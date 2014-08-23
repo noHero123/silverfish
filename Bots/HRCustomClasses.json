@@ -1,0 +1,7 @@
+{
+   "dll": "..\/Engine\/HRCustomClasses.dll"
+   "classes": [
+      { "class": "BoardControl" },
+      { "class": "Rush" }
+   ]
+}
