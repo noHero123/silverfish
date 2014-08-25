@@ -562,7 +562,14 @@ namespace HREngine.Bots
                 {
                     // todo Your next Secret costs (0).
                 }
-
+                if (me.CARDID == CardDB.cardIDEnum.EX1_084e) //warsongcommander
+                {
+                    this.charge++;
+                }
+                if (me.CARDID == CardDB.cardIDEnum.DS1_178e) //rhino
+                {
+                    this.charge++;
+                }
 
                 //ancientbuffs-------------------------------------------------
                 if (me.CARDID == CardDB.cardIDEnum.EX1_565o) //flametongue
@@ -626,6 +633,7 @@ namespace HREngine.Bots
                 {
                     this.tempAttack += 2;
                 }
+                
                 
 
                 

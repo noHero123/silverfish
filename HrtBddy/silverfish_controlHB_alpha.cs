@@ -514,7 +514,7 @@ namespace SilverfishControl
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha7";
+        public string versionnumber = "110alpha9";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -9137,6 +9137,18 @@ namespace SilverfishControl
                 // dont destroy owns ;_; (except mins with deathrattle effects)
 
                 Minion m = target;
+
+                if (name == CardDB.cardName.shadowwordpain)
+                {
+                    if (this.specialMinions.ContainsKey(m.name) || m.Angr == 3 || m.Hp >= 4)
+                    {
+                        return 0;
+                    }
+
+                    if (m.Angr == 2) return 5;
+
+                    return 10;
+                }
 
                 if (m.Angr >= 4 || m.Hp >= 5)
                 {
@@ -18403,6 +18415,7 @@ namespace SilverfishControl
             silenced = true;
             this.updateReadyness();
             p.minionGetOrEraseAllAreaBuffs(this, true);
+
             if (this.shadowmadnessed)
             {
                 this.shadowmadnessed = false;
@@ -18485,7 +18498,14 @@ namespace SilverfishControl
                 {
                     // todo Your next Secret costs (0).
                 }
-
+                if (me.CARDID == CardDB.cardIDEnum.EX1_084e) //warsongcommander
+                {
+                    this.charge++;
+                }
+                if (me.CARDID == CardDB.cardIDEnum.DS1_178e) //rhino
+                {
+                    this.charge++;
+                }
 
                 //ancientbuffs-------------------------------------------------
                 if (me.CARDID == CardDB.cardIDEnum.EX1_565o) //flametongue
@@ -18549,6 +18569,7 @@ namespace SilverfishControl
                 {
                     this.tempAttack += 2;
                 }
+
 
 
 

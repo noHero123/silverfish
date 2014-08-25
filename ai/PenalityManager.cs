@@ -896,6 +896,18 @@ namespace HREngine.Bots
 
                 Minion m = target;
 
+                if (name == CardDB.cardName.shadowwordpain)
+                {
+                    if (this.specialMinions.ContainsKey(m.name) || m.Angr == 3 || m.Hp >= 4)
+                    {
+                        return 0;
+                    }
+
+                    if(m.Angr==2) return 5;
+
+                    return 10;
+                }
+
                 if (m.Angr >= 4 || m.Hp >= 5)
                 {
                     pen = 0; // so we dont destroy cheap ones :D
