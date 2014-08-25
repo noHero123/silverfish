@@ -570,6 +570,14 @@ namespace HREngine.Bots
                 {
                     this.charge++;
                 }
+                if (me.CARDID == CardDB.cardIDEnum.CS2_103e2)// sturmangriff    +2 angriff und ansturm/.
+                {
+                    this.charge++;
+                }
+                if (me.CARDID == CardDB.cardIDEnum.CS2_103e)// sturmangriff    +2 angriff und ansturm/.
+                {
+                    this.charge++;
+                }
 
                 //ancientbuffs-------------------------------------------------
                 if (me.CARDID == CardDB.cardIDEnum.EX1_565o) //flametongue
