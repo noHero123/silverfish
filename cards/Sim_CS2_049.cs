@@ -8,7 +8,7 @@ namespace HREngine.Bots
 	{
 
 //    heldenfähigkeit/\nbeschwört ein zufälliges totem.
-        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_101t);//silverhandrecruit
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_050);//
 
         //    heldenfähigkeit/\nruft einen rekruten der silbernen hand (1/1) herbei.
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)

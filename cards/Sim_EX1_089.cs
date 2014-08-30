@@ -12,11 +12,11 @@ namespace HREngine.Bots
 		{
             if (own.own)
             {
-                p.enemyMaxMana++;
+                p.enemyMaxMana = Math.Min(10, p.enemyMaxMana+1);
             }
             else
             {
-                p.ownMaxMana++;
+                p.ownMaxMana = Math.Min(10, p.ownMaxMana + 1);
             }
 		}
 

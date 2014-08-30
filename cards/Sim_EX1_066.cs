@@ -10,7 +10,7 @@ namespace HREngine.Bots
 //    kampfschrei:/ zerstört die waffe eures gegners.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            p.lowerWeaponDurability(1000, own.own);
+            p.lowerWeaponDurability(1000, !own.own);
 		}
 
 

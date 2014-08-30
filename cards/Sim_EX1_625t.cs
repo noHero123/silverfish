@@ -9,9 +9,19 @@ namespace HREngine.Bots
 
 //    heldenfähigkeit/\nverursacht 2 schaden.
 
+
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-            p.minionGetDamageOrHeal(target, 2);
+            int dmg = 2;
+            if (ownplay)
+            {
+                if (p.doublepriest >= 1) dmg *= (2 * p.doublepriest);
+            }
+            else
+            {
+                if (p.enemydoublepriest >= 1) dmg *= (2 * p.enemydoublepriest);
+            }
+            p.minionGetDamageOrHeal(target, dmg);
 		}
 
 	}

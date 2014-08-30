@@ -12,11 +12,26 @@ namespace HREngine.Bots
 		{
             if (ownplay)
             {
-                p.ownMaxMana++;
+                if (p.ownMaxMana < 10)
+                {
+                    p.ownMaxMana++;
+                }
+                else
+                {
+                    p.drawACard(CardDB.cardName.excessmana, true, true);
+                }
+
             }
             else
             {
-                p.enemyMaxMana++;
+                if (p.enemyMaxMana < 10)
+                {
+                    p.enemyMaxMana++;
+                }
+                else
+                {
+                    p.drawACard(CardDB.cardName.excessmana, false, true);
+                }
             }
 		}
 

@@ -3366,7 +3366,7 @@ namespace HREngine.Bots
                     foreach (Minion m in p.enemyMinions)
                     {
                         k++;
-                        if (((this.type == cardtype.SPELL || this.type == cardtype.HEROPWR) && (m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.laughingsister) || m.name == CardDB.cardName.spectralknight) || m.stealth) continue;
+                        if (((this.type == cardtype.SPELL || this.type == cardtype.HEROPWR) && (m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.laughingsister || m.name == CardDB.cardName.spectralknight)) || m.stealth) continue;
                         enemyMins[k] = true;
                     }
 
@@ -3587,7 +3587,7 @@ namespace HREngine.Bots
                     foreach (Minion m in p.ownMinions)
                     {
                         k++;
-                        if ((this.type == cardtype.SPELL || this.type == cardtype.HEROPWR) && (m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.laughingsister || m.name == CardDB.cardName.spectralknight) || m.stealth) continue;
+                        if (((this.type == cardtype.SPELL || this.type == cardtype.HEROPWR) && (m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.laughingsister || m.name == CardDB.cardName.spectralknight)) || m.stealth) continue;
                         ownMins[k] = true;
 
                     }

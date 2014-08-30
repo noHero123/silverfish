@@ -10,7 +10,7 @@ namespace HREngine.Bots
 //    friert/ alle feindlichen diener ein.
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-            List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
+            List<Minion> temp = (ownplay) ? p.enemyMinions : p.ownMinions;
             for (int i = 0; i < temp.Count; i++)
             {
                 temp[i].frozen = true;

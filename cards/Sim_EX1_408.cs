@@ -19,7 +19,7 @@ namespace HREngine.Bots
             }
             else
             {
-                dmg = (p.enemyHero.Hp <= 12) ? p.getEnemySpellDamageDamage(2) : p.getEnemySpellDamageDamage(4);
+                dmg = (p.enemyHero.Hp <= 12) ? p.getEnemySpellDamageDamage(6) : p.getEnemySpellDamageDamage(4);
             }
             p.minionGetDamageOrHeal(target, dmg);
 		}

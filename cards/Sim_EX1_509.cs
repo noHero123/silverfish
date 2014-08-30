@@ -10,7 +10,7 @@ namespace HREngine.Bots
 //    erhält jedes mal +1 angriff, wenn ein murloc herbeigerufen wird.
         public override void onMinionIsSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
-            if ((TAG_RACE)summonedMinion.handcard.card.race == TAG_RACE.MURLOC) triggerEffectMinion.Angr++;
+            if ((TAG_RACE)summonedMinion.handcard.card.race == TAG_RACE.MURLOC) p.minionGetBuffed(triggerEffectMinion, 1, 0);
         }
 
 	}

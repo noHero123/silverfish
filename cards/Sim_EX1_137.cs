@@ -20,7 +20,7 @@ namespace HREngine.Bots
             {
                 p.minionGetDamageOrHeal(p.ownHero, dmg);
             }
-            if (p.cardsPlayedThisTurn >= 2) p.evaluatePenality -= 5;
+            if (p.cardsPlayedThisTurn >= 1) p.evaluatePenality -= 5;
 		}
 
 	}

@@ -11,14 +11,7 @@ namespace HREngine.Bots
 
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-            if (ownplay)
-            {
-                p.mana = Math.Min( p.mana + 2, 10);
-            }
-            else
-            {
-
-            }
+            p.mana = Math.Min(p.mana + 2, 10);
 		}
 
 	}

@@ -21,6 +21,7 @@ namespace HREngine.Bots
                 i++;
                 if (i == 2) break;
             }
+            if (ownplay) p.ueberladung += 2;
 		}
 
 	}

@@ -10,8 +10,8 @@ namespace HREngine.Bots
 //    ansturm/. kampfschrei:/ ruft zwei welplinge (1/1) für euren gegner herbei.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            
-            int pos = (own.own) ? p.ownMinions.Count : p.enemyMinions.Count;
+
+            int pos = (own.own) ? p.enemyMinions.Count : p.ownMinions.Count;
             p.callKid(kid, pos, !own.own);
             p.callKid(kid, pos, !own.own);
 		}

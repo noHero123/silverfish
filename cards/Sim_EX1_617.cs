@@ -11,9 +11,9 @@ namespace HREngine.Bots
 
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-            List<Minion> temp2 = new List<Minion>(p.enemyMinions);
+            List<Minion> temp2 = (ownplay) ? new List<Minion>(p.enemyMinions) : new List<Minion>(p.ownMinions);
             temp2.Sort((a, b) => a.Angr.CompareTo(b.Angr));
-            foreach (Minion enemy in temp2.ToArray())
+            foreach (Minion enemy in temp2)
             {
                 p.minionGetDestroyed(enemy);
                 break;

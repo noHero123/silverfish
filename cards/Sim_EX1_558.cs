@@ -10,14 +10,23 @@ namespace HREngine.Bots
 //    kampfschrei:/ zerstört die waffe eures gegners. zieht ihrer haltbarkeit entsprechend karten.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            p.enemyWeaponAttack = 0;
-            //this.owncarddraw += enemyWeaponDurability;
-            for (int i = 0; i < p.enemyWeaponDurability; i++)
+            if (own.own)
             {
-                p.drawACard(CardDB.cardName.unknown, true);
+                //this.owncarddraw += enemyWeaponDurability;
+                for (int i = 0; i < p.enemyWeaponDurability; i++)
+                {
+                    p.drawACard(CardDB.cardName.unknown, true);
+                }
+                p.lowerWeaponDurability(1000, false);
             }
-            p.enemyWeaponDurability = 0;
-            p.enemyWeaponName = CardDB.cardName.unknown;
+            else
+            {
+                for (int i = 0; i < p.enemyWeaponDurability; i++)
+                {
+                    p.drawACard(CardDB.cardName.unknown, false);
+                }
+                p.lowerWeaponDurability(1000, true);
+            }
 		}
 
 

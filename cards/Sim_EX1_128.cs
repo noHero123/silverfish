@@ -15,19 +15,26 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in p.ownMinions)
                 {
-                    m.stealth = true;
-                    m.concedal = true;
+                    if (!m.stealth)
+                    {
+                        m.stealth = true;
+                        m.concedal = true;
+                    }
                 }
             }
             else
             {
                 foreach (Minion m in p.enemyMinions)
                 {
-                    m.stealth = true;
-                    m.concedal = true;
+                    if (!m.stealth)
+                    {
+                        m.stealth = true;
+                        m.concedal = true;
+                    }
                 }
             }
 		}
 
 	}
+
 }

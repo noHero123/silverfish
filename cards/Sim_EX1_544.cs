@@ -19,7 +19,11 @@ namespace HREngine.Bots
             {
                 m.stealth = false;
             }
-            p.enemySecretCount = 0;
+            if (ownplay) p.enemySecretCount = 0;
+            else
+            {
+                p.ownSecretsIDList.Clear();
+            }
             p.drawACard(CardDB.cardName.unknown, ownplay);
 		}
 

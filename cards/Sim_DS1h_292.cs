@@ -11,13 +11,16 @@ namespace HREngine.Bots
 
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
+            int dmg = 2;
             if (ownplay)
             {
-                p.minionGetDamageOrHeal(p.enemyHero, 2);
+                if (p.doublepriest >= 1) dmg *= (2 * p.doublepriest);
+                p.minionGetDamageOrHeal(p.enemyHero, dmg);
             }
             else
             {
-                p.minionGetDamageOrHeal(p.ownHero, 2);
+                if (p.enemydoublepriest >= 1) dmg *= (2 * p.enemydoublepriest);
+                p.minionGetDamageOrHeal(p.ownHero, dmg);
             }
 
 		}

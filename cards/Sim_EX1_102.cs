@@ -15,7 +15,7 @@ namespace HREngine.Bots
             {
                 List<Minion> temp2 = (turnStartOfOwner)? p.enemyMinions : p.ownMinions;
                 bool dmgdone = false;
-                foreach (Minion mins in temp2.ToArray())
+                foreach (Minion mins in temp2)
                 {
                     p.minionGetDamageOrHeal(mins, 2);
                     dmgdone = true;

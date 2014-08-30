@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha9";
+        public string versionnumber = "110alpha10";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -415,7 +415,8 @@ namespace HREngine.Bots
 
                     m.charge = 0;
 
-                    if (!m.silenced && m.handcard.card.Charge) m.charge++;
+                    if (!m.silenced && m.name == CardDB.cardName.southseadeckhand && entitiy.GetTag(HRGameTag.CHARGE) == 1) m.charge = 1;
+                    if (!m.silenced && m.handcard.card.Charge) m.charge=1;
 
                     m.zonepos = zp;
 

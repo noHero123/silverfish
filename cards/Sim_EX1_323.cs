@@ -17,8 +17,18 @@ namespace HREngine.Bots
                 p.ownHeroAblility.card = card;
                 p.ownHeroName = HeroEnum.lordjaraxxus;
                 p.ownHero.Hp = own.Hp;
+                p.ownHero.maxHp = own.maxHp;
 
-                p.equipWeapon(weapon,own.own);
+                p.equipWeapon(weapon, own.own);
+            }
+            else 
+            {
+                p.enemyHeroAblility.card = card;
+                p.enemyHeroName = HeroEnum.lordjaraxxus;
+                p.enemyHero.Hp = own.Hp;
+                p.enemyHero.maxHp = own.maxHp;
+
+                p.equipWeapon(weapon, own.own);
             }
 		}
 

@@ -13,15 +13,29 @@ namespace HREngine.Bots
         CardDB.Card shatter  = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_625t2);
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-            if (p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001) // lesser heal becomes mind spike
+            if (ownplay)
             {
-                p.ownHeroAblility.card = mindspike;
-                p.ownAbilityReady = true;
+                if (p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001) // lesser heal becomes mind spike
+                {
+                    p.ownHeroAblility.card = mindspike;
+                    p.ownAbilityReady = true;
+                }
+                else
+                {
+                    p.ownHeroAblility.card = shatter;  // mindspike becomes mind shatter
+                    p.ownAbilityReady = true;
+                }
             }
             else
             {
-                p.ownHeroAblility.card = shatter;  // mindspike becomes mind shatter
-                p.ownAbilityReady = true;
+                if (p.enemyHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001) // lesser heal becomes mind spike
+                {
+                    p.enemyHeroAblility.card = mindspike;
+                }
+                else
+                {
+                    p.enemyHeroAblility.card = shatter;  // mindspike becomes mind shatter
+                }
             }
 		}
 

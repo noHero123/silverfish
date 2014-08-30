@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
         public override void onMinionGotDmgTrigger(Playfield p, Minion triggerEffectMinion, bool ownDmgdmin)
         {
-            triggerEffectMinion.Angr++;
+            p.minionGetBuffed(triggerEffectMinion, 1, 0);
         }
 
 	}

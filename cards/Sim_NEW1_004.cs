@@ -22,10 +22,29 @@ namespace HREngine.Bots
             p.anzMurlocWarleader = 0;
             p.anzGrimscaleOracle = 0;
             p.anzOwnAuchenaiSoulpriest = 0;
+            p.anzEnemyAuchenaiSoulpriest = 0;
             p.anzOwnsorcerersapprentice = 0;
             p.anzOwnsorcerersapprenticeStarted = 0;
             p.anzEnemysorcerersapprentice = 0;
             p.anzEnemysorcerersapprenticeStarted = 0;
+            p.anzOwnSouthseacaptain = 0;
+            p.anzEnemySouthseacaptain = 0;
+            p.doublepriest = 0;
+            p.enemydoublepriest = 0;
+            p.ownBaronRivendare = 0;
+            p.enemyBaronRivendare = 0;
+
+            p.spellpower = 0;
+            p.enemyspellpower = 0;
+
+
+
+            p.winzigebeschwoererin = 0;
+            p.managespenst = 0;
+            p.soeldnerDerVenture = 0;
+            p.beschwoerungsportal = 0;
+            p.nerubarweblord = 0;
+
             foreach (Minion m in p.ownMinions)
             {
                 p.drawACard(m.name, true, true);

@@ -18,6 +18,7 @@ namespace HREngine.Bots
         public int enemyMinionsDied;
         public int ownBeastDied;
         public int enemyBeastDied;
+        public int murlocDied;
 
         public bool ownMinionsChanged;
         public bool enemyMininsChanged;
@@ -62,8 +63,7 @@ namespace HREngine.Bots
 
         public bool weHavePlayedMillhouseManastorm = false;
 
-        public bool ownhasorcanplayKelThuzad = false;
-        public bool enemyhasorcanplayKelThuzad = false;
+        public bool hasorcanplayKelThuzad = false;
 
 
         public int doublepriest = 0;
@@ -326,16 +326,17 @@ namespace HREngine.Bots
             this.ownBaronRivendare = 0;
             this.enemyBaronRivendare = 0;
 
-            ownhasorcanplayKelThuzad = false;
-            enemyhasorcanplayKelThuzad = false;
+            hasorcanplayKelThuzad = false;
             this.loatheb = false;
             this.spellpower = 0;
+            this.enemyspellpower = 0;
 
             foreach (Minion m in this.ownMinions)
             {
                 if (m.playedThisTurn && m.name == CardDB.cardName.loatheb) this.loatheb = true;
 
                 spellpower = spellpower + m.spellpower;
+                spellpower += m.handcard.card.spellpowervalue;
 
                 if (m.silenced) continue;
 
@@ -375,7 +376,7 @@ namespace HREngine.Bots
                 }
                 if (m.handcard.card.name == CardDB.cardName.kelthuzad)
                 {
-                    this.ownhasorcanplayKelThuzad = true;
+                    this.hasorcanplayKelThuzad = true;
                 }
 
                 if (m.name == CardDB.cardName.raidleader) this.anzOwnRaidleader++;
@@ -401,13 +402,14 @@ namespace HREngine.Bots
 
                 if (hc.card.name == CardDB.cardName.kelthuzad)
                 {
-                    this.ownhasorcanplayKelThuzad = true;
+                    this.hasorcanplayKelThuzad = true;
                 }
             }
 
             foreach (Minion m in this.enemyMinions)
             {
                 this.enemyspellpower = this.enemyspellpower + m.spellpower;
+                enemyspellpower += m.handcard.card.spellpowervalue;
                 if (m.silenced) continue;
                 if (m.name == CardDB.cardName.prophetvelen) this.enemydoublepriest++;
                 if (m.name == CardDB.cardName.manawraith)
@@ -426,7 +428,7 @@ namespace HREngine.Bots
                 }
                 if (m.handcard.card.name == CardDB.cardName.kelthuzad)
                 {
-                    this.enemyhasorcanplayKelThuzad = true;
+                    this.hasorcanplayKelThuzad = true;
                 }
 
                 if (m.name == CardDB.cardName.raidleader) this.anzEnemyRaidleader++;
@@ -443,7 +445,7 @@ namespace HREngine.Bots
                 }
                 if (m.name == CardDB.cardName.southseacaptain) this.anzEnemySouthseacaptain++;
             }
-            if (this.ownhasorcanplayKelThuzad || this.enemyhasorcanplayKelThuzad) this.diedMinions = new List<GraveYardItem>(Probabilitymaker.Instance.turngraveyard);
+            if (this.hasorcanplayKelThuzad ) this.diedMinions = new List<GraveYardItem>(Probabilitymaker.Instance.turngraveyard);
 
         }
 
@@ -538,9 +540,8 @@ namespace HREngine.Bots
             this.spellpower = p.spellpower;
             this.enemyspellpower = p.enemyspellpower;
 
-            this.ownhasorcanplayKelThuzad = p.ownhasorcanplayKelThuzad;
-            this.enemyhasorcanplayKelThuzad = p.enemyhasorcanplayKelThuzad;
-            if (p.ownhasorcanplayKelThuzad || p.enemyhasorcanplayKelThuzad) this.diedMinions = new List<GraveYardItem>(p.diedMinions);
+            this.hasorcanplayKelThuzad = p.hasorcanplayKelThuzad;
+            if (p.hasorcanplayKelThuzad) this.diedMinions = new List<GraveYardItem>(p.diedMinions);
 
             //####buffs#############################
 
@@ -1814,6 +1815,8 @@ namespace HREngine.Bots
         public void prepareNextTurn(bool own)
         {
             //call this after start turn trigger!
+            this.playedPreparation = false;
+            this.playedmagierinderkirintor = false;
             if (own)
             {
                 this.ownMaxMana = Math.Min(10, this.ownMaxMana + 1);
@@ -1823,6 +1826,13 @@ namespace HREngine.Bots
                     m.numAttacksThisTurn = 0;
                     m.playedThisTurn = false;
                     m.updateReadyness();
+
+                    if (m.concedal)
+                    {
+                        m.concedal = false;
+                        m.stealth = false;
+                    }
+
                 }
                 //unfreeze the enemy minions
                 foreach (Minion m in enemyMinions)
@@ -1852,6 +1862,11 @@ namespace HREngine.Bots
                     m.numAttacksThisTurn = 0;
                     m.playedThisTurn = false;
                     m.updateReadyness();
+                    if (m.concedal)
+                    {
+                        m.concedal = false;
+                        m.stealth = false;
+                    }
                 }
                 //unfreeze the own minions
                 foreach (Minion m in ownMinions)
@@ -1869,7 +1884,7 @@ namespace HREngine.Bots
             }
 
 
-
+            this.ueberladung = 0;
             this.complete = false;
 
             this.value = int.MinValue;
@@ -2239,7 +2254,7 @@ namespace HREngine.Bots
                 this.doDmgTriggers();
             }
 
-            this.ueberladung += c.recallValue;
+            //this.ueberladung += c.recallValue;
             this.cardsPlayedThisTurn++;
 
         }
@@ -2302,8 +2317,10 @@ namespace HREngine.Bots
         //todo: test death's bite's dearthrattle
         public void lowerWeaponDurability(int value, bool own)
         {
+
             if (own)
             {
+                if (this.ownWeaponDurability <= 0) return;
                 this.ownWeaponDurability -= value;
                 if (this.ownWeaponDurability <= 0)
                 {
@@ -2343,6 +2360,7 @@ namespace HREngine.Bots
             }
             else
             {
+                if (this.enemyWeaponDurability <= 0) return;
                 this.enemyWeaponDurability -= value;
                 if (this.enemyWeaponDurability <= 0)
                 {
@@ -2405,6 +2423,7 @@ namespace HREngine.Bots
                 this.tempTrigger.enemyMinionsDied = 0;
                 this.tempTrigger.ownBeastDied = 0;
                 this.tempTrigger.enemyBeastDied = 0;
+                this.tempTrigger.murlocDied = 0;
             }
 
             updateBoards();
@@ -2576,8 +2595,14 @@ namespace HREngine.Bots
                 {
                     this.minionGetBuffed(mnn, 2 * this.tempTrigger.ownBeastDied, this.tempTrigger.ownBeastDied);
                 }
+
+                if (mnn.handcard.card.name == CardDB.cardName.oldmurkeye)
+                {
+                    this.minionGetBuffed(mnn, -1 * this.tempTrigger.murlocDied, 0);
+                }
+
             }
-            foreach (Minion mnn in this.ownMinions)
+            foreach (Minion mnn in this.enemyMinions)
             {
                 if (mnn.silenced) continue;
                 if (mnn.Hp <= 0) continue;
@@ -2601,6 +2626,12 @@ namespace HREngine.Bots
                 {
                     this.minionGetBuffed(mnn, 2 * this.tempTrigger.enemyBeastDied, this.tempTrigger.enemyBeastDied);
                 }
+
+                if (mnn.handcard.card.name == CardDB.cardName.oldmurkeye)
+                {
+                    this.minionGetBuffed(mnn, -1 * this.tempTrigger.murlocDied, 0);
+                }
+
             }
         }
 
@@ -2788,7 +2819,7 @@ namespace HREngine.Bots
                 if (!ownturn && m.destroyOnEnemyTurnEnd) this.minionGetDestroyed(m);
             }
             List<Minion> enemm = (ownturn) ? this.enemyMinions : this.ownMinions ;
-            foreach (Minion m in enemm)
+            foreach (Minion m in enemm.ToArray())
             {
                 //only gruul + kelthuzad
                 if (!m.silenced && (m.name == CardDB.cardName.gruul || m.name == CardDB.cardName.kelthuzad))
@@ -3584,6 +3615,8 @@ namespace HREngine.Bots
             m.charge--;
             m.updateReadyness();
         }
+
+
 
         public void minionGetTempBuff(Minion m, int tempAttack, int tempHp)
         {

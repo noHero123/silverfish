@@ -381,6 +381,11 @@ namespace HREngine.Bots
                 if (this.name == CardDB.cardName.feugen) p.feugenDead = true;
             }
 
+            if (this.handcard.card.race == 14)
+            {
+                p.tempTrigger.murlocDied++;
+            }
+
             if (own)
             {
 
@@ -496,10 +501,20 @@ namespace HREngine.Bots
                 {
                     this.ancestralspirit++;
                 }
+                if (me.CARDID == CardDB.cardIDEnum.EX1_584e) //ancient mage
+                {
+                    this.spellpower++;
+                }
                 if (me.CARDID == CardDB.cardIDEnum.EX1_158e) //soul of the forest
                 {
                     this.souloftheforest++;
                 }
+
+                if (me.CARDID == CardDB.cardIDEnum.EX1_128e) //conceal
+                {
+                    this.concedal=true;
+                }
+
                 if (me.CARDID == CardDB.cardIDEnum.CS2_063e) //corruption
                 {
                     if (me.controllerOfCreator == ownPlayerControler)
@@ -509,6 +524,18 @@ namespace HREngine.Bots
                     else
                     {
                         this.destroyOnEnemyTurnStart = true;
+                    }
+                }
+
+                if (me.CARDID == CardDB.cardIDEnum.EX1_363e || me.CARDID == CardDB.cardIDEnum.EX1_363e2) //corruption
+                {
+                    if (me.controllerOfCreator == ownPlayerControler)
+                    {
+                        this.ownBlessingOfWisdom++;
+                    }
+                    else
+                    {
+                        this.enemyBlessingOfWisdom++;
                     }
                 }
 

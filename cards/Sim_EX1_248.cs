@@ -15,6 +15,7 @@ namespace HREngine.Bots
 
             p.callKid(kid, posi, ownplay);
             p.callKid(kid, posi, ownplay);
+            if (ownplay) p.ueberladung += 2;
 		}
 
 	}

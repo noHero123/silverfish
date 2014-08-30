@@ -24,7 +24,7 @@ namespace HREngine.Bots
                     CardDB.Card c = CardDB.Instance.getCardDataFromID(mins.card.cardIDenum);
                     p.minionTransform(triggerEffectMinion, c);
                     p.removeCard(mins);
-                    p.drawACard(CardDB.cardName.alarmobot, true);
+                    p.drawACard(CardDB.cardName.alarmobot, true, true);
                     break;
                 }
                 return;

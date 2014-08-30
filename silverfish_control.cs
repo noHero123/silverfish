@@ -846,7 +846,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha9";
+        public string versionnumber = "110alpha10";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -1250,6 +1250,7 @@ namespace HREngine.Bots
 
                     m.charge = 0;
 
+                    if (!m.silenced && m.name == CardDB.cardName.southseadeckhand && entitiy.GetTag(HRGameTag.CHARGE) == 1) m.charge = 1;
                     if (!m.silenced && m.handcard.card.Charge) m.charge++;
 
                     m.zonepos = zp;
@@ -1969,6 +1970,7 @@ namespace HREngine.Bots
         public int enemyMinionsDied;
         public int ownBeastDied;
         public int enemyBeastDied;
+        public int murlocDied;
 
         public bool ownMinionsChanged;
         public bool enemyMininsChanged;
@@ -2013,8 +2015,7 @@ namespace HREngine.Bots
 
         public bool weHavePlayedMillhouseManastorm = false;
 
-        public bool ownhasorcanplayKelThuzad = false;
-        public bool enemyhasorcanplayKelThuzad = false;
+        public bool hasorcanplayKelThuzad = false;
 
 
         public int doublepriest = 0;
@@ -2277,16 +2278,17 @@ namespace HREngine.Bots
             this.ownBaronRivendare = 0;
             this.enemyBaronRivendare = 0;
 
-            ownhasorcanplayKelThuzad = false;
-            enemyhasorcanplayKelThuzad = false;
+            hasorcanplayKelThuzad = false;
             this.loatheb = false;
             this.spellpower = 0;
+            this.enemyspellpower = 0;
 
             foreach (Minion m in this.ownMinions)
             {
                 if (m.playedThisTurn && m.name == CardDB.cardName.loatheb) this.loatheb = true;
 
                 spellpower = spellpower + m.spellpower;
+                spellpower += m.handcard.card.spellpowervalue;
 
                 if (m.silenced) continue;
 
@@ -2326,7 +2328,7 @@ namespace HREngine.Bots
                 }
                 if (m.handcard.card.name == CardDB.cardName.kelthuzad)
                 {
-                    this.ownhasorcanplayKelThuzad = true;
+                    this.hasorcanplayKelThuzad = true;
                 }
 
                 if (m.name == CardDB.cardName.raidleader) this.anzOwnRaidleader++;
@@ -2352,13 +2354,14 @@ namespace HREngine.Bots
 
                 if (hc.card.name == CardDB.cardName.kelthuzad)
                 {
-                    this.ownhasorcanplayKelThuzad = true;
+                    this.hasorcanplayKelThuzad = true;
                 }
             }
 
             foreach (Minion m in this.enemyMinions)
             {
                 this.enemyspellpower = this.enemyspellpower + m.spellpower;
+                enemyspellpower += m.handcard.card.spellpowervalue;
                 if (m.silenced) continue;
                 if (m.name == CardDB.cardName.prophetvelen) this.enemydoublepriest++;
                 if (m.name == CardDB.cardName.manawraith)
@@ -2377,7 +2380,7 @@ namespace HREngine.Bots
                 }
                 if (m.handcard.card.name == CardDB.cardName.kelthuzad)
                 {
-                    this.enemyhasorcanplayKelThuzad = true;
+                    this.hasorcanplayKelThuzad = true;
                 }
 
                 if (m.name == CardDB.cardName.raidleader) this.anzEnemyRaidleader++;
@@ -2394,7 +2397,7 @@ namespace HREngine.Bots
                 }
                 if (m.name == CardDB.cardName.southseacaptain) this.anzEnemySouthseacaptain++;
             }
-            if (this.ownhasorcanplayKelThuzad || this.enemyhasorcanplayKelThuzad) this.diedMinions = new List<GraveYardItem>(Probabilitymaker.Instance.turngraveyard);
+            if (this.hasorcanplayKelThuzad) this.diedMinions = new List<GraveYardItem>(Probabilitymaker.Instance.turngraveyard);
 
         }
 
@@ -2489,9 +2492,8 @@ namespace HREngine.Bots
             this.spellpower = p.spellpower;
             this.enemyspellpower = p.enemyspellpower;
 
-            this.ownhasorcanplayKelThuzad = p.ownhasorcanplayKelThuzad;
-            this.enemyhasorcanplayKelThuzad = p.enemyhasorcanplayKelThuzad;
-            if (p.ownhasorcanplayKelThuzad || p.enemyhasorcanplayKelThuzad) this.diedMinions = new List<GraveYardItem>(p.diedMinions);
+            this.hasorcanplayKelThuzad = p.hasorcanplayKelThuzad;
+            if (p.hasorcanplayKelThuzad) this.diedMinions = new List<GraveYardItem>(p.diedMinions);
 
             //####buffs#############################
 
@@ -3765,6 +3767,8 @@ namespace HREngine.Bots
         public void prepareNextTurn(bool own)
         {
             //call this after start turn trigger!
+            this.playedPreparation = false;
+            this.playedmagierinderkirintor = false;
             if (own)
             {
                 this.ownMaxMana = Math.Min(10, this.ownMaxMana + 1);
@@ -3774,6 +3778,13 @@ namespace HREngine.Bots
                     m.numAttacksThisTurn = 0;
                     m.playedThisTurn = false;
                     m.updateReadyness();
+
+                    if (m.concedal)
+                    {
+                        m.concedal = false;
+                        m.stealth = false;
+                    }
+
                 }
                 //unfreeze the enemy minions
                 foreach (Minion m in enemyMinions)
@@ -3803,6 +3814,11 @@ namespace HREngine.Bots
                     m.numAttacksThisTurn = 0;
                     m.playedThisTurn = false;
                     m.updateReadyness();
+                    if (m.concedal)
+                    {
+                        m.concedal = false;
+                        m.stealth = false;
+                    }
                 }
                 //unfreeze the own minions
                 foreach (Minion m in ownMinions)
@@ -3820,7 +3836,7 @@ namespace HREngine.Bots
             }
 
 
-
+            this.ueberladung = 0;
             this.complete = false;
 
             this.value = int.MinValue;
@@ -4190,7 +4206,7 @@ namespace HREngine.Bots
                 this.doDmgTriggers();
             }
 
-            this.ueberladung += c.recallValue;
+            //this.ueberladung += c.recallValue;
             this.cardsPlayedThisTurn++;
 
         }
@@ -4253,8 +4269,10 @@ namespace HREngine.Bots
         //todo: test death's bite's dearthrattle
         public void lowerWeaponDurability(int value, bool own)
         {
+
             if (own)
             {
+                if (this.ownWeaponDurability <= 0) return;
                 this.ownWeaponDurability -= value;
                 if (this.ownWeaponDurability <= 0)
                 {
@@ -4294,6 +4312,7 @@ namespace HREngine.Bots
             }
             else
             {
+                if (this.enemyWeaponDurability <= 0) return;
                 this.enemyWeaponDurability -= value;
                 if (this.enemyWeaponDurability <= 0)
                 {
@@ -4356,6 +4375,7 @@ namespace HREngine.Bots
                 this.tempTrigger.enemyMinionsDied = 0;
                 this.tempTrigger.ownBeastDied = 0;
                 this.tempTrigger.enemyBeastDied = 0;
+                this.tempTrigger.murlocDied = 0;
             }
 
             updateBoards();
@@ -4527,8 +4547,14 @@ namespace HREngine.Bots
                 {
                     this.minionGetBuffed(mnn, 2 * this.tempTrigger.ownBeastDied, this.tempTrigger.ownBeastDied);
                 }
+
+                if (mnn.handcard.card.name == CardDB.cardName.oldmurkeye)
+                {
+                    this.minionGetBuffed(mnn, -1 * this.tempTrigger.murlocDied, 0);
+                }
+
             }
-            foreach (Minion mnn in this.ownMinions)
+            foreach (Minion mnn in this.enemyMinions)
             {
                 if (mnn.silenced) continue;
                 if (mnn.Hp <= 0) continue;
@@ -4552,6 +4578,12 @@ namespace HREngine.Bots
                 {
                     this.minionGetBuffed(mnn, 2 * this.tempTrigger.enemyBeastDied, this.tempTrigger.enemyBeastDied);
                 }
+
+                if (mnn.handcard.card.name == CardDB.cardName.oldmurkeye)
+                {
+                    this.minionGetBuffed(mnn, -1 * this.tempTrigger.murlocDied, 0);
+                }
+
             }
         }
 
@@ -4739,7 +4771,7 @@ namespace HREngine.Bots
                 if (!ownturn && m.destroyOnEnemyTurnEnd) this.minionGetDestroyed(m);
             }
             List<Minion> enemm = (ownturn) ? this.enemyMinions : this.ownMinions;
-            foreach (Minion m in enemm)
+            foreach (Minion m in enemm.ToArray())
             {
                 //only gruul + kelthuzad
                 if (!m.silenced && (m.name == CardDB.cardName.gruul || m.name == CardDB.cardName.kelthuzad))
@@ -5535,6 +5567,8 @@ namespace HREngine.Bots
             m.charge--;
             m.updateReadyness();
         }
+
+
 
         public void minionGetTempBuff(Minion m, int tempAttack, int tempHp)
         {
@@ -15376,7 +15410,7 @@ namespace HREngine.Bots
                     foreach (Minion m in p.enemyMinions)
                     {
                         k++;
-                        if (((this.type == cardtype.SPELL || this.type == cardtype.HEROPWR) && (m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.laughingsister) || m.name == CardDB.cardName.spectralknight) || m.stealth) continue;
+                        if (((this.type == cardtype.SPELL || this.type == cardtype.HEROPWR) && (m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.laughingsister || m.name == CardDB.cardName.spectralknight)) || m.stealth) continue;
                         enemyMins[k] = true;
                     }
 
@@ -15597,7 +15631,7 @@ namespace HREngine.Bots
                     foreach (Minion m in p.ownMinions)
                     {
                         k++;
-                        if ((this.type == cardtype.SPELL || this.type == cardtype.HEROPWR) && (m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.laughingsister || m.name == CardDB.cardName.spectralknight) || m.stealth) continue;
+                        if (((this.type == cardtype.SPELL || this.type == cardtype.HEROPWR) && (m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.laughingsister || m.name == CardDB.cardName.spectralknight)) || m.stealth) continue;
                         ownMins[k] = true;
 
                     }
@@ -18705,6 +18739,11 @@ namespace HREngine.Bots
                 if (this.name == CardDB.cardName.feugen) p.feugenDead = true;
             }
 
+            if (this.handcard.card.race == 14)
+            {
+                p.tempTrigger.murlocDied++;
+            }
+
             if (own)
             {
 
@@ -18820,10 +18859,20 @@ namespace HREngine.Bots
                 {
                     this.ancestralspirit++;
                 }
+                if (me.CARDID == CardDB.cardIDEnum.EX1_584e) //ancient mage
+                {
+                    this.spellpower++;
+                }
                 if (me.CARDID == CardDB.cardIDEnum.EX1_158e) //soul of the forest
                 {
                     this.souloftheforest++;
                 }
+
+                if (me.CARDID == CardDB.cardIDEnum.EX1_128e) //conceal
+                {
+                    this.concedal = true;
+                }
+
                 if (me.CARDID == CardDB.cardIDEnum.CS2_063e) //corruption
                 {
                     if (me.controllerOfCreator == ownPlayerControler)
@@ -18833,6 +18882,18 @@ namespace HREngine.Bots
                     else
                     {
                         this.destroyOnEnemyTurnStart = true;
+                    }
+                }
+
+                if (me.CARDID == CardDB.cardIDEnum.EX1_363e || me.CARDID == CardDB.cardIDEnum.EX1_363e2) //corruption
+                {
+                    if (me.controllerOfCreator == ownPlayerControler)
+                    {
+                        this.ownBlessingOfWisdom++;
+                    }
+                    else
+                    {
+                        this.enemyBlessingOfWisdom++;
                     }
                 }
 
@@ -18974,6 +19035,7 @@ namespace HREngine.Bots
         }
 
     }
+
 
     public enum TAG_MULLIGAN
     {
@@ -19160,7 +19222,17 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            int heal = (ownplay) ? p.getSpellHeal(2) : p.getEnemySpellHeal(2);
+            int heal = 2;
+            if (ownplay)
+            {
+                if (p.anzOwnAuchenaiSoulpriest >= 1) heal = -heal;
+                if (p.doublepriest >= 1) heal *= (2 * p.doublepriest);
+            }
+            else
+            {
+                if (p.anzEnemyAuchenaiSoulpriest >= 1) heal = -heal;
+                if (p.enemydoublepriest >= 1) heal *= (2 * p.enemydoublepriest);
+            }
             p.minionGetDamageOrHeal(target, -heal);
 
 
@@ -19384,17 +19456,18 @@ namespace HREngine.Bots
             }
             if (ownplay)
             {
-                if (p.ownHero.entitiyID != target.entitiyID)
-                {
-                    p.minionGetDamageOrHeal(p.ownHero, dmg);
-                }
-            }
-            else
-            {
                 if (p.enemyHero.entitiyID != target.entitiyID)
                 {
                     p.minionGetDamageOrHeal(p.enemyHero, dmg);
                 }
+            }
+            else
+            {
+                if (p.ownHero.entitiyID != target.entitiyID)
+                {
+                    p.minionGetDamageOrHeal(p.ownHero, dmg);
+                }
+
             }
         }
 
@@ -19408,11 +19481,26 @@ namespace HREngine.Bots
         {
             if (ownplay)
             {
-                p.ownMaxMana++;
+                if (p.ownMaxMana < 10)
+                {
+                    p.ownMaxMana++;
+                }
+                else
+                {
+                    p.drawACard(CardDB.cardName.excessmana, true, true);
+                }
+
             }
             else
             {
-                p.enemyMaxMana++;
+                if (p.enemyMaxMana < 10)
+                {
+                    p.enemyMaxMana++;
+                }
+                else
+                {
+                    p.drawACard(CardDB.cardName.excessmana, false, true);
+                }
             }
         }
 
@@ -19506,13 +19594,12 @@ namespace HREngine.Bots
         //    friert/ alle feindlichen diener ein.
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
+            List<Minion> temp = (ownplay) ? p.enemyMinions : p.ownMinions;
             for (int i = 0; i < temp.Count; i++)
             {
                 temp[i].frozen = true;
             }
         }
-
     }
 
     class Sim_CS2_027 : SimTemplate //mirrorimage
@@ -19601,7 +19688,16 @@ namespace HREngine.Bots
         //    heldenfähigkeit/\nverursacht 1 schaden.
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            p.minionGetDamageOrHeal(target, 1);
+            int dmg = 1;
+            if (ownplay)
+            {
+                if (p.doublepriest >= 1) dmg *= (2 * p.doublepriest);
+            }
+            else
+            {
+                if (p.enemydoublepriest >= 1) dmg *= (2 * p.enemydoublepriest);
+            }
+            p.minionGetDamageOrHeal(target, dmg);
         }
 
     }
@@ -19700,7 +19796,7 @@ namespace HREngine.Bots
     {
 
         //    heldenfähigkeit/\nbeschwört ein zufälliges totem.
-        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_101t);//silverhandrecruit
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_050);//
 
         //    heldenfähigkeit/\nruft einen rekruten der silbernen hand (1/1) herbei.
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
@@ -19708,7 +19804,6 @@ namespace HREngine.Bots
             int posi = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
             p.callKid(kid, posi, ownplay);
         }
-
     }
 
     class Sim_CS2_050 : SimTemplate //searingtotem
@@ -19777,13 +19872,17 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             p.drawACard(CardDB.cardName.unknown, ownplay);
+
+            int dmg = 2;
             if (ownplay)
             {
-                p.minionGetDamageOrHeal(p.ownHero, 2);
+                if (p.doublepriest >= 1) dmg *= (2 * p.doublepriest);
+                p.minionGetDamageOrHeal(p.ownHero, dmg);
             }
             else
             {
-                p.minionGetDamageOrHeal(p.enemyHero, 2);
+                if (p.enemydoublepriest >= 1) dmg *= (2 * p.enemydoublepriest);
+                p.minionGetDamageOrHeal(p.enemyHero, dmg);
             }
         }
 
@@ -19988,7 +20087,12 @@ namespace HREngine.Bots
     {
 
         //
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_080);
 
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            p.equipWeapon(w, ownplay);
+        }
 
     }
 
@@ -20068,7 +20172,12 @@ namespace HREngine.Bots
     {
 
         //
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_091);
 
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            p.equipWeapon(w, ownplay);
+        }
     }
 
     class Sim_CS2_092 : SimTemplate//blessing of kings
@@ -20721,7 +20830,7 @@ namespace HREngine.Bots
             {
                 if (p.ownWeaponDurability >= 1)
                 {
-                    p.ownHero.Angr += 2;
+                    p.minionGetBuffed(p.ownHero, 2, 0);
                     p.ownWeaponAttack += 2;
                 }
             }
@@ -20730,6 +20839,7 @@ namespace HREngine.Bots
                 if (p.enemyWeaponDurability >= 1)
                 {
                     p.enemyWeaponAttack += 2;
+                    p.minionGetBuffed(p.enemyHero, 2, 0);
                 }
             }
         }
@@ -20740,7 +20850,7 @@ namespace HREngine.Bots
             {
                 if (p.ownWeaponDurability >= 1)
                 {
-                    p.ownHero.Angr -= 2;
+                    p.minionGetBuffed(p.ownHero, -2, 0);
                     p.ownWeaponAttack -= 2;
                 }
             }
@@ -20749,6 +20859,7 @@ namespace HREngine.Bots
                 if (p.enemyWeaponDurability >= 1)
                 {
                     p.enemyWeaponAttack -= 2;
+                    p.minionGetBuffed(p.enemyHero, -2, 0);
                 }
             }
         }
@@ -21009,13 +21120,16 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
+            int dmg = 2;
             if (ownplay)
             {
-                p.minionGetDamageOrHeal(p.enemyHero, 2);
+                if (p.doublepriest >= 1) dmg *= (2 * p.doublepriest);
+                p.minionGetDamageOrHeal(p.enemyHero, dmg);
             }
             else
             {
-                p.minionGetDamageOrHeal(p.ownHero, 2);
+                if (p.enemydoublepriest >= 1) dmg *= (2 * p.enemydoublepriest);
+                p.minionGetDamageOrHeal(p.ownHero, dmg);
             }
 
         }
@@ -21310,7 +21424,7 @@ namespace HREngine.Bots
                     CardDB.Card c = CardDB.Instance.getCardDataFromID(mins.card.cardIDenum);
                     p.minionTransform(triggerEffectMinion, c);
                     p.removeCard(mins);
-                    p.drawACard(CardDB.cardName.alarmobot, true);
+                    p.drawACard(CardDB.cardName.alarmobot, true, true);
                     break;
                 }
                 return;
@@ -21786,7 +21900,7 @@ namespace HREngine.Bots
         //    kampfschrei:/ zerstört die waffe eures gegners.
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            p.lowerWeaponDurability(1000, own.own);
+            p.lowerWeaponDurability(1000, !own.own);
         }
 
 
@@ -21923,15 +22037,31 @@ namespace HREngine.Bots
         //    kampfschrei:/ falls euer gegner mind. 4 diener hat, übernehmt zufällig die kontrolle über einen davon.
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (p.enemyMinions.Count >= 4)
+            if (own.own)
             {
-                List<Minion> temp = new List<Minion>(p.enemyMinions);
-                temp.Sort((a, b) => a.Angr.CompareTo(b.Angr));//we take the weekest
-                Minion targett;
-                targett = temp[0];
-                if (targett.taunt && temp.Count >= 2 && !temp[1].taunt) targett = temp[1];
-                p.minionGetControlled(targett, true, false);
+                if (p.enemyMinions.Count >= 4)
+                {
+                    List<Minion> temp = new List<Minion>(p.enemyMinions);
+                    temp.Sort((a, b) => a.Angr.CompareTo(b.Angr));//we take the weekest
+                    Minion targett;
+                    targett = temp[0];
+                    if (targett.taunt && temp.Count >= 2 && !temp[1].taunt) targett = temp[1];
+                    p.minionGetControlled(targett, true, false);
 
+                }
+            }
+            else
+            {
+                if (p.ownMinions.Count >= 4)
+                {
+                    List<Minion> temp = new List<Minion>(p.ownMinions);
+                    temp.Sort((a, b) => a.Angr.CompareTo(b.Angr));//we take the weekest
+                    Minion targett;
+                    targett = temp[0];
+                    if (targett.taunt && temp.Count >= 2 && !temp[1].taunt) targett = temp[1];
+                    p.minionGetControlled(targett, false, false);
+
+                }
             }
         }
 
@@ -21945,11 +22075,11 @@ namespace HREngine.Bots
         {
             if (own.own)
             {
-                p.enemyMaxMana++;
+                p.enemyMaxMana = Math.Min(10, p.enemyMaxMana + 1);
             }
             else
             {
-                p.ownMaxMana++;
+                p.ownMaxMana = Math.Min(10, p.ownMaxMana + 1);
             }
         }
 
@@ -21995,7 +22125,7 @@ namespace HREngine.Bots
 
         public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
         {
-            if (c.type == CardDB.cardtype.SPELL)
+            if (c.type == CardDB.cardtype.SPELL && wasOwnCard == triggerEffectMinion.own)
             {
                 p.drawACard(CardDB.cardName.unknown, wasOwnCard);
             }
@@ -22054,7 +22184,7 @@ namespace HREngine.Bots
             {
                 List<Minion> temp2 = (turnStartOfOwner) ? p.enemyMinions : p.ownMinions;
                 bool dmgdone = false;
-                foreach (Minion mins in temp2.ToArray())
+                foreach (Minion mins in temp2)
                 {
                     p.minionGetDamageOrHeal(mins, 2);
                     dmgdone = true;
@@ -22130,7 +22260,7 @@ namespace HREngine.Bots
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
 
-            int pos = (own.own) ? p.ownMinions.Count : p.enemyMinions.Count;
+            int pos = (own.own) ? p.enemyMinions.Count : p.ownMinions.Count;
             p.callKid(kid, pos, !own.own);
             p.callKid(kid, pos, !own.own);
         }
@@ -22165,20 +22295,23 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             //attack right neightbor
-            if (ownplay && target.Angr > 0)
+            if (target.Angr > 0)
             {
                 int dmg = target.Angr;
+                List<Minion> temp = (ownplay) ? p.enemyMinions : p.ownMinions;
                 foreach (Minion m in p.enemyMinions)
                 {
                     if (m.zonepos + 1 == target.zonepos || m.zonepos - 1 == target.zonepos)
                     {
+                        int oldhp = m.Hp;
                         p.minionGetDamageOrHeal(m, dmg);
-                        if (!target.silenced && target.handcard.card.name == CardDB.cardName.waterelemental) m.frozen = true;
-                        if (!target.silenced && !m.immune && !m.divineshild && target.poisonous) p.minionGetDestroyed(m);
+                        if (!target.silenced && target.handcard.card.name == CardDB.cardName.waterelemental && m.Hp < oldhp) m.frozen = true;
+                        if (!target.silenced && m.Hp < oldhp && target.poisonous) p.minionGetDestroyed(m);
                     }
                 }
 
             }
+
         }
 
     }
@@ -22194,21 +22327,28 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in p.ownMinions)
                 {
-                    m.stealth = true;
-                    m.concedal = true;
+                    if (!m.stealth)
+                    {
+                        m.stealth = true;
+                        m.concedal = true;
+                    }
                 }
             }
             else
             {
                 foreach (Minion m in p.enemyMinions)
                 {
-                    m.stealth = true;
-                    m.concedal = true;
+                    if (!m.stealth)
+                    {
+                        m.stealth = true;
+                        m.concedal = true;
+                    }
                 }
             }
         }
 
     }
+
 
     class Sim_EX1_129 : SimTemplate //fanofknives
     {
@@ -22270,12 +22410,16 @@ namespace HREngine.Bots
 
     }
 
-    class Sim_EX1_613 : SimTemplate//edwin van cleefe
+    class Sim_EX1_133 : SimTemplate//pertitions blade
     {
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-        {
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_133);
 
-            p.minionGetBuffed(own, p.cardsPlayedThisTurn * 2, p.cardsPlayedThisTurn * 2);
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            int dmg = (ownplay) ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
+            if (p.cardsPlayedThisTurn >= 1) dmg = (ownplay) ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
+            p.minionGetDamageOrHeal(target, dmg);
+            p.equipWeapon(w, ownplay);
         }
 
     }
@@ -22317,7 +22461,7 @@ namespace HREngine.Bots
             {
                 p.minionGetDamageOrHeal(p.ownHero, dmg);
             }
-            if (p.cardsPlayedThisTurn >= 2) p.evaluatePenality -= 5;
+            if (p.cardsPlayedThisTurn >= 1) p.evaluatePenality -= 5;
         }
 
     }
@@ -22852,14 +22996,7 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            if (ownplay)
-            {
-                p.mana = Math.Min(p.mana + 2, 10);
-            }
-            else
-            {
-
-            }
+            p.mana = Math.Min(p.mana + 2, 10);
         }
 
     }
@@ -23036,6 +23173,7 @@ namespace HREngine.Bots
 
             p.callKid(kid, posi, ownplay);
             p.callKid(kid, posi, ownplay);
+            if (ownplay) p.ueberladung += 2;
         }
 
     }
@@ -23093,6 +23231,7 @@ namespace HREngine.Bots
                 i++;
                 if (i == 2) break;
             }
+            if (ownplay) p.ueberladung += 2;
         }
 
     }
@@ -23679,6 +23818,16 @@ namespace HREngine.Bots
                 p.ownHeroAblility.card = card;
                 p.ownHeroName = HeroEnum.lordjaraxxus;
                 p.ownHero.Hp = own.Hp;
+                p.ownHero.maxHp = own.maxHp;
+
+                p.equipWeapon(weapon, own.own);
+            }
+            else
+            {
+                p.enemyHeroAblility.card = card;
+                p.enemyHeroName = HeroEnum.lordjaraxxus;
+                p.enemyHero.Hp = own.Hp;
+                p.enemyHero.maxHp = own.maxHp;
 
                 p.equipWeapon(weapon, own.own);
             }
@@ -23857,13 +24006,14 @@ namespace HREngine.Bots
         //Stellt #8 Leben wieder her. Zieht 3 Karten.
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
+            int heal = (ownplay) ? p.getSpellHeal(8) : p.getEnemySpellHeal(8);
+            p.minionGetDamageOrHeal(target, -heal);
             for (int i = 0; i < 3; i++)
             {
                 //this.owncarddraw++;
                 p.drawACard(CardDB.cardName.unknown, ownplay);
             }
-            int heal = (ownplay) ? p.getSpellHeal(8) : p.getEnemySpellHeal(8);
-            p.minionGetDamageOrHeal(target, -heal);
+            
         }
 
     }
@@ -24003,7 +24153,11 @@ namespace HREngine.Bots
     {
 
         //
-
+        CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_383t);
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            p.equipWeapon(wcard, ownplay);
+        }
 
     }
 
@@ -24173,7 +24327,11 @@ namespace HREngine.Bots
     {
 
         //
-
+        CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_398t);
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            p.equipWeapon(wcard, ownplay);
+        }
     }
 
     class Sim_EX1_399 : SimTemplate //gurubashiberserker
@@ -24261,7 +24419,7 @@ namespace HREngine.Bots
             }
             else
             {
-                dmg = (p.enemyHero.Hp <= 12) ? p.getEnemySpellDamageDamage(2) : p.getEnemySpellDamageDamage(4);
+                dmg = (p.enemyHero.Hp <= 12) ? p.getEnemySpellDamageDamage(6) : p.getEnemySpellDamageDamage(4);
             }
             p.minionGetDamageOrHeal(target, dmg);
         }
@@ -24321,7 +24479,7 @@ namespace HREngine.Bots
         CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_411);
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            p.equipWeapon(wcard, true);
+            p.equipWeapon(wcard, ownplay);
         }
 
     }
@@ -24451,7 +24609,7 @@ namespace HREngine.Bots
         //    erhält jedes mal +1 angriff, wenn ein murloc herbeigerufen wird.
         public override void onMinionIsSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
-            if ((TAG_RACE)summonedMinion.handcard.card.race == TAG_RACE.MURLOC) triggerEffectMinion.Angr++;
+            if ((TAG_RACE)summonedMinion.handcard.card.race == TAG_RACE.MURLOC) p.minionGetBuffed(triggerEffectMinion, 1, 0);
         }
 
     }
@@ -24616,7 +24774,11 @@ namespace HREngine.Bots
             {
                 m.stealth = false;
             }
-            p.enemySecretCount = 0;
+            if (ownplay) p.enemySecretCount = 0;
+            else
+            {
+                p.ownSecretsIDList.Clear();
+            }
             p.drawACard(CardDB.cardName.unknown, ownplay);
         }
 
@@ -24684,14 +24846,23 @@ namespace HREngine.Bots
         //    kampfschrei:/ zerstört die waffe eures gegners. zieht ihrer haltbarkeit entsprechend karten.
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            p.enemyWeaponAttack = 0;
-            //this.owncarddraw += enemyWeaponDurability;
-            for (int i = 0; i < p.enemyWeaponDurability; i++)
+            if (own.own)
             {
-                p.drawACard(CardDB.cardName.unknown, true);
+                //this.owncarddraw += enemyWeaponDurability;
+                for (int i = 0; i < p.enemyWeaponDurability; i++)
+                {
+                    p.drawACard(CardDB.cardName.unknown, true);
+                }
+                p.lowerWeaponDurability(1000, false);
             }
-            p.enemyWeaponDurability = 0;
-            p.enemyWeaponName = CardDB.cardName.unknown;
+            else
+            {
+                for (int i = 0; i < p.enemyWeaponDurability; i++)
+                {
+                    p.drawACard(CardDB.cardName.unknown, false);
+                }
+                p.lowerWeaponDurability(1000, true);
+            }
         }
 
 
@@ -25302,9 +25473,8 @@ namespace HREngine.Bots
 
         public override void onMinionGotDmgTrigger(Playfield p, Minion triggerEffectMinion, bool ownDmgdmin)
         {
-            triggerEffectMinion.Angr++;
+            p.minionGetBuffed(triggerEffectMinion, 1, 0);
         }
-
     }
 
     class Sim_EX1_606 : SimTemplate //shieldblock
@@ -25407,16 +25577,13 @@ namespace HREngine.Bots
 
     }
 
-    class Sim_EX1_133 : SimTemplate//pertitions blade
+    class Sim_EX1_613 : SimTemplate//edwin van cleefe
     {
-        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_133);
-
-        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            int dmg = (ownplay) ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
-            if (p.cardsPlayedThisTurn >= 1) dmg = (ownplay) ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
-            p.minionGetDamageOrHeal(target, dmg);
-            p.equipWeapon(w, ownplay);
+
+            if (own.own) p.minionGetBuffed(own, p.cardsPlayedThisTurn * 2, p.cardsPlayedThisTurn * 2);
+            else p.minionGetBuffed(own, p.enemyAnzCards * 2, p.enemyAnzCards * 2);
         }
 
     }
@@ -25468,9 +25635,9 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            List<Minion> temp2 = new List<Minion>(p.enemyMinions);
+            List<Minion> temp2 = (ownplay) ? new List<Minion>(p.enemyMinions) : new List<Minion>(p.ownMinions);
             temp2.Sort((a, b) => a.Angr.CompareTo(b.Angr));
-            foreach (Minion enemy in temp2.ToArray())
+            foreach (Minion enemy in temp2)
             {
                 p.minionGetDestroyed(enemy);
                 break;
@@ -25565,15 +25732,29 @@ namespace HREngine.Bots
         CardDB.Card shatter = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_625t2);
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            if (p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001) // lesser heal becomes mind spike
+            if (ownplay)
             {
-                p.ownHeroAblility.card = mindspike;
-                p.ownAbilityReady = true;
+                if (p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001) // lesser heal becomes mind spike
+                {
+                    p.ownHeroAblility.card = mindspike;
+                    p.ownAbilityReady = true;
+                }
+                else
+                {
+                    p.ownHeroAblility.card = shatter;  // mindspike becomes mind shatter
+                    p.ownAbilityReady = true;
+                }
             }
             else
             {
-                p.ownHeroAblility.card = shatter;  // mindspike becomes mind shatter
-                p.ownAbilityReady = true;
+                if (p.enemyHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001) // lesser heal becomes mind spike
+                {
+                    p.enemyHeroAblility.card = mindspike;
+                }
+                else
+                {
+                    p.enemyHeroAblility.card = shatter;  // mindspike becomes mind shatter
+                }
             }
         }
 
@@ -25586,9 +25767,17 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            p.minionGetDamageOrHeal(target, 2);
+            int dmg = 2;
+            if (ownplay)
+            {
+                if (p.doublepriest >= 1) dmg *= (2 * p.doublepriest);
+            }
+            else
+            {
+                if (p.enemydoublepriest >= 1) dmg *= (2 * p.enemydoublepriest);
+            }
+            p.minionGetDamageOrHeal(target, dmg);
         }
-
     }
 
     class Sim_EX1_625t2 : SimTemplate //mindshatter
@@ -25598,9 +25787,17 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            p.minionGetDamageOrHeal(target, 3);
+            int dmg = 3;
+            if (ownplay)
+            {
+                if (p.doublepriest >= 1) dmg *= (2 * p.doublepriest);
+            }
+            else
+            {
+                if (p.enemydoublepriest >= 1) dmg *= (2 * p.enemydoublepriest);
+            }
+            p.minionGetDamageOrHeal(target, dmg);
         }
-
     }
 
     class Sim_EX1_626 : SimTemplate //massdispel
@@ -25862,7 +26059,7 @@ namespace HREngine.Bots
         //    todesröcheln:/ fügt eurer hand ein zufälliges wildtier hinzu.
         public override void onDeathrattle(Playfield p, Minion m)
         {
-            p.drawACard(CardDB.cardName.rivercrocolisk, m.own);
+            p.drawACard(CardDB.cardName.rivercrocolisk, m.own, true);
         }
 
     }
@@ -26025,6 +26222,13 @@ namespace HREngine.Bots
 
     class Sim_FP1_021 : SimTemplate//Death's Bite
     {
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.FP1_021);
+
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            p.equipWeapon(w, ownplay);
+        }
+
         public override void onDeathrattle(Playfield p, Minion m)
         {
             p.allMinionsGetDamage(1);
@@ -26389,20 +26593,9 @@ namespace HREngine.Bots
             if (turnStartOfOwner == triggerEffectMinion.own)
             {
                 p.minionGetDestroyed(triggerEffectMinion);
-                if (turnStartOfOwner)
-                {
-                    //this.owncarddraw += 3;
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                }
-                else
-                {
-                    //this.enemycarddraw += 3 ;
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                }
+                p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
+                p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
+                p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
             }
         }
 
@@ -26579,10 +26772,29 @@ namespace HREngine.Bots
             p.anzMurlocWarleader = 0;
             p.anzGrimscaleOracle = 0;
             p.anzOwnAuchenaiSoulpriest = 0;
+            p.anzEnemyAuchenaiSoulpriest = 0;
             p.anzOwnsorcerersapprentice = 0;
             p.anzOwnsorcerersapprenticeStarted = 0;
             p.anzEnemysorcerersapprentice = 0;
             p.anzEnemysorcerersapprenticeStarted = 0;
+            p.anzOwnSouthseacaptain = 0;
+            p.anzEnemySouthseacaptain = 0;
+            p.doublepriest = 0;
+            p.enemydoublepriest = 0;
+            p.ownBaronRivendare = 0;
+            p.enemyBaronRivendare = 0;
+
+            p.spellpower = 0;
+            p.enemyspellpower = 0;
+
+
+
+            p.winzigebeschwoererin = 0;
+            p.managespenst = 0;
+            p.soeldnerDerVenture = 0;
+            p.beschwoerungsportal = 0;
+            p.nerubarweblord = 0;
+
             foreach (Minion m in p.ownMinions)
             {
                 p.drawACard(m.name, true, true);
@@ -26595,6 +26807,7 @@ namespace HREngine.Bots
             p.enemyMinions.Clear();
 
         }
+
 
     }
 

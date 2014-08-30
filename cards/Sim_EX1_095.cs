@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
         public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
         {
-            if (c.type == CardDB.cardtype.SPELL)
+            if (c.type == CardDB.cardtype.SPELL && wasOwnCard == triggerEffectMinion.own)
             {
                 p.drawACard(CardDB.cardName.unknown, wasOwnCard);
             }

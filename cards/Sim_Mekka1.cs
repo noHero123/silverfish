@@ -14,20 +14,9 @@ namespace HREngine.Bots
             if (turnStartOfOwner == triggerEffectMinion.own)
             {
                 p.minionGetDestroyed(triggerEffectMinion);
-                if (turnStartOfOwner)
-                {
-                    //this.owncarddraw += 3;
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                }
-                else
-                {
-                    //this.enemycarddraw += 3 ;
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                    p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
-                }
+                p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
+                p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
+                p.drawACard(CardDB.cardName.unknown, turnStartOfOwner);
             }
         }
 

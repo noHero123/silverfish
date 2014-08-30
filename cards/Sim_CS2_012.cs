@@ -24,17 +24,18 @@ namespace HREngine.Bots
             }
             if (ownplay)
             {
-                if (p.ownHero.entitiyID != target.entitiyID)
-                {
-                    p.minionGetDamageOrHeal(p.ownHero, dmg);
-                }
-            }
-            else
-            {
                 if (p.enemyHero.entitiyID != target.entitiyID)
                 {
                     p.minionGetDamageOrHeal(p.enemyHero, dmg);
                 }
+            }
+            else
+            {
+                if (p.ownHero.entitiyID != target.entitiyID)
+                {
+                    p.minionGetDamageOrHeal(p.ownHero, dmg);
+                }
+                
             }
 		}
 
