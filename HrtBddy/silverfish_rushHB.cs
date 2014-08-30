@@ -9,9 +9,9 @@ using Triton.Game.Mapping;
 
 //using System.Linq;
 
-namespace SilverfishControl
+namespace SilverfishRush
 {
-    public class SilverControl : ICustomDeck
+    public class SilverRush : ICustomDeck
     {
         private int dirtyTargetSource = -1;
         private int stopAfterWins = 30;
@@ -34,7 +34,7 @@ namespace SilverfishControl
         int wins = 0;
         int loses = 0;
 
-        public SilverControl()
+        public SilverRush()
         {
             bool concede = false;
             bool writeToSingleFile = false;
