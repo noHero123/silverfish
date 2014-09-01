@@ -53,7 +53,7 @@ namespace SilverfishRush
             Helpfunctions.Instance.ErrorLog("set maxwide to: " + mxwde);
 
             Ai.Instance.setTwoTurnSimulation(false, 500);
-            Helpfunctions.Instance.ErrorLog("calculate the second turn of the " + twotsamount + " best boards");
+            Helpfunctions.Instance.ErrorLog("calculate the second turn of the 500 best boards");
 
             bool playaround = false;
             if (playaround)
