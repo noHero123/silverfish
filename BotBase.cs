@@ -134,13 +134,11 @@ namespace HREngine.Bots
 
             try
             {
-                bool twots = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurns") == "true") ? true : false;
-                if (twots)
-                {
-                    Ai.Instance.setTwoTurnSimulation(twots);
-                    Helpfunctions.Instance.ErrorLog("activated two turn simulation");
-                }
-
+                //bool twots = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurns") == "true") ? true : false;
+                int twotsamount = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurnCounter")));
+                if (twotsamount < 0) twotsamount = 0;
+                Ai.Instance.setTwoTurnSimulation(false, twotsamount);
+                Helpfunctions.Instance.ErrorLog("calculate the second turn of the " + twotsamount + " best boards");
 
 
             }

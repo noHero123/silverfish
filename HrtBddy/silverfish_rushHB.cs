@@ -52,12 +52,8 @@ namespace SilverfishRush
             Ai.Instance.setMaxWide(mxwde);
             Helpfunctions.Instance.ErrorLog("set maxwide to: " + mxwde);
 
-            bool twots = false;
-            if (twots)
-            {
-                Ai.Instance.setTwoTurnSimulation(twots);
-                Helpfunctions.Instance.ErrorLog("activated two turn simulation");
-            }
+            Ai.Instance.setTwoTurnSimulation(false, 500);
+            Helpfunctions.Instance.ErrorLog("calculate the second turn of the " + twotsamount + " best boards");
 
             bool playaround = false;
             if (playaround)
@@ -514,7 +510,7 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha11";
+        public string versionnumber = "110alpha12";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -5562,9 +5558,9 @@ namespace SilverfishRush
             this.mainTurnSimulator.updateParams(maxdeep, maxwide, 0);
         }
 
-        public void setTwoTurnSimulation(bool stts)
+        public void setTwoTurnSimulation(bool stts, int amount)
         {
-            this.mainTurnSimulator.setSecondTurnSimu(stts);
+            this.mainTurnSimulator.setSecondTurnSimu(stts, amount);
             this.secondturnsim = stts;
         }
 
@@ -5839,6 +5835,8 @@ namespace SilverfishRush
         private bool printNormalstuff = false;
 
         List<Playfield> posmoves = new List<Playfield>(7000);
+        List<Playfield> twoturnfields = new List<Playfield>(500);
+        public int dirtyTwoTurnSim = 500;
 
         public Action bestmove = null;
         public int bestmoveValue = 0;
@@ -5878,9 +5876,10 @@ namespace SilverfishRush
             this.printNormalstuff = sp;
         }
 
-        public void setSecondTurnSimu(bool sts)
+        public void setSecondTurnSimu(bool sts, int amount)
         {
-            this.simulateSecondTurn = sts;
+            //this.simulateSecondTurn = sts;
+            this.dirtyTwoTurnSim = amount;
         }
 
         public void setPlayAround(bool spa, int pprob, int pprob2)
@@ -5898,6 +5897,7 @@ namespace SilverfishRush
                 if (pf.isEqual(p, false)) return;
             }*/
             this.posmoves.Add(pf);
+
             //posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
             //if (posmoves.Count > this.maxwide) posmoves.RemoveAt(this.maxwide);
             if (this.totalboards >= 1)
@@ -5912,6 +5912,7 @@ namespace SilverfishRush
             if (botBase == null) botBase = Ai.Instance.botBase;
             bool test = false;
             this.posmoves.Clear();
+            this.twoturnfields.Clear();
             this.addToPosmoves(playf);
             bool havedonesomething = true;
             List<Playfield> temp = new List<Playfield>();
@@ -5939,6 +5940,7 @@ namespace SilverfishRush
                     List<Action> actions = movegen.getMoveList(p, isLethalCheck, usePenalityManager, useCutingTargets);
                     foreach (Action a in actions)
                     {
+                        //if (deep == 0 && a.actionType == actionEnum.playcard) Helpfunctions.Instance.ErrorLog("play " + a.card.card.name);
                         havedonesomething = true;
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
@@ -6016,6 +6018,12 @@ namespace SilverfishRush
                     }
                 }
             }
+
+            // search the best play...........................................................
+
+            //do dirtytwoturnsim first :D
+            if (!isLethalCheck) doDirtyTwoTurnsim();
+
             // Helpfunctions.Instance.logg("find best ");
             if (posmoves.Count >= 1)
             {
@@ -6047,6 +6055,22 @@ namespace SilverfishRush
             this.bestboard = playf;
             return -10000;
         }
+
+
+        public void doDirtyTwoTurnsim()
+        {
+            //return;
+            if (this.dirtyTwoTurnSim == 0) return;
+            this.posmoves.Clear();
+            foreach (Playfield p in this.twoturnfields)
+            {
+                p.value = int.MinValue;
+                Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                this.posmoves.Add(p);
+            }
+
+        }
+
 
         public void cuttingposibilities()
         {
@@ -6096,6 +6120,16 @@ namespace SilverfishRush
             }
             posmoves.Clear();
             posmoves.AddRange(temp.GetRange(0, Math.Min(takenumber, temp.Count)));
+
+            //twoturnfields!
+            temp.Clear();
+            temp.AddRange(this.twoturnfields);
+            temp.AddRange(posmoves.GetRange(0, Math.Min(this.dirtyTwoTurnSim, posmoves.Count)));
+            temp.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));
+            this.twoturnfields.Clear();
+            this.twoturnfields.AddRange(temp.GetRange(0, Math.Min(this.dirtyTwoTurnSim, temp.Count)));
+            //Helpfunctions.Instance.ErrorLog(this.twoturnfields.Count + "");
+
             //posmoves.Clear();
             //posmoves.AddRange(Helpfunctions.TakeList(temp, takenumber));
 
@@ -8181,7 +8215,7 @@ namespace SilverfishRush
 
             help.logg("ownhero:");
             help.logg(this.heroname + " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entitiyID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack);
-            help.logg("weapon " + heroWeaponAttack + " " + heroWeaponDurability + " " + ownHeroWeapon);
+            help.logg("weapon: " + heroWeaponAttack + " " + heroWeaponDurability + " " + ownHeroWeapon);
             help.logg("ability: " + this.ownAbilityisReady + " " + this.heroAbility.cardIDenum);
             string secs = "";
             foreach (CardDB.cardIDEnum sec in this.ownSecretList)

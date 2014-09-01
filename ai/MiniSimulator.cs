@@ -21,6 +21,8 @@ namespace HREngine.Bots
         private bool printNormalstuff = false;
 
         List<Playfield> posmoves = new List<Playfield>(7000);
+        List<Playfield> twoturnfields = new List<Playfield>(500);
+        public int dirtyTwoTurnSim = 500;
 
         public Action bestmove = null;
         public int bestmoveValue = 0;
@@ -60,9 +62,10 @@ namespace HREngine.Bots
             this.printNormalstuff = sp;
         }
 
-        public void setSecondTurnSimu(bool sts)
+        public void setSecondTurnSimu(bool sts, int amount)
         {
-            this.simulateSecondTurn = sts;
+            //this.simulateSecondTurn = sts;
+            this.dirtyTwoTurnSim = amount;
         }
 
         public void setPlayAround(bool spa, int pprob, int pprob2)
@@ -80,6 +83,7 @@ namespace HREngine.Bots
                 if (pf.isEqual(p, false)) return;
             }*/
             this.posmoves.Add(pf);
+
             //posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
             //if (posmoves.Count > this.maxwide) posmoves.RemoveAt(this.maxwide);
             if (this.totalboards >= 1)
@@ -94,6 +98,7 @@ namespace HREngine.Bots
             if (botBase == null) botBase = Ai.Instance.botBase;
             bool test = false;
             this.posmoves.Clear();
+            this.twoturnfields.Clear();
             this.addToPosmoves(playf);
             bool havedonesomething = true;
             List<Playfield> temp = new List<Playfield>();
@@ -121,6 +126,7 @@ namespace HREngine.Bots
                     List<Action> actions = movegen.getMoveList(p, isLethalCheck, usePenalityManager, useCutingTargets);
                     foreach (Action a in actions)
                     {
+                        //if (deep == 0 && a.actionType == actionEnum.playcard) Helpfunctions.Instance.ErrorLog("play " + a.card.card.name);
                         havedonesomething = true;
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
@@ -134,7 +140,7 @@ namespace HREngine.Bots
                     }
                     else
                     {
-                        p.endTurn(this.simulateSecondTurn, this.playaround,false, this.playaroundprob, this.playaroundprob2);
+                        p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
                     }
 
                     //sort stupid stuff ouf
@@ -194,10 +200,16 @@ namespace HREngine.Bots
                     }
                     else
                     {
-                        p.endTurn(this.simulateSecondTurn, this.playaround,false, this.playaroundprob, this.playaroundprob2);
+                        p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
                     }
                 }
             }
+
+            // search the best play...........................................................
+
+            //do dirtytwoturnsim first :D
+            if (!isLethalCheck) doDirtyTwoTurnsim();
+
             // Helpfunctions.Instance.logg("find best ");
             if (posmoves.Count >= 1)
             {
@@ -229,6 +241,22 @@ namespace HREngine.Bots
             this.bestboard = playf;
             return -10000;
         }
+
+
+        public void doDirtyTwoTurnsim()
+        {
+            //return;
+            if (this.dirtyTwoTurnSim == 0) return;
+            this.posmoves.Clear();
+            foreach (Playfield p in this.twoturnfields)
+            {
+                p.value = int.MinValue;
+                Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                this.posmoves.Add(p);
+            }
+
+        }
+
 
         public void cuttingposibilities()
         {
@@ -278,6 +306,16 @@ namespace HREngine.Bots
             }
             posmoves.Clear();
             posmoves.AddRange(temp.GetRange(0, Math.Min(takenumber, temp.Count)));
+
+            //twoturnfields!
+            temp.Clear();
+            temp.AddRange(this.twoturnfields);
+            temp.AddRange(posmoves.GetRange(0, Math.Min(this.dirtyTwoTurnSim, posmoves.Count)));
+            temp.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));
+            this.twoturnfields.Clear();
+            this.twoturnfields.AddRange(temp.GetRange(0, Math.Min(this.dirtyTwoTurnSim, temp.Count)));
+            //Helpfunctions.Instance.ErrorLog(this.twoturnfields.Count + "");
+
             //posmoves.Clear();
             //posmoves.AddRange(Helpfunctions.TakeList(temp, takenumber));
 

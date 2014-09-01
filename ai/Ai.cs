@@ -71,9 +71,9 @@ namespace HREngine.Bots
             this.mainTurnSimulator.updateParams(maxdeep, maxwide, 0);
         }
 
-        public void setTwoTurnSimulation(bool stts)
+        public void setTwoTurnSimulation(bool stts, int amount)
         {
-            this.mainTurnSimulator.setSecondTurnSimu(stts);
+            this.mainTurnSimulator.setSecondTurnSimu(stts, amount);
             this.secondturnsim = stts;
         }
 
@@ -105,7 +105,7 @@ namespace HREngine.Bots
                 this.nextMoveGuess = new Playfield();
 
                 this.nextMoveGuess.doAction(bestmove);
-               
+
                 this.bestboard.playactions.RemoveAt(0);
             }
             else
@@ -237,7 +237,7 @@ namespace HREngine.Bots
 
             help.logg("bestfield");
             bestboard.printBoard();
-            if(printstuff) simmulateWholeTurn();
+            if (printstuff) simmulateWholeTurn();
         }
 
         public void simmulateWholeTurn()
