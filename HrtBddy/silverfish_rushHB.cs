@@ -514,7 +514,7 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha10";
+        public string versionnumber = "110alpha11";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -3334,7 +3334,7 @@ namespace SilverfishRush
                 }
             }
 
-
+            this.doDmgTriggers();
         }
 
 
@@ -20586,11 +20586,10 @@ namespace SilverfishRush
     {
 
         //    vernichtet einen diener mit max. 3 angriff.
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             p.minionGetDestroyed(target);
         }
-
 
     }
 

@@ -8,7 +8,7 @@ namespace HREngine.Bots
 	{
 
 //    vernichtet einen diener mit max. 3 angriff.
-		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
             p.minionGetDestroyed(target);
 		}

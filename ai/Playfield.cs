@@ -1770,7 +1770,7 @@ namespace HREngine.Bots
                 }
             }
 
-
+            this.doDmgTriggers();
         }
 
 
