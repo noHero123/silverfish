@@ -103,6 +103,10 @@ namespace HREngine.Bots
             if (botbase is BehaviorControl) this.botbehave = "control";
             if (Ai.Instance.secondTurnAmount>0)
             {
+                if (Ai.Instance.nextMoveGuess.mana == -100)
+                {
+                    Ai.Instance.updateTwoTurnSim();
+                }
                 this.botbehave += " twoturnsim " + Ai.Instance.mainTurnSimulator.dirtyTwoTurnSim;
             }
             if (Ai.Instance.playaround)
