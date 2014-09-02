@@ -197,7 +197,6 @@ namespace HREngine.Bots
                 Ai.Instance.autoTester(behave, printstuff);
             }
             writeSettings();
-            writeUnixTimestamp();
         }
 
         int lossedtodo = 0;
@@ -220,7 +219,6 @@ namespace HREngine.Bots
             {
                 this.oldwin = totalwin;
                 Helpfunctions.Instance.ErrorLog("not today!! (you won a game)");
-                KeepConcede++;
                 this.isgoingtoconcede = true;
                 return true;
             }
@@ -229,7 +227,6 @@ namespace HREngine.Bots
             {
                 this.lossedtodo--;
                 Helpfunctions.Instance.ErrorLog("not today!");
-                KeepConcede++;
                 this.isgoingtoconcede = true;
                 return true;
             }
@@ -238,7 +235,6 @@ namespace HREngine.Bots
             {
                 this.lossedtodo = 3;
                 Helpfunctions.Instance.ErrorLog("not today!!!");
-                KeepConcede++;
                 this.isgoingtoconcede = true;
                 return true;
             }
@@ -251,7 +247,6 @@ namespace HREngine.Bots
             if (Mulligan.Instance.shouldConcede(Hrtprozis.Instance.heroNametoEnum(ownh), Hrtprozis.Instance.heroNametoEnum(enemyh)))
             {
                 Helpfunctions.Instance.ErrorLog("not today!!!!");
-                KeepConcede++;
                 writeSettings();
                 this.isgoingtoconcede = true;
                 return true;
@@ -475,7 +470,6 @@ namespace HREngine.Bots
 
                 if (this.isgoingtoconcede)
                 {
-                    this.isgoingtoconcede = false;
                     return new HREngine.API.Actions.ConcedeAction();
                 }
 
@@ -599,8 +593,6 @@ namespace HREngine.Bots
 
                 this.printlearnmode = sf.updateEverything(behave);
 
-                this.writeUnixTimestamp();
-
                 if (this.learnmode)
                 {
                     if (this.printlearnmode)
@@ -614,6 +606,7 @@ namespace HREngine.Bots
                 if (Ai.Instance.bestmoveValue <= -900) { return new HREngine.API.Actions.ConcedeAction(); }
 
                 Action moveTodo = Ai.Instance.bestmove;
+
                 if (moveTodo == null)
                 {
                     Helpfunctions.Instance.ErrorLog("end turn");
@@ -725,22 +718,14 @@ namespace HREngine.Bots
             //HRBattle.FinishRound();
         }
 
-        public void writeUnixTimestamp()
-        {
-            System.IO.File.WriteAllText(Settings.Instance.path + "lastActivity.txt", "" + UnixTimeNow());
-        }
-
-        public long UnixTimeNow()
-        {
-            var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
-            return (long)timeSpan.TotalSeconds;
-        }
-
         private HREngine.API.Actions.ActionBase HandleWining()
         {
             this.wins++;
+            if (this.isgoingtoconcede)
+            {
+                this.isgoingtoconcede = false;
+            }
             writeSettings();
-            writeUnixTimestamp();
             int totalwin = this.wins;
             int totallose = this.loses;
             if ((totalwin + totallose - KeepConcede) != 0)
@@ -766,8 +751,12 @@ namespace HREngine.Bots
         private HREngine.API.Actions.ActionBase HandleLosing()
         {
             this.loses++;
+            if (this.isgoingtoconcede)
+            {
+                this.isgoingtoconcede = false;
+                this.KeepConcede++;
+            }
             writeSettings();
-            writeUnixTimestamp();
             int totalwin = this.wins;
             int totallose = this.loses;
             if ((totalwin + totallose - KeepConcede) != 0)
@@ -843,7 +832,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha12";
+        public string versionnumber = "110alpha13";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -933,8 +922,19 @@ namespace HREngine.Bots
         {
             this.botbehave = "rush";
             if (botbase is BehaviorControl) this.botbehave = "control";
-            if (Ai.Instance.secondturnsim) this.botbehave += " twoturnsim";
-            if (Ai.Instance.playaround) this.botbehave += " playaround";
+            if (Ai.Instance.secondTurnAmount > 0)
+            {
+                if (Ai.Instance.nextMoveGuess.mana == -100)
+                {
+                    Ai.Instance.updateTwoTurnSim();
+                }
+                this.botbehave += " twoturnsim " + Ai.Instance.mainTurnSimulator.dirtyTwoTurnSim;
+            }
+            if (Ai.Instance.playaround)
+            {
+                this.botbehave += " playaround";
+                this.botbehave += " " + Ai.Instance.playaroundprob + " " + Ai.Instance.playaroundprob2;
+            }
             HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
             HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
             ownPlayerController = ownPlayer.GetHero().GetControllerId();//ownPlayer.GetHero().GetControllerId()
@@ -1461,7 +1461,11 @@ namespace HREngine.Bots
             Probabilitymaker.Instance.setOwnCards(ownCards);
             Probabilitymaker.Instance.setEnemyCards(enemyCards);
             bool isTurnStart = false;
-            if (Ai.Instance.nextMoveGuess.mana == -1) isTurnStart = true;
+            if (Ai.Instance.nextMoveGuess.mana == -100)
+            {
+                isTurnStart = true;
+                Ai.Instance.updateTwoTurnSim();
+            }
             Probabilitymaker.Instance.setGraveYard(graveYard, isTurnStart);
 
         }
@@ -5893,9 +5897,10 @@ namespace HREngine.Bots
         private bool useLethalCheck = true;
         private bool useComparison = true;
         public int playaroundprob = 40;
+        public int playaroundprob2 = 80;
 
         public MiniSimulatorNextTurn nextTurnSimulator;
-        MiniSimulator mainTurnSimulator;
+        public MiniSimulator mainTurnSimulator;
 
         public EnemyTurnSimulator enemyTurnSim;
 
@@ -5914,6 +5919,7 @@ namespace HREngine.Bots
         public Behavior botBase = null;
 
         public bool secondturnsim = false;
+        public int secondTurnAmount = 256;
         public bool playaround = false;
 
         private static Ai instance;
@@ -5933,7 +5939,7 @@ namespace HREngine.Bots
         private Ai()
         {
             this.nextMoveGuess = new Playfield();
-            this.nextMoveGuess.mana = -1;
+            this.nextMoveGuess.mana = -100;
             this.nextTurnSimulator = new MiniSimulatorNextTurn();
             this.mainTurnSimulator = new MiniSimulator(maxdeep, maxwide, 0); // 0 for unlimited
             this.enemyTurnSim = new EnemyTurnSimulator();
@@ -5951,6 +5957,12 @@ namespace HREngine.Bots
         {
             this.mainTurnSimulator.setSecondTurnSimu(stts, amount);
             this.secondturnsim = stts;
+            this.secondTurnAmount = amount;
+        }
+
+        public void updateTwoTurnSim()
+        {
+            this.mainTurnSimulator.setSecondTurnSimu(this.secondturnsim, this.secondTurnAmount);
         }
 
         public void setPlayAround(bool spa, int pprob, int pprob2)
@@ -5958,6 +5970,7 @@ namespace HREngine.Bots
             this.mainTurnSimulator.setPlayAround(spa, pprob, pprob2);
             this.playaround = spa;
             this.playaroundprob = pprob;
+            this.playaroundprob2 = pprob2;
         }
 
         private void doallmoves(bool test, bool isLethalCheck)
@@ -5986,7 +5999,7 @@ namespace HREngine.Bots
             }
             else
             {
-                nextMoveGuess.mana = -1;
+                nextMoveGuess.mana = -100;
             }
 
         }
@@ -6007,7 +6020,7 @@ namespace HREngine.Bots
             }
             else
             {
-                nextMoveGuess.mana = -1;
+                nextMoveGuess.mana = -100;
             }
 
         }
@@ -6132,7 +6145,7 @@ namespace HREngine.Bots
             }
             else
             {
-                tempbestboard.mana = -1;
+                tempbestboard.mana = -100;
             }
             help.logg("-------------");
             tempbestboard.printBoard();
@@ -6152,7 +6165,7 @@ namespace HREngine.Bots
                 }
                 else
                 {
-                    tempbestboard.mana = -1;
+                    tempbestboard.mana = -100;
                 }
                 help.logg("-------------");
                 tempbestboard.printBoard();
@@ -6181,7 +6194,7 @@ namespace HREngine.Bots
             }
             else
             {
-                tempbestboard.mana = -1;
+                tempbestboard.mana = -100;
                 help.ErrorLog("end turn");
             }
 
@@ -6198,7 +6211,7 @@ namespace HREngine.Bots
                 }
                 else
                 {
-                    tempbestboard.mana = -1;
+                    tempbestboard.mana = -100;
                     help.ErrorLog("end turn");
                 }
             }
@@ -6225,7 +6238,7 @@ namespace HREngine.Bots
 
         List<Playfield> posmoves = new List<Playfield>(7000);
         List<Playfield> twoturnfields = new List<Playfield>(500);
-        public int dirtyTwoTurnSim = 500;
+        public int dirtyTwoTurnSim = 256;
 
         public Action bestmove = null;
         public int bestmoveValue = 0;
@@ -6413,6 +6426,8 @@ namespace HREngine.Bots
             //do dirtytwoturnsim first :D
             if (!isLethalCheck) doDirtyTwoTurnsim();
 
+            if (!isLethalCheck) this.dirtyTwoTurnSim /= 2;
+
             // Helpfunctions.Instance.logg("find best ");
             if (posmoves.Count >= 1)
             {
@@ -6516,7 +6531,50 @@ namespace HREngine.Bots
             temp.AddRange(posmoves.GetRange(0, Math.Min(this.dirtyTwoTurnSim, posmoves.Count)));
             temp.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));
             this.twoturnfields.Clear();
-            this.twoturnfields.AddRange(temp.GetRange(0, Math.Min(this.dirtyTwoTurnSim, temp.Count)));
+
+            if (this.useComparison)
+            {
+                int i = 0;
+                int max = Math.Min(temp.Count, this.dirtyTwoTurnSim);
+
+                Playfield p = null;
+                Playfield pp = null;
+                //foreach (Playfield p in posmoves)
+                for (i = 0; i < max; i++)
+                {
+                    p = temp[i];
+                    int hash = p.GetHashCode();
+                    p.hashcode = hash;
+                    bool found = false;
+                    //foreach (Playfield pp in temp)
+                    for (int j = 0; j < twoturnfields.Count; j++)
+                    {
+                        pp = twoturnfields[j];
+                        if (pp.hashcode == p.hashcode)
+                        {
+                            if (pp.isEqualf(p))
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!found) twoturnfields.Add(p);
+                    //i++;
+                    //if (i >= this.maxwide) break;
+
+                }
+
+
+            }
+
+
+
+
+
+
+            //this.twoturnfields.AddRange(temp.GetRange(0, Math.Min(this.dirtyTwoTurnSim, temp.Count)));
+
             //Helpfunctions.Instance.ErrorLog(this.twoturnfields.Count + "");
 
             //posmoves.Clear();
@@ -19052,11 +19110,6 @@ namespace HREngine.Bots
                     this.tempAttack += 2;
                     this.immune = true;
                 }
-                if (me.CARDID == CardDB.cardIDEnum.CS2_103e2) //Sturmangriff
-                {
-                    this.tempAttack += 2;
-                    this.charge++;
-                }
                 if (me.CARDID == CardDB.cardIDEnum.CS2_005o) //Claw
                 {
                     this.tempAttack += 2;
@@ -19070,7 +19123,6 @@ namespace HREngine.Bots
         }
 
     }
-
 
     public enum TAG_MULLIGAN
     {

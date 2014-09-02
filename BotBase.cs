@@ -193,7 +193,6 @@ namespace HREngine.Bots
                 Ai.Instance.autoTester(behave, printstuff);
             }
             writeSettings();
-            writeUnixTimestamp();
         }
 
         int lossedtodo = 0;
@@ -216,7 +215,6 @@ namespace HREngine.Bots
             {
                 this.oldwin = totalwin;
                 Helpfunctions.Instance.ErrorLog("not today!! (you won a game)");
-                KeepConcede++;
                 this.isgoingtoconcede = true;
                 return true;
             }
@@ -225,7 +223,6 @@ namespace HREngine.Bots
             {
                 this.lossedtodo--;
                 Helpfunctions.Instance.ErrorLog("not today!");
-                KeepConcede++;
                 this.isgoingtoconcede = true;
                 return true;
             }
@@ -234,7 +231,6 @@ namespace HREngine.Bots
             {
                 this.lossedtodo = 3;
                 Helpfunctions.Instance.ErrorLog("not today!!!");
-                KeepConcede++;
                 this.isgoingtoconcede = true;
                 return true;
             }
@@ -247,7 +243,6 @@ namespace HREngine.Bots
             if (Mulligan.Instance.shouldConcede(Hrtprozis.Instance.heroNametoEnum(ownh), Hrtprozis.Instance.heroNametoEnum(enemyh)))
             {
                 Helpfunctions.Instance.ErrorLog("not today!!!!");
-                KeepConcede++;
                 writeSettings();
                 this.isgoingtoconcede = true;
                 return true;
@@ -471,7 +466,6 @@ namespace HREngine.Bots
 
                 if (this.isgoingtoconcede)
                 {
-                    this.isgoingtoconcede = false;
                     return new HREngine.API.Actions.ConcedeAction();
                 }
 
@@ -594,8 +588,6 @@ namespace HREngine.Bots
                 }
 
                 this.printlearnmode = sf.updateEverything(behave);
-
-                this.writeUnixTimestamp();
 
                 if (this.learnmode)
                 {
@@ -722,22 +714,14 @@ namespace HREngine.Bots
             //HRBattle.FinishRound();
         }
 
-        public void writeUnixTimestamp()
-        {
-            System.IO.File.WriteAllText(Settings.Instance.path + "lastActivity.txt", ""+UnixTimeNow());
-        }
-
-        public long UnixTimeNow()
-        {
-            var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
-            return (long)timeSpan.TotalSeconds;
-        }
-
         private HREngine.API.Actions.ActionBase HandleWining()
         {
             this.wins++;
+            if (this.isgoingtoconcede)
+            {
+                this.isgoingtoconcede = false;
+            }
             writeSettings();
-            writeUnixTimestamp();
             int totalwin = this.wins;
             int totallose = this.loses;
             if ((totalwin + totallose - KeepConcede) != 0)
@@ -763,8 +747,12 @@ namespace HREngine.Bots
         private HREngine.API.Actions.ActionBase HandleLosing()
         {
             this.loses++;
+            if (this.isgoingtoconcede)
+            {
+                this.isgoingtoconcede = false;
+                this.KeepConcede++;
+            }
             writeSettings();
-            writeUnixTimestamp();
             int totalwin = this.wins;
             int totallose = this.loses;
             if ((totalwin + totallose - KeepConcede) != 0)

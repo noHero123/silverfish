@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha12";
+        public string versionnumber = "110alpha13";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -101,8 +101,15 @@ namespace HREngine.Bots
         {
             this.botbehave = "rush";
             if (botbase is BehaviorControl) this.botbehave = "control";
-            if (Ai.Instance.secondturnsim) this.botbehave += " twoturnsim";
-            if (Ai.Instance.playaround) this.botbehave += " playaround";
+            if (Ai.Instance.secondTurnAmount>0)
+            {
+                this.botbehave += " twoturnsim " + Ai.Instance.mainTurnSimulator.dirtyTwoTurnSim;
+            }
+            if (Ai.Instance.playaround)
+            {
+                this.botbehave += " playaround";
+                this.botbehave += " " + Ai.Instance.playaroundprob + " " + Ai.Instance.playaroundprob2;
+            }
             HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
             HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
             ownPlayerController = ownPlayer.GetHero().GetControllerId();//ownPlayer.GetHero().GetControllerId()
@@ -629,7 +636,11 @@ namespace HREngine.Bots
             Probabilitymaker.Instance.setOwnCards(ownCards);
             Probabilitymaker.Instance.setEnemyCards(enemyCards);
             bool isTurnStart = false;
-            if (Ai.Instance.nextMoveGuess.mana == -1) isTurnStart = true; 
+            if (Ai.Instance.nextMoveGuess.mana == -100)
+            {
+                isTurnStart = true;
+                Ai.Instance.updateTwoTurnSim();
+            }
             Probabilitymaker.Instance.setGraveYard(graveYard, isTurnStart);
 
         }

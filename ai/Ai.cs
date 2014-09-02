@@ -17,9 +17,10 @@ namespace HREngine.Bots
         private bool useLethalCheck = true;
         private bool useComparison = true;
         public int playaroundprob = 40;
+        public int playaroundprob2 = 80;
 
         public MiniSimulatorNextTurn nextTurnSimulator;
-        MiniSimulator mainTurnSimulator;
+        public MiniSimulator mainTurnSimulator;
 
         public EnemyTurnSimulator enemyTurnSim;
 
@@ -38,6 +39,7 @@ namespace HREngine.Bots
         public Behavior botBase = null;
 
         public bool secondturnsim = false;
+        public int secondTurnAmount = 256;
         public bool playaround = false;
 
         private static Ai instance;
@@ -57,7 +59,7 @@ namespace HREngine.Bots
         private Ai()
         {
             this.nextMoveGuess = new Playfield();
-            this.nextMoveGuess.mana = -1;
+            this.nextMoveGuess.mana = -100;
             this.nextTurnSimulator = new MiniSimulatorNextTurn();
             this.mainTurnSimulator = new MiniSimulator(maxdeep, maxwide, 0); // 0 for unlimited
             this.enemyTurnSim = new EnemyTurnSimulator();
@@ -75,6 +77,12 @@ namespace HREngine.Bots
         {
             this.mainTurnSimulator.setSecondTurnSimu(stts, amount);
             this.secondturnsim = stts;
+            this.secondTurnAmount = amount;
+        }
+
+        public void updateTwoTurnSim()
+        {
+            this.mainTurnSimulator.setSecondTurnSimu(this.secondturnsim, this.secondTurnAmount);
         }
 
         public void setPlayAround(bool spa, int pprob, int pprob2)
@@ -82,6 +90,7 @@ namespace HREngine.Bots
             this.mainTurnSimulator.setPlayAround(spa, pprob, pprob2);
             this.playaround = spa;
             this.playaroundprob = pprob;
+            this.playaroundprob2 = pprob2;
         }
 
         private void doallmoves(bool test, bool isLethalCheck)
@@ -110,7 +119,7 @@ namespace HREngine.Bots
             }
             else
             {
-                nextMoveGuess.mana = -1;
+                nextMoveGuess.mana = -100;
             }
 
         }
@@ -131,7 +140,7 @@ namespace HREngine.Bots
             }
             else
             {
-                nextMoveGuess.mana = -1;
+                nextMoveGuess.mana = -100;
             }
 
         }
@@ -256,7 +265,7 @@ namespace HREngine.Bots
             }
             else
             {
-                tempbestboard.mana = -1;
+                tempbestboard.mana = -100;
             }
             help.logg("-------------");
             tempbestboard.printBoard();
@@ -276,7 +285,7 @@ namespace HREngine.Bots
                 }
                 else
                 {
-                    tempbestboard.mana = -1;
+                    tempbestboard.mana = -100;
                 }
                 help.logg("-------------");
                 tempbestboard.printBoard();
@@ -305,7 +314,7 @@ namespace HREngine.Bots
             }
             else
             {
-                tempbestboard.mana = -1;
+                tempbestboard.mana = -100;
                 help.ErrorLog("end turn");
             }
 
@@ -322,7 +331,7 @@ namespace HREngine.Bots
                 }
                 else
                 {
-                    tempbestboard.mana = -1;
+                    tempbestboard.mana = -100;
                     help.ErrorLog("end turn");
                 }
             }

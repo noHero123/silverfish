@@ -659,11 +659,6 @@ namespace HREngine.Bots
                     this.tempAttack += 2;
                     this.immune = true;
                 }
-                if (me.CARDID == CardDB.cardIDEnum.CS2_103e2) //Sturmangriff
-                {
-                    this.tempAttack += 2;
-                    this.charge++;
-                }
                 if (me.CARDID == CardDB.cardIDEnum.CS2_005o) //Claw
                 {
                     this.tempAttack += 2;

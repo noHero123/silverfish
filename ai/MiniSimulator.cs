@@ -22,7 +22,7 @@ namespace HREngine.Bots
 
         List<Playfield> posmoves = new List<Playfield>(7000);
         List<Playfield> twoturnfields = new List<Playfield>(500);
-        public int dirtyTwoTurnSim = 500;
+        public int dirtyTwoTurnSim = 256;
 
         public Action bestmove = null;
         public int bestmoveValue = 0;
@@ -210,6 +210,8 @@ namespace HREngine.Bots
             //do dirtytwoturnsim first :D
             if (!isLethalCheck) doDirtyTwoTurnsim();
 
+            if (!isLethalCheck) this.dirtyTwoTurnSim /= 2;
+
             // Helpfunctions.Instance.logg("find best ");
             if (posmoves.Count >= 1)
             {
@@ -313,7 +315,50 @@ namespace HREngine.Bots
             temp.AddRange(posmoves.GetRange(0, Math.Min(this.dirtyTwoTurnSim, posmoves.Count)));
             temp.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));
             this.twoturnfields.Clear();
-            this.twoturnfields.AddRange(temp.GetRange(0, Math.Min(this.dirtyTwoTurnSim, temp.Count)));
+
+            if (this.useComparison)
+            {
+                int i = 0;
+                int max = Math.Min(temp.Count, this.dirtyTwoTurnSim);
+
+                Playfield p = null;
+                Playfield pp = null;
+                //foreach (Playfield p in posmoves)
+                for (i = 0; i < max; i++)
+                {
+                    p = temp[i];
+                    int hash = p.GetHashCode();
+                    p.hashcode = hash;
+                    bool found = false;
+                    //foreach (Playfield pp in temp)
+                    for (int j = 0; j < twoturnfields.Count; j++)
+                    {
+                        pp = twoturnfields[j];
+                        if (pp.hashcode == p.hashcode)
+                        {
+                            if (pp.isEqualf(p))
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!found) twoturnfields.Add(p);
+                    //i++;
+                    //if (i >= this.maxwide) break;
+
+                }
+
+
+            }
+
+
+
+
+
+
+            //this.twoturnfields.AddRange(temp.GetRange(0, Math.Min(this.dirtyTwoTurnSim, temp.Count)));
+
             //Helpfunctions.Instance.ErrorLog(this.twoturnfields.Count + "");
 
             //posmoves.Clear();
