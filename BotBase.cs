@@ -615,7 +615,7 @@ namespace HREngine.Bots
                     return new HREngine.API.Actions.MakeNothingAction();
                 }
 
-                if (Ai.Instance.bestmoveValue <= -900) { return new HREngine.API.Actions.ConcedeAction(); }
+                if (Ai.Instance.bestmoveValue <= -900 && enemyConcede) { return new HREngine.API.Actions.ConcedeAction(); }
 
                 Action moveTodo = Ai.Instance.bestmove;
 

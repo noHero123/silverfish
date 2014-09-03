@@ -33,7 +33,7 @@ namespace HREngine.Bots
         Helpfunctions help = Helpfunctions.Instance;
 
         public Action bestmove = null;
-        public int bestmoveValue = 0;
+        public float bestmoveValue = 0;
         Playfield bestboard = new Playfield();
         public Playfield nextMoveGuess = new Playfield();
         public Behavior botBase = null;
@@ -98,7 +98,7 @@ namespace HREngine.Bots
             this.mainTurnSimulator.doallmoves(this.posmoves[0], isLethalCheck);
 
             Playfield bestplay = this.mainTurnSimulator.bestboard;
-            int bestval = this.mainTurnSimulator.bestmoveValue;
+            float bestval = this.mainTurnSimulator.bestmoveValue;
 
             help.loggonoff(true);
             help.logg("-------------------------------------");
@@ -251,7 +251,9 @@ namespace HREngine.Bots
 
         public void simmulateWholeTurn()
         {
+            help.ErrorLog("####################################################");
             help.logg("simulate best board");
+            help.ErrorLog("####################################################");
             //this.bestboard.printActions();
 
             Playfield tempbestboard = new Playfield();
@@ -298,9 +300,9 @@ namespace HREngine.Bots
 
         public void simmulateWholeTurnandPrint()
         {
-            help.ErrorLog("");
+            help.ErrorLog("####################################################");
             help.ErrorLog("what would silverfish do?---------");
-            help.ErrorLog("");
+            help.ErrorLog("####################################################");
             //this.bestboard.printActions();
 
             Playfield tempbestboard = new Playfield();

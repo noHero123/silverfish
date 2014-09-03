@@ -619,7 +619,7 @@ namespace HREngine.Bots
                     return new HREngine.API.Actions.MakeNothingAction();
                 }
 
-                if (Ai.Instance.bestmoveValue <= -900) { return new HREngine.API.Actions.ConcedeAction(); }
+                if (Ai.Instance.bestmoveValue <= -900 && enemyConcede) { return new HREngine.API.Actions.ConcedeAction(); }
 
                 Action moveTodo = Ai.Instance.bestmove;
 
@@ -849,7 +849,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha16";
+        public string versionnumber = "110alpha17";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -1493,7 +1493,7 @@ namespace HREngine.Bots
 
     public abstract class Behavior
     {
-        public virtual int getPlayfieldValue(Playfield p)
+        public virtual float getPlayfieldValue(Playfield p)
         {
             return 0;
         }
@@ -1509,7 +1509,7 @@ namespace HREngine.Bots
     {
         PenalityManager penman = PenalityManager.Instance;
 
-        public override int getPlayfieldValue(Playfield p)
+        public override float getPlayfieldValue(Playfield p)
         {
             if (p.value >= -2000000) return p.value;
             int retval = 0;
@@ -1696,7 +1696,7 @@ namespace HREngine.Bots
     {
         PenalityManager penman = PenalityManager.Instance;
 
-        public override int getPlayfieldValue(Playfield p)
+        public override float getPlayfieldValue(Playfield p)
         {
             if (p.value >= -2000000) return p.value;
             int retval = 0;
@@ -2061,7 +2061,7 @@ namespace HREngine.Bots
         public int enemyHeroEntity = -1;
 
         public int hashcode = 0;
-        public int value = Int32.MinValue;
+        public float value = Int32.MinValue;
         public int guessingHeroHP = 30;
 
         public int mana = 0;
@@ -2123,6 +2123,7 @@ namespace HREngine.Bots
         public int mobsplayedThisTurn = 0;
         public int startedWithMobsPlayedThisTurn = 0;
 
+        public int optionsPlayedThisTurn = 0;
         public int cardsPlayedThisTurn = 0;
         public int ueberladung = 0; //=recall
 
@@ -2266,6 +2267,9 @@ namespace HREngine.Bots
             this.mobsplayedThisTurn = Hrtprozis.Instance.numMinionsPlayedThisTurn;
             this.startedWithMobsPlayedThisTurn = Hrtprozis.Instance.numMinionsPlayedThisTurn;// only change mobsplayedthisturm
             this.cardsPlayedThisTurn = Hrtprozis.Instance.cardsPlayedThisTurn;
+            //todo:
+            this.optionsPlayedThisTurn = 0;
+
             this.ueberladung = Hrtprozis.Instance.ueberladung;
 
             this.ownHeroFatigue = Hrtprozis.Instance.ownHeroFatigue;
@@ -2480,6 +2484,7 @@ namespace HREngine.Bots
             this.spellpower = 0;
             this.mobsplayedThisTurn = p.mobsplayedThisTurn;
             this.startedWithMobsPlayedThisTurn = p.startedWithMobsPlayedThisTurn;
+            this.optionsPlayedThisTurn = p.optionsPlayedThisTurn;
             this.cardsPlayedThisTurn = p.cardsPlayedThisTurn;
             this.ueberladung = p.ueberladung;
 
@@ -3418,7 +3423,7 @@ namespace HREngine.Bots
 
             //guess the dmg the hero will receive from enemy:
             guessHeroDamage();
-
+            this.optionsPlayedThisTurn = 0;
             if (this.turnCounter <= turnsToSimulate)
             {
                 if (!this.isOwnTurn || this.guessingHeroHP <= 0)
@@ -3477,6 +3482,7 @@ namespace HREngine.Bots
                 this.ownHero.updateReadyness();
                 this.cardsPlayedThisTurn = 0;
                 this.mobsplayedThisTurn = 0;
+                this.optionsPlayedThisTurn = 0;
 
                 this.sEnemTurn = false;
             }
@@ -3520,10 +3526,10 @@ namespace HREngine.Bots
             if (!this.loatheb)
             {
                 Playfield p = new Playfield(this);
-                int oldval = Ai.Instance.botBase.getPlayfieldValue(p);
+                float oldval = Ai.Instance.botBase.getPlayfieldValue(p);
                 p.value = int.MinValue;
                 p.EnemyCardPlaying(p.enemyHeroName, p.mana, p.enemyAnzCards, pprob, pprob2);
-                int newval = Ai.Instance.botBase.getPlayfieldValue(p);
+                float newval = Ai.Instance.botBase.getPlayfieldValue(p);
                 p.value = int.MinValue;
                 if (oldval > newval) // new board is better for enemy (value is smaller)
                 {
@@ -3760,7 +3766,7 @@ namespace HREngine.Bots
             this.triggerEndTurn(this.isOwnTurn);
             this.isOwnTurn = !this.isOwnTurn;
             this.triggerStartTurn(this.isOwnTurn);
-
+            this.optionsPlayedThisTurn = 0;
             if (!this.isOwnTurn) simulateTraps();
 
             if (!sEnemTurn)
@@ -3789,6 +3795,7 @@ namespace HREngine.Bots
             //call this after start turn trigger!
             this.playedPreparation = false;
             this.playedmagierinderkirintor = false;
+            this.optionsPlayedThisTurn = 0;
             if (own)
             {
                 this.ownMaxMana = Math.Min(10, this.ownMaxMana + 1);
@@ -3978,6 +3985,8 @@ namespace HREngine.Bots
 
             // create and execute the action------------------------------------------------------------------------
             Action a = new Action(aa.actionType, aa.card, o, aa.place, trgt, aa.penalty, aa.druidchoice);
+
+            this.optionsPlayedThisTurn++;
 
             //save the action if its our first turn
             if (this.turnCounter == 0) this.playactions.Add(a);
@@ -5932,7 +5941,7 @@ namespace HREngine.Bots
         Helpfunctions help = Helpfunctions.Instance;
 
         public Action bestmove = null;
-        public int bestmoveValue = 0;
+        public float bestmoveValue = 0;
         Playfield bestboard = new Playfield();
         public Playfield nextMoveGuess = new Playfield();
         public Behavior botBase = null;
@@ -5997,7 +6006,7 @@ namespace HREngine.Bots
             this.mainTurnSimulator.doallmoves(this.posmoves[0], isLethalCheck);
 
             Playfield bestplay = this.mainTurnSimulator.bestboard;
-            int bestval = this.mainTurnSimulator.bestmoveValue;
+            float bestval = this.mainTurnSimulator.bestmoveValue;
 
             help.loggonoff(true);
             help.logg("-------------------------------------");
@@ -6150,7 +6159,9 @@ namespace HREngine.Bots
 
         public void simmulateWholeTurn()
         {
+            help.ErrorLog("####################################################");
             help.logg("simulate best board");
+            help.ErrorLog("####################################################");
             //this.bestboard.printActions();
 
             Playfield tempbestboard = new Playfield();
@@ -6197,9 +6208,9 @@ namespace HREngine.Bots
 
         public void simmulateWholeTurnandPrint()
         {
-            help.ErrorLog("");
+            help.ErrorLog("####################################################");
             help.ErrorLog("what would silverfish do?---------");
-            help.ErrorLog("");
+            help.ErrorLog("####################################################");
             //this.bestboard.printActions();
 
             Playfield tempbestboard = new Playfield();
@@ -6260,7 +6271,7 @@ namespace HREngine.Bots
         public int dirtyTwoTurnSim = 256;
 
         public Action bestmove = null;
-        public int bestmoveValue = 0;
+        public float bestmoveValue = 0;
         public Playfield bestboard = new Playfield();
 
         public Behavior botBase = null;
@@ -6327,7 +6338,7 @@ namespace HREngine.Bots
             }
         }
 
-        public int doallmoves(Playfield playf, bool isLethalCheck)
+        public float doallmoves(Playfield playf, bool isLethalCheck)
         {
             //Helpfunctions.Instance.logg("NXTTRN" + playf.mana);
             if (botBase == null) botBase = Ai.Instance.botBase;
@@ -6348,7 +6359,7 @@ namespace HREngine.Bots
                 temp.AddRange(this.posmoves);
                 havedonesomething = false;
                 Playfield bestold = null;
-                int bestoldval = -20000000;
+                float bestoldval = -20000000;
                 foreach (Playfield p in temp)
                 {
 
@@ -6450,12 +6461,12 @@ namespace HREngine.Bots
             // Helpfunctions.Instance.logg("find best ");
             if (posmoves.Count >= 1)
             {
-                int bestval = int.MinValue;
+                float bestval = int.MinValue;
                 int bestanzactions = 1000;
                 Playfield bestplay = posmoves[0];//temp[0]
                 foreach (Playfield p in posmoves)//temp
                 {
-                    int val = botBase.getPlayfieldValue(p);
+                    float val = botBase.getPlayfieldValue(p);
                     if (bestval <= val)
                     {
                         if (bestval == val && bestanzactions < p.playactions.Count) continue;
@@ -6710,10 +6721,10 @@ namespace HREngine.Bots
 
             if (playaround && !rootfield.loatheb)
             {
-                int oldval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
+                float oldval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
                 posmoves[0].value = int.MinValue;
                 enemMana = posmoves[0].EnemyCardPlaying(rootfield.enemyHeroName, enemMana, rootfield.enemyAnzCards, pprob, pprob2);
-                int newval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
+                float newval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
                 posmoves[0].value = int.MinValue;
                 if (oldval < newval)
                 {
@@ -6774,7 +6785,7 @@ namespace HREngine.Bots
                 temp.AddRange(posmoves);
                 havedonesomething = false;
                 Playfield bestold = null;
-                int bestoldval = 20000000;
+                float bestoldval = 20000000;
                 foreach (Playfield p in temp)
                 {
 
@@ -6821,13 +6832,13 @@ namespace HREngine.Bots
                 if (!p.complete) p.endEnemyTurn();
             }
 
-            int bestval = int.MaxValue;
+            float bestval = int.MaxValue;
             Playfield bestplay = posmoves[0];
 
             foreach (Playfield p in posmoves)
             {
                 p.guessingHeroHP = rootfield.guessingHeroHP;
-                int val = Ai.Instance.botBase.getPlayfieldValue(p);
+                float val = Ai.Instance.botBase.getPlayfieldValue(p);
                 if (bestval > val)// we search the worst value
                 {
                     bestplay = p;
@@ -6839,7 +6850,7 @@ namespace HREngine.Bots
             if (simulateTwoTurns && bestplay.value > -1000)
             {
                 bestplay.prepareNextTurn(true);
-                rootfield.value = (int)(0.5 * bestval + 0.5 * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false));
+                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false);
             }
 
 
@@ -6869,7 +6880,7 @@ namespace HREngine.Bots
         List<Playfield> posmoves = new List<Playfield>(7000);
 
         public Action bestmove = null;
-        public int bestmoveValue = 0;
+        public float bestmoveValue = 0;
         public Playfield bestboard = new Playfield();
 
         public Behavior botBase = null;
@@ -6927,7 +6938,7 @@ namespace HREngine.Bots
             }
         }
 
-        public int doallmoves(Playfield playf, bool isLethalCheck)
+        public float doallmoves(Playfield playf, bool isLethalCheck)
         {
             //Helpfunctions.Instance.logg("NXTTRN" + playf.mana);
             if (botBase == null) botBase = Ai.Instance.botBase;
@@ -6947,7 +6958,7 @@ namespace HREngine.Bots
                 temp.AddRange(this.posmoves);
                 havedonesomething = false;
                 Playfield bestold = null;
-                int bestoldval = -20000000;
+                float bestoldval = -20000000;
                 foreach (Playfield p in temp)
                 {
 
@@ -7039,12 +7050,12 @@ namespace HREngine.Bots
             // Helpfunctions.Instance.logg("find best ");
             if (posmoves.Count >= 1)
             {
-                int bestval = int.MinValue;
+                float bestval = int.MinValue;
                 int bestanzactions = 1000;
                 Playfield bestplay = posmoves[0];//temp[0]
                 foreach (Playfield p in posmoves)//temp
                 {
-                    int val = botBase.getPlayfieldValue(p);
+                    float val = botBase.getPlayfieldValue(p);
                     if (bestval <= val)
                     {
                         if (bestval == val && bestanzactions < p.playactions.Count) continue;
@@ -9482,13 +9493,13 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.lifetap)
             {
-                return Math.Max(-carddraw + 2 * p.playactions.Count + p.ownMaxMana - p.mana, 0);
+                return Math.Max(-carddraw + 2 * p.optionsPlayedThisTurn + p.ownMaxMana - p.mana, 0);
             }
 
             if (p.owncards.Count + carddraw > 10) return 15 * (p.owncarddraw + p.owncards.Count - 10);
             if (p.owncards.Count + p.cardsPlayedThisTurn > 5) return 5;
 
-            return -carddraw + 2 * p.playactions.Count + p.ownMaxMana - p.mana;
+            return -carddraw + 2 * p.optionsPlayedThisTurn + p.ownMaxMana - p.mana;
             /*pen = -carddraw + p.ownMaxMana - p.mana;
             return pen;*/
         }
@@ -9516,7 +9527,7 @@ namespace HREngine.Bots
             if (carddraw == 0) return 0;
 
             if (p.owncards.Count >= 5) return 0;
-            pen = -carddraw + p.ownMaxMana - p.mana + p.playactions.Count;
+            pen = -carddraw + p.ownMaxMana - p.mana + p.optionsPlayedThisTurn;
 
             return pen;
         }
@@ -9524,7 +9535,7 @@ namespace HREngine.Bots
         private int getRandomPenaltiy(CardDB.Card card, Playfield p, Minion target)
         {
             if (!this.randomEffects.ContainsKey(card.name)) return 0;
-            if (card.name == CardDB.cardName.brawl && p.playactions.Count >= 1 && p.enemyHeroName != HeroEnum.mage) return 100;
+            if (card.name == CardDB.cardName.brawl && p.optionsPlayedThisTurn >= 1 && p.enemyHeroName != HeroEnum.mage) return 100;
             if ((card.name == CardDB.cardName.cleave || card.name == CardDB.cardName.multishot) && p.enemyMinions.Count == 2) return 0;
             if ((card.name == CardDB.cardName.deadlyshot) && p.enemyMinions.Count == 1) return 0;
             if ((card.name == CardDB.cardName.arcanemissiles || card.name == CardDB.cardName.avengingwrath) && p.enemyMinions.Count == 0) return 0;

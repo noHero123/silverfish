@@ -7,7 +7,7 @@ namespace HREngine.Bots
 {
     public abstract class Behavior
     {
-        public virtual int getPlayfieldValue(Playfield p)
+        public virtual float getPlayfieldValue(Playfield p)
         {
             return 0;
         }

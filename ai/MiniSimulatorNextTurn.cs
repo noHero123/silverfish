@@ -23,7 +23,7 @@ namespace HREngine.Bots
         List<Playfield> posmoves = new List<Playfield>(7000);
 
         public Action bestmove = null;
-        public int bestmoveValue = 0;
+        public float bestmoveValue = 0;
         public Playfield bestboard = new Playfield();
 
         public Behavior botBase = null;
@@ -81,7 +81,7 @@ namespace HREngine.Bots
             }
         }
 
-        public int doallmoves(Playfield playf, bool isLethalCheck)
+        public float doallmoves(Playfield playf, bool isLethalCheck)
         {
             //Helpfunctions.Instance.logg("NXTTRN" + playf.mana);
             if (botBase == null) botBase = Ai.Instance.botBase;
@@ -101,7 +101,7 @@ namespace HREngine.Bots
                 temp.AddRange(this.posmoves);
                 havedonesomething = false;
                 Playfield bestold = null;
-                int bestoldval = -20000000;
+                float bestoldval = -20000000;
                 foreach (Playfield p in temp)
                 {
 
@@ -193,12 +193,12 @@ namespace HREngine.Bots
             // Helpfunctions.Instance.logg("find best ");
             if (posmoves.Count >= 1)
             {
-                int bestval = int.MinValue;
+                float bestval = int.MinValue;
                 int bestanzactions = 1000;
                 Playfield bestplay = posmoves[0];//temp[0]
                 foreach (Playfield p in posmoves)//temp
                 {
-                    int val = botBase.getPlayfieldValue(p);
+                    float val = botBase.getPlayfieldValue(p);
                     if (bestval <= val)
                     {
                         if (bestval == val && bestanzactions < p.playactions.Count) continue;

@@ -10,7 +10,7 @@ namespace HREngine.Bots
     {
         PenalityManager penman = PenalityManager.Instance;
 
-        public override int getPlayfieldValue(Playfield p)
+        public override float getPlayfieldValue(Playfield p)
         {
             if (p.value >= -2000000) return p.value;
             int retval = 0;

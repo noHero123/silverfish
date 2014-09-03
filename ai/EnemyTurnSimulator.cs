@@ -26,10 +26,10 @@ namespace HREngine.Bots
 
             if (playaround && !rootfield.loatheb)
             {
-                int oldval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
+                float oldval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
                 posmoves[0].value = int.MinValue;
                 enemMana = posmoves[0].EnemyCardPlaying(rootfield.enemyHeroName, enemMana, rootfield.enemyAnzCards, pprob, pprob2);
-                int newval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
+                float newval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
                 posmoves[0].value = int.MinValue;
                 if (oldval < newval)
                 {
@@ -90,7 +90,7 @@ namespace HREngine.Bots
                 temp.AddRange(posmoves);
                 havedonesomething = false;
                 Playfield bestold = null;
-                int bestoldval = 20000000;
+                float bestoldval = 20000000;
                 foreach (Playfield p in temp)
                 {
 
@@ -137,13 +137,13 @@ namespace HREngine.Bots
                 if (!p.complete) p.endEnemyTurn();
             }
 
-            int bestval = int.MaxValue;
+            float bestval = int.MaxValue;
             Playfield bestplay = posmoves[0];
-            
+
             foreach (Playfield p in posmoves)
             {
                 p.guessingHeroHP = rootfield.guessingHeroHP;
-                int val = Ai.Instance.botBase.getPlayfieldValue(p);
+                float val = Ai.Instance.botBase.getPlayfieldValue(p);
                 if (bestval > val)// we search the worst value
                 {
                     bestplay = p;
@@ -155,7 +155,7 @@ namespace HREngine.Bots
             if (simulateTwoTurns && bestplay.value > -1000)
             {
                 bestplay.prepareNextTurn(true);
-                rootfield.value = (int)(0.5 * bestval + 0.5 * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false));
+                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false);
             }
 
 

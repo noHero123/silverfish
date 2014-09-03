@@ -705,13 +705,13 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.lifetap)
             {
-                return Math.Max(-carddraw + 2 * p.playactions.Count + p.ownMaxMana - p.mana, 0);
+                return Math.Max(-carddraw + 2 * p.optionsPlayedThisTurn + p.ownMaxMana - p.mana, 0);
             }
 
             if (p.owncards.Count + carddraw > 10) return 15 * (p.owncarddraw + p.owncards.Count - 10);
             if (p.owncards.Count + p.cardsPlayedThisTurn > 5) return 5;
 
-            return -carddraw + 2 * p.playactions.Count + p.ownMaxMana - p.mana;
+            return -carddraw + 2 * p.optionsPlayedThisTurn + p.ownMaxMana - p.mana;
             /*pen = -carddraw + p.ownMaxMana - p.mana;
             return pen;*/
         }
@@ -739,7 +739,7 @@ namespace HREngine.Bots
             if (carddraw == 0) return 0;
 
             if (p.owncards.Count >= 5) return 0;
-            pen = -carddraw + p.ownMaxMana - p.mana + p.playactions.Count;
+            pen = -carddraw + p.ownMaxMana - p.mana + p.optionsPlayedThisTurn;
 
             return pen;
         }
@@ -747,7 +747,7 @@ namespace HREngine.Bots
         private int getRandomPenaltiy(CardDB.Card card, Playfield p, Minion target)
         {
             if (!this.randomEffects.ContainsKey(card.name)) return 0;
-            if (card.name == CardDB.cardName.brawl && p.playactions.Count >= 1 && p.enemyHeroName != HeroEnum.mage) return 100;
+            if (card.name == CardDB.cardName.brawl && p.optionsPlayedThisTurn >= 1 && p.enemyHeroName != HeroEnum.mage) return 100;
             if ((card.name == CardDB.cardName.cleave || card.name == CardDB.cardName.multishot) && p.enemyMinions.Count == 2) return 0;
             if ((card.name == CardDB.cardName.deadlyshot) && p.enemyMinions.Count == 1) return 0;
             if ((card.name == CardDB.cardName.arcanemissiles || card.name == CardDB.cardName.avengingwrath) && p.enemyMinions.Count == 0) return 0;
