@@ -510,7 +510,7 @@ namespace SilverfishControl
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha15";
+        public string versionnumber = "110alpha16";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -6149,6 +6149,7 @@ namespace SilverfishControl
             posmoves.AddRange(temp.GetRange(0, Math.Min(takenumber, temp.Count)));
 
             //twoturnfields!
+            if (this.dirtyTwoTurnSim == 0) return;
             temp.Clear();
             temp.AddRange(this.twoturnfields);
             temp.AddRange(posmoves.GetRange(0, Math.Min(this.dirtyTwoTurnSim, posmoves.Count)));

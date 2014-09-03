@@ -200,6 +200,8 @@ namespace HREngine.Bots
         int oldwin = 0;
         private bool autoconcede()
         {
+            if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.ARENA) return false;
+            if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode != HRGameMode.RANKED_PLAY) return false;
             int totalwin = this.wins;
             int totallose = this.loses;
             /*if ((totalwin + totallose - KeepConcede) != 0)
@@ -208,8 +210,14 @@ namespace HREngine.Bots
             }*/
 
 
-            if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode != HRGameMode.RANKED_PLAY) return false;
+            
             int curlvl = HRPlayer.GetLocalPlayer().GetRank();
+
+            if (curlvl > this.concedeLvl)
+            {
+                this.lossedtodo = 0;
+                return false;
+            }
 
             if (this.oldwin != totalwin)
             {
@@ -239,6 +247,7 @@ namespace HREngine.Bots
 
         private bool concedeVSenemy(string ownh, string enemyh)
         {
+            if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.ARENA) return false;
             if (!(HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.RANKED_PLAY || HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.UNRANKED_PLAY)) return false;
             if (Mulligan.Instance.shouldConcede(Hrtprozis.Instance.heroNametoEnum(ownh), Hrtprozis.Instance.heroNametoEnum(enemyh)))
             {
@@ -466,7 +475,14 @@ namespace HREngine.Bots
 
                 if (this.isgoingtoconcede)
                 {
-                    return new HREngine.API.Actions.ConcedeAction();
+                    if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.ARENA)
+                    {
+                        this.isgoingtoconcede = false;
+                    }
+                    else
+                    {
+                        return new HREngine.API.Actions.ConcedeAction();
+                    }
                 }
 
                 if (this.learnmode && (HRBattle.IsInTargetMode() || HRChoice.IsChoiceActive()))

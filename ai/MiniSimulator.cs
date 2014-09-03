@@ -310,6 +310,7 @@ namespace HREngine.Bots
             posmoves.AddRange(temp.GetRange(0, Math.Min(takenumber, temp.Count)));
 
             //twoturnfields!
+            if (this.dirtyTwoTurnSim == 0) return;
             temp.Clear();
             temp.AddRange(this.twoturnfields);
             temp.AddRange(posmoves.GetRange(0, Math.Min(this.dirtyTwoTurnSim, posmoves.Count)));
