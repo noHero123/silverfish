@@ -1,0 +1,8 @@
+{
+   "dll": "silver/silver.dll",
+   "settings": "silver/silverfish.xml",
+   "classes": [
+      	{ "class": "Rushi" },
+ 	{ "class": "BoardControli"}
+   ]
+}

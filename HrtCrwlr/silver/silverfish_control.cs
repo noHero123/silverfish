@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-
+ 
 
 namespace HREngine.Bots
 {
@@ -14,7 +14,7 @@ namespace HREngine.Bots
 
     public class Bot : IBot
     {
-        private int stopAfterWins = 30;
+        //private int stopAfterWins = 30;
         private int concedeLvl = 5; // the rank, till you want to concede
         private int dirtytarget = -1;
         private int dirtychoice = -1;
@@ -26,7 +26,7 @@ namespace HREngine.Bots
         public bool learnmode = true;
         public bool printlearnmode = true;
 
-        Behavior behave = new BehaviorRush();
+        Behavior behave = new BehaviorControl();
 
 
 
@@ -80,7 +80,7 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("cant read your concede-Lvl");
             }
 
-            try
+            /*try
             {
                 this.stopAfterWins = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.stopwin")));
                 if (this.stopAfterWins <= 0) this.stopAfterWins = 10000;
@@ -89,7 +89,7 @@ namespace HREngine.Bots
             catch
             {
                 Helpfunctions.Instance.ErrorLog("cant read stop after # of wins");
-            }
+            }*/
 
             try
             {
@@ -736,7 +736,7 @@ namespace HREngine.Bots
             {
                 Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + KeepConcede + " lose:" + (totallose - KeepConcede) + " real winrate: infinity!!!! (division by zero :D)");
             }
-            if (totalwin >= this.stopAfterWins)
+            /*if (totalwin >= this.stopAfterWins)
             {
                 if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.ARENA) return null;
                 Helpfunctions.Instance.ErrorLog("we have done our " + totalwin + " wins! lets finish this!");
@@ -745,6 +745,7 @@ namespace HREngine.Bots
                 HREngine.API.HRGame.OpenScene(HRGameMode.ARENA);
                 return null;
             }
+             */
             return null;
         }
 
@@ -832,7 +833,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha14";
+        public string versionnumber = "110alpha15";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -922,6 +923,7 @@ namespace HREngine.Bots
         {
             this.botbehave = "rush";
             if (botbase is BehaviorControl) this.botbehave = "control";
+            this.botbehave += " " + Ai.Instance.maxwide;
             if (Ai.Instance.secondTurnAmount > 0)
             {
                 if (Ai.Instance.nextMoveGuess.mana == -100)
@@ -1218,6 +1220,7 @@ namespace HREngine.Bots
                     m.Angr = entitiy.GetATK();
                     m.maxHp = entitiy.GetHealth();
                     m.Hp = m.maxHp - entitiy.GetDamage();
+                    if (m.Hp <= 0) continue;
                     m.wounded = false;
                     if (m.maxHp > m.Hp) m.wounded = true;
 
@@ -1499,7 +1502,7 @@ namespace HREngine.Bots
             int aggroboarder = 11;
 
             retval -= p.evaluatePenality;
-            retval += p.owncards.Count * 1;
+            retval += p.owncards.Count * 5;
 
             retval += p.ownMaxMana;
             retval -= p.enemyMaxMana;
@@ -1682,7 +1685,7 @@ namespace HREngine.Bots
             if (p.value >= -2000000) return p.value;
             int retval = 0;
             retval -= p.evaluatePenality;
-            retval += p.owncards.Count * 1;
+            retval += p.owncards.Count * 5;
 
             retval += p.ownHero.Hp + p.ownHero.armor;
             retval += -(p.enemyHero.Hp + p.enemyHero.armor);
@@ -4917,10 +4920,10 @@ namespace HREngine.Bots
                         // end aura of minion m
                         m.handcard.card.sim_card.onAuraEnds(this, m);
 
-                        if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || m.ancestralspirit >= 1)
+                        /*if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || m.ancestralspirit>=1)
                         {
                             this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
-                        }
+                        }*/
 
                     }
                     else
@@ -4951,7 +4954,7 @@ namespace HREngine.Bots
                         }
                         m.handcard.card.sim_card.onAuraEnds(this, m);
 
-                        if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || m.ancestralspirit >= 1)
+                        if ((!m.silenced && (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem)) || m.ancestralspirit >= 1)
                         {
                             this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
                         }
@@ -5889,7 +5892,7 @@ namespace HREngine.Bots
     public class Ai
     {
         private int maxdeep = 12;
-        private int maxwide = 3000;
+        public int maxwide = 3000;
         public bool simulateEnemyTurn = true;
         private bool usePenalityManager = true;
         private bool useCutingTargets = true;
@@ -6816,7 +6819,7 @@ namespace HREngine.Bots
             }
             if (print) bestplay.printBoard();
             rootfield.value = bestplay.value;
-            if (simulateTwoTurns)
+            if (simulateTwoTurns && bestplay.value > -1000)
             {
                 bestplay.prepareNextTurn(true);
                 rootfield.value = (int)(0.5 * bestval + 0.5 * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false));
@@ -8662,7 +8665,7 @@ namespace HREngine.Bots
 
             help.logg("ownhero:");
             help.logg(this.heroname + " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entitiyID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack);
-            help.logg("weapon: " + heroWeaponAttack + " " + heroWeaponDurability + " " + ownHeroWeapon);
+            help.logg("weapon " + heroWeaponAttack + " " + heroWeaponDurability + " " + ownHeroWeapon);
             help.logg("ability: " + this.ownAbilityisReady + " " + this.heroAbility.cardIDenum);
             string secs = "";
             foreach (CardDB.cardIDEnum sec in this.ownSecretList)
@@ -19124,6 +19127,7 @@ namespace HREngine.Bots
 
     }
 
+
     public enum TAG_MULLIGAN
     {
         INVALID,
@@ -24100,7 +24104,7 @@ namespace HREngine.Bots
                 //this.owncarddraw++;
                 p.drawACard(CardDB.cardName.unknown, ownplay);
             }
-
+            
         }
 
     }
@@ -27621,6 +27625,6 @@ namespace HREngine.Bots
 
     }
 
-
+   
 }
 

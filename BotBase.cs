@@ -8,7 +8,7 @@ namespace HREngine.Bots
 
    public abstract class Bot : API.IBot
    {
-       private int stopAfterWins = 30;
+       //private int stopAfterWins = 30;
        private int concedeLvl = 5; // the rank, till you want to concede
        private int dirtytarget = -1;
        private int dirtychoice = -1;
@@ -75,7 +75,7 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("cant read your concede-Lvl");
             }
 
-            try
+            /*try
             {
                 this.stopAfterWins = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.stopwin")));
                 if (this.stopAfterWins <= 0) this.stopAfterWins = 10000;
@@ -84,7 +84,7 @@ namespace HREngine.Bots
             catch
             {
                 Helpfunctions.Instance.ErrorLog("cant read stop after # of wins");
-            }
+            }*/
 
             try
             {
@@ -732,6 +732,7 @@ namespace HREngine.Bots
             {
                 Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + KeepConcede + " lose:" + (totallose - KeepConcede) + " real winrate: infinity!!!! (division by zero :D)");
             }
+            /*
             if (totalwin >= this.stopAfterWins)
             {
                 if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.ARENA) return null;
@@ -740,7 +741,7 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("relogger is disabled");
                 HREngine.API.HRGame.OpenScene(HRGameMode.ARENA);
                 return null;
-            }
+            }*/
             return null;
         }
 

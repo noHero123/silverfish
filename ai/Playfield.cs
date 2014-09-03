@@ -2964,10 +2964,10 @@ namespace HREngine.Bots
                         // end aura of minion m
                         m.handcard.card.sim_card.onAuraEnds(this, m);
 
-                        if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || m.ancestralspirit>=1)
+                        /*if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || m.ancestralspirit>=1)
                         {
                             this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
-                        }
+                        }*/
 
                     }
                     else
@@ -2998,7 +2998,7 @@ namespace HREngine.Bots
                         }
                         m.handcard.card.sim_card.onAuraEnds(this, m);
 
-                        if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || m.ancestralspirit>=1)
+                        if ((!m.silenced && (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem)) || m.ancestralspirit>=1)
                         {
                             this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
                         }

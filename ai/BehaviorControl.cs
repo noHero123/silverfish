@@ -19,7 +19,7 @@ namespace HREngine.Bots
             int aggroboarder = 11;
 
             retval -= p.evaluatePenality;
-            retval += p.owncards.Count * 1;
+            retval += p.owncards.Count * 5;
 
             retval += p.ownMaxMana;
             retval -= p.enemyMaxMana;

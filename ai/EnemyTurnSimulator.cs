@@ -152,7 +152,7 @@ namespace HREngine.Bots
             }
             if (print) bestplay.printBoard();
             rootfield.value = bestplay.value;
-            if (simulateTwoTurns)
+            if (simulateTwoTurns && bestplay.value > -1000)
             {
                 bestplay.prepareNextTurn(true);
                 rootfield.value = (int)(0.5 * bestval + 0.5 * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false));

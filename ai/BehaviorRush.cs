@@ -15,7 +15,7 @@ namespace HREngine.Bots
             if (p.value >= -2000000) return p.value;
             int retval = 0;
             retval -= p.evaluatePenality;
-            retval += p.owncards.Count * 1;
+            retval += p.owncards.Count * 5;
 
             retval += p.ownHero.Hp + p.ownHero.armor;
             retval += -(p.enemyHero.Hp + p.enemyHero.armor);

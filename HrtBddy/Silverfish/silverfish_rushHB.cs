@@ -510,7 +510,7 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha14";
+        public string versionnumber = "110alpha15";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -601,6 +601,7 @@ namespace SilverfishRush
         {
             this.botbehave = "rush";
             if (botbase is BehaviorControl) this.botbehave = "control";
+            this.botbehave += " " + Ai.Instance.maxwide;
             if (Ai.Instance.secondTurnAmount > 0)
             {
                 if (Ai.Instance.nextMoveGuess.mana == -100)
@@ -1123,7 +1124,7 @@ namespace SilverfishRush
             int aggroboarder = 11;
 
             retval -= p.evaluatePenality;
-            retval += p.owncards.Count * 1;
+            retval += p.owncards.Count * 5;
 
             retval += p.ownMaxMana;
             retval -= p.enemyMaxMana;
@@ -1306,7 +1307,7 @@ namespace SilverfishRush
             if (p.value >= -2000000) return p.value;
             int retval = 0;
             retval -= p.evaluatePenality;
-            retval += p.owncards.Count * 1;
+            retval += p.owncards.Count * 5;
 
             retval += p.ownHero.Hp + p.ownHero.armor;
             retval += -(p.enemyHero.Hp + p.enemyHero.armor);
@@ -4539,10 +4540,10 @@ namespace SilverfishRush
                         // end aura of minion m
                         m.handcard.card.sim_card.onAuraEnds(this, m);
 
-                        if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || m.ancestralspirit >= 1)
+                        /*if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || m.ancestralspirit>=1)
                         {
                             this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
-                        }
+                        }*/
 
                     }
                     else
@@ -4573,7 +4574,7 @@ namespace SilverfishRush
                         }
                         m.handcard.card.sim_card.onAuraEnds(this, m);
 
-                        if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || m.ancestralspirit >= 1)
+                        if ((!m.silenced && (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem)) || m.ancestralspirit >= 1)
                         {
                             this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
                         }
@@ -5511,7 +5512,7 @@ namespace SilverfishRush
     public class Ai
     {
         private int maxdeep = 12;
-        private int maxwide = 3000;
+        public int maxwide = 3000;
         public bool simulateEnemyTurn = true;
         private bool usePenalityManager = true;
         private bool useCutingTargets = true;
@@ -6438,7 +6439,7 @@ namespace SilverfishRush
             }
             if (print) bestplay.printBoard();
             rootfield.value = bestplay.value;
-            if (simulateTwoTurns)
+            if (simulateTwoTurns && bestplay.value > -1000)
             {
                 bestplay.prepareNextTurn(true);
                 rootfield.value = (int)(0.5 * bestval + 0.5 * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false));

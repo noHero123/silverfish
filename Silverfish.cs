@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha14";
+        public string versionnumber = "110alpha15";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -101,6 +101,7 @@ namespace HREngine.Bots
         {
             this.botbehave = "rush";
             if (botbase is BehaviorControl) this.botbehave = "control";
+            this.botbehave += " " + Ai.Instance.maxwide;
             if (Ai.Instance.secondTurnAmount>0)
             {
                 if (Ai.Instance.nextMoveGuess.mana == -100)

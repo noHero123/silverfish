@@ -1,0 +1,7 @@
+{
+"script": "silver/silverfish_control.cs",
+"settings": "silver/silverfish.xml",
+"classes": [
+{ "class": "Bot" }
+]
+}

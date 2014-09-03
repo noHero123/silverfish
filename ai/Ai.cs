@@ -9,7 +9,7 @@ namespace HREngine.Bots
     public class Ai
     {
         private int maxdeep = 12;
-        private int maxwide = 3000;
+        public int maxwide = 3000;
         public bool simulateEnemyTurn = true;
         private bool usePenalityManager = true;
         private bool useCutingTargets = true;
