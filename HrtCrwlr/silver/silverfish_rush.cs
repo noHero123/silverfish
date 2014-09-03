@@ -849,7 +849,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha17";
+        public string versionnumber = "110alpha18";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -9492,6 +9492,16 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.lifetap)
             {
+                int minmana = 10;
+                foreach (Handmanager.Handcard hc in p.owncards)
+                {
+                    if (hc.manacost <= minmana)
+                    {
+                        minmana = hc.manacost;
+                    }
+                }
+                if (p.owncards.Count + p.cardsPlayedThisTurn <= 5 && minmana > p.ownMaxMana) return 0;
+                if (p.owncards.Count + p.cardsPlayedThisTurn > 5) return 5;
                 return Math.Max(-carddraw + 2 * p.optionsPlayedThisTurn + p.ownMaxMana - p.mana, 0);
             }
 
