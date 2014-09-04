@@ -52,8 +52,8 @@ namespace SilverfishControl
             Ai.Instance.setMaxWide(mxwde);
             Helpfunctions.Instance.ErrorLog("set maxwide to: " + mxwde);
 
-            Ai.Instance.setTwoTurnSimulation(false, 128);
-            Helpfunctions.Instance.ErrorLog("calculate the second turn of the 128 best boards");
+            Ai.Instance.setTwoTurnSimulation(false, 0);
+            Helpfunctions.Instance.ErrorLog("calculate the second turn of the 0 best boards");
 
             bool playaround = false;
             if (playaround)
