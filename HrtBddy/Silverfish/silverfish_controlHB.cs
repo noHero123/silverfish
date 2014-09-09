@@ -655,7 +655,7 @@ namespace SilverfishControl
                 if (m.Hp >= 1) this.numOptionPlayedThisTurn += m.numAttacksThisTurn;
             }
 
-            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ueberladung, ownPlayer.GetHero().GetEntityId(), enemyPlayer.GetHero().GetEntityId());
+            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ueberladung, TritonHS.OurHero.EntityId, TritonHS.EnemyHero.EntityId);
             Hrtprozis.Instance.updateSecretStuff(this.ownSecretList, this.enemySecretCount);
 
             Hrtprozis.Instance.updateOwnHero(this.ownHeroWeapon, this.heroWeaponAttack, this.heroWeaponDurability, this.heroname, this.heroAbility, this.ownAbilityisReady, this.ownHero);
