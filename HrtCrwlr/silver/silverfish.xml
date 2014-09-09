@@ -3,6 +3,8 @@
 <Section id="silver1" title="settings">
 <Description>General settings related to ultimate AI.&lt;br&gt;</Description>
 <Setting name="uai.wwuaid" type="boolean" description="tutor mode" />
+<Setting name="uai.extern" default="true" type="boolean" description="use external process for calculations (recomended)" />
+<Label>uses Silver.exe for calculations, make sure you started it manually.</Label>
 <Setting name="uai.autoconcede" type="boolean" description="autoconcede" />
 <Setting name="uai.concedelvl" default="20" type="text" description="concede till rank: (is ignored if autoconcede isnt checked)" />
 <Label></Label>
@@ -33,6 +35,9 @@
 <Label></Label>
 <Setting name="uai.simulateTwoTurnCounter" default="256" type="text" description="amount of Two-Turn-simulations" />
 <Label>number of boards, where the second turn is simulated, write a 0 to turn it off</Label>
+<Label></Label>
+<Setting name="uai.simulateEnemyOnSecondTurn" default="true" type="boolean" description="simulate enemys second turn" />
+<Label>simulate the enemys response on your second turn</Label>
 <Label></Label>
 <Setting name="uai.playAround" type="boolean" description="play arround specific cards" />
 <Label>(EXPERIMENTAL) check this and the ai will play around some cards (like flamestrike) (will not change calculation time mutch)</Label>

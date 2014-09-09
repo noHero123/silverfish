@@ -11,9 +11,10 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "110alpha17";
+        public string versionnumber = "111";
         private bool singleLog = false;
         private string botbehave = "rush";
+
 
         Playfield lastpf;
         Settings sttngs = Settings.Instance;
@@ -27,6 +28,7 @@ namespace HREngine.Bots
 
         int currentMana = 0;
         int ownMaxMana = 0;
+        int numOptionPlayedThisTurn = 0;
         int numMinionsPlayedThisTurn = 0;
         int cardsPlayedThisTurn = 0;
         int ueberladung = 0;
@@ -97,24 +99,10 @@ namespace HREngine.Bots
             }
         }
 
-        public bool updateEverything(Behavior botbase)
+        public bool updateEverything(Behavior botbase, bool runExtern=false)
         {
-            this.botbehave = "rush";
-            if (botbase is BehaviorControl) this.botbehave = "control";
-            this.botbehave += " " + Ai.Instance.maxwide;
-            if (Ai.Instance.secondTurnAmount>0)
-            {
-                if (Ai.Instance.nextMoveGuess.mana == -100)
-                {
-                    Ai.Instance.updateTwoTurnSim();
-                }
-                this.botbehave += " twoturnsim " + Ai.Instance.mainTurnSimulator.dirtyTwoTurnSim;
-            }
-            if (Ai.Instance.playaround)
-            {
-                this.botbehave += " playaround";
-                this.botbehave += " " + Ai.Instance.playaroundprob + " " + Ai.Instance.playaroundprob2;
-            }
+            this.updateBehaveString(botbase);
+
             HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
             HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
             ownPlayerController = ownPlayer.GetHero().GetControllerId();//ownPlayer.GetHero().GetControllerId()
@@ -133,7 +121,14 @@ namespace HREngine.Bots
             Hrtprozis.Instance.setOwnPlayer(ownPlayerController);
             Handmanager.Instance.setOwnPlayer(ownPlayerController);
 
-            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.ueberladung, ownPlayer.GetHero().GetEntityId(), enemyPlayer.GetHero().GetEntityId());
+            this.numOptionPlayedThisTurn = 0;
+            this.numOptionPlayedThisTurn += this.cardsPlayedThisTurn + this.ownHero.numAttacksThisTurn;
+            foreach (Minion m in this.ownMinions)
+            {
+                if (m.Hp >= 1) this.numOptionPlayedThisTurn += m.numAttacksThisTurn;
+            }
+
+            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn,this.numOptionPlayedThisTurn, this.ueberladung, ownPlayer.GetHero().GetEntityId(), enemyPlayer.GetHero().GetEntityId());
             Hrtprozis.Instance.updateSecretStuff(this.ownSecretList, this.enemySecretCount);
 
             Hrtprozis.Instance.updateOwnHero(this.ownHeroWeapon, this.heroWeaponAttack, this.heroWeaponDurability, this.heroname,  this.heroAbility, this.ownAbilityisReady, this.ownHero);
@@ -161,32 +156,34 @@ namespace HREngine.Bots
             }
 
 
-            // print data
-            printstuff();
-            Hrtprozis.Instance.printHero();
-            Hrtprozis.Instance.printOwnMinions();
-            Hrtprozis.Instance.printEnemyMinions();
-            Handmanager.Instance.printcards();
-            Probabilitymaker.Instance.printTurnGraveYard();
-
             // calculate stuff
             Helpfunctions.Instance.ErrorLog("calculating stuff... " + DateTime.Now.ToString("HH:mm:ss.ffff"));
-            Ai.Instance.dosomethingclever(botbase);
+            if (runExtern)
+            {
+                Helpfunctions.Instance.logg("recalc-check###########");
+                p.printBoard();
+                Ai.Instance.nextMoveGuess.printBoard();
+                if (p.isEqual(Ai.Instance.nextMoveGuess, true))
+                {
+                   
+                    printstuff(false);
+                    Ai.Instance.doNextCalcedMove();
+                    
+                }
+                else
+                {
+                    printstuff(true);
+                    readActionFile();
+                }
+            }
+            else
+            {
+                printstuff(false);
+                Ai.Instance.dosomethingclever(botbase);
+            }
+
             Helpfunctions.Instance.ErrorLog("calculating ended! " + DateTime.Now.ToString("HH:mm:ss.ffff"));
             return true;
-        }
-
-        private void printstuff()
-        {
-            HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("start calculations, current time: " + DateTime.Now.ToString("HH:mm:ss") + " V" + this.versionnumber + " " + this.botbehave);
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("mana " + currentMana + "/" + ownMaxMana);
-            Helpfunctions.Instance.logg("emana " + enemyMaxMana);
-            Helpfunctions.Instance.logg("own secretsCount: " + ownPlayer.GetSecretDefinitions().Count);
-            Helpfunctions.Instance.logg("enemy secretsCount: " + enemySecretCount);
         }
 
         private void getHerostuff()
@@ -365,6 +362,9 @@ namespace HREngine.Bots
             }
 
             this.enemyHero.loadEnchantments(miniEnchlist, enemyhero.GetTag(HRGameTag.CONTROLLER));
+            //fastmode weapon correction:
+            if (ownHero.Angr < this.heroWeaponAttack) ownHero.Angr = this.heroWeaponAttack;
+            if (enemyHero.Angr < this.enemyWeaponAttack) enemyHero.Angr = this.enemyWeaponAttack;
 
         }
 
@@ -398,6 +398,7 @@ namespace HREngine.Bots
                     m.Angr = entitiy.GetATK();
                     m.maxHp = entitiy.GetHealth();
                     m.Hp = m.maxHp - entitiy.GetDamage();
+                    if (m.Hp <= 0) continue;
                     m.wounded = false;
                     if (m.maxHp > m.Hp) m.wounded = true;
 
@@ -649,6 +650,145 @@ namespace HREngine.Bots
             Probabilitymaker.Instance.setGraveYard(graveYard, isTurnStart);
 
         }
+
+        private void updateBehaveString(Behavior botbase)
+        {
+            this.botbehave = "rush";
+            if (botbase is BehaviorControl) this.botbehave = "control";
+            this.botbehave += " " + Ai.Instance.maxwide;
+            if (Ai.Instance.secondTurnAmount > 0)
+            {
+                if (Ai.Instance.nextMoveGuess.mana == -100)
+                {
+                    Ai.Instance.updateTwoTurnSim();
+                }
+                this.botbehave += " twoturnsim " + Ai.Instance.mainTurnSimulator.dirtyTwoTurnSim;
+            }
+            if (Ai.Instance.playaround)
+            {
+                this.botbehave += " playaround";
+                this.botbehave += " " + Ai.Instance.playaroundprob + " " + Ai.Instance.playaroundprob2;
+            }
+            if (Ai.Instance.nextTurnSimulator.doEnemySecondTurn)
+            {
+                this.botbehave += " simEnemy2Turn";
+            }
+
+        }
+
+        private void printstuff(bool runEx)
+        {
+            HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
+            int ownsecretcount = ownPlayer.GetSecretDefinitions().Count;
+            string dtimes = DateTime.Now.ToString("HH:mm:ss:ffff");
+            Helpfunctions.Instance.logg("#######################################################################");
+            Helpfunctions.Instance.logg("#######################################################################");
+            Helpfunctions.Instance.logg("start calculations, current time: " + dtimes + " V" + this.versionnumber + " " + this.botbehave);
+            Helpfunctions.Instance.logg("#######################################################################");
+            Helpfunctions.Instance.logg("mana " + currentMana + "/" + ownMaxMana);
+            Helpfunctions.Instance.logg("emana " + enemyMaxMana);
+            Helpfunctions.Instance.logg("own secretsCount: " + ownsecretcount);
+            Helpfunctions.Instance.logg("enemy secretsCount: " + enemySecretCount);
+
+            Ai.Instance.currentCalculatedBoard = dtimes;
+
+            if (runEx)
+            {
+                Helpfunctions.Instance.resetBuffer();
+                Helpfunctions.Instance.writeBufferToActionFile();
+                Helpfunctions.Instance.resetBuffer();
+
+                Helpfunctions.Instance.writeToBuffer("#######################################################################");
+                Helpfunctions.Instance.writeToBuffer("#######################################################################");
+                Helpfunctions.Instance.writeToBuffer("start calculations, current time: " + dtimes + " V" + this.versionnumber + " " + this.botbehave);
+                Helpfunctions.Instance.writeToBuffer("#######################################################################");
+                Helpfunctions.Instance.writeToBuffer("mana " + currentMana + "/" + ownMaxMana);
+                Helpfunctions.Instance.writeToBuffer("emana " + enemyMaxMana);
+                Helpfunctions.Instance.writeToBuffer("own secretsCount: " + ownsecretcount);
+                Helpfunctions.Instance.writeToBuffer("enemy secretsCount: " + enemySecretCount);
+            }
+            Hrtprozis.Instance.printHero(runEx);
+            Hrtprozis.Instance.printOwnMinions(runEx);
+            Hrtprozis.Instance.printEnemyMinions(runEx);
+            Handmanager.Instance.printcards(runEx);
+            Probabilitymaker.Instance.printTurnGraveYard(runEx);
+
+            if (runEx) Helpfunctions.Instance.writeBufferToFile();
+
+        }
+
+        private void readActionFile(bool passiveWaiting = false)
+        {
+            bool readed = true;
+            List<string> alist = new List<string>();
+            float value = 0f;
+            string boardnumm = "-1";
+            while (readed)
+            {
+                try
+                {
+                    string data = System.IO.File.ReadAllText(Settings.Instance.path + "actionstodo.txt");
+                    if (data != "" && data != "<EoF>" && data.EndsWith("<EoF>"))
+                    {
+                        data = data.Replace("<EoF>", "");
+                        //Helpfunctions.Instance.ErrorLog(data);
+                        Helpfunctions.Instance.resetBuffer();
+                        Helpfunctions.Instance.writeBufferToActionFile();
+                        alist.AddRange(data.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));
+                        string board = alist[0];
+                        if (board.StartsWith("board "))
+                        {
+                            boardnumm = (board.Split(' ')[1].Split(' ')[0]);
+                            alist.RemoveAt(0);
+                            if (boardnumm != Ai.Instance.currentCalculatedBoard)
+                            {
+                                if (passiveWaiting)
+                                {
+                                    System.Threading.Thread.Sleep(10);
+                                    return;
+                                }
+                                continue;
+                            }
+                        }
+                        string first = alist[0];
+                        if (first.StartsWith("value "))
+                        {
+                            value = float.Parse((first.Split(' ')[1].Split(' ')[0]));
+                            alist.RemoveAt(0);
+                        }
+                        readed = false;
+                    }
+                    else
+                    {
+                        System.Threading.Thread.Sleep(10);
+                        if (passiveWaiting)
+                        {
+                            return;
+                        }
+                    }
+
+                }
+                catch
+                {
+                    System.Threading.Thread.Sleep(10);
+                }
+               
+            }
+            Helpfunctions.Instance.logg("received " + boardnumm + " actions to do:");
+            Ai.Instance.currentCalculatedBoard = "0";
+            Playfield p = new Playfield();
+            List<Action> aclist = new List<Action>();
+            
+            foreach (string a in alist)
+            {
+                aclist.Add(new Action(a, p));
+                Helpfunctions.Instance.logg(a);
+            }
+            
+            Ai.Instance.setBestMoves(aclist, value);
+
+        }
+
 
     }
 

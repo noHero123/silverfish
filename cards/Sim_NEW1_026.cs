@@ -8,9 +8,9 @@ namespace HREngine.Bots
     {
         public CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_026t);
         
-        public virtual void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
         {
-            if (wasOwnCard == triggerEffectMinion.own)
+            if (wasOwnCard == triggerEffectMinion.own && c.type == CardDB.cardtype.SPELL)
             {
                 int place = (wasOwnCard)? p.ownMinions.Count : p.enemyMinions.Count;
                 p.callKid(card, place, wasOwnCard);
@@ -18,4 +18,5 @@ namespace HREngine.Bots
         }
 
     }
+
 }

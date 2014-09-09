@@ -17,6 +17,7 @@ namespace HREngine.Bots
         private bool useLethalCheck = true;
         private bool useComparison = true;
 
+        public bool doEnemySecondTurn = false;
 
         private bool printNormalstuff = false;
 
@@ -56,6 +57,11 @@ namespace HREngine.Bots
         public void setSecondTurnSimu(bool sts)
         {
             this.simulateSecondTurn = sts;
+        }
+
+        public void setEnemyTurnsim(bool ets)
+        {
+            this.doEnemySecondTurn = ets;
         }
 
         public void setPlayAround(bool spa, int pprob, int pprob2)
@@ -126,7 +132,8 @@ namespace HREngine.Bots
                     }
                     else
                     {
-                        p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                        p.sEnemTurn = this.doEnemySecondTurn;
+                        p.endTurn(false, false, false, this.playaroundprob, this.playaroundprob2);
                     }
 
                     //sort stupid stuff ouf

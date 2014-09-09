@@ -38,17 +38,7 @@ namespace HREngine.Bots
                 }
             }
 
-            foreach (Minion m in posmoves[0].enemyMinions)
-            {
-                if (m.frozen || (m.handcard.card.name == CardDB.cardName.ancientwatcher && !m.silenced))
-                {
-                    m.Ready = false;
-                    continue;
-                }
-                if (m.Angr == 0) continue;
-                m.Ready = true;
-                m.numAttacksThisTurn = 0;
-            }
+           
 
             //play ability!
             if (posmoves[0].enemyAbilityReady && enemMana >= 2 && posmoves[0].enemyHeroAblility.card.canplayCard(posmoves[0], 0) && !rootfield.loatheb)
@@ -80,6 +70,17 @@ namespace HREngine.Bots
                 }
 
             }
+
+
+            foreach (Minion m in posmoves[0].enemyMinions)
+            {
+                if (m.Angr == 0) continue;
+                m.numAttacksThisTurn = 0;
+                m.playedThisTurn = false;
+                m.updateReadyness();
+            }
+
+             doSomeBasicEnemyAi(posmoves[0]);
 
             int count = 0;
             //movegen...
@@ -162,7 +163,120 @@ namespace HREngine.Bots
 
         }
 
+        CardDB.Card flame = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_614t);
 
+        private void doSomeBasicEnemyAi(Playfield p)
+        {
+            foreach (Minion m in p.enemyMinions)
+            {
+                if(m.silenced) continue;
+                if (p.enemyAnzCards >= 2 && (m.name == CardDB.cardName.gadgetzanauctioneer || m.name == CardDB.cardName.starvingbuzzard))
+                {
+                    if (p.enemyDeckSize >= 1)
+                    {
+                        p.drawACard(CardDB.cardName.unknown, false);
+                    }
+                }
+                if (m.name == CardDB.cardName.northshirecleric)
+                {
+                    int anz = 0;
+                    foreach (Minion mnn in p.enemyMinions)
+                    {
+                        if (mnn.wounded) anz++;
+                    }
+                    anz = Math.Min(anz, 3);
+                    for (int i = 0; i < anz; i++)
+                    {
+                        if (p.enemyDeckSize >= 1)
+                        {
+                            p.drawACard(CardDB.cardName.unknown, false);
+                        }
+                    }
+                }
+
+                if (m.name == CardDB.cardName.illidanstormrage && p.enemyAnzCards>=1)
+                {
+                    p.callKid(flame, p.enemyMinions.Count, false);
+                }
+
+                if (m.name == CardDB.cardName.questingadventurer && p.enemyAnzCards >= 1)
+                {
+                    p.minionGetBuffed(m, 1, 1);
+                    if (p.enemyAnzCards >= 3 && p.enemyMaxMana >=5)
+                    {
+                        p.minionGetBuffed(m, 1, 1);
+                    }
+                }
+
+                if (m.name == CardDB.cardName.manaaddict && p.enemyAnzCards >= 1)
+                {
+                    p.minionGetTempBuff(m, 2, 0);
+                    if (p.enemyAnzCards >= 3 && p.enemyMaxMana >= 5)
+                    {
+                        p.minionGetTempBuff(m, 2, 0);
+                    }
+                }
+
+                if (m.name == CardDB.cardName.manawyrm && p.enemyAnzCards >= 1)
+                {
+                    p.minionGetBuffed(m, 1, 0);
+                    if (p.enemyAnzCards >= 3 && p.enemyMaxMana >= 5)
+                    {
+                        p.minionGetBuffed(m, 1, 0);
+                    }
+                }
+
+                if (m.name == CardDB.cardName.secretkeeper && p.enemyAnzCards >= 3)
+                {
+                    p.minionGetBuffed(m, 1, 1);
+                }
+
+                if (m.name == CardDB.cardName.unboundelemental && p.enemyAnzCards >= 2)
+                {
+                    p.minionGetBuffed(m, 1, 1);
+                }
+
+                if (m.name == CardDB.cardName.murloctidecaller && p.enemyAnzCards >= 2)
+                {
+                    p.minionGetBuffed(m, 1, 0);
+                }
+
+                if (m.name == CardDB.cardName.undertaker && p.enemyAnzCards >= 2)
+                {
+                    p.minionGetBuffed(m, 1, 1);
+                }
+
+                if (m.name == CardDB.cardName.frothingberserker && p.enemyMinions.Count + p.ownMinions.Count >= 3)
+                {
+                    p.minionGetBuffed(m, 1, 0);
+                }
+
+                if (m.name == CardDB.cardName.gurubashiberserker && m.Hp>=5 && p.enemyAnzCards >=3)
+                {
+                    p.minionGetBuffed(m, 3, 0);
+                }
+
+                if (m.name == CardDB.cardName.lightwarden)
+                {
+                    int anz = 0;
+                    foreach (Minion mnn in p.enemyMinions)
+                    {
+                        if (mnn.wounded) anz++;
+                    }
+                    if (p.enemyHero.wounded) anz++;
+                    if (anz >= 2) p.minionGetBuffed(m, 2, 0);
+                }
+            }
+
+            if (p.enemyMinions.Count < 7)
+            {
+                p.callKid(this.flame, p.enemyMinions.Count, false);
+                int bval = 1;
+                if (p.enemyMaxMana > 4) bval = 2;
+                if (p.enemyMaxMana > 7) bval = 3;
+                p.minionGetBuffed(p.enemyMinions[p.enemyMinions.Count - 1], bval - 1, bval);
+            }
+        }
 
 
     }

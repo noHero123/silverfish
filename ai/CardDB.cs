@@ -3207,7 +3207,7 @@ namespace HREngine.Bots
             REQ_MUST_TARGET_TAUNTER,//=46
             REQ_UNDAMAGED_TARGET//=47
         }
-
+        
         public class Card
         {
             //public string CardID = "";

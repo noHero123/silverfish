@@ -32,6 +32,8 @@ namespace HREngine.Bots
         {
             List<Action> returnlist = new List<Action>();
 
+            if (hc.card.type == CardDB.cardtype.MOB && p.ownMinions.Count>=7) return returnlist;
+
             for (int i = 1; i < 3; i++)
             {
                 CardDB.Card c = hc.card;
@@ -84,6 +86,7 @@ namespace HREngine.Bots
                 }
                 if (c.name == CardDB.cardName.ancientofwar)
                 {
+                    
                     if (i == 1)
                     {
                         c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_178a);
@@ -107,6 +110,7 @@ namespace HREngine.Bots
                 //cenarius dont need
                 if (c.name == CardDB.cardName.keeperofthegrove)//keeper of the grove
                 {
+                    
                     if (i == 1)
                     {
                         c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_166a);

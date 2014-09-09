@@ -22,6 +22,7 @@ namespace HREngine.Bots
 
        Behavior behave = new BehaviorControl();
 
+       bool useExternalProcess = true;
 
 
        //crawlerstuff
@@ -39,6 +40,8 @@ namespace HREngine.Bots
             starttime = DateTime.Now;
             bool concede = false;
             bool writeToSingleFile = false;
+
+           
 
             try
             {
@@ -132,10 +135,11 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("error in reading Maxwide from settings, please recheck the entry");
             }
 
+           int twotsamount =0;
             try
             {
                 //bool twots = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurns") == "true") ? true : false;
-                int twotsamount = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurnCounter")));
+                twotsamount = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurnCounter")));
                 if (twotsamount < 0) twotsamount = 0;
                 Ai.Instance.setTwoTurnSimulation(false, twotsamount);
                 Helpfunctions.Instance.ErrorLog("calculate the second turn of the " + twotsamount + " best boards");
@@ -145,6 +149,22 @@ namespace HREngine.Bots
             catch
             {
                 Helpfunctions.Instance.ErrorLog("error in reading two-turn-simulation from settings");
+            }
+
+            if (twotsamount >= 1)
+            {
+                try
+                {
+                    bool enemySecondTurnSim = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateEnemyOnSecondTurn") == "true") ? true : false;
+                    Ai.Instance.nextTurnSimulator.setEnemyTurnsim(enemySecondTurnSim);
+                    if(enemySecondTurnSim) Helpfunctions.Instance.ErrorLog("simulates the enemy turn on your second turn");
+
+
+                }
+                catch
+                {
+                    Helpfunctions.Instance.ErrorLog("error in reading enemys-two-turn-simulation from settings");
+                }
             }
 
             try
@@ -188,9 +208,21 @@ namespace HREngine.Bots
             Helpfunctions.Instance.ErrorLog("you are running uai V" + sf.versionnumber);
             Helpfunctions.Instance.ErrorLog("----------------------------");
 
+            try
+            {
+                this.useExternalProcess = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.extern") == "true") ? true : false;
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("rand read the external-process setting!");
+            }
+
+            if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("YOU USE SILVER.EXE FOR CALCULATION, MAKE SURE YOU STARTED IT!");
+            if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("SILVER.EXE IS LOCATED IN: " + Settings.Instance.path);
+
             if (teststuff)
             {
-                Ai.Instance.autoTester(behave, printstuff);
+                Ai.Instance.autoTester(printstuff);
             }
             writeSettings();
         }
@@ -222,6 +254,10 @@ namespace HREngine.Bots
             if (this.oldwin != totalwin)
             {
                 this.oldwin = totalwin;
+                if (this.lossedtodo > 0)
+                {
+                    this.lossedtodo--;
+                }
                 Helpfunctions.Instance.ErrorLog("not today!! (you won a game)");
                 this.isgoingtoconcede = true;
                 return true;
@@ -238,6 +274,7 @@ namespace HREngine.Bots
             if (curlvl < this.concedeLvl)
             {
                 this.lossedtodo = 3;
+                Helpfunctions.Instance.ErrorLog("your rank is " + curlvl + " targeted rank is " + this.concedeLvl + " -> concede!");
                 Helpfunctions.Instance.ErrorLog("not today!!!");
                 this.isgoingtoconcede = true;
                 return true;
@@ -603,7 +640,7 @@ namespace HREngine.Bots
                     }
                 }
 
-                this.printlearnmode = sf.updateEverything(behave);
+                this.printlearnmode = sf.updateEverything(behave, this.useExternalProcess);
 
                 if (this.learnmode)
                 {
@@ -624,7 +661,7 @@ namespace HREngine.Bots
                     Helpfunctions.Instance.ErrorLog("end turn");
                     return null;
                 }
-                Helpfunctions.Instance.ErrorLog("play action");
+                Helpfunctions.Instance.ErrorLog("play current action:-------------");
                 moveTodo.print();
                 if (moveTodo.actionType == actionEnum.playcard)
                 {

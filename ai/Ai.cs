@@ -21,8 +21,9 @@ namespace HREngine.Bots
 
         public MiniSimulatorNextTurn nextTurnSimulator;
         public MiniSimulator mainTurnSimulator;
-
         public EnemyTurnSimulator enemyTurnSim;
+
+        public string currentCalculatedBoard = "1";
 
         PenalityManager penman = PenalityManager.Instance;
 
@@ -34,9 +35,10 @@ namespace HREngine.Bots
 
         public Action bestmove = null;
         public float bestmoveValue = 0;
-        Playfield bestboard = new Playfield();
         public Playfield nextMoveGuess = new Playfield();
         public Behavior botBase = null;
+
+        public List<Action> bestActions = new List<Action>();
 
         public bool secondturnsim = false;
         public int secondTurnAmount = 256;
@@ -104,18 +106,25 @@ namespace HREngine.Bots
             help.logg("-------------------------------------");
             help.logg("bestPlayvalue " + bestval);
 
-            bestplay.printActions();
-            this.bestmove = bestplay.getNextAction();
+            this.bestActions.Clear();
+            this.bestmove = null;
+            foreach(Action a in bestplay.playactions)
+            {
+                this.bestActions.Add(new Action(a));
+                a.print();
+            }
+            if (this.bestActions.Count >= 1)
+            {
+                this.bestmove = this.bestActions[0];
+                this.bestActions.RemoveAt(0);
+            }
             this.bestmoveValue = bestval;
-            this.bestboard = new Playfield(bestplay);
 
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
                 this.nextMoveGuess = new Playfield();
 
                 this.nextMoveGuess.doAction(bestmove);
-
-                this.bestboard.playactions.RemoveAt(0);
             }
             else
             {
@@ -124,19 +133,78 @@ namespace HREngine.Bots
 
         }
 
-        private void doNextCalcedMove()
+        public void setBestMoves(List<Action> alist, float value)
         {
-            help.logg("noRecalcNeeded!!!-----------------------------------");
-            this.bestboard.printActions();
-            this.bestmove = this.bestboard.getNextAction();
+            this.bestActions.Clear();
+            this.bestmove = null;
+
+            foreach (Action a in alist)
+            {
+                this.bestActions.Add(new Action(a));
+                a.print();
+            }
+            
+            if (this.bestActions.Count >= 1)
+            {
+                this.bestmove = this.bestActions[0];
+                this.bestActions.RemoveAt(0);
+            }
 
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
+               
+
                 this.nextMoveGuess = new Playfield();
+
+                if (bestmove.actionType == actionEnum.playcard)
+                {
+                    foreach (Handmanager.Handcard hc in this.nextMoveGuess.owncards)
+                    {
+                        if (hc.entity == bestmove.card.entity)
+                        {
+                            bestmove.card = hc;
+                        }
+                    }
+                }
 
                 this.nextMoveGuess.doAction(bestmove);
 
-                this.bestboard.playactions.RemoveAt(0);
+               
+            }
+            else
+            {
+                nextMoveGuess.mana = -100;
+            }
+        }
+
+        public void doNextCalcedMove()
+        {
+            help.logg("noRecalcNeeded!!!-----------------------------------");
+            //this.bestboard.printActions();
+
+            this.bestmove = null;
+            if (this.bestActions.Count >= 1)
+            {
+                this.bestmove = this.bestActions[0];
+                this.bestActions.RemoveAt(0);
+            }
+
+            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            {
+                //this.nextMoveGuess = new Playfield();
+
+                if (bestmove.actionType == actionEnum.playcard)
+                {
+                    foreach (Handmanager.Handcard hc in this.nextMoveGuess.owncards)
+                    {
+                        if (hc.entity == bestmove.card.entity)
+                        {
+                            bestmove.card = hc;
+                        }
+                    }
+                }
+
+                this.nextMoveGuess.doAction(bestmove);
             }
             else
             {
@@ -201,12 +269,11 @@ namespace HREngine.Bots
 
         }
 
-        public void autoTester(Behavior bbase, bool printstuff)
+        public void autoTester(bool printstuff, string data = "")
         {
             help.logg("simulating board ");
 
-            BoardTester bt = new BoardTester();
-            this.botBase = bbase;
+            BoardTester bt = new BoardTester(data);
             hp.printHero();
             hp.printOwnMinions();
             hp.printEnemyMinions();
@@ -242,11 +309,11 @@ namespace HREngine.Bots
                 help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
             }
 
-            this.mainTurnSimulator.printPosmoves();
-
-            help.logg("bestfield");
-            bestboard.printBoard();
-            if (printstuff) simmulateWholeTurn();
+            if (printstuff)
+            {
+                this.mainTurnSimulator.printPosmoves();
+                simmulateWholeTurn();
+            }
         }
 
         public void simmulateWholeTurn()
@@ -272,7 +339,7 @@ namespace HREngine.Bots
             help.logg("-------------");
             tempbestboard.printBoard();
 
-            foreach (Action bestmovee in bestboard.playactions)
+            foreach (Action bestmovee in this.bestActions)
             {
 
                 help.logg("stepp");
@@ -320,7 +387,7 @@ namespace HREngine.Bots
                 help.ErrorLog("end turn");
             }
 
-            foreach (Action bestmovee in bestboard.playactions)
+            foreach (Action bestmovee in this.bestActions)
             {
                 tempbestboard.printActionforDummies(bestmovee);
 
@@ -339,7 +406,24 @@ namespace HREngine.Bots
             }
         }
 
-
+        public void updateEntitiy(int old, int newone)
+        {
+            Helpfunctions.Instance.logg("entityupdate! "+ old + " to " + newone);
+            foreach(Minion m in this.nextMoveGuess.ownMinions)
+            {
+                if (m.entitiyID == old) m.entitiyID = newone;
+            }
+            foreach (Minion m in this.nextMoveGuess.enemyMinions)
+            {
+                if (m.entitiyID == old) m.entitiyID = newone;
+            }
+            foreach (Action a in this.bestActions)
+            {
+                if (a.own != null && a.own.entitiyID == old) a.own.entitiyID = newone;
+                if (a.target != null && a.target.entitiyID == old) a.target.entitiyID = newone;
+                if (a.card != null && a.card.entity == old) a.card.entity = newone;
+            }
+        }
 
     }
 

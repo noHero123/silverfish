@@ -59,6 +59,7 @@ namespace HREngine.Bots
         public CardDB.Card heroAbility;
         public bool ownAbilityisReady = false;
         public CardDB.Card enemyAbility;
+        public int numOptionsPlayedThisTurn = 0;
         public int numMinionsPlayedThisTurn = 0;
 
         public int cardsPlayedThisTurn = 0;
@@ -301,7 +302,7 @@ namespace HREngine.Bots
             this.enemySecretCount = numEnemSec;
         }
 
-        public void updatePlayer(int maxmana, int currentmana, int cardsplayedthisturn, int numMinionsplayed, int recall, int heroentity, int enemyentity)
+        public void updatePlayer(int maxmana, int currentmana, int cardsplayedthisturn, int numMinionsplayed, int optionsPlayedThisTurn, int recall, int heroentity, int enemyentity)
         {
             this.currentMana = currentmana;
             this.ownMaxMana = maxmana;
@@ -310,6 +311,7 @@ namespace HREngine.Bots
             this.ueberladung = recall;
             this.ownHeroEntity = heroentity;
             this.enemyHeroEntitiy = enemyentity;
+            this.numOptionsPlayedThisTurn = optionsPlayedThisTurn;
         }
 
         public void updateOwnHero(string weapon, int watt, int wdur, string heron, CardDB.Card hab, bool habrdy, Minion Hero)
@@ -416,7 +418,7 @@ namespace HREngine.Bots
         }
 
 
-        public void printHero()
+        public void printHero(bool writetobuffer=false)
         {
             help.logg("player:");
             help.logg(this.numMinionsPlayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.ueberladung + " " + this.ownPlayerController );
@@ -436,12 +438,35 @@ namespace HREngine.Bots
             help.logg("weapon: " +this.enemyWeaponAttack + " " + this.enemyWeaponDurability +" " + this.enemyHeroWeapon);
             help.logg("ability: " + "true" + " " + this.enemyAbility.cardIDenum);
             help.logg("fatigue: " + this.ownDeckSize + " " +this.ownHeroFatigue + " "+ this.enemyDeckSize + " " + this.enemyHeroFatigue);
+
+            if (writetobuffer)
+            {
+                help.writeToBuffer("player:");
+                help.writeToBuffer(this.numMinionsPlayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.ueberladung + " " + this.ownPlayerController);
+
+                help.writeToBuffer("ownhero:");
+                help.writeToBuffer(this.heroname + " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entitiyID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack);
+                help.writeToBuffer("weapon: " + heroWeaponAttack + " " + heroWeaponDurability + " " + ownHeroWeapon);
+                help.writeToBuffer("ability: " + this.ownAbilityisReady + " " + this.heroAbility.cardIDenum);
+                secs = "";
+                foreach (CardDB.cardIDEnum sec in this.ownSecretList)
+                {
+                    secs += sec + " ";
+                }
+                help.writeToBuffer("osecrets: " + secs);
+                help.writeToBuffer("enemyhero:");
+                help.writeToBuffer(this.enemyHeroname + " " + this.enemyHero.Hp + " " + this.enemyHero.maxHp + " " + this.enemyHero.armor + " " + this.enemyHero.frozen + " " + this.enemyHero.immune + " " + this.enemyHero.entitiyID);
+                help.writeToBuffer("weapon: " + this.enemyWeaponAttack + " " + this.enemyWeaponDurability + " " + this.enemyHeroWeapon);
+                help.writeToBuffer("ability: " + "true" + " " + this.enemyAbility.cardIDenum);
+                help.writeToBuffer("fatigue: " + this.ownDeckSize + " " + this.ownHeroFatigue + " " + this.enemyDeckSize + " " + this.enemyHeroFatigue);
+            }
         }
 
 
-        public void printOwnMinions()
+        public void printOwnMinions(bool writetobuffer=false)
         {
             help.logg("OwnMinions:");
+            if (writetobuffer) help.writeToBuffer("OwnMinions:");
             foreach (Minion m in this.ownMinions)
             {
                 string mini = m.name + " " + m.handcard.card.cardIDenum + " zp:" + m.zonepos + " e:" + m.entitiyID + " A:" + m.Angr + " H:" + m.Hp + " mH:" + m.maxHp + " rdy:" + m.Ready + " natt:" + m.numAttacksThisTurn;
@@ -477,13 +502,15 @@ namespace HREngine.Bots
 
 
                 help.logg( mini );
+                if (writetobuffer) help.writeToBuffer(mini);
             }
 
         }
 
-        public void printEnemyMinions()
+        public void printEnemyMinions(bool writetobuffer=false)
         {
             help.logg("EnemyMinions:");
+            if (writetobuffer) help.writeToBuffer("EnemyMinions:");
             foreach (Minion m in this.enemyMinions)
             {
                 string mini = m.name + " " + m.handcard.card.cardIDenum + " zp:" + m.zonepos + " e:" + m.entitiyID + " A:" + m.Angr + " H:" + m.Hp + " mH:" + m.maxHp + " rdy:" + m.Ready;// +" natt:" + m.numAttacksThisTurn;
@@ -516,6 +543,7 @@ namespace HREngine.Bots
                 if (m.souloftheforest >= 1) mini += " souloffrst(" + m.souloftheforest + ")";
                 
                 help.logg( mini );
+                if (writetobuffer) help.writeToBuffer(mini);
             }
 
         }

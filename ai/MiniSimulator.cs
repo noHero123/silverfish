@@ -244,7 +244,6 @@ namespace HREngine.Bots
             return -10000;
         }
 
-
         public void doDirtyTwoTurnsim()
         {
             //return;
@@ -252,8 +251,15 @@ namespace HREngine.Bots
             this.posmoves.Clear();
             foreach (Playfield p in this.twoturnfields)
             {
-                p.value = int.MinValue;
-                Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+
+                if (p.guessingHeroHP >= 1)
+                {
+                    p.value = int.MinValue;
+                    //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+                    p.prepareNextTurn(p.isOwnTurn);
+                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
+                }
+                //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
                 this.posmoves.Add(p);
             }
 

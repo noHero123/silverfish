@@ -24,6 +24,7 @@ namespace HREngine.Bots
         public bool enemyMininsChanged;
     }
 
+
     public class Playfield
     {
         //Todo: delete all new list<minion>
@@ -296,7 +297,7 @@ namespace HREngine.Bots
             this.startedWithMobsPlayedThisTurn = Hrtprozis.Instance.numMinionsPlayedThisTurn;// only change mobsplayedthisturm
             this.cardsPlayedThisTurn = Hrtprozis.Instance.cardsPlayedThisTurn;
             //todo:
-            this.optionsPlayedThisTurn = 0;
+            this.optionsPlayedThisTurn = Hrtprozis.Instance.numOptionsPlayedThisTurn;
 
             this.ueberladung = Hrtprozis.Instance.ueberladung;
 
@@ -670,12 +671,15 @@ namespace HREngine.Bots
                 Minion dis = this.ownMinions[i]; Minion pis = p.ownMinions[i];
                 //if (dis.entitiyID == 0) dis.entitiyID = pis.entitiyID;
                 //if (pis.entitiyID == 0) pis.entitiyID = dis.entitiyID;
-                if (dis.entitiyID != pis.entitiyID) minionbool = false;
+                if (dis.name != pis.name) minionbool = false;
                 if (dis.Angr != pis.Angr || dis.Hp != pis.Hp || dis.maxHp != pis.maxHp || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
                 if (dis.Ready != pis.Ready) minionbool = false; // includes frozen, exhaunted
-                if (dis.playedThisTurn != pis.playedThisTurn || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
-                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.wounded != pis.wounded || dis.zonepos != pis.zonepos) minionbool = false;
+                if (dis.playedThisTurn != pis.playedThisTurn) minionbool = false;
+                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury  || dis.zonepos != pis.zonepos) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
+                if(dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
+                if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.souloftheforest != pis.souloftheforest) minionbool = false;
 
             }
             if (minionbool == false)
@@ -689,12 +693,15 @@ namespace HREngine.Bots
                 Minion dis = this.enemyMinions[i]; Minion pis = p.enemyMinions[i];
                 //if (dis.entitiyID == 0) dis.entitiyID = pis.entitiyID;
                 //if (pis.entitiyID == 0) pis.entitiyID = dis.entitiyID;
-                if (dis.entitiyID != pis.entitiyID) minionbool = false;
+                if (dis.name != pis.name) minionbool = false;
                 if (dis.Angr != pis.Angr || dis.Hp != pis.Hp || dis.maxHp != pis.maxHp || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
                 if (dis.Ready != pis.Ready) minionbool = false; // includes frozen, exhaunted
-                if (dis.playedThisTurn != pis.playedThisTurn || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
-                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.wounded != pis.wounded || dis.zonepos != pis.zonepos) minionbool = false;
+                if (dis.playedThisTurn != pis.playedThisTurn) minionbool = false;
+                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
+                if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
+                if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.souloftheforest != pis.souloftheforest) minionbool = false;
             }
             if (minionbool == false)
             {
@@ -712,6 +719,19 @@ namespace HREngine.Bots
                 }
             }
 
+            for (int i = 0; i < this.ownMinions.Count; i++)
+            {
+                Minion dis = this.ownMinions[i]; Minion pis = p.ownMinions[i];
+                if (dis.entitiyID != pis.entitiyID) Ai.Instance.updateEntitiy(pis.entitiyID, dis.entitiyID);
+                
+            }
+
+            for (int i = 0; i < this.enemyMinions.Count; i++)
+            {
+                Minion dis = this.enemyMinions[i]; Minion pis = p.enemyMinions[i];
+                if (dis.entitiyID != pis.entitiyID) Ai.Instance.updateEntitiy(pis.entitiyID, dis.entitiyID);
+
+            }
             return true;
         }
 
@@ -744,9 +764,12 @@ namespace HREngine.Bots
                 if (dis.entitiyID != pis.entitiyID) minionbool = false;
                 if (dis.Angr != pis.Angr || dis.Hp != pis.Hp || dis.maxHp != pis.maxHp || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
                 if (dis.Ready != pis.Ready) minionbool = false; // includes frozen, exhaunted
-                if (dis.playedThisTurn != pis.playedThisTurn || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
-                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.wounded != pis.wounded || dis.zonepos != pis.zonepos) minionbool = false;
+                if (dis.playedThisTurn != pis.playedThisTurn) minionbool = false;
+                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
+                if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
+                if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.souloftheforest != pis.souloftheforest) minionbool = false;
                 if (minionbool == false) break;
             }
             if (minionbool == false)
@@ -763,9 +786,12 @@ namespace HREngine.Bots
                 if (dis.entitiyID != pis.entitiyID) minionbool = false;
                 if (dis.Angr != pis.Angr || dis.Hp != pis.Hp || dis.maxHp != pis.maxHp || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
                 if (dis.Ready != pis.Ready) minionbool = false; // includes frozen, exhaunted
-                if (dis.playedThisTurn != pis.playedThisTurn || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
-                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.wounded != pis.wounded || dis.zonepos != pis.zonepos) minionbool = false;
+                if (dis.playedThisTurn != pis.playedThisTurn) minionbool = false;
+                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
+                if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
+                if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
+                if (dis.ancestralspirit != pis.ancestralspirit || dis.souloftheforest != pis.souloftheforest) minionbool = false;
                 if (minionbool == false) break;
             }
             if (minionbool == false)
@@ -1967,6 +1993,7 @@ namespace HREngine.Bots
             //CREATE NEW MINIONS (cant use a.target or a.own) (dont belong to this board)
             Minion trgt = null;
             Minion o = null;
+            Handmanager.Handcard ha = null;
             if (aa.target != null)
             {
                 foreach (Minion m in this.ownMinions)
@@ -2010,12 +2037,34 @@ namespace HREngine.Bots
                 if (aa.own.entitiyID == this.enemyHero.entitiyID) o = this.enemyHero;
             }
 
-
+            if (aa.card != null)
+            {
+                foreach (Handmanager.Handcard hh in this.owncards)
+                {
+                    if (hh.entity == aa.card.entity)
+                    {
+                        ha = hh;
+                        break;
+                    }
+                }
+                if (aa.actionType== actionEnum.useHeroPower)
+                {
+                    if (this.isOwnTurn) ha = this.ownHeroAblility;
+                    else ha = this.enemyHeroAblility;
+                }
+            }
             // create and execute the action------------------------------------------------------------------------
-            Action a = new Action(aa.actionType, aa.card, o, aa.place, trgt, aa.penalty, aa.druidchoice);
+            Action a = new Action(aa.actionType, ha, o, aa.place, trgt, aa.penalty, aa.druidchoice);
 
-            this.optionsPlayedThisTurn++;
 
+            if (this.isOwnTurn)
+            { 
+                this.optionsPlayedThisTurn++; 
+            }
+            else
+            {
+                this.enemyOptionsDoneThisTurn++;
+            }
             //save the action if its our first turn
             if (this.turnCounter == 0) this.playactions.Add(a);
 
@@ -2045,7 +2094,7 @@ namespace HREngine.Bots
             {
                 playHeroPower(a.target, a.penalty, this.isOwnTurn);
             }
-            if (!this.isOwnTurn) enemyOptionsDoneThisTurn++;
+            
         }
 
         //minion attacks a minion
@@ -2356,6 +2405,7 @@ namespace HREngine.Bots
                     this.ownWeaponDurability = 0;
                     this.ownWeaponAttack = 0;
                     this.ownWeaponName = CardDB.cardName.unknown;
+                    this.ownHero.windfury = false;
 
                     foreach (Minion m in this.ownMinions)
                     {
@@ -2365,6 +2415,7 @@ namespace HREngine.Bots
                             m.updateReadyness();
                         }
                     }
+                    this.ownHero.updateReadyness();
                 }
             }
             else
@@ -2394,6 +2445,8 @@ namespace HREngine.Bots
                     this.enemyWeaponDurability = 0;
                     this.enemyWeaponAttack = 0;
                     this.enemyWeaponName = CardDB.cardName.unknown;
+                    this.enemyHero.windfury = false;
+                    this.enemyHero.updateReadyness();
                 }
             }
         }
@@ -2674,9 +2727,12 @@ namespace HREngine.Bots
                 {
                     if (m.silenced) continue;
 
-                    if (own && m.name == CardDB.cardName.violetteacher && c.type == CardDB.cardtype.SPELL)
+                    if (own && m.name == CardDB.cardName.violetteacher)
                     {
-                        violetteacher++;
+                        if (c.type == CardDB.cardtype.SPELL)
+                        {
+                            violetteacher++;
+                        }
                         continue;
                     }
 
@@ -2696,9 +2752,12 @@ namespace HREngine.Bots
                 {
                     if (m.silenced) continue;
 
-                    if (own && m.name == CardDB.cardName.violetteacher && c.type == CardDB.cardtype.SPELL)
+                    if (!own && m.name == CardDB.cardName.violetteacher)
                     {
-                        violetteacher++;
+                        if (c.type == CardDB.cardtype.SPELL)
+                        {
+                            violetteacher++;
+                        }
                         continue;
                     }
 
@@ -3050,10 +3109,14 @@ namespace HREngine.Bots
                     angr--;
                     vert--;
                 }
-                if (m.name == CardDB.cardName.grimscaleoracle)
+                if (m.name == CardDB.cardName.murlocwarleader)
                 {
                     angr -= 2;
                     vert--;
+                }
+                if (m.name == CardDB.cardName.grimscaleoracle)
+                {
+                    angr--;
                 }
             }
 
@@ -3238,12 +3301,14 @@ namespace HREngine.Bots
 
         public void equipWeapon(CardDB.Card c, bool own)
         {
+            Minion hero = (own) ? this.ownHero : this.enemyHero;
             if (own)
             {
                 if (this.ownWeaponDurability >= 1)
                 {
                     this.lostWeaponDamage += this.ownWeaponDurability * this.ownWeaponAttack * this.ownWeaponAttack;
                     this.lowerWeaponDurability(1000, true);
+                    hero.Angr -= this.ownWeaponAttack;
                 }
                 this.ownWeaponAttack = c.Attack;
                 this.ownWeaponDurability = c.Durability;
@@ -3251,18 +3316,18 @@ namespace HREngine.Bots
             }
             else
             {
+                if (this.enemyWeaponDurability >= 1)
+                {
+                    hero.Angr -= this.enemyWeaponAttack;
+                }
                 this.enemyWeaponAttack = c.Attack;
                 this.enemyWeaponDurability = c.Durability;
                 this.enemyWeaponName = c.name;
             }
 
-            Minion hero = (own) ? this.ownHero : this.enemyHero;
+            
 
-            if (own)
-            {
-                hero.tempAttack = 0;
-                hero.Angr = c.Attack;
-            }
+            hero.Angr += c.Attack;
 
             if (c.name == CardDB.cardName.doomhammer)
             {
@@ -3432,6 +3497,8 @@ namespace HREngine.Bots
                 hc.card = plchldr;
                 hc.position = this.owncards.Count + 1;
                 hc.manacost = 1000;
+                hc.entity = this.nextEntity;
+                this.nextEntity++;
                 this.owncards.Add(hc);
             }
             else
@@ -3441,6 +3508,8 @@ namespace HREngine.Bots
                 hc.card = c;
                 hc.position = this.owncards.Count + 1;
                 hc.manacost = c.calculateManaCost(this);
+                hc.entity = this.nextEntity;
+                this.nextEntity++;
                 this.owncards.Add(hc);
             }
 
@@ -3799,6 +3868,7 @@ namespace HREngine.Bots
         {
             Helpfunctions.Instance.logg("board: " + value);
             Helpfunctions.Instance.logg("pen " + this.evaluatePenality);
+            Helpfunctions.Instance.logg("mana " + this.mana + "/" + this.ownMaxMana);
             Helpfunctions.Instance.logg("cardsplayed: " + this.cardsPlayedThisTurn + " handsize: " + this.owncards.Count);
 
             Helpfunctions.Instance.logg("ownhero: ");
@@ -3830,11 +3900,11 @@ namespace HREngine.Bots
             return null;
         }
 
-        public void printActions()
+        public void printActions(bool toBuffer=false)
         {
             foreach (Action a in this.playactions)
             {
-                a.print();
+                a.print(toBuffer);
                 Helpfunctions.Instance.logg("");
             }
         }

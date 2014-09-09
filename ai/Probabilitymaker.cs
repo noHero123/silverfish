@@ -61,12 +61,13 @@ namespace HREngine.Bots
             setupDeck(list, enemyDeckGuessed, enemyCardsPlayed);
         }
 
-        public void printTurnGraveYard()
+        public void printTurnGraveYard(bool writetobuffer=false)
         {
             string g = "";
             if (Probabilitymaker.Instance.feugenDead) g += " fgn";
             if (Probabilitymaker.Instance.stalaggDead) g += " stlgg";
             Helpfunctions.Instance.logg("GraveYard:" + g);
+            if (writetobuffer) Helpfunctions.Instance.writeToBuffer("GraveYard:" + g);
 
             string s = "ownDiedMinions: ";
             foreach (GraveYardItem gyi in this.turngraveyard)
@@ -74,6 +75,7 @@ namespace HREngine.Bots
                 if (gyi.own) s += gyi.cardid + "," + gyi.entity + ";";
             }
             Helpfunctions.Instance.logg(s);
+            if (writetobuffer) Helpfunctions.Instance.writeToBuffer(s);
 
             s = "enemyDiedMinions: ";
             foreach (GraveYardItem gyi in this.turngraveyard)
@@ -81,6 +83,7 @@ namespace HREngine.Bots
                 if (!gyi.own) s += gyi.cardid + "," + gyi.entity + ";";
             }
             Helpfunctions.Instance.logg(s);
+            if (writetobuffer) Helpfunctions.Instance.writeToBuffer(s);
         }
 
         public void setGraveYard(List<GraveYardItem> list, bool turnStart)

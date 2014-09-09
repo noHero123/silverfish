@@ -5,7 +5,6 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-
     public class miniEnch
     {
         public CardDB.cardIDEnum CARDID = CardDB.cardIDEnum.None;
@@ -484,7 +483,14 @@ namespace HREngine.Bots
             silenced = true;
             this.updateReadyness();
             p.minionGetOrEraseAllAreaBuffs(this, true);
-
+            if (own)
+            {
+                p.tempTrigger.ownMinionsChanged = true;
+            }
+            else
+            {
+                p.tempTrigger.enemyMininsChanged = true;
+            }
             if (this.shadowmadnessed)
             {
                 this.shadowmadnessed = false;

@@ -7,8 +7,16 @@ namespace HREngine.Bots
     // reads the board and simulates it
     public class BoardTester
     {
-        int ownPlayer = 1;
+        
+        public string evalFunction = "control";
+        int maxwide = 3000;
+        int twoturnsim = 256;
+        bool simEnemy2Turn = false;
+        int pprob1 = 50;
+        int pprob2 = 80;
+        bool playarround = false;
 
+        int ownPlayer = 1;
         int enemmaxman = 0;
 
         Minion ownHero;
@@ -29,10 +37,11 @@ namespace HREngine.Bots
         int ownheroattacksThisRound = 0;
         int ownHeroAttack = 0;
         int ownHeroTempAttack = 0;
-        string ownHeroWeapon="";
+        string ownHeroWeapon = "";
         int ownHeroWeaponAttack = 0;
         int ownHeroWeaponDurability = 0;
-        int numMinionsPlayedThisTurn =0;
+        int numOptionPlayedThisTurn = 0;
+        int numMinionsPlayedThisTurn = 0;
         int cardsPlayedThisTurn = 0;
         int overdrive = 0;
 
@@ -67,19 +76,28 @@ namespace HREngine.Bots
         bool feugendead = false;
         bool stalaggdead = false;
 
-        public BoardTester()
+        public BoardTester(string data = "")
         {
+            Hrtprozis.Instance.clearAll();
+            Handmanager.Instance.clearAll();
             string[] lines = new string[0] { };
-            try
+            if (data == "")
             {
-                string path = Settings.Instance.path;
-                lines = System.IO.File.ReadAllLines(path + "test.txt");
+                try
+                {
+                    string path = Settings.Instance.path;
+                    lines = System.IO.File.ReadAllLines(path + "test.txt");
+                }
+                catch
+                {
+                    Helpfunctions.Instance.logg("cant find test.txt");
+                    Helpfunctions.Instance.ErrorLog("cant find test.txt");
+                    return;
+                }
             }
-            catch
+            else
             {
-                Helpfunctions.Instance.logg("cant find test.txt");
-                Helpfunctions.Instance.ErrorLog("cant find test.txt");
-                return;
+                lines = data.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             CardDB.Card heroability = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_034);
@@ -104,8 +122,29 @@ namespace HREngine.Bots
                 {
                     continue;
                 }
-                if (s.StartsWith("start calculations"))
+                if (s.StartsWith("start calculations, current time: "))
                 {
+                    Ai.Instance.currentCalculatedBoard = s.Split(' ')[4].Split(' ')[0];
+
+                    this.evalFunction = s.Split(' ')[6].Split(' ')[0];
+
+                    this.maxwide = Convert.ToInt32(s.Split(' ')[7].Split(' ')[0]);
+
+                    //following params are optional
+                    this.twoturnsim = 256;
+                    if (s.Contains("twoturnsim ")) this.twoturnsim = Convert.ToInt32(s.Split(new string[] { "twoturnsim " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+
+                    this.playarround = false;
+                    if (s.Contains("playaround "))
+                    {
+                        string probs = s.Split(new string[] { "playaround " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        this.playarround = true;
+                        this.pprob1 = Convert.ToInt32(probs.Split(' ')[0]);
+                        this.pprob2 = Convert.ToInt32(probs.Split(' ')[1]);
+                    }
+
+                    if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
+
                     continue;
                 }
 
@@ -297,7 +336,7 @@ namespace HREngine.Bots
                         ownsecretlist.Add(s.Replace(" ", ""));
                     }
                 }
-                
+
                 if (readstate == 2 && counter == 1) // class + hp + defence + frozen + immune
                 {
                     enemyheroname = s.Split(' ')[0];
@@ -319,9 +358,9 @@ namespace HREngine.Bots
                     }
                     else
                     {
-                        this.enemyWeapon = s.Split(' ')[3] ;
+                        this.enemyWeapon = s.Split(' ')[3];
                     }
-                    
+
                 }
                 if (readstate == 2 && counter == 3) // ability
                 {
@@ -351,33 +390,33 @@ namespace HREngine.Bots
                         bool ready = s.Split(new string[] { " rdy:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0] == "True" ? true : false;
                         int natt = 0;
                         if (s.Contains(" natt:")) natt = Convert.ToInt32(s.Split(new string[] { " natt:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                        
+
                         //optional params (bools)
 
                         bool ex = false;//exhausted
                         if (s.Contains(" ex")) ex = true;
 
                         bool taunt = false;
-                        if (s.Contains(" tnt"))  taunt = true;
-                        
+                        if (s.Contains(" tnt")) taunt = true;
+
                         bool frzn = false;
                         if (s.Contains(" frz")) frzn = true;
-                       
+
                         bool silenced = false;
                         if (s.Contains(" silenced")) silenced = true;
-                        
+
                         bool divshield = false;
                         if (s.Contains(" divshield")) divshield = true;
-                        
+
                         bool ptt = false;//played this turn
-                        if (s.Contains(" ptt")) ptt =true;
-                        
+                        if (s.Contains(" ptt")) ptt = true;
+
                         bool wndfry = false;//windfurry
                         if (s.Contains(" wndfr")) wndfry = true;
 
                         bool stl = false;//stealth
                         if (s.Contains(" stlth")) stl = true;
-                        
+
                         bool pois = false;//poision
                         if (s.Contains(" poi")) pois = true;
 
@@ -409,7 +448,7 @@ namespace HREngine.Bots
 
 
                         int chrg = 0;//charge
-                        if (s.Contains(" chrg(")) chrg = Convert.ToInt32(s.Split(new string[] { " chrg(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]) ;
+                        if (s.Contains(" chrg(")) chrg = Convert.ToInt32(s.Split(new string[] { " chrg(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
                         int adjadmg = 0;//adjadmg
                         if (s.Contains(" adjaattk(")) adjadmg = Convert.ToInt32(s.Split(new string[] { " adjaattk(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
@@ -431,9 +470,9 @@ namespace HREngine.Bots
 
                         int souloftheforest = 0;//adjadmg
                         if (s.Contains(" souloffrst(")) souloftheforest = Convert.ToInt32(s.Split(new string[] { " souloffrst(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
-                        
 
-                        
+
+
                         tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, true);
                         tempminion.own = true;
                         tempminion.entitiyID = ent;
@@ -461,7 +500,7 @@ namespace HREngine.Bots
                         tempminion.destroyOnEnemyTurnEnd = destroyOnEnemyTurnEnd;
                         tempminion.shadowmadnessed = shadowmadnessed;
                         tempminion.cantLowerHPbelowONE = cntlower;
-                        
+
                         tempminion.charge = chrg;
                         tempminion.AdjacentAngr = adjadmg;
                         tempminion.tempAttack = tmpdmg;
@@ -471,7 +510,7 @@ namespace HREngine.Bots
                         tempminion.ownBlessingOfWisdom = ownBlessingOfWisdom;
                         tempminion.enemyBlessingOfWisdom = enemyBlessingOfWisdom;
                         tempminion.souloftheforest = souloftheforest;
-                        
+
                         if (maxhp > hp) tempminion.wounded = true;
                         tempminion.updateReadyness();
                         this.ownminions.Add(tempminion);
@@ -626,7 +665,7 @@ namespace HREngine.Bots
 
 
                     }
-                    
+
 
                 }
 
@@ -695,10 +734,17 @@ namespace HREngine.Bots
             Hrtprozis.Instance.setOwnPlayer(ownPlayer);
             Handmanager.Instance.setOwnPlayer(ownPlayer);
 
-            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn,this.overdrive, 100, 200);
+            this.numOptionPlayedThisTurn = 0;
+            this.numOptionPlayedThisTurn += this.cardsPlayedThisTurn + ownheroattacksThisRound;
+            foreach (Minion m in this.ownminions)
+            {
+                this.numOptionPlayedThisTurn += m.numAttacksThisTurn;
+            }
+
+
+            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, 100, 200);
             Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecrets);
 
-            int numattttHero = 0;
             bool herowindfury = false;
 
             //create heros:
@@ -720,7 +766,7 @@ namespace HREngine.Bots
             this.ownHero.frozen = ownHeroFrozen;
             this.ownHero.immuneWhileAttacking = ownHeroimmunewhileattacking;
             this.ownHero.immune = heroImmune;
-            this.ownHero.numAttacksThisTurn = numattttHero;
+            this.ownHero.numAttacksThisTurn = ownheroattacksThisRound;
             this.ownHero.windfury = herowindfury;
 
             this.enemyHero.Angr = enemyWeaponAttack;
@@ -733,14 +779,25 @@ namespace HREngine.Bots
             this.ownHero.updateReadyness();
 
 
+            //set Simulation stuff
+
+            Ai.Instance.botBase = new BehaviorControl();
+            if (this.evalFunction == "rush") Ai.Instance.botBase = new BehaviorRush();
+
+            Ai.Instance.setMaxWide(this.maxwide);
+            Ai.Instance.setTwoTurnSimulation(false, this.twoturnsim);
+            Ai.Instance.nextTurnSimulator.setEnemyTurnsim(this.simEnemy2Turn);
+            //Ai.Instance.nextTurnSimulator.updateParams();
+            Ai.Instance.setPlayAround(this.playarround, this.pprob1, this.pprob2);
+
             //save data
             Hrtprozis.Instance.updateOwnHero(this.ownHeroWeapon, this.ownHeroWeaponAttack, this.ownHeroWeaponDurability, this.ownheroname, heroability, abilityReady, this.ownHero);
-            Hrtprozis.Instance.updateEnemyHero(this.enemyWeapon, this.enemyWeaponAttack, this.enemyWeaponDur, this.enemyheroname, enemmaxman, enemyability, this.enemyHero );
+            Hrtprozis.Instance.updateEnemyHero(this.enemyWeapon, this.enemyWeaponAttack, this.enemyWeaponDur, this.enemyheroname, enemmaxman, enemyability, this.enemyHero);
 
             Hrtprozis.Instance.updateMinions(this.ownminions, this.enemyminions);
-            
+
             Hrtprozis.Instance.updateFatigueStats(this.ownDecksize, this.ownFatigue, this.enemyDecksize, this.enemyFatigue);
-            
+
             Handmanager.Instance.setHandcards(this.handcards, this.handcards.Count, enemyNumberHand);
 
             Probabilitymaker.Instance.setTurnGraveYard(this.turnGraveYard);

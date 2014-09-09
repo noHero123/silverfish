@@ -41,7 +41,6 @@ namespace HREngine.Bots
         Dictionary<CardDB.cardName, int> buffingMinionsDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> buffing1TurnDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> heroDamagingAoeDatabase = new Dictionary<CardDB.cardName, int>();
-
         Dictionary<CardDB.cardName, int> randomEffects = new Dictionary<CardDB.cardName, int>();
 
         Dictionary<CardDB.cardName, int> silenceTargets = new Dictionary<CardDB.cardName, int>();
@@ -370,9 +369,15 @@ namespace HREngine.Bots
 
                     if (priorityDatabase.ContainsKey(m.name) && !m.silenced)
                     {
-                        return -10;
+                        return 0;
                     }
+
                     if (this.silenceTargets.ContainsKey(m.name) && !m.silenced)
+                    {
+                        return 0;
+                    }
+
+                    if (m.handcard.card.deathrattle && !m.silenced)
                     {
                         return 0;
                     }
@@ -386,7 +391,7 @@ namespace HREngine.Bots
 
 
 
-                    pen = 0;
+                    return 5;
                 }
             }
 
@@ -495,6 +500,7 @@ namespace HREngine.Bots
                     {
                         dmg = HealTargetDatabase[name];
                     }
+                    if (m.name == CardDB.cardName.madscientist && p.ownHeroName == HeroEnum.hunter) return 500;
                     if (m.handcard.card.deathrattle) return 10;
                     if (m.Hp > dmg)
                     {
@@ -714,7 +720,7 @@ namespace HREngine.Bots
                     }
                 }
                 if (p.owncards.Count + p.cardsPlayedThisTurn <= 5 && minmana > p.ownMaxMana) return 0;
-                if (p.owncards.Count + p.cardsPlayedThisTurn > 5) return 5;
+                if (p.owncards.Count + p.cardsPlayedThisTurn > 5) return 25;
                 return Math.Max(-carddraw + 2 * p.optionsPlayedThisTurn + p.ownMaxMana - p.mana, 0);
             }
 
@@ -913,7 +919,7 @@ namespace HREngine.Bots
                         return 0;
                     }
 
-                    if(m.Angr==2) return 5;
+                    if (m.Angr == 2) return 5;
 
                     return 10;
                 }
@@ -1679,8 +1685,6 @@ namespace HREngine.Bots
             }
             return ret;
         }
-
-
 
         private void setupEnrageDatabase()
         {

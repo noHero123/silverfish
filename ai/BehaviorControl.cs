@@ -24,8 +24,6 @@ namespace HREngine.Bots
             retval += p.ownMaxMana;
             retval -= p.enemyMaxMana;
 
-            retval += p.ownMinions.Count * 10;
-
             retval += p.ownMaxMana * 20 - p.enemyMaxMana * 20;
 
             if (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.druid) retval -= 2 * p.enemyspellpower;
@@ -73,6 +71,7 @@ namespace HREngine.Bots
             int ownMinionsCount = 0;
             foreach (Minion m in p.ownMinions)
             {
+                retval += 5;
                 retval += m.Hp * 1;
                 retval += m.Angr * 2;
                 retval += m.handcard.card.rarity;
@@ -163,7 +162,7 @@ namespace HREngine.Bots
 
         public override int getEnemyMinionValue(Minion m, Playfield p)
         {
-            int retval = 10;
+            int retval = 5;
             retval += m.Hp * 2;
             if (!m.frozen && !(m.handcard.card.name == CardDB.cardName.ancientwatcher && !m.silenced))
             {

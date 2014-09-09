@@ -92,6 +92,56 @@ namespace HREngine.Bots
             HREngine.API.Utilities.HRLog.Write(s);
         }
 
+        string sendbuffer = "";
+        public void resetBuffer()
+        {
+            this.sendbuffer = "";
+        }
+
+        public void writeToBuffer(string data)
+        {
+            this.sendbuffer += "\r\n" + data;
+        }
+
+        public void writeBufferToFile()
+        {
+            bool writed = true;
+            this.sendbuffer += "<EoF>";
+            while (writed)
+            {
+                try
+                {
+                    System.IO.File.WriteAllText(Settings.Instance.path + "crrntbrd.txt", this.sendbuffer);
+                    writed = false;
+                }
+                catch
+                {
+                    writed = true;
+                }
+            }
+            this.sendbuffer = "";
+        }
+
+        public void writeBufferToActionFile()
+        {
+            bool writed = true;
+            this.sendbuffer += "<EoF>";
+            while (writed)
+            {
+                try
+                {
+                    System.IO.File.WriteAllText(Settings.Instance.path + "actionstodo.txt", this.sendbuffer);
+                    writed = false;
+                }
+                catch
+                {
+                    writed = true;
+                }
+            }
+            this.sendbuffer = "";
+
+        }
+   
     }
 
 }
