@@ -367,18 +367,19 @@ namespace HREngine.Bots
 
         public void simmulateWholeTurnandPrint()
         {
-            help.ErrorLog("####################################################");
+            help.ErrorLog("###################################");
             help.ErrorLog("what would silverfish do?---------");
-            help.ErrorLog("####################################################");
+            help.ErrorLog("###################################");
+            if (this.bestmoveValue >= 10000) help.ErrorLog("DETECTED LETHAL ###################################");
             //this.bestboard.printActions();
 
             Playfield tempbestboard = new Playfield();
 
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
-                tempbestboard.printActionforDummies(bestmove);
 
                 tempbestboard.doAction(bestmove);
+                tempbestboard.printActionforDummies(tempbestboard.playactions[tempbestboard.playactions.Count - 1]);
 
             }
             else
@@ -389,13 +390,12 @@ namespace HREngine.Bots
 
             foreach (Action bestmovee in this.bestActions)
             {
-                tempbestboard.printActionforDummies(bestmovee);
 
                 if (bestmovee != null) // save the guessed move, so we doesnt need to recalc!
                 {
-                    bestmovee.print();
-
+                    //bestmovee.print();
                     tempbestboard.doAction(bestmovee);
+                    tempbestboard.printActionforDummies(tempbestboard.playactions[tempbestboard.playactions.Count - 1]);
 
                 }
                 else
