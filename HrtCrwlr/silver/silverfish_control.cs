@@ -884,7 +884,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "111.1";
+        public string versionnumber = "111.2";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -18492,6 +18492,17 @@ namespace HREngine.Bots
                 {
                     if (s.Contains("fgn")) this.feugendead = true;
                     if (s.Contains("stlgg")) this.stalaggdead = true;
+                    continue;
+                }
+
+                if (s.StartsWith("osecrets: "))
+                {
+                    string secs = s.Replace("osecrets: ", "");
+                    foreach (string sec in secs.Split(' '))
+                    {
+                        if (sec == "" || sec == string.Empty) continue;
+                        this.ownsecretlist.Add(sec);
+                    }
                     continue;
                 }
 

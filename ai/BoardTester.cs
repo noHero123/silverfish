@@ -7,7 +7,7 @@ namespace HREngine.Bots
     // reads the board and simulates it
     public class BoardTester
     {
-        
+
         public string evalFunction = "control";
         int maxwide = 3000;
         int twoturnsim = 256;
@@ -177,6 +177,17 @@ namespace HREngine.Bots
                 {
                     if (s.Contains("fgn")) this.feugendead = true;
                     if (s.Contains("stlgg")) this.stalaggdead = true;
+                    continue;
+                }
+
+                if (s.StartsWith("osecrets: "))
+                {
+                    string secs = s.Replace("osecrets: ", "");
+                    foreach (string sec in secs.Split(' '))
+                    {
+                        if (sec == "" || sec == string.Empty) continue;
+                        this.ownsecretlist.Add(sec);
+                    }
                     continue;
                 }
 
