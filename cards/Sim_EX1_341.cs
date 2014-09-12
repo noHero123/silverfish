@@ -12,6 +12,7 @@ namespace HREngine.Bots
         {
             if (turnStartOfOwner == triggerEffectMinion.own)
             {
+                int heal = (turnStartOfOwner) ? p.getMinionHeal(3) : p.getEnemyMinionHeal(3);
                 List<Minion> temp = (turnStartOfOwner) ? p.ownMinions : p.enemyMinions;
                 if (temp.Count >= 1)
                 {
@@ -20,7 +21,7 @@ namespace HREngine.Bots
                     {
                         if (mins.wounded)
                         {
-                            p.minionGetDamageOrHeal(mins, -3);
+                            p.minionGetDamageOrHeal(mins, -heal);
                             healed = true;
                             break;
                         }
@@ -28,17 +29,18 @@ namespace HREngine.Bots
 
                     if (!healed)
                     {
-                        if (turnStartOfOwner) p.minionGetDamageOrHeal(p.ownHero, -3);
-                        else p.minionGetDamageOrHeal(p.enemyHero, -3);
+                        if (turnStartOfOwner) p.minionGetDamageOrHeal(p.ownHero, -heal);
+                        else p.minionGetDamageOrHeal(p.enemyHero, -heal);
                     }
                 }
                 else
                 {
-                    if (turnStartOfOwner) p.minionGetDamageOrHeal(p.ownHero, -3);
-                    else p.minionGetDamageOrHeal(p.enemyHero, -3);
+                    if (turnStartOfOwner) p.minionGetDamageOrHeal(p.ownHero, -heal);
+                    else p.minionGetDamageOrHeal(p.enemyHero, -heal);
                 }
 
             }
         }
     }
+
 }
