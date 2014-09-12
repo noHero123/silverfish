@@ -167,6 +167,11 @@ namespace HREngine.Bots
 
         private void doSomeBasicEnemyAi(Playfield p)
         {
+            if (p.enemyHeroName == HeroEnum.mage)
+            {
+                if (Probabilitymaker.Instance.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_561)) p.ownHero.Hp = Math.Max(5, p.ownHero.Hp - 7);
+            }
+
             foreach (Minion m in p.enemyMinions)
             {
                 if(m.silenced) continue;

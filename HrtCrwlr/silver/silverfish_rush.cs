@@ -884,7 +884,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "111.3";
+        public string versionnumber = "111.4";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -1478,7 +1478,7 @@ namespace HREngine.Bots
             foreach (HREntity ent in allEntitys.Values)
             {
                 if (ent.GetZone() == HRCardZone.SECRET && ent.GetControllerId() == enemycontroler) continue; // cant know enemy secrets :D
-
+                if (ent.GetZone() == HRCardZone.DECK) continue;
                 if (ent.GetCardType() == HRCardType.MINION || ent.GetCardType() == HRCardType.WEAPON || ent.GetCardType() == HRCardType.ABILITY)
                 {
                     CardDB.cardIDEnum cardid = CardDB.Instance.cardIdstringToEnum(ent.GetCardId());
@@ -1580,6 +1580,7 @@ namespace HREngine.Bots
             Hrtprozis.Instance.printEnemyMinions(runEx);
             Handmanager.Instance.printcards(runEx);
             Probabilitymaker.Instance.printTurnGraveYard(runEx);
+            Probabilitymaker.Instance.printGraveyards(runEx);
 
             if (runEx) Helpfunctions.Instance.writeBufferToFile();
 
@@ -1773,7 +1774,7 @@ namespace HREngine.Bots
                 if (a.actionType == actionEnum.attackWithHero && p.enemyHero.Hp <= p.attackFaceHP) retval++;
                 if (a.actionType == actionEnum.useHeroPower) useAbili = true;
                 if (p.ownHeroName == HeroEnum.warrior && a.actionType == actionEnum.attackWithHero && useAbili) retval -= 1;
-                if (a.actionType == actionEnum.useHeroPower && a.card.card.name == CardDB.cardName.lesserheal && (!a.target.own)) retval -= 5;
+                //if (a.actionType == actionEnum.useHeroPower && a.card.card.name == CardDB.cardName.lesserheal && (!a.target.own)) retval -= 5;
                 if (a.actionType != actionEnum.playcard) continue;
                 if ((a.card.card.name == CardDB.cardName.thecoin || a.card.card.name == CardDB.cardName.innervate)) usecoin = true;
                 //save spell for all classes: (except for rouge if he has no combo)
@@ -1782,6 +1783,7 @@ namespace HREngine.Bots
                 if (p.ownHeroName == HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (a.target.isHero && !a.target.own)) retval -= 11;
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
+            if (usecoin) retval -= 5 * p.manaTurnEnd;
             //if (usecoin && p.mana >= 1) retval -= 20;
 
             int mobsInHand = 0;
@@ -2444,6 +2446,7 @@ namespace HREngine.Bots
         public int guessingHeroHP = 30;
 
         public int mana = 0;
+        public int manaTurnEnd = 0;
 
 
 
@@ -2557,6 +2560,7 @@ namespace HREngine.Bots
             this.enemyHeroEntity = Hrtprozis.Instance.enemyHeroEntitiy;
 
             this.mana = Hrtprozis.Instance.currentMana;
+            this.manaTurnEnd = this.mana;
             this.ownMaxMana = Hrtprozis.Instance.ownMaxMana;
             this.enemyMaxMana = Hrtprozis.Instance.enemyMaxMana;
             this.evaluatePenality = 0;
@@ -2823,6 +2827,7 @@ namespace HREngine.Bots
 
             this.enemySecretCount = p.enemySecretCount;
             this.mana = p.mana;
+            this.manaTurnEnd = p.manaTurnEnd;
             this.ownMaxMana = p.ownMaxMana;
             this.enemyMaxMana = p.enemyMaxMana;
             addMinionsReal(p.ownMinions, ownMinions);
@@ -3492,7 +3497,8 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (trgts2.Count == 0 && !this.ownHero.immune) trgts2.Add(this.ownHero);
+                trgts2.Add(this.ownHero);
+                //if (trgts2.Count == 0 && !this.ownHero.immune) trgts2.Add(this.ownHero);
             }
 
             if (hasTaunts) return trgts;
@@ -3814,7 +3820,7 @@ namespace HREngine.Bots
         // the new endturn
         public void endCurrentPlayersTurnAndStartTheNextOne(int turnsToSimulate, bool playaround, int pprob = 100, int pprob2 = 100)
         {
-
+            if (this.turnCounter == 0) this.manaTurnEnd = this.mana;
             if (this.complete) return;
             this.triggerEndTurn(this.isOwnTurn);
             // the other player is going to do its stuff:
@@ -4177,7 +4183,8 @@ namespace HREngine.Bots
         public void endTurn(bool simulateTwoTurns, bool playaround, bool print = false, int pprob = 0, int pprob2 = 0)
         {
             this.value = int.MinValue;
-
+            if (this.turnCounter == 0) this.manaTurnEnd = this.mana;
+            this.turnCounter++;
             //penalty for destroying combo
 
             this.evaluatePenality += ComboBreaker.Instance.checkIfComboWasPlayed(this.playactions, this.ownWeaponName, this.ownHeroName);
@@ -7455,6 +7462,11 @@ namespace HREngine.Bots
 
         private void doSomeBasicEnemyAi(Playfield p)
         {
+            if (p.enemyHeroName == HeroEnum.mage)
+            {
+                if (Probabilitymaker.Instance.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_561)) p.ownHero.Hp = Math.Max(5, p.ownHero.Hp - 7);
+            }
+
             foreach (Minion m in p.enemyMinions)
             {
                 if (m.silenced) continue;
@@ -8814,43 +8826,43 @@ namespace HREngine.Bots
 
             //todo print died minions this turn!
 
-            if (Ai.Instance.playaround)
+            /*if(Ai.Instance.playaround)
             {
-                if (Hrtprozis.Instance.enemyHeroname == HeroEnum.mage)
+                if(Hrtprozis.Instance.enemyHeroname == HeroEnum.mage)
                 {
-                    help.logg("probs: " + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_032) + " " + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_028));
+                    help.logg("probs: "  + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_032) + " " + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_028));
                 }
 
                 if (Hrtprozis.Instance.enemyHeroname == HeroEnum.warrior)
                 {
-                    help.logg("probs: " + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.EX1_400));
+                    help.logg("probs: "  + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.EX1_400));
                 }
 
                 if (Hrtprozis.Instance.enemyHeroname == HeroEnum.hunter)
                 {
-                    help.logg("probs: " + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.EX1_538));
+                    help.logg("probs: "  + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.EX1_538));
                 }
 
                 if (Hrtprozis.Instance.enemyHeroname == HeroEnum.priest)
                 {
-                    help.logg("probs: " + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS1_112));
+                    help.logg("probs: "  + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS1_112));
                 }
 
                 if (Hrtprozis.Instance.enemyHeroname == HeroEnum.shaman)
                 {
-                    help.logg("probs: " + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.EX1_259));
+                    help.logg("probs: "  + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.EX1_259));
                 }
 
                 if (Hrtprozis.Instance.enemyHeroname == HeroEnum.pala)
                 {
-                    help.logg("probs: " + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_093));
+                    help.logg("probs: "  + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_093));
                 }
 
                 if (Hrtprozis.Instance.enemyHeroname == HeroEnum.druid)
                 {
-                    help.logg("probs: " + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_012));
+                    help.logg("probs: "  + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_012));
                 }
-            }
+            }*/
 
             if (writeTobuffer)
             {
@@ -8863,7 +8875,7 @@ namespace HREngine.Bots
 
                 //todo print died minions this turn!
 
-                if (Ai.Instance.playaround)
+                /*if (Ai.Instance.playaround)
                 {
                     if (Hrtprozis.Instance.enemyHeroname == HeroEnum.mage)
                     {
@@ -8899,12 +8911,13 @@ namespace HREngine.Bots
                     {
                         help.writeToBuffer("probs: " + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_012));
                     }
-                }
+                }*/
             }
         }
 
 
     }
+
 
     public enum HeroEnum
     {
@@ -10556,6 +10569,14 @@ namespace HREngine.Bots
 
             }
 
+            if (name == CardDB.cardName.sap || name == CardDB.cardName.dream || name == CardDB.cardName.kidnapper)
+            {
+                if (!m.own && m.name == CardDB.cardName.theblackknight)
+                {
+                    return 50;
+                }
+            }
+
             if (name == CardDB.cardName.sylvanaswindrunner)
             {
                 if (p.enemyMinions.Count == 0)
@@ -11765,8 +11786,8 @@ namespace HREngine.Bots
 
     public class Probabilitymaker
     {
-        Dictionary<CardDB.cardIDEnum, int> ownCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
-        Dictionary<CardDB.cardIDEnum, int> enemyCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
+        public Dictionary<CardDB.cardIDEnum, int> ownCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
+        public Dictionary<CardDB.cardIDEnum, int> enemyCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
         List<CardDB.Card> ownDeckGuessed = new List<CardDB.Card>();
         List<CardDB.Card> enemyDeckGuessed = new List<CardDB.Card>();
         List<GraveYardItem> graveyard = new List<GraveYardItem>();
@@ -11806,11 +11827,11 @@ namespace HREngine.Bots
 
         public void printTurnGraveYard(bool writetobuffer = false)
         {
-            string g = "";
+            /*string g = "";
             if (Probabilitymaker.Instance.feugenDead) g += " fgn";
             if (Probabilitymaker.Instance.stalaggDead) g += " stlgg";
             Helpfunctions.Instance.logg("GraveYard:" + g);
-            if (writetobuffer) Helpfunctions.Instance.writeToBuffer("GraveYard:" + g);
+            if (writetobuffer) Helpfunctions.Instance.writeToBuffer("GraveYard:" + g);*/
 
             string s = "ownDiedMinions: ";
             foreach (GraveYardItem gyi in this.turngraveyard)
@@ -11827,6 +11848,32 @@ namespace HREngine.Bots
             }
             Helpfunctions.Instance.logg(s);
             if (writetobuffer) Helpfunctions.Instance.writeToBuffer(s);
+        }
+
+        public void readTurnGraveYard(string own, string enemy)
+        {
+            this.turngraveyard.Clear();
+            string temp = "";
+            temp = own.Replace("ownDiedMinions: ", "");
+
+            foreach (string s in temp.Split(';'))
+            {
+                if (s == "" || s == " ") continue;
+                string id = s.Split(',')[0];
+                string ent = s.Split(',')[1];
+                GraveYardItem gyi = new GraveYardItem(CardDB.Instance.cardIdstringToEnum(id), Convert.ToInt32(ent), true);
+            }
+
+            temp = enemy.Replace("enemyDiedMinions: ", "");
+
+            foreach (string s in temp.Split(';'))
+            {
+                if (s == "" || s == " ") continue;
+                string id = s.Split(',')[0];
+                string ent = s.Split(',')[1];
+                GraveYardItem gyi = new GraveYardItem(CardDB.Instance.cardIdstringToEnum(id), Convert.ToInt32(ent), false);
+            }
+
         }
 
         public void setGraveYard(List<GraveYardItem> list, bool turnStart)
@@ -11939,6 +11986,57 @@ namespace HREngine.Bots
 
         }
 
+        public void printGraveyards(bool writetobuffer = false)
+        {
+            string og = "og: ";
+            foreach (KeyValuePair<CardDB.cardIDEnum, int> e in this.ownCardsPlayed)
+            {
+                og += (int)e.Key + "," + e.Value + ";";
+            }
+            string eg = "eg: ";
+            foreach (KeyValuePair<CardDB.cardIDEnum, int> e in this.enemyCardsPlayed)
+            {
+                eg += (int)e.Key + "," + e.Value + ";";
+            }
+            Helpfunctions.Instance.logg(og);
+            Helpfunctions.Instance.logg(eg);
+            if (writetobuffer)
+            {
+                Helpfunctions.Instance.writeToBuffer(og);
+                Helpfunctions.Instance.writeToBuffer(eg);
+            }
+        }
+
+        public void readGraveyards(string owngrave, string enemygrave)
+        {
+            this.ownCardsPlayed.Clear();
+            this.enemyCardsPlayed.Clear();
+            string temp = owngrave.Replace("og: ", "");
+            this.stalaggDead = false;
+            this.feugenDead = false;
+            foreach (string s in temp.Split(';'))
+            {
+                if (s == "" || s == " ") continue;
+                string id = s.Split(',')[0];
+                string anz = s.Split(',')[1];
+                CardDB.cardIDEnum cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
+                this.ownCardsPlayed.Add(cdbe, Convert.ToInt32(anz));
+                if (cdbe == CardDB.cardIDEnum.FP1_015) this.feugenDead = true;
+                if (cdbe == CardDB.cardIDEnum.FP1_014) this.stalaggDead = true;
+            }
+            temp = enemygrave.Replace("eg: ", "");
+            foreach (string s in temp.Split(';'))
+            {
+                if (s == "" || s == " ") continue;
+                string id = s.Split(',')[0];
+                string anz = s.Split(',')[1];
+                CardDB.cardIDEnum cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
+                this.enemyCardsPlayed.Add(cdbe, Convert.ToInt32(anz));
+                if (cdbe == CardDB.cardIDEnum.FP1_015) this.feugenDead = true;
+                if (cdbe == CardDB.cardIDEnum.FP1_014) this.stalaggDead = true;
+            }
+
+        }
 
         public int getProbOfEnemyHavingCardInHand(CardDB.cardIDEnum cardid, int handsize, int decksize)
         {
@@ -11972,7 +12070,6 @@ namespace HREngine.Bots
             }
             return false;
         }
-
     }
 
     public class ComboBreaker
@@ -18478,6 +18575,12 @@ namespace HREngine.Bots
 
         public BoardTester(string data = "")
         {
+            string og = "";
+            string eg = "";
+
+            string omd = "";
+            string emd = "";
+
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
             string[] lines = new string[0] { };
@@ -18593,37 +18696,16 @@ namespace HREngine.Bots
 
                 if (s.StartsWith("ownDiedMinions: "))
                 {
-                    string mins = s.Split(' ')[1];
-
-                    foreach (string str in s.Split(';'))
-                    {
-                        if (str == string.Empty || str == "")
-                        {
-                            int ent = Convert.ToInt32(str.Split(',')[1]);
-                            CardDB.cardIDEnum crdid = CardDB.Instance.cardIdstringToEnum(str.Split(',')[0]);
-                            GraveYardItem gyi = new GraveYardItem(crdid, ent, true);
-                            this.turnGraveYard.Add(gyi);
-                        }
-                    }
+                    omd = s;
                     continue;
                 }
 
                 if (s.StartsWith("enemyDiedMinions: "))
                 {
-                    string mins = s.Split(' ')[1];
-
-                    foreach (string str in s.Split(';'))
-                    {
-                        if (str == string.Empty || str == "")
-                        {
-                            int ent = Convert.ToInt32(str.Split(',')[1]);
-                            CardDB.cardIDEnum crdid = CardDB.Instance.cardIdstringToEnum(str.Split(',')[0]);
-                            GraveYardItem gyi = new GraveYardItem(crdid, ent, false);
-                            this.turnGraveYard.Add(gyi);
-                        }
-                    }
+                    emd = s;
                     continue;
                 }
+
 
 
                 if (s.StartsWith("probs: "))
@@ -18692,6 +18774,17 @@ namespace HREngine.Bots
                     }
 
                     Probabilitymaker.Instance.setEnemyCards(enemycards);
+                    continue;
+                }
+
+                if (s.StartsWith("og:"))
+                {
+                    og = s;
+                    continue;
+                }
+                if (s.StartsWith("eg:"))
+                {
+                    eg = s;
                     continue;
                 }
 
@@ -19157,6 +19250,7 @@ namespace HREngine.Bots
             Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecrets);
 
             bool herowindfury = false;
+            if (this.ownHeroWeapon == "doomhammer") herowindfury = true;
 
             //create heros:
 
@@ -19214,6 +19308,10 @@ namespace HREngine.Bots
             Probabilitymaker.Instance.setTurnGraveYard(this.turnGraveYard);
             Probabilitymaker.Instance.stalaggDead = this.stalaggdead;
             Probabilitymaker.Instance.feugenDead = this.feugendead;
+
+            if (og != "") Probabilitymaker.Instance.readGraveyards(og, eg);
+            if (omd != "") Probabilitymaker.Instance.readTurnGraveYard(omd, emd);
+
 
 
         }
@@ -28426,6 +28524,7 @@ namespace HREngine.Bots
 
 
     }
+
 
 }
 

@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "111";
+        public string versionnumber = "111.4";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -610,9 +610,10 @@ namespace HREngine.Bots
             foreach (HREntity ent in allEntitys.Values)
             {
                 if (ent.GetZone() == HRCardZone.SECRET && ent.GetControllerId() == enemycontroler) continue; // cant know enemy secrets :D
-
+                if (ent.GetZone() == HRCardZone.DECK) continue;
                 if (ent.GetCardType() == HRCardType.MINION || ent.GetCardType() == HRCardType.WEAPON || ent.GetCardType() == HRCardType.ABILITY)
                 {
+                    
                     CardDB.cardIDEnum cardid = CardDB.Instance.cardIdstringToEnum(ent.GetCardId());
                     //string owner = "own";
                     //if (ent.GetControllerId() == enemycontroler) owner = "enemy";
@@ -626,7 +627,8 @@ namespace HREngine.Bots
                             graveYard.Add(gyi);
                         }
 
-                        if (ent.GetControllerId() == owncontroler)
+                        if (ent.GetTag(HRGameTag.CREATOR) != owncontroler && ent.GetTag(HRGameTag.CREATOR) != enemycontroler) continue; //if creator is someone else, it was not played
+                        if (ent.GetCreatorId() == owncontroler) //or controler?
                         {
                             ownCards.Add(cardid);
                         }
@@ -712,6 +714,7 @@ namespace HREngine.Bots
             Hrtprozis.Instance.printEnemyMinions(runEx);
             Handmanager.Instance.printcards(runEx);
             Probabilitymaker.Instance.printTurnGraveYard(runEx);
+            Probabilitymaker.Instance.printGraveyards(runEx);
 
             if (runEx) Helpfunctions.Instance.writeBufferToFile();
 

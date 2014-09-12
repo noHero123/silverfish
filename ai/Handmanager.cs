@@ -117,7 +117,7 @@ namespace HREngine.Bots
             
             //todo print died minions this turn!
             
-            if(Ai.Instance.playaround)
+            /*if(Ai.Instance.playaround)
             {
                 if(Hrtprozis.Instance.enemyHeroname == HeroEnum.mage)
                 {
@@ -153,7 +153,7 @@ namespace HREngine.Bots
                 {
                     help.logg("probs: "  + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_012));
                 }
-            }
+            }*/
 
             if (writeTobuffer)
             {
@@ -166,7 +166,7 @@ namespace HREngine.Bots
 
                 //todo print died minions this turn!
 
-                if (Ai.Instance.playaround)
+                /*if (Ai.Instance.playaround)
                 {
                     if (Hrtprozis.Instance.enemyHeroname == HeroEnum.mage)
                     {
@@ -202,7 +202,7 @@ namespace HREngine.Bots
                     {
                         help.writeToBuffer("probs: " + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_012));
                     }
-                }
+                }*/
             }
         }
 

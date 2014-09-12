@@ -22,8 +22,8 @@ namespace HREngine.Bots
 
     public class Probabilitymaker
     {
-        Dictionary<CardDB.cardIDEnum, int> ownCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
-        Dictionary<CardDB.cardIDEnum, int> enemyCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
+        public Dictionary<CardDB.cardIDEnum, int> ownCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
+        public Dictionary<CardDB.cardIDEnum, int> enemyCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
         List<CardDB.Card> ownDeckGuessed = new List<CardDB.Card>();
         List<CardDB.Card> enemyDeckGuessed = new List<CardDB.Card>();
         List<GraveYardItem> graveyard = new List<GraveYardItem>();
@@ -63,11 +63,11 @@ namespace HREngine.Bots
 
         public void printTurnGraveYard(bool writetobuffer=false)
         {
-            string g = "";
+            /*string g = "";
             if (Probabilitymaker.Instance.feugenDead) g += " fgn";
             if (Probabilitymaker.Instance.stalaggDead) g += " stlgg";
             Helpfunctions.Instance.logg("GraveYard:" + g);
-            if (writetobuffer) Helpfunctions.Instance.writeToBuffer("GraveYard:" + g);
+            if (writetobuffer) Helpfunctions.Instance.writeToBuffer("GraveYard:" + g);*/
 
             string s = "ownDiedMinions: ";
             foreach (GraveYardItem gyi in this.turngraveyard)
@@ -84,6 +84,32 @@ namespace HREngine.Bots
             }
             Helpfunctions.Instance.logg(s);
             if (writetobuffer) Helpfunctions.Instance.writeToBuffer(s);
+        }
+
+        public void readTurnGraveYard(string own, string enemy)
+        {
+            this.turngraveyard.Clear();
+            string temp ="";
+            temp = own.Replace("ownDiedMinions: ","");
+
+            foreach (string s in temp.Split(';'))
+            {
+                if (s == "" || s==" ") continue;
+                string id = s.Split(',')[0];
+                string ent = s.Split(',')[1];
+                GraveYardItem gyi = new GraveYardItem(CardDB.Instance.cardIdstringToEnum(id), Convert.ToInt32(ent), true);
+            }
+
+            temp = enemy.Replace("enemyDiedMinions: ", "");
+
+            foreach (string s in temp.Split(';'))
+            {
+                if (s == "" || s == " ") continue;
+                string id = s.Split(',')[0];
+                string ent = s.Split(',')[1];
+                GraveYardItem gyi = new GraveYardItem(CardDB.Instance.cardIdstringToEnum(id), Convert.ToInt32(ent), false);
+            }
+
         }
 
         public void setGraveYard(List<GraveYardItem> list, bool turnStart)
@@ -196,6 +222,57 @@ namespace HREngine.Bots
 
         }
 
+        public void printGraveyards(bool writetobuffer = false)
+        {
+            string og = "og: ";
+            foreach (KeyValuePair< CardDB.cardIDEnum, int> e in this.ownCardsPlayed)
+            {
+                og += (int)e.Key + "," + e.Value+";";
+            }
+            string eg = "eg: ";
+            foreach (KeyValuePair<CardDB.cardIDEnum, int> e in this.enemyCardsPlayed)
+            {
+                eg += (int)e.Key + "," + e.Value + ";";
+            }
+            Helpfunctions.Instance.logg(og);
+            Helpfunctions.Instance.logg(eg);
+            if (writetobuffer)
+            {
+                Helpfunctions.Instance.writeToBuffer(og);
+                Helpfunctions.Instance.writeToBuffer(eg);
+            }
+        }
+
+        public void readGraveyards(string owngrave, string enemygrave)
+        {
+            this.ownCardsPlayed.Clear();
+            this.enemyCardsPlayed.Clear();
+            string temp = owngrave.Replace("og: ","");
+            this.stalaggDead = false;
+            this.feugenDead = false;
+            foreach (string s in temp.Split(';'))
+            {
+                if (s == "" || s == " ") continue;
+                string id = s.Split(',')[0];
+                string anz = s.Split(',')[1];
+                CardDB.cardIDEnum cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
+                this.ownCardsPlayed.Add(cdbe, Convert.ToInt32(anz));
+                if (cdbe == CardDB.cardIDEnum.FP1_015) this.feugenDead = true;
+                if (cdbe == CardDB.cardIDEnum.FP1_014) this.stalaggDead = true;
+            }
+            temp = enemygrave.Replace("eg: ", "");
+            foreach (string s in temp.Split(';'))
+            {
+                if (s == "" || s == " ") continue;
+                string id = s.Split(',')[0];
+                string anz = s.Split(',')[1];
+                CardDB.cardIDEnum cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
+                this.enemyCardsPlayed.Add(cdbe, Convert.ToInt32(anz));
+                if (cdbe == CardDB.cardIDEnum.FP1_015) this.feugenDead = true;
+                if (cdbe == CardDB.cardIDEnum.FP1_014) this.stalaggDead = true;
+            }
+
+        }
 
         public int getProbOfEnemyHavingCardInHand(CardDB.cardIDEnum cardid, int handsize, int decksize)
         {
@@ -229,7 +306,6 @@ namespace HREngine.Bots
             }
             return false;
         }
-
     }
 
 }

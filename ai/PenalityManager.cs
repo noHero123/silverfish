@@ -1114,6 +1114,14 @@ namespace HREngine.Bots
 
             }
 
+            if (name == CardDB.cardName.sap || name == CardDB.cardName.dream || name == CardDB.cardName.kidnapper)
+            {
+                if (!m.own && m.name == CardDB.cardName.theblackknight)
+                {
+                    return 50;
+                }
+            }
+
             if (name == CardDB.cardName.sylvanaswindrunner)
             {
                 if (p.enemyMinions.Count == 0)

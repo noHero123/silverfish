@@ -104,7 +104,7 @@ namespace HREngine.Bots
                 if (a.actionType == actionEnum.attackWithHero && p.enemyHero.Hp <= p.attackFaceHP) retval++;
                 if (a.actionType == actionEnum.useHeroPower) useAbili = true;
                 if (p.ownHeroName == HeroEnum.warrior && a.actionType == actionEnum.attackWithHero && useAbili) retval -= 1;
-                if (a.actionType == actionEnum.useHeroPower && a.card.card.name == CardDB.cardName.lesserheal && (!a.target.own)) retval -= 5;
+                //if (a.actionType == actionEnum.useHeroPower && a.card.card.name == CardDB.cardName.lesserheal && (!a.target.own)) retval -= 5;
                 if (a.actionType != actionEnum.playcard) continue;
                 if ((a.card.card.name == CardDB.cardName.thecoin || a.card.card.name == CardDB.cardName.innervate)) usecoin = true;
                 //save spell for all classes: (except for rouge if he has no combo)
@@ -113,6 +113,7 @@ namespace HREngine.Bots
                 if (p.ownHeroName == HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (a.target.isHero && !a.target.own)) retval -= 11;
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
+            if (usecoin) retval -= 5*p.manaTurnEnd;
             //if (usecoin && p.mana >= 1) retval -= 20;
 
             int mobsInHand = 0;

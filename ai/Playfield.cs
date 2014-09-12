@@ -94,6 +94,7 @@ namespace HREngine.Bots
         public int guessingHeroHP = 30;
 
         public int mana = 0;
+        public int manaTurnEnd = 0;
 
 
 
@@ -207,6 +208,7 @@ namespace HREngine.Bots
             this.enemyHeroEntity = Hrtprozis.Instance.enemyHeroEntitiy;
 
             this.mana = Hrtprozis.Instance.currentMana;
+            this.manaTurnEnd = this.mana;
             this.ownMaxMana = Hrtprozis.Instance.ownMaxMana;
             this.enemyMaxMana = Hrtprozis.Instance.enemyMaxMana;
             this.evaluatePenality = 0;
@@ -473,6 +475,7 @@ namespace HREngine.Bots
 
             this.enemySecretCount = p.enemySecretCount;
             this.mana = p.mana;
+            this.manaTurnEnd = p.manaTurnEnd;
             this.ownMaxMana = p.ownMaxMana;
             this.enemyMaxMana = p.enemyMaxMana;
             addMinionsReal(p.ownMinions, ownMinions);
@@ -1142,7 +1145,8 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (trgts2.Count == 0 && !this.ownHero.immune) trgts2.Add(this.ownHero);
+                trgts2.Add(this.ownHero);
+                //if (trgts2.Count == 0 && !this.ownHero.immune) trgts2.Add(this.ownHero);
             }
 
             if (hasTaunts) return trgts;
@@ -1464,7 +1468,7 @@ namespace HREngine.Bots
         // the new endturn
         public void endCurrentPlayersTurnAndStartTheNextOne(int turnsToSimulate, bool playaround, int pprob = 100, int pprob2 = 100)
         {
-
+            if (this.turnCounter == 0) this.manaTurnEnd = this.mana;
             if (this.complete) return;
             this.triggerEndTurn(this.isOwnTurn);
             // the other player is going to do its stuff:
@@ -1827,7 +1831,8 @@ namespace HREngine.Bots
         public void endTurn(bool simulateTwoTurns, bool playaround, bool print = false, int pprob = 0, int pprob2 = 0)
         {
             this.value = int.MinValue;
-
+            if (this.turnCounter == 0) this.manaTurnEnd = this.mana;
+            this.turnCounter++;
             //penalty for destroying combo
 
             this.evaluatePenality += ComboBreaker.Instance.checkIfComboWasPlayed(this.playactions, this.ownWeaponName, this.ownHeroName);

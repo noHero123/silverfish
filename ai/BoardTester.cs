@@ -78,6 +78,12 @@ namespace HREngine.Bots
 
         public BoardTester(string data = "")
         {
+            string og = "";
+            string eg = "";
+
+            string omd = "";
+            string emd = "";
+
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
             string[] lines = new string[0] { };
@@ -193,38 +199,17 @@ namespace HREngine.Bots
 
                 if (s.StartsWith("ownDiedMinions: "))
                 {
-                    string mins = s.Split(' ')[1];
-
-                    foreach (string str in s.Split(';'))
-                    {
-                        if (str == string.Empty || str == "")
-                        {
-                            int ent = Convert.ToInt32(str.Split(',')[1]);
-                            CardDB.cardIDEnum crdid = CardDB.Instance.cardIdstringToEnum(str.Split(',')[0]);
-                            GraveYardItem gyi = new GraveYardItem(crdid, ent, true);
-                            this.turnGraveYard.Add(gyi);
-                        }
-                    }
+                    omd = s;
                     continue;
                 }
 
                 if (s.StartsWith("enemyDiedMinions: "))
                 {
-                    string mins = s.Split(' ')[1];
-
-                    foreach (string str in s.Split(';'))
-                    {
-                        if (str == string.Empty || str == "")
-                        {
-                            int ent = Convert.ToInt32(str.Split(',')[1]);
-                            CardDB.cardIDEnum crdid = CardDB.Instance.cardIdstringToEnum(str.Split(',')[0]);
-                            GraveYardItem gyi = new GraveYardItem(crdid, ent, false);
-                            this.turnGraveYard.Add(gyi);
-                        }
-                    }
+                    emd = s;
                     continue;
                 }
 
+                
 
                 if (s.StartsWith("probs: "))
                 {
@@ -292,6 +277,17 @@ namespace HREngine.Bots
                     }
 
                     Probabilitymaker.Instance.setEnemyCards(enemycards);
+                    continue;
+                }
+
+                if (s.StartsWith("og:"))
+                {
+                    og = s;
+                    continue;
+                }
+                if (s.StartsWith("eg:"))
+                {
+                    eg = s;
                     continue;
                 }
 
@@ -757,6 +753,7 @@ namespace HREngine.Bots
             Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecrets);
 
             bool herowindfury = false;
+            if (this.ownHeroWeapon == "doomhammer") herowindfury = true;
 
             //create heros:
 
@@ -814,6 +811,10 @@ namespace HREngine.Bots
             Probabilitymaker.Instance.setTurnGraveYard(this.turnGraveYard);
             Probabilitymaker.Instance.stalaggDead = this.stalaggdead;
             Probabilitymaker.Instance.feugenDead = this.feugendead;
+
+            if (og != "") Probabilitymaker.Instance.readGraveyards(og, eg);
+            if (omd != "") Probabilitymaker.Instance.readTurnGraveYard(omd, emd);
+
 
 
         }
