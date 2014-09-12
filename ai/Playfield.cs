@@ -1476,8 +1476,9 @@ namespace HREngine.Bots
             if (this.turnCounter == 1) simulateTraps();
 
             //guess the dmg the hero will receive from enemy:
-            guessHeroDamage();
+            if(!this.isOwnTurn)guessHeroDamage();
             this.optionsPlayedThisTurn = 0;
+            this.enemyOptionsDoneThisTurn = 0;
             if (this.turnCounter <= turnsToSimulate)
             {
                 if (!this.isOwnTurn || this.guessingHeroHP <= 0)
@@ -1495,12 +1496,12 @@ namespace HREngine.Bots
             else
             {
                 // if its the enemy turn, end it and start our turn
-                if (!this.isOwnTurn)
+                /*if (!this.isOwnTurn)
                 {
                     this.triggerEndTurn(false);
                     this.isOwnTurn = !this.isOwnTurn;
                     this.triggerStartTurn(true);
-                }
+                }*/
 
                 //flag the board, that it is finished
                 this.complete = true;
@@ -1521,24 +1522,33 @@ namespace HREngine.Bots
                     m.numAttacksThisTurn = 0;
                     m.playedThisTurn = false;
                     m.updateReadyness();
+                    if (m.concedal)
+                    {
+                        m.concedal = false;
+                        m.stealth = false;
+                    }
                 }
                 //unfreeze the enemy minions
                 foreach (Minion m in enemyMinions)
                 {
                     m.frozen = false;
+                    
                 }
                 this.enemyHero.frozen = false;
 
 
                 this.ownHero.Angr = this.ownWeaponAttack;
                 this.ownHero.numAttacksThisTurn = 0;
-                this.ownAbilityReady = true;
                 this.ownHero.updateReadyness();
+
+                this.ownAbilityReady = true;
                 this.cardsPlayedThisTurn = 0;
                 this.mobsplayedThisTurn = 0;
+                this.playedPreparation = false;
+                this.playedmagierinderkirintor = false;
                 this.optionsPlayedThisTurn = 0;
-
-                this.sEnemTurn = false;
+                this.ueberladung = 0;
+                //this.sEnemTurn = false;
             }
             else
             {
@@ -1550,6 +1560,11 @@ namespace HREngine.Bots
                     m.numAttacksThisTurn = 0;
                     m.playedThisTurn = false;
                     m.updateReadyness();
+                    if (m.concedal)
+                    {
+                        m.concedal = false;
+                        m.stealth = false;
+                    }
                 }
                 //unfreeze the own minions
                 foreach (Minion m in ownMinions)
@@ -1560,8 +1575,9 @@ namespace HREngine.Bots
 
                 this.enemyHero.Angr = this.ownWeaponAttack;
                 this.enemyHero.numAttacksThisTurn = 0;
-                this.enemyAbilityReady = true;
                 this.enemyHero.updateReadyness();
+
+                this.enemyAbilityReady = true;
                 this.enemyOptionsDoneThisTurn = 0;
 
                 //start the enemy turn: play ability + his spells!
@@ -1569,7 +1585,7 @@ namespace HREngine.Bots
             }
 
 
-
+            
 
             this.value = int.MinValue;
             if (this.diedMinions != null) this.diedMinions.Clear();//contains only the minions that died in this turn!
@@ -1847,9 +1863,7 @@ namespace HREngine.Bots
         public void prepareNextTurn(bool own)
         {
             //call this after start turn trigger!
-            this.playedPreparation = false;
-            this.playedmagierinderkirintor = false;
-            this.optionsPlayedThisTurn = 0;
+            
             if (own)
             {
                 this.ownMaxMana = Math.Min(10, this.ownMaxMana + 1);
@@ -1881,6 +1895,9 @@ namespace HREngine.Bots
                 this.ownHero.updateReadyness();
                 this.cardsPlayedThisTurn = 0;
                 this.mobsplayedThisTurn = 0;
+                this.playedPreparation = false;
+                this.playedmagierinderkirintor = false;
+                this.optionsPlayedThisTurn = 0;
 
                 this.sEnemTurn = false;
             }
@@ -2057,24 +2074,20 @@ namespace HREngine.Bots
             Action a = new Action(aa.actionType, ha, o, aa.place, trgt, aa.penalty, aa.druidchoice);
 
 
-            if (this.isOwnTurn)
-            { 
-                this.optionsPlayedThisTurn++; 
-            }
-            else
-            {
-                this.enemyOptionsDoneThisTurn++;
-            }
+            
             //save the action if its our first turn
             if (this.turnCounter == 0) this.playactions.Add(a);
 
             if (a.actionType == actionEnum.attackWithMinion)
             {
-                minionAttacksMinion(a.own, a.target);
+                this.secretTrigger_MinionIsGoingToAttack(a.own, a.target);
+                this.secretTrigger_CharIsAttacked(a.own, a.target);
+                if(a.own.Hp>=0) minionAttacksMinion(a.own, a.target);
             }
 
             if (a.actionType == actionEnum.attackWithHero)
             {
+                //secret trigger is inside
                 attackWithWeapon(a.target, a.penalty);
             }
 
@@ -2094,16 +2107,27 @@ namespace HREngine.Bots
             {
                 playHeroPower(a.target, a.penalty, this.isOwnTurn);
             }
+
+            if (this.isOwnTurn)
+            {
+                this.optionsPlayedThisTurn++;
+            }
+            else
+            {
+                this.enemyOptionsDoneThisTurn++;
+            }
             
         }
 
         //minion attacks a minion
         public void minionAttacksMinion(Minion attacker, Minion defender, bool dontcount = false)
         {
+
             if (attacker.isHero)
             {
                 if (defender.isHero)
                 {
+
                     defender.getDamageOrHeal(attacker.Angr, this, true, false);
                 }
                 else
@@ -2144,6 +2168,7 @@ namespace HREngine.Bots
 
             if (defender.isHero)//target is enemy hero
             {
+
                 int oldhp = defender.Hp;
                 defender.getDamageOrHeal(attacker.Angr, this, true, false);
                 if (oldhp > defender.Hp)
@@ -2226,6 +2251,8 @@ namespace HREngine.Bots
             if (logging) Helpfunctions.Instance.logg("attck with weapon trgt: " + target.entitiyID);
 
             // hero attacks enemy----------------------------------------------------------------------------------
+
+            if (target.isHero) this.secretTrigger_CharIsAttacked(hero, target);
             this.minionAttacksMinion(hero, target);
             //-----------------------------------------------------------------------------------------------------
 
@@ -2298,6 +2325,7 @@ namespace HREngine.Bots
             }
             else
             {
+
                 c.sim_card.onCardPlay(this, true, target, choice);
                 this.doDmgTriggers();
                 //secret trigger? do here
@@ -2479,6 +2507,7 @@ namespace HREngine.Bots
             if (this.tempTrigger.ownMinionsDied + this.tempTrigger.enemyMinionsDied >= 1)
             {
                 triggerAMinionDied(); //possible effects: draw card, gain attack + hp
+                secretTrigger_MinionDied();
                 if (this.tempTrigger.ownMinionsDied >= 1) this.tempTrigger.ownMinionsChanged = true;
                 if (this.tempTrigger.enemyMinionsDied >= 1) this.tempTrigger.enemyMininsChanged = true;
                 this.tempTrigger.ownMinionsDied = 0;
@@ -2962,6 +2991,30 @@ namespace HREngine.Bots
 
 
 
+        public void secretTrigger_CharIsAttacked(Minion attacker, Minion defender)
+        {
+ 
+        }
+
+        public void secretTrigger_MinionIsGoingToAttack(Minion attacker, Minion defender)
+        {
+
+        }
+
+        public void secretTrigger_MinionIsPlayed(Minion playedMinion)
+        { 
+        }
+
+        public void secretTrigger_SpellIsPlayed(Minion target)
+        {
+ 
+        }
+
+        public void secretTrigger_MinionDied()
+        {
+ 
+        }
+
         public void doDeathrattles(List<Minion> deathrattles)
         {
             //todo sort them from oldest to newest (first played, first deathrattle)
@@ -3268,7 +3321,7 @@ namespace HREngine.Bots
             //add minion to list + do triggers + do secret trigger +  minion was played trigger
             addMinionToBattlefield(m);
 
-
+            secretTrigger_MinionIsPlayed(m);
 
 
             if (logging) Helpfunctions.Instance.logg("added " + m.handcard.card.name);

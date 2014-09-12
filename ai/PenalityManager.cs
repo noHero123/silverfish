@@ -763,7 +763,7 @@ namespace HREngine.Bots
         private int getRandomPenaltiy(CardDB.Card card, Playfield p, Minion target)
         {
             if (!this.randomEffects.ContainsKey(card.name)) return 0;
-            if (card.name == CardDB.cardName.brawl && p.optionsPlayedThisTurn >= 1 && p.enemyHeroName != HeroEnum.mage) return 100;
+            if (card.name == CardDB.cardName.brawl) return 0;
             if ((card.name == CardDB.cardName.cleave || card.name == CardDB.cardName.multishot) && p.enemyMinions.Count == 2) return 0;
             if ((card.name == CardDB.cardName.deadlyshot) && p.enemyMinions.Count == 1) return 0;
             if ((card.name == CardDB.cardName.arcanemissiles || card.name == CardDB.cardName.avengingwrath) && p.enemyMinions.Count == 0) return 0;
@@ -799,7 +799,6 @@ namespace HREngine.Bots
                 {
                     if (card.name == CardDB.cardName.knifejuggler && card.type == CardDB.cardtype.MOB)
                     {
-                        first = false;
                         continue;
                     }
                     if (cardDrawBattleCryDatabase.ContainsKey(a.card.card.name)) continue;
@@ -1072,6 +1071,11 @@ namespace HREngine.Bots
 
 
             Minion m = target;
+
+            if (card.name == CardDB.cardName.knifejuggler && p.mobsplayedThisTurn > 1 ||(p.ownHeroName == HeroEnum.shaman && p.ownAbilityReady==false))
+            {
+                return 20;
+            }
 
             if (card.name == CardDB.cardName.flametonguetotem && p.ownMinions.Count == 0)
             {

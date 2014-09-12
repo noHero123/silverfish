@@ -163,7 +163,9 @@ namespace HREngine.Bots
                         if (hc.entity == bestmove.card.entity)
                         {
                             bestmove.card = hc;
+                            break;
                         }
+                        Helpfunctions.Instance.logg("cant find" + bestmove.card.entity);
                     }
                 }
 

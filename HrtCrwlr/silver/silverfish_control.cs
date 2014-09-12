@@ -884,7 +884,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "111.2";
+        public string versionnumber = "111.3";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -1642,6 +1642,7 @@ namespace HREngine.Bots
                 }
 
             }
+            Helpfunctions.Instance.ErrorLog("actions received");
             Helpfunctions.Instance.logg("received " + boardnumm + " actions to do:");
             Ai.Instance.currentCalculatedBoard = "0";
             Playfield p = new Playfield();
@@ -1652,7 +1653,7 @@ namespace HREngine.Bots
                 aclist.Add(new Action(a, p));
                 Helpfunctions.Instance.logg(a);
             }
-
+            Helpfunctions.Instance.logg("---------------");
             Ai.Instance.setBestMoves(aclist, value);
 
         }
@@ -1752,7 +1753,7 @@ namespace HREngine.Bots
                 if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
                 if (m.Angr > 1 || m.Hp > 1) ownMinionsCount++;
                 if (m.handcard.card.hasEffect) retval += 1;
-                if (m.handcard.card.name == CardDB.cardName.silverhandrecruit && m.Angr == 1 && m.Hp == 1) retval -= 5;
+                if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
                 if (m.handcard.card.name == CardDB.cardName.bloodmagethalnos) retval += 10;
             }
@@ -3825,8 +3826,9 @@ namespace HREngine.Bots
             if (this.turnCounter == 1) simulateTraps();
 
             //guess the dmg the hero will receive from enemy:
-            guessHeroDamage();
+            if (!this.isOwnTurn) guessHeroDamage();
             this.optionsPlayedThisTurn = 0;
+            this.enemyOptionsDoneThisTurn = 0;
             if (this.turnCounter <= turnsToSimulate)
             {
                 if (!this.isOwnTurn || this.guessingHeroHP <= 0)
@@ -3844,12 +3846,12 @@ namespace HREngine.Bots
             else
             {
                 // if its the enemy turn, end it and start our turn
-                if (!this.isOwnTurn)
+                /*if (!this.isOwnTurn)
                 {
                     this.triggerEndTurn(false);
                     this.isOwnTurn = !this.isOwnTurn;
                     this.triggerStartTurn(true);
-                }
+                }*/
 
                 //flag the board, that it is finished
                 this.complete = true;
@@ -3870,24 +3872,33 @@ namespace HREngine.Bots
                     m.numAttacksThisTurn = 0;
                     m.playedThisTurn = false;
                     m.updateReadyness();
+                    if (m.concedal)
+                    {
+                        m.concedal = false;
+                        m.stealth = false;
+                    }
                 }
                 //unfreeze the enemy minions
                 foreach (Minion m in enemyMinions)
                 {
                     m.frozen = false;
+
                 }
                 this.enemyHero.frozen = false;
 
 
                 this.ownHero.Angr = this.ownWeaponAttack;
                 this.ownHero.numAttacksThisTurn = 0;
-                this.ownAbilityReady = true;
                 this.ownHero.updateReadyness();
+
+                this.ownAbilityReady = true;
                 this.cardsPlayedThisTurn = 0;
                 this.mobsplayedThisTurn = 0;
+                this.playedPreparation = false;
+                this.playedmagierinderkirintor = false;
                 this.optionsPlayedThisTurn = 0;
-
-                this.sEnemTurn = false;
+                this.ueberladung = 0;
+                //this.sEnemTurn = false;
             }
             else
             {
@@ -3899,6 +3910,11 @@ namespace HREngine.Bots
                     m.numAttacksThisTurn = 0;
                     m.playedThisTurn = false;
                     m.updateReadyness();
+                    if (m.concedal)
+                    {
+                        m.concedal = false;
+                        m.stealth = false;
+                    }
                 }
                 //unfreeze the own minions
                 foreach (Minion m in ownMinions)
@@ -3909,8 +3925,9 @@ namespace HREngine.Bots
 
                 this.enemyHero.Angr = this.ownWeaponAttack;
                 this.enemyHero.numAttacksThisTurn = 0;
-                this.enemyAbilityReady = true;
                 this.enemyHero.updateReadyness();
+
+                this.enemyAbilityReady = true;
                 this.enemyOptionsDoneThisTurn = 0;
 
                 //start the enemy turn: play ability + his spells!
@@ -4196,9 +4213,7 @@ namespace HREngine.Bots
         public void prepareNextTurn(bool own)
         {
             //call this after start turn trigger!
-            this.playedPreparation = false;
-            this.playedmagierinderkirintor = false;
-            this.optionsPlayedThisTurn = 0;
+
             if (own)
             {
                 this.ownMaxMana = Math.Min(10, this.ownMaxMana + 1);
@@ -4230,6 +4245,9 @@ namespace HREngine.Bots
                 this.ownHero.updateReadyness();
                 this.cardsPlayedThisTurn = 0;
                 this.mobsplayedThisTurn = 0;
+                this.playedPreparation = false;
+                this.playedmagierinderkirintor = false;
+                this.optionsPlayedThisTurn = 0;
 
                 this.sEnemTurn = false;
             }
@@ -4406,24 +4424,20 @@ namespace HREngine.Bots
             Action a = new Action(aa.actionType, ha, o, aa.place, trgt, aa.penalty, aa.druidchoice);
 
 
-            if (this.isOwnTurn)
-            {
-                this.optionsPlayedThisTurn++;
-            }
-            else
-            {
-                this.enemyOptionsDoneThisTurn++;
-            }
+
             //save the action if its our first turn
             if (this.turnCounter == 0) this.playactions.Add(a);
 
             if (a.actionType == actionEnum.attackWithMinion)
             {
-                minionAttacksMinion(a.own, a.target);
+                this.secretTrigger_MinionIsGoingToAttack(a.own, a.target);
+                this.secretTrigger_CharIsAttacked(a.own, a.target);
+                if (a.own.Hp >= 0) minionAttacksMinion(a.own, a.target);
             }
 
             if (a.actionType == actionEnum.attackWithHero)
             {
+                //secret trigger is inside
                 attackWithWeapon(a.target, a.penalty);
             }
 
@@ -4444,15 +4458,26 @@ namespace HREngine.Bots
                 playHeroPower(a.target, a.penalty, this.isOwnTurn);
             }
 
+            if (this.isOwnTurn)
+            {
+                this.optionsPlayedThisTurn++;
+            }
+            else
+            {
+                this.enemyOptionsDoneThisTurn++;
+            }
+
         }
 
         //minion attacks a minion
         public void minionAttacksMinion(Minion attacker, Minion defender, bool dontcount = false)
         {
+
             if (attacker.isHero)
             {
                 if (defender.isHero)
                 {
+
                     defender.getDamageOrHeal(attacker.Angr, this, true, false);
                 }
                 else
@@ -4493,6 +4518,7 @@ namespace HREngine.Bots
 
             if (defender.isHero)//target is enemy hero
             {
+
                 int oldhp = defender.Hp;
                 defender.getDamageOrHeal(attacker.Angr, this, true, false);
                 if (oldhp > defender.Hp)
@@ -4575,6 +4601,8 @@ namespace HREngine.Bots
             if (logging) Helpfunctions.Instance.logg("attck with weapon trgt: " + target.entitiyID);
 
             // hero attacks enemy----------------------------------------------------------------------------------
+
+            if (target.isHero) this.secretTrigger_CharIsAttacked(hero, target);
             this.minionAttacksMinion(hero, target);
             //-----------------------------------------------------------------------------------------------------
 
@@ -4647,6 +4675,7 @@ namespace HREngine.Bots
             }
             else
             {
+
                 c.sim_card.onCardPlay(this, true, target, choice);
                 this.doDmgTriggers();
                 //secret trigger? do here
@@ -4828,6 +4857,7 @@ namespace HREngine.Bots
             if (this.tempTrigger.ownMinionsDied + this.tempTrigger.enemyMinionsDied >= 1)
             {
                 triggerAMinionDied(); //possible effects: draw card, gain attack + hp
+                secretTrigger_MinionDied();
                 if (this.tempTrigger.ownMinionsDied >= 1) this.tempTrigger.ownMinionsChanged = true;
                 if (this.tempTrigger.enemyMinionsDied >= 1) this.tempTrigger.enemyMininsChanged = true;
                 this.tempTrigger.ownMinionsDied = 0;
@@ -5311,6 +5341,30 @@ namespace HREngine.Bots
 
 
 
+        public void secretTrigger_CharIsAttacked(Minion attacker, Minion defender)
+        {
+
+        }
+
+        public void secretTrigger_MinionIsGoingToAttack(Minion attacker, Minion defender)
+        {
+
+        }
+
+        public void secretTrigger_MinionIsPlayed(Minion playedMinion)
+        {
+        }
+
+        public void secretTrigger_SpellIsPlayed(Minion target)
+        {
+
+        }
+
+        public void secretTrigger_MinionDied()
+        {
+
+        }
+
         public void doDeathrattles(List<Minion> deathrattles)
         {
             //todo sort them from oldest to newest (first played, first deathrattle)
@@ -5617,7 +5671,7 @@ namespace HREngine.Bots
             //add minion to list + do triggers + do secret trigger +  minion was played trigger
             addMinionToBattlefield(m);
 
-
+            secretTrigger_MinionIsPlayed(m);
 
 
             if (logging) Helpfunctions.Instance.logg("added " + m.handcard.card.name);
@@ -6518,7 +6572,9 @@ namespace HREngine.Bots
                         if (hc.entity == bestmove.card.entity)
                         {
                             bestmove.card = hc;
+                            break;
                         }
+                        Helpfunctions.Instance.logg("cant find" + bestmove.card.entity);
                     }
                 }
 
@@ -10149,7 +10205,7 @@ namespace HREngine.Bots
         private int getRandomPenaltiy(CardDB.Card card, Playfield p, Minion target)
         {
             if (!this.randomEffects.ContainsKey(card.name)) return 0;
-            if (card.name == CardDB.cardName.brawl && p.optionsPlayedThisTurn >= 1 && p.enemyHeroName != HeroEnum.mage) return 100;
+            if (card.name == CardDB.cardName.brawl) return 0;
             if ((card.name == CardDB.cardName.cleave || card.name == CardDB.cardName.multishot) && p.enemyMinions.Count == 2) return 0;
             if ((card.name == CardDB.cardName.deadlyshot) && p.enemyMinions.Count == 1) return 0;
             if ((card.name == CardDB.cardName.arcanemissiles || card.name == CardDB.cardName.avengingwrath) && p.enemyMinions.Count == 0) return 0;
@@ -10185,7 +10241,6 @@ namespace HREngine.Bots
                 {
                     if (card.name == CardDB.cardName.knifejuggler && card.type == CardDB.cardtype.MOB)
                     {
-                        first = false;
                         continue;
                     }
                     if (cardDrawBattleCryDatabase.ContainsKey(a.card.card.name)) continue;
@@ -10458,6 +10513,11 @@ namespace HREngine.Bots
 
 
             Minion m = target;
+
+            if (card.name == CardDB.cardName.knifejuggler && p.mobsplayedThisTurn > 1 || (p.ownHeroName == HeroEnum.shaman && p.ownAbilityReady == false))
+            {
+                return 20;
+            }
 
             if (card.name == CardDB.cardName.flametonguetotem && p.ownMinions.Count == 0)
             {
@@ -16043,6 +16103,7 @@ namespace HREngine.Bots
             public int needMinNumberOfEnemy = 0;
             public int needMinTotalMinions = 0;
             public int needMinionsCapIfAvailable = 0;
+            public bool isToken = false;
 
             public int spellpowervalue = 0;
             public cardIDEnum cardIDenum = cardIDEnum.None;
@@ -16109,6 +16170,7 @@ namespace HREngine.Bots
                 this.windfury = c.windfury;
                 this.cardIDenum = c.cardIDenum;
                 this.sim_card = c.sim_card;
+                this.isToken = c.isToken;
             }
 
             public bool isRequirementInList(CardDB.ErrorType2 et)
@@ -16912,6 +16974,29 @@ namespace HREngine.Bots
                     //c.CardID = temp;
                     allCardIDS.Add(temp);
                     c.cardIDenum = this.cardIdstringToEnum(temp);
+
+                    //token:
+                    if (temp.EndsWith("t"))
+                    {
+                        c.isToken = true;
+                    }
+                    if (temp.Equals("ds1_whelptoken")) c.isToken = true;
+                    if (temp.Equals("CS2_mirror")) c.isToken = true;
+                    if (temp.Equals("CS2_050")) c.isToken = true;
+                    if (temp.Equals("CS2_052")) c.isToken = true;
+                    if (temp.Equals("CS2_051")) c.isToken = true;
+                    if (temp.Equals("NEW1_009")) c.isToken = true;
+                    if (temp.Equals("CS2_152")) c.isToken = true;
+                    if (temp.Equals("CS2_boar")) c.isToken = true;
+                    if (temp.Equals("EX1_tk11")) c.isToken = true;
+                    if (temp.Equals("EX1_506a")) c.isToken = true;
+                    if (temp.Equals("skele21")) c.isToken = true;
+                    if (temp.Equals("EX1_tk9")) c.isToken = true;
+                    if (temp.Equals("EX1_finkle")) c.isToken = true;
+                    if (temp.Equals("EX1_598")) c.isToken = true;
+                    if (temp.Equals("EX1_tk34")) c.isToken = true;
+                    //if (c.isToken) Helpfunctions.Instance.ErrorLog(temp);
+
                     continue;
                 }
                 /*
@@ -24587,6 +24672,7 @@ namespace HREngine.Bots
 
         //    fügt einem charakter $2 schaden zu. beschwört einen zufälligen dämon, wenn der schaden tödlich ist.
 
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_059);//bloodimp
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
 
@@ -24605,7 +24691,6 @@ namespace HREngine.Bots
             if (summondemon)
             {
                 int posi = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
-                CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_059);//bloodimp
                 p.callKid(kid, posi, ownplay);
             }
 
@@ -27827,7 +27912,7 @@ namespace HREngine.Bots
         //    fügt einem zufälligen feind 1 schaden zu, nachdem ihr einen diener herbeigerufen habt.
         public override void onMinionWasSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
-            if (triggerEffectMinion.own == summonedMinion.own)
+            if (triggerEffectMinion.entitiyID != summonedMinion.entitiyID && triggerEffectMinion.own == summonedMinion.own)
             {
                 List<Minion> temp = (triggerEffectMinion.own) ? p.enemyMinions : p.ownMinions;
 

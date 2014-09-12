@@ -3260,6 +3260,7 @@ namespace HREngine.Bots
             public int needMinNumberOfEnemy = 0;
             public int needMinTotalMinions = 0;
             public int needMinionsCapIfAvailable = 0;
+            public bool isToken = false;
 
             public int spellpowervalue = 0;
             public cardIDEnum cardIDenum = cardIDEnum.None;
@@ -3326,6 +3327,7 @@ namespace HREngine.Bots
                 this.windfury = c.windfury;
                 this.cardIDenum = c.cardIDenum;
                 this.sim_card = c.sim_card;
+                this.isToken = c.isToken;
             }
 
             public bool isRequirementInList(CardDB.ErrorType2 et)
@@ -4129,6 +4131,29 @@ namespace HREngine.Bots
                     //c.CardID = temp;
                     allCardIDS.Add(temp);
                     c.cardIDenum = this.cardIdstringToEnum(temp);
+
+                    //token:
+                    if (temp.EndsWith("t"))
+                    {
+                        c.isToken = true;
+                    }
+                    if(temp.Equals("ds1_whelptoken")) c.isToken=true;
+                    if (temp.Equals("CS2_mirror")) c.isToken = true;
+                    if (temp.Equals("CS2_050")) c.isToken = true;
+                    if (temp.Equals("CS2_052")) c.isToken = true;
+                    if (temp.Equals("CS2_051")) c.isToken = true;
+                    if (temp.Equals("NEW1_009")) c.isToken = true;
+                    if (temp.Equals("CS2_152")) c.isToken = true;
+                    if (temp.Equals("CS2_boar")) c.isToken = true;
+                    if (temp.Equals("EX1_tk11")) c.isToken = true;
+                    if (temp.Equals("EX1_506a")) c.isToken = true;
+                    if (temp.Equals("skele21")) c.isToken = true;
+                    if (temp.Equals("EX1_tk9")) c.isToken = true;
+                    if (temp.Equals("EX1_finkle")) c.isToken = true;
+                    if (temp.Equals("EX1_598")) c.isToken = true;
+                    if (temp.Equals("EX1_tk34")) c.isToken = true;
+                    //if (c.isToken) Helpfunctions.Instance.ErrorLog(temp);
+
                     continue;
                 }
                 /*

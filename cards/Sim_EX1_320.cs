@@ -8,7 +8,7 @@ namespace HREngine.Bots
 	{
 
 //    fügt einem charakter $2 schaden zu. beschwört einen zufälligen dämon, wenn der schaden tödlich ist.
-
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_059);//bloodimp
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
 
@@ -27,7 +27,7 @@ namespace HREngine.Bots
             if (summondemon)
             {
                 int posi = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
-                CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_059);//bloodimp
+                
                 p.callKid(kid, posi, ownplay);
             }
 

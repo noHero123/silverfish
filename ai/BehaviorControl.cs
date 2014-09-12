@@ -84,7 +84,7 @@ namespace HREngine.Bots
                 if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
                 if (m.Angr > 1 || m.Hp > 1) ownMinionsCount++;
                 if (m.handcard.card.hasEffect) retval += 1;
-                if (m.handcard.card.name == CardDB.cardName.silverhandrecruit && m.Angr == 1 && m.Hp == 1) retval -= 5;
+                if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
                 if (m.handcard.card.name == CardDB.cardName.bloodmagethalnos) retval += 10;
             }
