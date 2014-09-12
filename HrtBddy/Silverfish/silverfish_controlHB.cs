@@ -1088,7 +1088,7 @@ namespace SilverfishControl
                         graveYard.Add(gyi);
                     }
 
-                    if (ent.GetTag(HRGameTag.CREATOR) != owncontroler && ent.GetTag(HRGameTag.CREATOR) != enemycontroler) continue; //if creator is someone else, it was not played
+                    if (ent.GetTag(GAME_TAG.CREATOR) != owncontroler && ent.GetTag(GAME_TAG.CREATOR) != enemycontroler) continue; //if creator is someone else, it was not played
 
 
                     if (ent.GetTag(GAME_TAG.CREATOR) == owncontroler)
