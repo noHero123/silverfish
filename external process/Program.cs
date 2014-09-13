@@ -180,6 +180,8 @@ namespace ConsoleApplication1
             Helpfunctions.Instance.writeBufferToActionFile();
             Ai.Instance.currentCalculatedBoard = "1";
             Helpfunctions.Instance.ErrorLog("wait for next board...");
+
+            //sf.readActionFile();
         }
 
         public void testing(int start)
@@ -303,6 +305,7 @@ namespace ConsoleApplication1
 
         public void readActionFile(bool passiveWaiting = false)
         {
+            Ai.Instance.nextMoveGuess = new Playfield();
             bool readed = true;
             List<string> alist = new List<string>();
             float value = 0f;
@@ -324,7 +327,7 @@ namespace ConsoleApplication1
                         {
                             boardnumm = (board.Split(' ')[1].Split(' ')[0]);
                             alist.RemoveAt(0);
-                            if (boardnumm != Ai.Instance.currentCalculatedBoard)
+                            /*if (boardnumm != Ai.Instance.currentCalculatedBoard)
                             {
                                 if (passiveWaiting)
                                 {
@@ -332,7 +335,7 @@ namespace ConsoleApplication1
                                     return;
                                 }
                                 continue;
-                            }
+                            }*/
                         }
                         string first = alist[0];
                         if (first.StartsWith("value "))
@@ -372,6 +375,8 @@ namespace ConsoleApplication1
             Ai.Instance.setBestMoves(aclist, value);
 
         }
+
+
 
     }
 
@@ -450,7 +455,7 @@ namespace ConsoleApplication1
             retval += p.owncarddraw * 5;
             retval -= p.enemycarddraw * 15;
 
-            int owntaunt = 0;
+            //int owntaunt = 0;
             int ownMinionsCount = 0;
             foreach (Minion m in p.ownMinions)
             {
@@ -461,13 +466,22 @@ namespace ConsoleApplication1
                 if (m.windfury) retval += m.Angr;
                 if (m.divineshild) retval += 1;
                 if (m.stealth) retval += 1;
-                if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
+                if (penman.specialMinions.ContainsKey(m.name))
+                {
+                    if (!m.taunt && m.stealth) retval += 20;
+                }
+                else
+                {
+                    if (m.Angr <= 2 && m.Hp <= 2) retval -= 5;
+                }
+                //if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
                 //if (m.poisonous) retval += 1;
                 if (m.divineshild && m.taunt) retval += 4;
-                if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
+                //if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
                 if (m.Angr > 1 || m.Hp > 1) ownMinionsCount++;
                 if (m.handcard.card.hasEffect) retval += 1;
-                if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
+                //if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
+                //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
                 if (m.handcard.card.name == CardDB.cardName.bloodmagethalnos) retval += 10;
             }
@@ -5018,6 +5032,26 @@ namespace ConsoleApplication1
             Helpfunctions.Instance.logg("");
         }
 
+        public void printBoardDebug()
+        {
+            Helpfunctions.Instance.logg("hero " + this.ownHero.Hp + " " + this.ownHero.armor + " " + this.ownHero.entitiyID);
+            Helpfunctions.Instance.logg("ehero " + this.enemyHero.Hp + " " + this.enemyHero.armor + " " + this.enemyHero.entitiyID);
+            foreach (Minion m in ownMinions)
+            {
+                Helpfunctions.Instance.logg(m.name + " " + m.entitiyID);
+            }
+            Helpfunctions.Instance.logg("-");
+            foreach (Minion m in enemyMinions)
+            {
+                Helpfunctions.Instance.logg(m.name + " " + m.entitiyID);
+            }
+            Helpfunctions.Instance.logg("-");
+            foreach (Handmanager.Handcard hc in this.owncards)
+            {
+                Helpfunctions.Instance.logg(hc.position + " " + hc.card.name + " " + hc.entity);
+            }
+        }
+
         public Action getNextAction()
         {
             if (this.playactions.Count >= 1) return this.playactions[0];
@@ -5265,6 +5299,7 @@ namespace ConsoleApplication1
 
         public void setBestMoves(List<Action> alist, float value)
         {
+            help.logg("set best action-----------------------------------");
             this.bestActions.Clear();
             this.bestmove = null;
 
@@ -5280,11 +5315,15 @@ namespace ConsoleApplication1
                 this.bestActions.RemoveAt(0);
             }
 
+            this.nextMoveGuess = new Playfield();
+            //only debug:
+            this.nextMoveGuess.printBoardDebug();
+
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
 
 
-                this.nextMoveGuess = new Playfield();
+
 
                 if (bestmove.actionType == actionEnum.playcard)
                 {
@@ -5292,15 +5331,17 @@ namespace ConsoleApplication1
                     {
                         if (hc.entity == bestmove.card.entity)
                         {
-                            bestmove.card = hc;
+                            bestmove.card = new Handmanager.Handcard(hc);
                             break;
                         }
-                        Helpfunctions.Instance.logg("cant find" + bestmove.card.entity);
+                        //Helpfunctions.Instance.logg("cant find" + bestmove.card.entity);
                     }
                 }
 
+                bestmove.print();
+                Helpfunctions.Instance.logg("nmgsim-");
                 this.nextMoveGuess.doAction(bestmove);
-
+                Helpfunctions.Instance.logg("nmgsime-");
 
             }
             else
@@ -5320,6 +5361,8 @@ namespace ConsoleApplication1
                 this.bestmove = this.bestActions[0];
                 this.bestActions.RemoveAt(0);
             }
+            if (this.nextMoveGuess == null) this.nextMoveGuess = new Playfield();
+            this.nextMoveGuess.printBoardDebug();
 
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
@@ -5331,12 +5374,14 @@ namespace ConsoleApplication1
                     {
                         if (hc.entity == bestmove.card.entity)
                         {
-                            bestmove.card = hc;
+                            bestmove.card = new Handmanager.Handcard(hc);
                         }
                     }
                 }
-
+                bestmove.print();
+                Helpfunctions.Instance.logg("nmgsim-");
                 this.nextMoveGuess.doAction(bestmove);
+                Helpfunctions.Instance.logg("nmgsime-");
             }
             else
             {
@@ -5541,13 +5586,16 @@ namespace ConsoleApplication1
         public void updateEntitiy(int old, int newone)
         {
             Helpfunctions.Instance.logg("entityupdate! " + old + " to " + newone);
-            foreach (Minion m in this.nextMoveGuess.ownMinions)
+            if (this.nextMoveGuess != null)
             {
-                if (m.entitiyID == old) m.entitiyID = newone;
-            }
-            foreach (Minion m in this.nextMoveGuess.enemyMinions)
-            {
-                if (m.entitiyID == old) m.entitiyID = newone;
+                foreach (Minion m in this.nextMoveGuess.ownMinions)
+                {
+                    if (m.entitiyID == old) m.entitiyID = newone;
+                }
+                foreach (Minion m in this.nextMoveGuess.enemyMinions)
+                {
+                    if (m.entitiyID == old) m.entitiyID = newone;
+                }
             }
             foreach (Action a in this.bestActions)
             {
@@ -5555,6 +5603,7 @@ namespace ConsoleApplication1
                 if (a.target != null && a.target.entitiyID == old) a.target.entitiyID = newone;
                 if (a.card != null && a.card.entity == old) a.card.entity = newone;
             }
+
         }
 
     }

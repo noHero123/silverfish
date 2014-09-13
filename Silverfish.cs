@@ -678,6 +678,16 @@ namespace HREngine.Bots
 
         }
 
+        public void testExternal()
+        {
+            BoardTester bt = new BoardTester("");
+            this.currentMana = Hrtprozis.Instance.currentMana;
+            this.ownMaxMana = Hrtprozis.Instance.ownMaxMana;
+            this.enemyMaxMana = Hrtprozis.Instance.enemyMaxMana;
+            printstuff(true);
+            readActionFile();
+        }
+
         private void printstuff(bool runEx)
         {
             HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();

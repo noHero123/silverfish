@@ -67,7 +67,7 @@ namespace HREngine.Bots
             retval += p.owncarddraw * 5;
             retval -= p.enemycarddraw * 15;
 
-            int owntaunt = 0;
+            //int owntaunt = 0;
             int ownMinionsCount = 0;
             foreach (Minion m in p.ownMinions)
             {
@@ -78,13 +78,22 @@ namespace HREngine.Bots
                 if (m.windfury) retval += m.Angr;
                 if (m.divineshild) retval += 1;
                 if (m.stealth) retval += 1;
-                if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
+                if (penman.specialMinions.ContainsKey(m.name))
+                {
+                    if (!m.taunt && m.stealth) retval += 20;
+                }
+                else
+                {
+                    if (m.Angr <= 2 && m.Hp <= 2) retval -= 5;
+                }
+                //if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
                 //if (m.poisonous) retval += 1;
                 if (m.divineshild && m.taunt) retval += 4;
-                if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
+                //if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
                 if (m.Angr > 1 || m.Hp > 1) ownMinionsCount++;
                 if (m.handcard.card.hasEffect) retval += 1;
-                if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
+                //if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
+                //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
                 if (m.handcard.card.name == CardDB.cardName.bloodmagethalnos) retval += 10;
             }

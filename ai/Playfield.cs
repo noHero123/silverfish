@@ -3952,6 +3952,26 @@ namespace HREngine.Bots
             Helpfunctions.Instance.logg("");
         }
 
+        public void printBoardDebug()
+        {
+            Helpfunctions.Instance.logg("hero " + this.ownHero.Hp + " " + this.ownHero.armor + " " + this.ownHero.entitiyID);
+            Helpfunctions.Instance.logg("ehero " + this.enemyHero.Hp + " " + this.enemyHero.armor + " " + this.enemyHero.entitiyID);
+            foreach (Minion m in ownMinions)
+            {
+                Helpfunctions.Instance.logg(m.name + " " + m.entitiyID);
+            }
+            Helpfunctions.Instance.logg("-");
+            foreach (Minion m in enemyMinions)
+            {
+                Helpfunctions.Instance.logg(m.name + " " + m.entitiyID);
+            }
+            Helpfunctions.Instance.logg("-");
+            foreach (Handmanager.Handcard hc in this.owncards)
+            {
+                Helpfunctions.Instance.logg(hc.position + " " + hc.card.name + " " + hc.entity);
+            }
+        }
+
         public Action getNextAction()
         {
             if (this.playactions.Count >= 1) return this.playactions[0];

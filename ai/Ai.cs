@@ -135,6 +135,7 @@ namespace HREngine.Bots
 
         public void setBestMoves(List<Action> alist, float value)
         {
+            help.logg("set best action-----------------------------------");
             this.bestActions.Clear();
             this.bestmove = null;
 
@@ -150,11 +151,15 @@ namespace HREngine.Bots
                 this.bestActions.RemoveAt(0);
             }
 
+            this.nextMoveGuess = new Playfield();
+            //only debug:
+            this.nextMoveGuess.printBoardDebug();
+
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
-               
 
-                this.nextMoveGuess = new Playfield();
+
+               
 
                 if (bestmove.actionType == actionEnum.playcard)
                 {
@@ -162,15 +167,17 @@ namespace HREngine.Bots
                     {
                         if (hc.entity == bestmove.card.entity)
                         {
-                            bestmove.card = hc;
+                            bestmove.card = new Handmanager.Handcard(hc);
                             break;
                         }
-                        Helpfunctions.Instance.logg("cant find" + bestmove.card.entity);
+                        //Helpfunctions.Instance.logg("cant find" + bestmove.card.entity);
                     }
                 }
 
+                bestmove.print();
+                Helpfunctions.Instance.logg("nmgsim-");
                 this.nextMoveGuess.doAction(bestmove);
-
+                Helpfunctions.Instance.logg("nmgsime-");
                
             }
             else
@@ -190,6 +197,8 @@ namespace HREngine.Bots
                 this.bestmove = this.bestActions[0];
                 this.bestActions.RemoveAt(0);
             }
+            if (this.nextMoveGuess == null) this.nextMoveGuess = new Playfield();
+            this.nextMoveGuess.printBoardDebug();
 
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
@@ -201,12 +210,14 @@ namespace HREngine.Bots
                     {
                         if (hc.entity == bestmove.card.entity)
                         {
-                            bestmove.card = hc;
+                            bestmove.card = new Handmanager.Handcard(hc);
                         }
                     }
                 }
-
+                bestmove.print();
+                Helpfunctions.Instance.logg("nmgsim-");
                 this.nextMoveGuess.doAction(bestmove);
+                Helpfunctions.Instance.logg("nmgsime-");
             }
             else
             {
@@ -411,13 +422,16 @@ namespace HREngine.Bots
         public void updateEntitiy(int old, int newone)
         {
             Helpfunctions.Instance.logg("entityupdate! "+ old + " to " + newone);
-            foreach(Minion m in this.nextMoveGuess.ownMinions)
+            if (this.nextMoveGuess != null)
             {
-                if (m.entitiyID == old) m.entitiyID = newone;
-            }
-            foreach (Minion m in this.nextMoveGuess.enemyMinions)
-            {
-                if (m.entitiyID == old) m.entitiyID = newone;
+                foreach (Minion m in this.nextMoveGuess.ownMinions)
+                {
+                    if (m.entitiyID == old) m.entitiyID = newone;
+                }
+                foreach (Minion m in this.nextMoveGuess.enemyMinions)
+                {
+                    if (m.entitiyID == old) m.entitiyID = newone;
+                }
             }
             foreach (Action a in this.bestActions)
             {
@@ -425,6 +439,7 @@ namespace HREngine.Bots
                 if (a.target != null && a.target.entitiyID == old) a.target.entitiyID = newone;
                 if (a.card != null && a.card.entity == old) a.card.entity = newone;
             }
+
         }
 
     }

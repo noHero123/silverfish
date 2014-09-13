@@ -531,7 +531,7 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "111.5";
+        public string versionnumber = "111.6";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -5897,6 +5897,26 @@ namespace SilverfishRush
             Helpfunctions.Instance.logg("");
         }
 
+        public void printBoardDebug()
+        {
+            Helpfunctions.Instance.logg("hero " + this.ownHero.Hp + " " + this.ownHero.armor + " " + this.ownHero.entitiyID);
+            Helpfunctions.Instance.logg("ehero " + this.enemyHero.Hp + " " + this.enemyHero.armor + " " + this.enemyHero.entitiyID);
+            foreach (Minion m in ownMinions)
+            {
+                Helpfunctions.Instance.logg(m.name + " " + m.entitiyID);
+            }
+            Helpfunctions.Instance.logg("-");
+            foreach (Minion m in enemyMinions)
+            {
+                Helpfunctions.Instance.logg(m.name + " " + m.entitiyID);
+            }
+            Helpfunctions.Instance.logg("-");
+            foreach (Handmanager.Handcard hc in this.owncards)
+            {
+                Helpfunctions.Instance.logg(hc.position + " " + hc.card.name + " " + hc.entity);
+            }
+        }
+
         public Action getNextAction()
         {
             if (this.playactions.Count >= 1) return this.playactions[0];
@@ -6144,6 +6164,7 @@ namespace SilverfishRush
 
         public void setBestMoves(List<Action> alist, float value)
         {
+            help.logg("set best action-----------------------------------");
             this.bestActions.Clear();
             this.bestmove = null;
 
@@ -6159,11 +6180,15 @@ namespace SilverfishRush
                 this.bestActions.RemoveAt(0);
             }
 
+            this.nextMoveGuess = new Playfield();
+            //only debug:
+            this.nextMoveGuess.printBoardDebug();
+
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
 
 
-                this.nextMoveGuess = new Playfield();
+
 
                 if (bestmove.actionType == actionEnum.playcard)
                 {
@@ -6171,15 +6196,17 @@ namespace SilverfishRush
                     {
                         if (hc.entity == bestmove.card.entity)
                         {
-                            bestmove.card = hc;
+                            bestmove.card = new Handmanager.Handcard(hc);
                             break;
                         }
-                        Helpfunctions.Instance.logg("cant find" + bestmove.card.entity);
+                        //Helpfunctions.Instance.logg("cant find" + bestmove.card.entity);
                     }
                 }
 
+                bestmove.print();
+                Helpfunctions.Instance.logg("nmgsim-");
                 this.nextMoveGuess.doAction(bestmove);
-
+                Helpfunctions.Instance.logg("nmgsime-");
 
             }
             else
@@ -6199,6 +6226,8 @@ namespace SilverfishRush
                 this.bestmove = this.bestActions[0];
                 this.bestActions.RemoveAt(0);
             }
+            if (this.nextMoveGuess == null) this.nextMoveGuess = new Playfield();
+            this.nextMoveGuess.printBoardDebug();
 
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
@@ -6210,12 +6239,14 @@ namespace SilverfishRush
                     {
                         if (hc.entity == bestmove.card.entity)
                         {
-                            bestmove.card = hc;
+                            bestmove.card = new Handmanager.Handcard(hc);
                         }
                     }
                 }
-
+                bestmove.print();
+                Helpfunctions.Instance.logg("nmgsim-");
                 this.nextMoveGuess.doAction(bestmove);
+                Helpfunctions.Instance.logg("nmgsime-");
             }
             else
             {
@@ -6420,13 +6451,16 @@ namespace SilverfishRush
         public void updateEntitiy(int old, int newone)
         {
             Helpfunctions.Instance.logg("entityupdate! " + old + " to " + newone);
-            foreach (Minion m in this.nextMoveGuess.ownMinions)
+            if (this.nextMoveGuess != null)
             {
-                if (m.entitiyID == old) m.entitiyID = newone;
-            }
-            foreach (Minion m in this.nextMoveGuess.enemyMinions)
-            {
-                if (m.entitiyID == old) m.entitiyID = newone;
+                foreach (Minion m in this.nextMoveGuess.ownMinions)
+                {
+                    if (m.entitiyID == old) m.entitiyID = newone;
+                }
+                foreach (Minion m in this.nextMoveGuess.enemyMinions)
+                {
+                    if (m.entitiyID == old) m.entitiyID = newone;
+                }
             }
             foreach (Action a in this.bestActions)
             {
@@ -6434,6 +6468,7 @@ namespace SilverfishRush
                 if (a.target != null && a.target.entitiyID == old) a.target.entitiyID = newone;
                 if (a.card != null && a.card.entity == old) a.card.entity = newone;
             }
+
         }
 
     }
