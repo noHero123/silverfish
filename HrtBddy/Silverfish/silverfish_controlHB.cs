@@ -51,6 +51,13 @@ namespace SilverfishControl
             int playaroundprob = 50;    //probability where the enemy plays the aoe-spell, but your minions will not die through it
             int playaroundprob2 = 80;   // probability where the enemy plays the aoe-spell, and your minions can die!
             this.useExternalProcess = false; // use silver.exe for calculations a lot faster than turning it off (true = recomended)
+
+            int amountBoardsInEnemyTurnSim = 20;
+            int amountBoardsInEnemySecondTurnSim = 20;
+
+            int nextturnsimDeep = 6;
+            int nextturnsimMaxWidth = 10;
+            int nexttunsimMaxBoards = 50;
             //###########################################################
 
 
@@ -85,6 +92,11 @@ namespace SilverfishControl
             bool teststuff = false;
             // set to true, to run a testfile (requires test.txt file in filder where _cardDB.txt file is located)
             bool printstuff = false; // if true, the best board of the tested file is printet stepp by stepp
+
+            Ai.Instance.enemyTurnSim.maxwide = amountBoardsInEnemyTurnSim;
+            Ai.Instance.enemySecondTurnSim.maxwide = amountBoardsInEnemySecondTurnSim;
+            Ai.Instance.nextTurnSimulator.updateParams(nextturnsimDeep, nextturnsimMaxWidth, nexttunsimMaxBoards);
+
             Helpfunctions.Instance.ErrorLog("----------------------------");
             Helpfunctions.Instance.ErrorLog("you are running uai V" + sf.versionnumber);
             Helpfunctions.Instance.ErrorLog("----------------------------");
@@ -531,7 +543,7 @@ namespace SilverfishControl
 
     public class Silverfish
     {
-        public string versionnumber = "111.6";
+        public string versionnumber = "1117";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -1126,17 +1138,23 @@ namespace SilverfishControl
                 {
                     Ai.Instance.updateTwoTurnSim();
                 }
-                this.botbehave += " twoturnsim " + Ai.Instance.mainTurnSimulator.dirtyTwoTurnSim;
+                this.botbehave += " twoturnsim " + Ai.Instance.mainTurnSimulator.dirtyTwoTurnSim + " ntss " + Ai.Instance.nextTurnSimulator.maxdeep + " " + Ai.Instance.nextTurnSimulator.maxwide + " " + Ai.Instance.nextTurnSimulator.totalboards;
             }
             if (Ai.Instance.playaround)
             {
                 this.botbehave += " playaround";
                 this.botbehave += " " + Ai.Instance.playaroundprob + " " + Ai.Instance.playaroundprob2;
             }
+
+            this.botbehave += " ets " + Ai.Instance.enemyTurnSim.maxwide;
+
             if (Ai.Instance.nextTurnSimulator.doEnemySecondTurn)
             {
                 this.botbehave += " simEnemy2Turn";
+                this.botbehave += " ents " + Ai.Instance.enemySecondTurnSim.maxwide;
             }
+
+
 
         }
 
@@ -1339,7 +1357,7 @@ namespace SilverfishControl
                 retval += m.Hp * 1;
                 retval += m.Angr * 2;
                 retval += m.handcard.card.rarity;
-                if (m.windfury) retval += m.Angr;
+                if (!m.playedThisTurn && m.windfury) retval += m.Angr;
                 if (m.divineshild) retval += 1;
                 if (m.stealth) retval += 1;
                 if (penman.specialMinions.ContainsKey(m.name))
@@ -3812,7 +3830,11 @@ namespace SilverfishControl
                 {
                     //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                     this.prepareNextTurn(this.isOwnTurn);
-                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
+
+                    if (this.turnCounter >= 2)
+                        Ai.Instance.enemySecondTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
+                    else
+                        Ai.Instance.enemyTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
                 }
                 this.complete = true;
             }
@@ -6057,9 +6079,11 @@ namespace SilverfishControl
         public int playaroundprob = 40;
         public int playaroundprob2 = 80;
 
-        public MiniSimulatorNextTurn nextTurnSimulator;
+
         public MiniSimulator mainTurnSimulator;
         public EnemyTurnSimulator enemyTurnSim;
+        public MiniSimulatorNextTurn nextTurnSimulator;
+        public EnemyTurnSimulator enemySecondTurnSim;
 
         public string currentCalculatedBoard = "1";
 
@@ -6103,6 +6127,7 @@ namespace SilverfishControl
             this.nextTurnSimulator = new MiniSimulatorNextTurn();
             this.mainTurnSimulator = new MiniSimulator(maxdeep, maxwide, 0); // 0 for unlimited
             this.enemyTurnSim = new EnemyTurnSimulator();
+            this.enemySecondTurnSim = new EnemyTurnSimulator();
             this.mainTurnSimulator.setPrintingstuff(true);
         }
 
@@ -6942,7 +6967,7 @@ namespace SilverfishControl
     {
 
         private List<Playfield> posmoves = new List<Playfield>(7000);
-        private int maxwide = 20;
+        public int maxwide = 20;
         Movegenerator movegen = Movegenerator.Instance;
 
         public void simulateEnemysTurn(Playfield rootfield, bool simulateTwoTurns, bool playaround, bool print, int pprob, int pprob2)
@@ -7104,7 +7129,7 @@ namespace SilverfishControl
                 if (Probabilitymaker.Instance.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_561)) p.ownHero.Hp = Math.Max(5, p.ownHero.Hp - 7);
             }
 
-            foreach (Minion m in p.enemyMinions)
+            foreach (Minion m in p.enemyMinions.ToArray())
             {
                 if (m.silenced) continue;
                 if (p.enemyAnzCards >= 2 && (m.name == CardDB.cardName.gadgetzanauctioneer || m.name == CardDB.cardName.starvingbuzzard))
@@ -7221,9 +7246,9 @@ namespace SilverfishControl
     public class MiniSimulatorNextTurn
     {
         //#####################################################################################################################
-        private int maxdeep = 6;
-        private int maxwide = 10;
-        private int totalboards = 50;
+        public int maxdeep = 6;
+        public int maxwide = 10;
+        public int totalboards = 50;
         private bool usePenalityManager = true;
         private bool useCutingTargets = true;
         private bool dontRecalc = true;
@@ -18218,6 +18243,13 @@ namespace SilverfishControl
             string omd = "";
             string emd = "";
 
+            int ets = 20;
+            int ents = 20;
+
+            int ntssw = 10;
+            int ntssd = 6;
+            int ntssm = 50;
+
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
             string[] lines = new string[0] { };
@@ -18281,6 +18313,27 @@ namespace SilverfishControl
                         this.playarround = true;
                         this.pprob1 = Convert.ToInt32(probs.Split(' ')[0]);
                         this.pprob2 = Convert.ToInt32(probs.Split(' ')[1]);
+                    }
+
+                    if (s.Contains(" ets "))
+                    {
+                        string eturnsim = s.Split(new string[] { " ets " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        ets = Convert.ToInt32(eturnsim.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" ents "))
+                    {
+                        string eturnsim = s.Split(new string[] { " ents " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        ents = Convert.ToInt32(eturnsim.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" ntss "))
+                    {
+                        string probs = s.Split(new string[] { " ntss " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        this.playarround = true;
+                        ntssd = Convert.ToInt32(probs.Split(' ')[0]);
+                        ntssw = Convert.ToInt32(probs.Split(' ')[1]);
+                        ntssm = Convert.ToInt32(probs.Split(' ')[2]);
                     }
 
                     if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
@@ -18948,6 +19001,9 @@ namespace SilverfishControl
 
             if (og != "") Probabilitymaker.Instance.readGraveyards(og, eg);
             if (omd != "") Probabilitymaker.Instance.readTurnGraveYard(omd, emd);
+            Ai.Instance.enemyTurnSim.maxwide = ets;
+            Ai.Instance.enemySecondTurnSim.maxwide = ents;
+            Ai.Instance.nextTurnSimulator.updateParams(ntssd, ntssw, ntssm);
 
 
 
@@ -19842,6 +19898,7 @@ namespace SilverfishControl
         }
 
     }
+
 
     class Sim_CS1h_001 : SimTemplate //lesserheal
     {

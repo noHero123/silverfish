@@ -664,17 +664,23 @@ namespace HREngine.Bots
                 {
                     Ai.Instance.updateTwoTurnSim();
                 }
-                this.botbehave += " twoturnsim " + Ai.Instance.mainTurnSimulator.dirtyTwoTurnSim;
+                this.botbehave += " twoturnsim " + Ai.Instance.mainTurnSimulator.dirtyTwoTurnSim + " ntss " + Ai.Instance.nextTurnSimulator.maxdeep + " " + Ai.Instance.nextTurnSimulator.maxwide + " " + Ai.Instance.nextTurnSimulator.totalboards;
             }
             if (Ai.Instance.playaround)
             {
                 this.botbehave += " playaround";
                 this.botbehave += " " + Ai.Instance.playaroundprob + " " + Ai.Instance.playaroundprob2;
             }
+
+            this.botbehave += " ets " + Ai.Instance.enemyTurnSim.maxwide;
+
             if (Ai.Instance.nextTurnSimulator.doEnemySecondTurn)
             {
                 this.botbehave += " simEnemy2Turn";
+                this.botbehave += " ents " + Ai.Instance.enemySecondTurnSim.maxwide;
             }
+
+            
 
         }
 

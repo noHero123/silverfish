@@ -19,9 +19,11 @@ namespace HREngine.Bots
         public int playaroundprob = 40;
         public int playaroundprob2 = 80;
 
-        public MiniSimulatorNextTurn nextTurnSimulator;
+        
         public MiniSimulator mainTurnSimulator;
         public EnemyTurnSimulator enemyTurnSim;
+        public MiniSimulatorNextTurn nextTurnSimulator;
+        public EnemyTurnSimulator enemySecondTurnSim;
 
         public string currentCalculatedBoard = "1";
 
@@ -65,6 +67,7 @@ namespace HREngine.Bots
             this.nextTurnSimulator = new MiniSimulatorNextTurn();
             this.mainTurnSimulator = new MiniSimulator(maxdeep, maxwide, 0); // 0 for unlimited
             this.enemyTurnSim = new EnemyTurnSimulator();
+            this.enemySecondTurnSim = new EnemyTurnSimulator();
             this.mainTurnSimulator.setPrintingstuff(true);
         }
 

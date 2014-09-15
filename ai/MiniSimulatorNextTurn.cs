@@ -8,9 +8,9 @@ namespace HREngine.Bots
     public class MiniSimulatorNextTurn
     {
         //#####################################################################################################################
-        private int maxdeep = 6;
-        private int maxwide = 10;
-        private int totalboards = 50;
+        public int maxdeep = 6;
+        public int maxwide = 10;
+        public int totalboards = 50;
         private bool usePenalityManager = true;
         private bool useCutingTargets = true;
         private bool dontRecalc = true;

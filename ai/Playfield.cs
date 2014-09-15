@@ -1858,7 +1858,11 @@ namespace HREngine.Bots
                 {
                     //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                     this.prepareNextTurn(this.isOwnTurn);
-                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
+                    
+                    if (this.turnCounter >= 2) 
+                        Ai.Instance.enemySecondTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
+                    else 
+                        Ai.Instance.enemyTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
                 }
                 this.complete = true;
             }

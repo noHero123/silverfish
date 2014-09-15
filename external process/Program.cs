@@ -141,13 +141,17 @@ namespace ConsoleApplication1
 
             Helpfunctions.Instance.ErrorLog("write to single log file is: " + writeToSingleFile);
 
+
+            Ai.Instance.enemyTurnSim.maxwide = 100;
+            Ai.Instance.enemySecondTurnSim.maxwide = 100;
+            Ai.Instance.nextTurnSimulator.updateParams(6, 20, 50);
             bool teststuff = false;
             bool printstuff = false;
             try
             {
 
-                //printstuff = true;
-                //teststuff = true;
+                printstuff = true;
+                teststuff = true;
             }
             catch
             {
@@ -2938,7 +2942,11 @@ namespace ConsoleApplication1
                 {
                     //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                     this.prepareNextTurn(this.isOwnTurn);
-                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
+
+                    if (this.turnCounter >= 2)
+                        Ai.Instance.enemySecondTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
+                    else
+                        Ai.Instance.enemyTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
                 }
                 this.complete = true;
             }
@@ -5183,9 +5191,11 @@ namespace ConsoleApplication1
         public int playaroundprob = 40;
         public int playaroundprob2 = 80;
 
-        public MiniSimulatorNextTurn nextTurnSimulator;
+
         public MiniSimulator mainTurnSimulator;
         public EnemyTurnSimulator enemyTurnSim;
+        public MiniSimulatorNextTurn nextTurnSimulator;
+        public EnemyTurnSimulator enemySecondTurnSim;
 
         public string currentCalculatedBoard = "1";
 
@@ -5229,6 +5239,7 @@ namespace ConsoleApplication1
             this.nextTurnSimulator = new MiniSimulatorNextTurn();
             this.mainTurnSimulator = new MiniSimulator(maxdeep, maxwide, 0); // 0 for unlimited
             this.enemyTurnSim = new EnemyTurnSimulator();
+            this.enemySecondTurnSim = new EnemyTurnSimulator();
             this.mainTurnSimulator.setPrintingstuff(true);
         }
 
@@ -6068,7 +6079,7 @@ namespace ConsoleApplication1
     {
 
         private List<Playfield> posmoves = new List<Playfield>(7000);
-        private int maxwide = 20;
+        public int maxwide = 20;
         Movegenerator movegen = Movegenerator.Instance;
 
         public void simulateEnemysTurn(Playfield rootfield, bool simulateTwoTurns, bool playaround, bool print, int pprob, int pprob2)
@@ -6230,7 +6241,7 @@ namespace ConsoleApplication1
                 if (Probabilitymaker.Instance.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_561)) p.ownHero.Hp = Math.Max(5, p.ownHero.Hp - 7);
             }
 
-            foreach (Minion m in p.enemyMinions)
+            foreach (Minion m in p.enemyMinions.ToArray())
             {
                 if (m.silenced) continue;
                 if (p.enemyAnzCards >= 2 && (m.name == CardDB.cardName.gadgetzanauctioneer || m.name == CardDB.cardName.starvingbuzzard))
@@ -6347,9 +6358,9 @@ namespace ConsoleApplication1
     public class MiniSimulatorNextTurn
     {
         //#####################################################################################################################
-        private int maxdeep = 6;
-        private int maxwide = 10;
-        private int totalboards = 50;
+        public int maxdeep = 6;
+        public int maxwide = 10;
+        public int totalboards = 50;
         private bool usePenalityManager = true;
         private bool useCutingTargets = true;
         private bool dontRecalc = true;
@@ -17344,6 +17355,13 @@ namespace ConsoleApplication1
             string omd = "";
             string emd = "";
 
+            int ets = 20;
+            int ents = 20;
+
+            int ntssw = 10;
+            int ntssd = 6;
+            int ntssm = 50;
+
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
             string[] lines = new string[0] { };
@@ -17407,6 +17425,27 @@ namespace ConsoleApplication1
                         this.playarround = true;
                         this.pprob1 = Convert.ToInt32(probs.Split(' ')[0]);
                         this.pprob2 = Convert.ToInt32(probs.Split(' ')[1]);
+                    }
+
+                    if (s.Contains(" ets "))
+                    {
+                        string eturnsim = s.Split(new string[] { " ets " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        ets = Convert.ToInt32(eturnsim.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" ents "))
+                    {
+                        string eturnsim = s.Split(new string[] { " ents " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        ents = Convert.ToInt32(eturnsim.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" ntss "))
+                    {
+                        string probs = s.Split(new string[] { " ntss " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        this.playarround = true;
+                        ntssd = Convert.ToInt32(probs.Split(' ')[0]);
+                        ntssw = Convert.ToInt32(probs.Split(' ')[1]);
+                        ntssm = Convert.ToInt32(probs.Split(' ')[2]);
                     }
 
                     if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
@@ -18074,6 +18113,9 @@ namespace ConsoleApplication1
 
             if (og != "") Probabilitymaker.Instance.readGraveyards(og, eg);
             if (omd != "") Probabilitymaker.Instance.readTurnGraveYard(omd, emd);
+            Ai.Instance.enemyTurnSim.maxwide = ets;
+            Ai.Instance.enemySecondTurnSim.maxwide = ents;
+            Ai.Instance.nextTurnSimulator.updateParams(ntssd, ntssw, ntssm);
 
 
 

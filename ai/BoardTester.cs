@@ -84,6 +84,13 @@ namespace HREngine.Bots
             string omd = "";
             string emd = "";
 
+            int ets = 20;
+            int ents = 20;
+
+            int ntssw = 10;
+            int ntssd = 6;
+            int ntssm = 50;
+
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
             string[] lines = new string[0] { };
@@ -147,6 +154,27 @@ namespace HREngine.Bots
                         this.playarround = true;
                         this.pprob1 = Convert.ToInt32(probs.Split(' ')[0]);
                         this.pprob2 = Convert.ToInt32(probs.Split(' ')[1]);
+                    }
+
+                    if (s.Contains(" ets "))
+                    {
+                        string eturnsim = s.Split(new string[] { " ets " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        ets = Convert.ToInt32(eturnsim.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" ents "))
+                    {
+                        string eturnsim = s.Split(new string[] { " ents " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        ents = Convert.ToInt32(eturnsim.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" ntss "))
+                    {
+                        string probs = s.Split(new string[] { " ntss " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        this.playarround = true;
+                        ntssd = Convert.ToInt32(probs.Split(' ')[0]);
+                        ntssw = Convert.ToInt32(probs.Split(' ')[1]);
+                        ntssm = Convert.ToInt32(probs.Split(' ')[2]);
                     }
 
                     if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
@@ -814,6 +842,9 @@ namespace HREngine.Bots
 
             if (og != "") Probabilitymaker.Instance.readGraveyards(og, eg);
             if (omd != "") Probabilitymaker.Instance.readTurnGraveYard(omd, emd);
+            Ai.Instance.enemyTurnSim.maxwide = ets;
+            Ai.Instance.enemySecondTurnSim.maxwide = ents;
+            Ai.Instance.nextTurnSimulator.updateParams(ntssd, ntssw, ntssm);
 
 
 

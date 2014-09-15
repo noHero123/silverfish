@@ -75,7 +75,7 @@ namespace HREngine.Bots
                 retval += m.Hp * 1;
                 retval += m.Angr * 2;
                 retval += m.handcard.card.rarity;
-                if (m.windfury) retval += m.Angr;
+                if (!m.playedThisTurn && m.windfury) retval += m.Angr;
                 if (m.divineshild) retval += 1;
                 if (m.stealth) retval += 1;
                 if (penman.specialMinions.ContainsKey(m.name))

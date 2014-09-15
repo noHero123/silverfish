@@ -10,7 +10,7 @@ namespace HREngine.Bots
     {
 
         private List<Playfield> posmoves = new List<Playfield>(7000);
-        private int maxwide = 20;
+        public int maxwide = 20;
         Movegenerator movegen = Movegenerator.Instance;
 
         public void simulateEnemysTurn(Playfield rootfield, bool simulateTwoTurns, bool playaround, bool print, int pprob, int pprob2)
@@ -172,7 +172,7 @@ namespace HREngine.Bots
                 if (Probabilitymaker.Instance.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_561)) p.ownHero.Hp = Math.Max(5, p.ownHero.Hp - 7);
             }
 
-            foreach (Minion m in p.enemyMinions)
+            foreach (Minion m in p.enemyMinions.ToArray())
             {
                 if(m.silenced) continue;
                 if (p.enemyAnzCards >= 2 && (m.name == CardDB.cardName.gadgetzanauctioneer || m.name == CardDB.cardName.starvingbuzzard))
