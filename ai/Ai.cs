@@ -19,7 +19,7 @@ namespace HREngine.Bots
         public int playaroundprob = 40;
         public int playaroundprob2 = 80;
 
-        
+
         public MiniSimulator mainTurnSimulator;
         public EnemyTurnSimulator enemyTurnSim;
         public MiniSimulatorNextTurn nextTurnSimulator;
@@ -111,7 +111,7 @@ namespace HREngine.Bots
 
             this.bestActions.Clear();
             this.bestmove = null;
-            foreach(Action a in bestplay.playactions)
+            foreach (Action a in bestplay.playactions)
             {
                 this.bestActions.Add(new Action(a));
                 a.print();
@@ -144,10 +144,11 @@ namespace HREngine.Bots
 
             foreach (Action a in alist)
             {
+                help.logg("-a-");
                 this.bestActions.Add(new Action(a));
-                a.print();
+                this.bestActions[this.bestActions.Count - 1].print();
             }
-            
+
             if (this.bestActions.Count >= 1)
             {
                 this.bestmove = this.bestActions[0];
@@ -160,28 +161,24 @@ namespace HREngine.Bots
 
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
-
-
-               
-
-                if (bestmove.actionType == actionEnum.playcard)
-                {
-                    foreach (Handmanager.Handcard hc in this.nextMoveGuess.owncards)
-                    {
-                        if (hc.entity == bestmove.card.entity)
-                        {
-                            bestmove.card = new Handmanager.Handcard(hc);
-                            break;
-                        }
-                        //Helpfunctions.Instance.logg("cant find" + bestmove.card.entity);
-                    }
-                }
-
-                bestmove.print();
                 Helpfunctions.Instance.logg("nmgsim-");
-                this.nextMoveGuess.doAction(bestmove);
+                try
+                {
+                    this.nextMoveGuess.doAction(bestmove);
+                    this.bestmove = this.nextMoveGuess.playactions[this.nextMoveGuess.playactions.Count - 1];
+                }
+                catch (Exception ex)
+                {
+                    Helpfunctions.Instance.logg("Message ---");
+                    Helpfunctions.Instance.logg("Message ---" + ex.Message);
+                    Helpfunctions.Instance.logg("Source ---" + ex.Source);
+                    Helpfunctions.Instance.logg("StackTrace ---" + ex.StackTrace);
+                    Helpfunctions.Instance.logg("TargetSite ---\n{0}" + ex.TargetSite);
+
+                }
                 Helpfunctions.Instance.logg("nmgsime-");
-               
+
+
             }
             else
             {
@@ -206,21 +203,23 @@ namespace HREngine.Bots
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
                 //this.nextMoveGuess = new Playfield();
-
-                if (bestmove.actionType == actionEnum.playcard)
-                {
-                    foreach (Handmanager.Handcard hc in this.nextMoveGuess.owncards)
-                    {
-                        if (hc.entity == bestmove.card.entity)
-                        {
-                            bestmove.card = new Handmanager.Handcard(hc);
-                        }
-                    }
-                }
-                bestmove.print();
                 Helpfunctions.Instance.logg("nmgsim-");
-                this.nextMoveGuess.doAction(bestmove);
+                try
+                {
+                    this.nextMoveGuess.doAction(bestmove);
+                    this.bestmove = this.nextMoveGuess.playactions[this.nextMoveGuess.playactions.Count - 1];
+                }
+                catch (Exception ex)
+                {
+                    Helpfunctions.Instance.logg("Message ---");
+                    Helpfunctions.Instance.logg("Message ---" + ex.Message);
+                    Helpfunctions.Instance.logg("Source ---" + ex.Source);
+                    Helpfunctions.Instance.logg("StackTrace ---" + ex.StackTrace);
+                    Helpfunctions.Instance.logg("TargetSite ---\n{0}" + ex.TargetSite);
+
+                }
                 Helpfunctions.Instance.logg("nmgsime-");
+
             }
             else
             {
@@ -424,7 +423,7 @@ namespace HREngine.Bots
 
         public void updateEntitiy(int old, int newone)
         {
-            Helpfunctions.Instance.logg("entityupdate! "+ old + " to " + newone);
+            Helpfunctions.Instance.logg("entityupdate! " + old + " to " + newone);
             if (this.nextMoveGuess != null)
             {
                 foreach (Minion m in this.nextMoveGuess.ownMinions)

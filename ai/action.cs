@@ -54,6 +54,7 @@ namespace HREngine.Bots
             this.target = target;
             this.penalty = pen;
             this.druidchoice = choice;
+
         }
 
         public Action(string s, Playfield p)
@@ -110,8 +111,6 @@ namespace HREngine.Bots
                 Minion o = new Minion();
                 o.entitiyID = ownEnt;
                 this.own = o;
-
-                
             }
 
             if (s.StartsWith("heroattack "))
@@ -130,6 +129,7 @@ namespace HREngine.Bots
                 this.target = m;
 
                 this.own = p.ownHero;
+
             }
 
             if (s.StartsWith("useability on target "))
@@ -222,21 +222,22 @@ namespace HREngine.Bots
             }
             if (this.actionType == actionEnum.playcard)
             {
-                help.logg("play " + this.card.card.name);
-                if (this.druidchoice >= 1) help.logg("choose choise " + this.druidchoice);
-                help.logg("with entityid " + this.card.entity);
-                if (this.place >= 0)
-                {
-                    help.logg("on position " + this.place);
-                }
+                string playaction = "play ";
+
+                playaction += "id " + this.card.entity;
                 if (this.target != null)
                 {
-                    help.logg("and target to " + this.target.entitiyID);
+                    playaction += " target " + this.target.entitiyID;
                 }
-                if (this.penalty > 0)
+
+                if (this.place >= 0)
                 {
-                    help.logg("penality for playing " + this.penalty);
+                    playaction += " pos " + this.place;
                 }
+
+                if (this.druidchoice >= 1) playaction += " choice " + this.druidchoice;
+
+                help.logg(playaction);
             }
             if (this.actionType == actionEnum.attackWithMinion)
             {

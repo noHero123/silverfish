@@ -1773,6 +1773,7 @@ namespace SilverfishControl
             this.target = target;
             this.penalty = pen;
             this.druidchoice = choice;
+
         }
 
         public Action(string s, Playfield p)
@@ -1829,8 +1830,6 @@ namespace SilverfishControl
                 Minion o = new Minion();
                 o.entitiyID = ownEnt;
                 this.own = o;
-
-
             }
 
             if (s.StartsWith("heroattack "))
@@ -1849,6 +1848,7 @@ namespace SilverfishControl
                 this.target = m;
 
                 this.own = p.ownHero;
+
             }
 
             if (s.StartsWith("useability on target "))
@@ -1941,21 +1941,22 @@ namespace SilverfishControl
             }
             if (this.actionType == actionEnum.playcard)
             {
-                help.logg("play " + this.card.card.name);
-                if (this.druidchoice >= 1) help.logg("choose choise " + this.druidchoice);
-                help.logg("with entityid " + this.card.entity);
-                if (this.place >= 0)
-                {
-                    help.logg("on position " + this.place);
-                }
+                string playaction = "play ";
+
+                playaction += "id " + this.card.entity;
                 if (this.target != null)
                 {
-                    help.logg("and target to " + this.target.entitiyID);
+                    playaction += " target " + this.target.entitiyID;
                 }
-                if (this.penalty > 0)
+
+                if (this.place >= 0)
                 {
-                    help.logg("penality for playing " + this.penalty);
+                    playaction += " pos " + this.place;
                 }
+
+                if (this.druidchoice >= 1) playaction += " choice " + this.druidchoice;
+
+                help.logg(playaction);
             }
             if (this.actionType == actionEnum.attackWithMinion)
             {
@@ -6204,8 +6205,9 @@ namespace SilverfishControl
 
             foreach (Action a in alist)
             {
+                help.logg("-a-");
                 this.bestActions.Add(new Action(a));
-                a.print();
+                this.bestActions[this.bestActions.Count - 1].print();
             }
 
             if (this.bestActions.Count >= 1)
@@ -6220,27 +6222,23 @@ namespace SilverfishControl
 
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
-
-
-
-
-                if (bestmove.actionType == actionEnum.playcard)
-                {
-                    foreach (Handmanager.Handcard hc in this.nextMoveGuess.owncards)
-                    {
-                        if (hc.entity == bestmove.card.entity)
-                        {
-                            bestmove.card = new Handmanager.Handcard(hc);
-                            break;
-                        }
-                        //Helpfunctions.Instance.logg("cant find" + bestmove.card.entity);
-                    }
-                }
-
-                bestmove.print();
                 Helpfunctions.Instance.logg("nmgsim-");
-                this.nextMoveGuess.doAction(bestmove);
+                try
+                {
+                    this.nextMoveGuess.doAction(bestmove);
+                    this.bestmove = this.nextMoveGuess.playactions[this.nextMoveGuess.playactions.Count - 1];
+                }
+                catch (Exception ex)
+                {
+                    Helpfunctions.Instance.logg("Message ---");
+                    Helpfunctions.Instance.logg("Message ---" + ex.Message);
+                    Helpfunctions.Instance.logg("Source ---" + ex.Source);
+                    Helpfunctions.Instance.logg("StackTrace ---" + ex.StackTrace);
+                    Helpfunctions.Instance.logg("TargetSite ---\n{0}" + ex.TargetSite);
+
+                }
                 Helpfunctions.Instance.logg("nmgsime-");
+
 
             }
             else
@@ -6266,21 +6264,23 @@ namespace SilverfishControl
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
                 //this.nextMoveGuess = new Playfield();
-
-                if (bestmove.actionType == actionEnum.playcard)
-                {
-                    foreach (Handmanager.Handcard hc in this.nextMoveGuess.owncards)
-                    {
-                        if (hc.entity == bestmove.card.entity)
-                        {
-                            bestmove.card = new Handmanager.Handcard(hc);
-                        }
-                    }
-                }
-                bestmove.print();
                 Helpfunctions.Instance.logg("nmgsim-");
-                this.nextMoveGuess.doAction(bestmove);
+                try
+                {
+                    this.nextMoveGuess.doAction(bestmove);
+                    this.bestmove = this.nextMoveGuess.playactions[this.nextMoveGuess.playactions.Count - 1];
+                }
+                catch (Exception ex)
+                {
+                    Helpfunctions.Instance.logg("Message ---");
+                    Helpfunctions.Instance.logg("Message ---" + ex.Message);
+                    Helpfunctions.Instance.logg("Source ---" + ex.Source);
+                    Helpfunctions.Instance.logg("StackTrace ---" + ex.StackTrace);
+                    Helpfunctions.Instance.logg("TargetSite ---\n{0}" + ex.TargetSite);
+
+                }
                 Helpfunctions.Instance.logg("nmgsime-");
+
             }
             else
             {
@@ -11930,6 +11930,9 @@ namespace SilverfishControl
 
                 i++;
             }*/
+                this.bonusForPlaying = Math.Max(bonusForPlaying, 1);
+                this.bonusForPlayingT0 = Math.Max(bonusForPlayingT0, 1);
+                this.bonusForPlayingT1 = Math.Max(bonusForPlayingT1, 1);
             }
 
             public int isInCombo(List<Handmanager.Handcard> hand, int omm)
@@ -12046,12 +12049,13 @@ namespace SilverfishControl
                     }
                 }
 
-                if (cardsincombo >= this.combolength) return this.bonusForPlaying;
+                if (cardsincombo == this.combolength) return this.bonusForPlaying;
                 return 0;
             }
 
             public int hasPlayedTurn0Combo(List<Handmanager.Handcard> hand)
             {
+                if (this.combocardsTurn0All.Count == 0) return 0;
                 int cardsincombo = 0;
                 Dictionary<CardDB.cardIDEnum, int> combocardscopy = new Dictionary<CardDB.cardIDEnum, int>(this.combocardsTurn0All);
                 foreach (Handmanager.Handcard hc in hand)
@@ -12063,12 +12067,13 @@ namespace SilverfishControl
                     }
                 }
 
-                if (cardsincombo >= this.combot0lenAll) return this.bonusForPlayingT0;
+                if (cardsincombo == this.combot0lenAll) return this.bonusForPlayingT0;
                 return 0;
             }
 
             public int hasPlayedTurn1Combo(List<Handmanager.Handcard> hand)
             {
+                if (this.combocardsTurn1.Count == 0) return 0;
                 int cardsincombo = 0;
                 Dictionary<CardDB.cardIDEnum, int> combocardscopy = new Dictionary<CardDB.cardIDEnum, int>(this.combocardsTurn1);
                 foreach (Handmanager.Handcard hc in hand)
@@ -12080,7 +12085,7 @@ namespace SilverfishControl
                     }
                 }
 
-                if (cardsincombo >= this.combot1len) return this.bonusForPlayingT1;
+                if (cardsincombo == this.combot1len) return this.bonusForPlayingT1;
                 return 0;
             }
 
@@ -12240,7 +12245,6 @@ namespace SilverfishControl
             }
 
             if (playedcards.Count == 0) return 0;
-
             bool wholeComboPlayed = false;
 
             int bonus = 0;
@@ -19898,7 +19902,6 @@ namespace SilverfishControl
         }
 
     }
-
 
     class Sim_CS1h_001 : SimTemplate //lesserheal
     {

@@ -202,6 +202,9 @@ namespace HREngine.Bots
 
                 i++;
             }*/
+                this.bonusForPlaying = Math.Max(bonusForPlaying, 1);
+                this.bonusForPlayingT0 = Math.Max(bonusForPlayingT0, 1);
+                this.bonusForPlayingT1 = Math.Max(bonusForPlayingT1, 1);
             }
 
             public int isInCombo(List<Handmanager.Handcard> hand, int omm)
@@ -318,12 +321,13 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (cardsincombo >= this.combolength) return this.bonusForPlaying;
+                if (cardsincombo == this.combolength) return this.bonusForPlaying;
                 return 0;
             }
 
             public int hasPlayedTurn0Combo(List<Handmanager.Handcard> hand)
             {
+                if (this.combocardsTurn0All.Count == 0) return 0;
                 int cardsincombo = 0;
                 Dictionary<CardDB.cardIDEnum, int> combocardscopy = new Dictionary<CardDB.cardIDEnum, int>(this.combocardsTurn0All);
                 foreach (Handmanager.Handcard hc in hand)
@@ -335,12 +339,13 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (cardsincombo >= this.combot0lenAll) return this.bonusForPlayingT0;
+                if (cardsincombo == this.combot0lenAll) return this.bonusForPlayingT0;
                 return 0;
             }
 
             public int hasPlayedTurn1Combo(List<Handmanager.Handcard> hand)
             {
+                if (this.combocardsTurn1.Count == 0) return 0;
                 int cardsincombo = 0;
                 Dictionary<CardDB.cardIDEnum, int> combocardscopy = new Dictionary<CardDB.cardIDEnum, int>(this.combocardsTurn1);
                 foreach (Handmanager.Handcard hc in hand)
@@ -352,7 +357,7 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (cardsincombo >= this.combot1len) return this.bonusForPlayingT1;
+                if (cardsincombo == this.combot1len) return this.bonusForPlayingT1;
                 return 0;
             }
 
@@ -512,7 +517,6 @@ namespace HREngine.Bots
             }
 
             if (playedcards.Count == 0) return 0;
-
             bool wholeComboPlayed = false;
 
             int bonus = 0;
