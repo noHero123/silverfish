@@ -237,7 +237,7 @@ namespace HREngine.Bots
                     continue;
                 }
 
-                
+
 
                 if (s.StartsWith("probs: "))
                 {
@@ -818,7 +818,12 @@ namespace HREngine.Bots
             //set Simulation stuff
 
             Ai.Instance.botBase = new BehaviorControl();
+
+
+
             if (this.evalFunction == "rush") Ai.Instance.botBase = new BehaviorRush();
+
+            if (this.evalFunction == "mana") Ai.Instance.botBase = new BehaviorMana();
 
             Ai.Instance.setMaxWide(this.maxwide);
             Ai.Instance.setTwoTurnSimulation(false, this.twoturnsim);

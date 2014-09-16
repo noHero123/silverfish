@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ai\Behavior.cs" />
     <Compile Include="ai\BehaviorControl.cs" />
+    <Compile Include="ai\BehaviourMana.cs" />
     <Compile Include="ai\BoardTester.cs" />
     <Compile Include="ai\Movegenerator.cs" />
     <Compile Include="ai\PenTemplate.cs" />

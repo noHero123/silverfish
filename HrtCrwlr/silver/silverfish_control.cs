@@ -463,16 +463,16 @@ namespace HREngine.Bots
             {
                 return new HREngine.API.Actions.MakeNothingAction();
             }
-            //Helpfunctions.Instance.ErrorLog("handle mulligan");
-
             if ((TAG_MULLIGAN)HRPlayer.GetLocalPlayer().GetTag(HRGameTag.MULLIGAN_STATE) != TAG_MULLIGAN.INPUT)
             {
                 //Helpfunctions.Instance.ErrorLog("but we have to wait :D");
                 return null;
             }
-
+            
             if (HRMulligan.IsMulliganActive())
             {
+                Helpfunctions.Instance.ErrorLog("handle mulligan...");
+
                 var list = HRCard.GetCards(HRPlayer.GetLocalPlayer(), HRCardZone.HAND);
                 if (Mulligan.Instance.hasmulliganrules())
                 {
@@ -524,6 +524,7 @@ namespace HREngine.Bots
 
                 if (Mulligan.Instance.loserLoserLoser)
                 {
+                    Helpfunctions.Instance.ErrorLog("concede check...");
                     HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
                     HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
                     string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
@@ -533,6 +534,10 @@ namespace HREngine.Bots
                         concedeVSenemy(ownName, enemName);
                     }
 
+                }
+                else
+                {
+                    Helpfunctions.Instance.ErrorLog("... no auto conceding...");
                 }
 
                 return null;
@@ -926,7 +931,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "111.8";
+        public string versionnumber = "111.801";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -1565,6 +1570,7 @@ namespace HREngine.Bots
         {
             this.botbehave = "rush";
             if (botbase is BehaviorControl) this.botbehave = "control";
+            if (botbase is BehaviorMana) this.botbehave = "mana";
             this.botbehave += " " + Ai.Instance.maxwide;
             if (Ai.Instance.secondTurnAmount > 0)
             {
@@ -2041,6 +2047,62 @@ namespace HREngine.Bots
 
 
     }
+
+    public class BehaviorMana : Behavior
+    {
+        PenalityManager penman = PenalityManager.Instance;
+
+        public override float getPlayfieldValue(Playfield p)
+        {
+            if (p.value >= -2000000) return p.value;
+            int retval = 0;
+
+            retval += p.ownHero.Hp + p.ownHero.armor;
+            retval -= (p.enemyHero.Hp + p.enemyHero.armor);
+
+            foreach (Minion m in p.ownMinions)
+            {
+                retval += this.getEnemyMinionValue(m, p);
+            }
+
+            foreach (Minion m in p.enemyMinions)
+            {
+                retval -= this.getEnemyMinionValue(m, p);
+            }
+
+            foreach (Handmanager.Handcard hc in p.owncards)
+            {
+                int r = Math.Max(hc.getManaCost(p), 1);
+                if (hc.card.name == CardDB.cardName.unknown) r = 4;
+                retval += r;
+            }
+
+            retval -= p.enemySecretCount;
+            retval -= p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
+            retval -= p.lostWeaponDamage;
+            if (p.enemyHero.Hp <= 0) retval = 10000;
+            if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
+            {
+                retval += p.owncarddraw * 500;
+                retval -= 1000;
+            }
+            if (p.ownHero.Hp <= 0) retval = -10000;
+
+            p.value = retval;
+            return retval;
+        }
+
+        public override int getEnemyMinionValue(Minion m, Playfield p)
+        {
+            int retval = 0;
+            retval += m.handcard.card.cost;
+            if (m.handcard.card.name == CardDB.cardName.unknown) retval = 4;
+            return retval;
+        }
+
+
+    }
+
 
     public class Helpfunctions
     {
@@ -19421,7 +19483,12 @@ namespace HREngine.Bots
             //set Simulation stuff
 
             Ai.Instance.botBase = new BehaviorControl();
+
+
+
             if (this.evalFunction == "rush") Ai.Instance.botBase = new BehaviorRush();
+
+            if (this.evalFunction == "mana") Ai.Instance.botBase = new BehaviorMana();
 
             Ai.Instance.setMaxWide(this.maxwide);
             Ai.Instance.setTwoTurnSimulation(false, this.twoturnsim);

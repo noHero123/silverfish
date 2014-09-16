@@ -657,6 +657,7 @@ namespace HREngine.Bots
         {
             this.botbehave = "rush";
             if (botbase is BehaviorControl) this.botbehave = "control";
+            if (botbase is BehaviorMana) this.botbehave = "mana";
             this.botbehave += " " + Ai.Instance.maxwide;
             if (Ai.Instance.secondTurnAmount > 0)
             {
