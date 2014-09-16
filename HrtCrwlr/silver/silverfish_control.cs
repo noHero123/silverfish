@@ -6668,6 +6668,7 @@ namespace HREngine.Bots
                 }
                 catch (Exception ex)
                 {
+                    Helpfunctions.Instance.ErrorLog("Error!!!");
                     Helpfunctions.Instance.logg("Message ---");
                     Helpfunctions.Instance.logg("Message ---"+ ex.Message);
                     Helpfunctions.Instance.logg("Source ---"+ ex.Source);
