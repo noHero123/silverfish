@@ -142,8 +142,8 @@ namespace ConsoleApplication1
             Helpfunctions.Instance.ErrorLog("write to single log file is: " + writeToSingleFile);
 
 
-            Ai.Instance.enemyTurnSim.maxwide = 100;
-            Ai.Instance.enemySecondTurnSim.maxwide = 100;
+            Ai.Instance.enemyTurnSim.maxwide = 20;
+            Ai.Instance.enemySecondTurnSim.maxwide = 20;
             Ai.Instance.nextTurnSimulator.updateParams(6, 20, 50);
             bool teststuff = false;
             bool printstuff = false;
@@ -464,10 +464,10 @@ namespace ConsoleApplication1
             foreach (Minion m in p.ownMinions)
             {
                 retval += 5;
-                retval += m.Hp * 1;
+                retval += m.Hp * 2;
                 retval += m.Angr * 2;
                 retval += m.handcard.card.rarity;
-                if (m.windfury) retval += m.Angr;
+                if (!m.playedThisTurn && m.windfury) retval += m.Angr;
                 if (m.divineshild) retval += 1;
                 if (m.stealth) retval += 1;
                 if (penman.specialMinions.ContainsKey(m.name))
@@ -476,7 +476,7 @@ namespace ConsoleApplication1
                 }
                 else
                 {
-                    if (m.Angr <= 2 && m.Hp <= 2) retval -= 5;
+                    if (m.Angr <= 2 && m.Hp <= 2 && !m.divineshild) retval -= 5;
                 }
                 //if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
                 //if (m.poisonous) retval += 1;
@@ -716,6 +716,62 @@ namespace ConsoleApplication1
 
     }
 
+    public class BehaviorMana : Behavior
+    {
+        PenalityManager penman = PenalityManager.Instance;
+
+        public override float getPlayfieldValue(Playfield p)
+        {
+            if (p.value >= -2000000) return p.value;
+            int retval = 0;
+
+            retval += p.ownHero.Hp + p.ownHero.armor;
+            retval -= (p.enemyHero.Hp + p.enemyHero.armor);
+
+            foreach (Minion m in p.ownMinions)
+            {
+                retval += this.getEnemyMinionValue(m, p);
+            }
+
+            foreach (Minion m in p.enemyMinions)
+            {
+                retval -= this.getEnemyMinionValue(m, p);
+            }
+
+            foreach (Handmanager.Handcard hc in p.owncards)
+            {
+                int r = Math.Max(hc.getManaCost(p),1);
+                if (hc.card.name == CardDB.cardName.unknown) r = 4;
+                retval += r;
+            }
+
+            retval -= p.enemySecretCount;
+            retval -= p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
+            retval -= p.lostWeaponDamage;
+            if (p.enemyHero.Hp <= 0) retval = 10000;
+            if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
+            {
+                retval += p.owncarddraw * 500;
+                retval -= 1000;
+            }
+            if (p.ownHero.Hp <= 0) retval = -10000;
+
+            p.value = retval;
+            return retval;
+        }
+
+        public override int getEnemyMinionValue(Minion m, Playfield p)
+        {
+            int retval = 0;
+            retval += m.handcard.card.cost;
+            if (m.handcard.card.name == CardDB.cardName.unknown) retval = 4;
+            return retval;
+        }
+
+
+    }
+
+
     public class Helpfunctions
     {
 
@@ -885,6 +941,7 @@ namespace ConsoleApplication1
             this.target = target;
             this.penalty = pen;
             this.druidchoice = choice;
+
         }
 
         public Action(string s, Playfield p)
@@ -941,8 +998,6 @@ namespace ConsoleApplication1
                 Minion o = new Minion();
                 o.entitiyID = ownEnt;
                 this.own = o;
-
-
             }
 
             if (s.StartsWith("heroattack "))
@@ -961,6 +1016,7 @@ namespace ConsoleApplication1
                 this.target = m;
 
                 this.own = p.ownHero;
+
             }
 
             if (s.StartsWith("useability on target "))
@@ -1053,21 +1109,22 @@ namespace ConsoleApplication1
             }
             if (this.actionType == actionEnum.playcard)
             {
-                help.logg("play " + this.card.card.name);
-                if (this.druidchoice >= 1) help.logg("choose choise " + this.druidchoice);
-                help.logg("with entityid " + this.card.entity);
-                if (this.place >= 0)
-                {
-                    help.logg("on position " + this.place);
-                }
+                string playaction = "play ";
+
+                playaction += "id " + this.card.entity;
                 if (this.target != null)
                 {
-                    help.logg("and target to " + this.target.entitiyID);
+                    playaction += " target " + this.target.entitiyID;
                 }
-                if (this.penalty > 0)
+
+                if (this.place >= 0)
                 {
-                    help.logg("penality for playing " + this.penalty);
+                    playaction += " pos " + this.place;
                 }
+
+                if (this.druidchoice >= 1) playaction += " choice " + this.druidchoice;
+
+                help.logg(playaction);
             }
             if (this.actionType == actionEnum.attackWithMinion)
             {
@@ -1427,10 +1484,8 @@ namespace ConsoleApplication1
                 if (m.playedThisTurn && m.name == CardDB.cardName.loatheb) this.loatheb = true;
 
                 spellpower = spellpower + m.spellpower;
-                spellpower += m.handcard.card.spellpowervalue;
-
                 if (m.silenced) continue;
-
+                spellpower += m.handcard.card.spellpowervalue;
                 if (m.name == CardDB.cardName.prophetvelen) this.doublepriest++;
 
 
@@ -5316,8 +5371,9 @@ namespace ConsoleApplication1
 
             foreach (Action a in alist)
             {
+                help.logg("-a-");
                 this.bestActions.Add(new Action(a));
-                a.print();
+                this.bestActions[this.bestActions.Count - 1].print();
             }
 
             if (this.bestActions.Count >= 1)
@@ -5332,27 +5388,23 @@ namespace ConsoleApplication1
 
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
-
-
-
-
-                if (bestmove.actionType == actionEnum.playcard)
-                {
-                    foreach (Handmanager.Handcard hc in this.nextMoveGuess.owncards)
-                    {
-                        if (hc.entity == bestmove.card.entity)
-                        {
-                            bestmove.card = new Handmanager.Handcard(hc);
-                            break;
-                        }
-                        //Helpfunctions.Instance.logg("cant find" + bestmove.card.entity);
-                    }
-                }
-
-                bestmove.print();
                 Helpfunctions.Instance.logg("nmgsim-");
-                this.nextMoveGuess.doAction(bestmove);
+                try
+                {
+                    this.nextMoveGuess.doAction(bestmove);
+                    this.bestmove = this.nextMoveGuess.playactions[this.nextMoveGuess.playactions.Count - 1];
+                }
+                catch (Exception ex)
+                {
+                    Helpfunctions.Instance.logg("Message ---");
+                    Helpfunctions.Instance.logg("Message ---" + ex.Message);
+                    Helpfunctions.Instance.logg("Source ---" + ex.Source);
+                    Helpfunctions.Instance.logg("StackTrace ---" + ex.StackTrace);
+                    Helpfunctions.Instance.logg("TargetSite ---\n{0}" + ex.TargetSite);
+
+                }
                 Helpfunctions.Instance.logg("nmgsime-");
+
 
             }
             else
@@ -5378,21 +5430,23 @@ namespace ConsoleApplication1
             if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
             {
                 //this.nextMoveGuess = new Playfield();
-
-                if (bestmove.actionType == actionEnum.playcard)
-                {
-                    foreach (Handmanager.Handcard hc in this.nextMoveGuess.owncards)
-                    {
-                        if (hc.entity == bestmove.card.entity)
-                        {
-                            bestmove.card = new Handmanager.Handcard(hc);
-                        }
-                    }
-                }
-                bestmove.print();
                 Helpfunctions.Instance.logg("nmgsim-");
-                this.nextMoveGuess.doAction(bestmove);
+                try
+                {
+                    this.nextMoveGuess.doAction(bestmove);
+                    this.bestmove = this.nextMoveGuess.playactions[this.nextMoveGuess.playactions.Count - 1];
+                }
+                catch (Exception ex)
+                {
+                    Helpfunctions.Instance.logg("Message ---");
+                    Helpfunctions.Instance.logg("Message ---" + ex.Message);
+                    Helpfunctions.Instance.logg("Source ---" + ex.Source);
+                    Helpfunctions.Instance.logg("StackTrace ---" + ex.StackTrace);
+                    Helpfunctions.Instance.logg("TargetSite ---\n{0}" + ex.TargetSite);
+
+                }
                 Helpfunctions.Instance.logg("nmgsime-");
+
             }
             else
             {
@@ -5462,6 +5516,7 @@ namespace ConsoleApplication1
             help.logg("simulating board ");
 
             BoardTester bt = new BoardTester(data);
+            if (!bt.datareaded) return;
             hp.printHero();
             hp.printOwnMinions();
             hp.printEnemyMinions();
@@ -11042,6 +11097,9 @@ namespace ConsoleApplication1
 
                 i++;
             }*/
+                this.bonusForPlaying = Math.Max(bonusForPlaying, 1);
+                this.bonusForPlayingT0 = Math.Max(bonusForPlayingT0, 1);
+                this.bonusForPlayingT1 = Math.Max(bonusForPlayingT1, 1);
             }
 
             public int isInCombo(List<Handmanager.Handcard> hand, int omm)
@@ -11158,12 +11216,13 @@ namespace ConsoleApplication1
                     }
                 }
 
-                if (cardsincombo >= this.combolength) return this.bonusForPlaying;
+                if (cardsincombo == this.combolength) return this.bonusForPlaying;
                 return 0;
             }
 
             public int hasPlayedTurn0Combo(List<Handmanager.Handcard> hand)
             {
+                if (this.combocardsTurn0All.Count == 0) return 0;
                 int cardsincombo = 0;
                 Dictionary<CardDB.cardIDEnum, int> combocardscopy = new Dictionary<CardDB.cardIDEnum, int>(this.combocardsTurn0All);
                 foreach (Handmanager.Handcard hc in hand)
@@ -11175,12 +11234,13 @@ namespace ConsoleApplication1
                     }
                 }
 
-                if (cardsincombo >= this.combot0lenAll) return this.bonusForPlayingT0;
+                if (cardsincombo == this.combot0lenAll) return this.bonusForPlayingT0;
                 return 0;
             }
 
             public int hasPlayedTurn1Combo(List<Handmanager.Handcard> hand)
             {
+                if (this.combocardsTurn1.Count == 0) return 0;
                 int cardsincombo = 0;
                 Dictionary<CardDB.cardIDEnum, int> combocardscopy = new Dictionary<CardDB.cardIDEnum, int>(this.combocardsTurn1);
                 foreach (Handmanager.Handcard hc in hand)
@@ -11192,7 +11252,7 @@ namespace ConsoleApplication1
                     }
                 }
 
-                if (cardsincombo >= this.combot1len) return this.bonusForPlayingT1;
+                if (cardsincombo == this.combot1len) return this.bonusForPlayingT1;
                 return 0;
             }
 
@@ -11352,7 +11412,6 @@ namespace ConsoleApplication1
             }
 
             if (playedcards.Count == 0) return 0;
-
             bool wholeComboPlayed = false;
 
             int bonus = 0;
@@ -17346,6 +17405,7 @@ namespace ConsoleApplication1
 
         bool feugendead = false;
         bool stalaggdead = false;
+        public bool datareaded = false;
 
         public BoardTester(string data = "")
         {
@@ -17367,13 +17427,16 @@ namespace ConsoleApplication1
             string[] lines = new string[0] { };
             if (data == "")
             {
+                this.datareaded = false;
                 try
                 {
                     string path = Settings.Instance.path;
                     lines = System.IO.File.ReadAllLines(path + "test.txt");
+                    this.datareaded = true;
                 }
                 catch
                 {
+                    this.datareaded = false;
                     Helpfunctions.Instance.logg("cant find test.txt");
                     Helpfunctions.Instance.ErrorLog("cant find test.txt");
                     return;
@@ -17381,6 +17444,7 @@ namespace ConsoleApplication1
             }
             else
             {
+                this.datareaded = true;
                 lines = data.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             }
 
@@ -18089,7 +18153,12 @@ namespace ConsoleApplication1
             //set Simulation stuff
 
             Ai.Instance.botBase = new BehaviorControl();
+
+
+
             if (this.evalFunction == "rush") Ai.Instance.botBase = new BehaviorRush();
+
+            if (this.evalFunction == "mana") Ai.Instance.botBase = new BehaviorMana();
 
             Ai.Instance.setMaxWide(this.maxwide);
             Ai.Instance.setTwoTurnSimulation(false, this.twoturnsim);

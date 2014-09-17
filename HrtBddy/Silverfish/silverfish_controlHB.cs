@@ -543,7 +543,7 @@ namespace SilverfishControl
 
     public class Silverfish
     {
-        public string versionnumber = "111.8";
+        public string versionnumber = "111.9";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -1355,7 +1355,7 @@ namespace SilverfishControl
             foreach (Minion m in p.ownMinions)
             {
                 retval += 5;
-                retval += m.Hp * 1;
+                retval += m.Hp * 2;
                 retval += m.Angr * 2;
                 retval += m.handcard.card.rarity;
                 if (!m.playedThisTurn && m.windfury) retval += m.Angr;
@@ -1367,7 +1367,7 @@ namespace SilverfishControl
                 }
                 else
                 {
-                    if (m.Angr <= 2 && m.Hp <= 2) retval -= 5;
+                    if (m.Angr <= 2 && m.Hp <= 2 && !m.divineshild) retval -= 5;
                 }
                 //if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
                 //if (m.poisonous) retval += 1;
@@ -2373,10 +2373,8 @@ namespace SilverfishControl
                 if (m.playedThisTurn && m.name == CardDB.cardName.loatheb) this.loatheb = true;
 
                 spellpower = spellpower + m.spellpower;
-                spellpower += m.handcard.card.spellpowervalue;
-
                 if (m.silenced) continue;
-
+                spellpower += m.handcard.card.spellpowervalue;
                 if (m.name == CardDB.cardName.prophetvelen) this.doublepriest++;
 
 

@@ -11,7 +11,7 @@ using Triton.Game.Mapping;
 
 namespace SilverfishRush
 {
-    public class SilverRush : ICustomDeck
+    public class SilverfishRush : ICustomDeck
     {
         private int dirtyTargetSource = -1;
         private int stopAfterWins = 30;
@@ -34,7 +34,7 @@ namespace SilverfishRush
         int wins = 0;
         int loses = 0;
 
-        public SilverRush()
+        public SilverfishRush()
         {
 
             bool concede = false;
@@ -543,7 +543,7 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "1117";
+        public string versionnumber = "111.9";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -1131,6 +1131,7 @@ namespace SilverfishRush
         {
             this.botbehave = "rush";
             if (botbase is BehaviorControl) this.botbehave = "control";
+            if (botbase is BehaviorMana) this.botbehave = "mana";
             this.botbehave += " " + Ai.Instance.maxwide;
             if (Ai.Instance.secondTurnAmount > 0)
             {
@@ -1354,7 +1355,7 @@ namespace SilverfishRush
             foreach (Minion m in p.ownMinions)
             {
                 retval += 5;
-                retval += m.Hp * 1;
+                retval += m.Hp * 2;
                 retval += m.Angr * 2;
                 retval += m.handcard.card.rarity;
                 if (!m.playedThisTurn && m.windfury) retval += m.Angr;
@@ -1366,7 +1367,7 @@ namespace SilverfishRush
                 }
                 else
                 {
-                    if (m.Angr <= 2 && m.Hp <= 2) retval -= 5;
+                    if (m.Angr <= 2 && m.Hp <= 2 && !m.divineshild) retval -= 5;
                 }
                 //if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
                 //if (m.poisonous) retval += 1;
@@ -1605,6 +1606,62 @@ namespace SilverfishRush
 
 
     }
+
+    public class BehaviorMana : Behavior
+    {
+        PenalityManager penman = PenalityManager.Instance;
+
+        public override float getPlayfieldValue(Playfield p)
+        {
+            if (p.value >= -2000000) return p.value;
+            int retval = 0;
+
+            retval += p.ownHero.Hp + p.ownHero.armor;
+            retval -= (p.enemyHero.Hp + p.enemyHero.armor);
+
+            foreach (Minion m in p.ownMinions)
+            {
+                retval += this.getEnemyMinionValue(m, p);
+            }
+
+            foreach (Minion m in p.enemyMinions)
+            {
+                retval -= this.getEnemyMinionValue(m, p);
+            }
+
+            foreach (Handmanager.Handcard hc in p.owncards)
+            {
+                int r = Math.Max(hc.getManaCost(p), 1);
+                if (hc.card.name == CardDB.cardName.unknown) r = 4;
+                retval += r;
+            }
+
+            retval -= p.enemySecretCount;
+            retval -= p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
+            retval -= p.lostWeaponDamage;
+            if (p.enemyHero.Hp <= 0) retval = 10000;
+            if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
+            {
+                retval += p.owncarddraw * 500;
+                retval -= 1000;
+            }
+            if (p.ownHero.Hp <= 0) retval = -10000;
+
+            p.value = retval;
+            return retval;
+        }
+
+        public override int getEnemyMinionValue(Minion m, Playfield p)
+        {
+            int retval = 0;
+            retval += m.handcard.card.cost;
+            if (m.handcard.card.name == CardDB.cardName.unknown) retval = 4;
+            return retval;
+        }
+
+
+    }
+
 
     public class Helpfunctions
     {
@@ -2316,10 +2373,8 @@ namespace SilverfishRush
                 if (m.playedThisTurn && m.name == CardDB.cardName.loatheb) this.loatheb = true;
 
                 spellpower = spellpower + m.spellpower;
-                spellpower += m.handcard.card.spellpowervalue;
-
                 if (m.silenced) continue;
-
+                spellpower += m.handcard.card.spellpowervalue;
                 if (m.name == CardDB.cardName.prophetvelen) this.doublepriest++;
 
 
@@ -6230,6 +6285,7 @@ namespace SilverfishRush
                 }
                 catch (Exception ex)
                 {
+                    Helpfunctions.Instance.ErrorLog("Error!!!");
                     Helpfunctions.Instance.logg("Message ---");
                     Helpfunctions.Instance.logg("Message ---" + ex.Message);
                     Helpfunctions.Instance.logg("Source ---" + ex.Source);
@@ -6272,6 +6328,7 @@ namespace SilverfishRush
                 }
                 catch (Exception ex)
                 {
+                    Helpfunctions.Instance.ErrorLog("Error!!!");
                     Helpfunctions.Instance.logg("Message ---");
                     Helpfunctions.Instance.logg("Message ---" + ex.Message);
                     Helpfunctions.Instance.logg("Source ---" + ex.Source);
@@ -18981,7 +19038,12 @@ namespace SilverfishRush
             //set Simulation stuff
 
             Ai.Instance.botBase = new BehaviorControl();
+
+
+
             if (this.evalFunction == "rush") Ai.Instance.botBase = new BehaviorRush();
+
+            if (this.evalFunction == "mana") Ai.Instance.botBase = new BehaviorMana();
 
             Ai.Instance.setMaxWide(this.maxwide);
             Ai.Instance.setTwoTurnSimulation(false, this.twoturnsim);

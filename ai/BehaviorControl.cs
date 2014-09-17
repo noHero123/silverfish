@@ -72,7 +72,7 @@ namespace HREngine.Bots
             foreach (Minion m in p.ownMinions)
             {
                 retval += 5;
-                retval += m.Hp * 1;
+                retval += m.Hp * 2;
                 retval += m.Angr * 2;
                 retval += m.handcard.card.rarity;
                 if (!m.playedThisTurn && m.windfury) retval += m.Angr;
@@ -84,7 +84,7 @@ namespace HREngine.Bots
                 }
                 else
                 {
-                    if (m.Angr <= 2 && m.Hp <= 2) retval -= 5;
+                    if (m.Angr <= 2 && m.Hp <= 2 && !m.divineshild) retval -= 5;
                 }
                 //if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
                 //if (m.poisonous) retval += 1;

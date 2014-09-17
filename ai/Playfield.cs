@@ -153,7 +153,7 @@ namespace HREngine.Bots
         public int mobsplayedThisTurn = 0;
         public int startedWithMobsPlayedThisTurn = 0;
 
-        public int optionsPlayedThisTurn=0;
+        public int optionsPlayedThisTurn = 0;
         public int cardsPlayedThisTurn = 0;
         public int ueberladung = 0; //=recall
 
@@ -343,10 +343,8 @@ namespace HREngine.Bots
                 if (m.playedThisTurn && m.name == CardDB.cardName.loatheb) this.loatheb = true;
 
                 spellpower = spellpower + m.spellpower;
-                spellpower += m.handcard.card.spellpowervalue;
-
                 if (m.silenced) continue;
-
+                spellpower += m.handcard.card.spellpowervalue;
                 if (m.name == CardDB.cardName.prophetvelen) this.doublepriest++;
 
 
@@ -678,9 +676,9 @@ namespace HREngine.Bots
                 if (dis.Angr != pis.Angr || dis.Hp != pis.Hp || dis.maxHp != pis.maxHp || dis.numAttacksThisTurn != pis.numAttacksThisTurn) minionbool = false;
                 if (dis.Ready != pis.Ready) minionbool = false; // includes frozen, exhaunted
                 if (dis.playedThisTurn != pis.playedThisTurn) minionbool = false;
-                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury  || dis.zonepos != pis.zonepos) minionbool = false;
+                if (dis.silenced != pis.silenced || dis.stealth != pis.stealth || dis.taunt != pis.taunt || dis.windfury != pis.windfury || dis.zonepos != pis.zonepos) minionbool = false;
                 if (dis.divineshild != pis.divineshild || dis.cantLowerHPbelowONE != pis.cantLowerHPbelowONE || dis.immune != pis.immune) minionbool = false;
-                if(dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
+                if (dis.ownBlessingOfWisdom != pis.ownBlessingOfWisdom || dis.enemyBlessingOfWisdom != pis.enemyBlessingOfWisdom) minionbool = false;
                 if (dis.destroyOnEnemyTurnStart != pis.destroyOnEnemyTurnStart || dis.destroyOnEnemyTurnEnd != pis.destroyOnEnemyTurnEnd || dis.destroyOnOwnTurnEnd != pis.destroyOnOwnTurnEnd || dis.destroyOnOwnTurnStart != pis.destroyOnOwnTurnStart) minionbool = false;
                 if (dis.ancestralspirit != pis.ancestralspirit || dis.souloftheforest != pis.souloftheforest) minionbool = false;
 
@@ -726,7 +724,7 @@ namespace HREngine.Bots
             {
                 Minion dis = this.ownMinions[i]; Minion pis = p.ownMinions[i];
                 if (dis.entitiyID != pis.entitiyID) Ai.Instance.updateEntitiy(pis.entitiyID, dis.entitiyID);
-                
+
             }
 
             for (int i = 0; i < this.enemyMinions.Count; i++)
@@ -1480,7 +1478,7 @@ namespace HREngine.Bots
             if (this.turnCounter == 1) simulateTraps();
 
             //guess the dmg the hero will receive from enemy:
-            if(!this.isOwnTurn)guessHeroDamage();
+            if (!this.isOwnTurn) guessHeroDamage();
             this.optionsPlayedThisTurn = 0;
             this.enemyOptionsDoneThisTurn = 0;
             if (this.turnCounter <= turnsToSimulate)
@@ -1536,7 +1534,7 @@ namespace HREngine.Bots
                 foreach (Minion m in enemyMinions)
                 {
                     m.frozen = false;
-                    
+
                 }
                 this.enemyHero.frozen = false;
 
@@ -1589,7 +1587,7 @@ namespace HREngine.Bots
             }
 
 
-            
+
 
             this.value = int.MinValue;
             if (this.diedMinions != null) this.diedMinions.Clear();//contains only the minions that died in this turn!
@@ -1858,10 +1856,10 @@ namespace HREngine.Bots
                 {
                     //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                     this.prepareNextTurn(this.isOwnTurn);
-                    
-                    if (this.turnCounter >= 2) 
+
+                    if (this.turnCounter >= 2)
                         Ai.Instance.enemySecondTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
-                    else 
+                    else
                         Ai.Instance.enemyTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
                 }
                 this.complete = true;
@@ -1872,7 +1870,7 @@ namespace HREngine.Bots
         public void prepareNextTurn(bool own)
         {
             //call this after start turn trigger!
-            
+
             if (own)
             {
                 this.ownMaxMana = Math.Min(10, this.ownMaxMana + 1);
@@ -2073,7 +2071,7 @@ namespace HREngine.Bots
                         break;
                     }
                 }
-                if (aa.actionType== actionEnum.useHeroPower)
+                if (aa.actionType == actionEnum.useHeroPower)
                 {
                     if (this.isOwnTurn) ha = this.ownHeroAblility;
                     else ha = this.enemyHeroAblility;
@@ -2083,7 +2081,7 @@ namespace HREngine.Bots
             Action a = new Action(aa.actionType, ha, o, aa.place, trgt, aa.penalty, aa.druidchoice);
 
 
-            
+
             //save the action if its our first turn
             if (this.turnCounter == 0) this.playactions.Add(a);
 
@@ -2091,7 +2089,7 @@ namespace HREngine.Bots
             {
                 this.secretTrigger_MinionIsGoingToAttack(a.own, a.target);
                 this.secretTrigger_CharIsAttacked(a.own, a.target);
-                if(a.own.Hp>=0) minionAttacksMinion(a.own, a.target);
+                if (a.own.Hp >= 0) minionAttacksMinion(a.own, a.target);
             }
 
             if (a.actionType == actionEnum.attackWithHero)
@@ -2125,7 +2123,7 @@ namespace HREngine.Bots
             {
                 this.enemyOptionsDoneThisTurn++;
             }
-            
+
         }
 
         //minion attacks a minion
@@ -3002,7 +3000,7 @@ namespace HREngine.Bots
 
         public void secretTrigger_CharIsAttacked(Minion attacker, Minion defender)
         {
- 
+
         }
 
         public void secretTrigger_MinionIsGoingToAttack(Minion attacker, Minion defender)
@@ -3011,17 +3009,17 @@ namespace HREngine.Bots
         }
 
         public void secretTrigger_MinionIsPlayed(Minion playedMinion)
-        { 
+        {
         }
 
         public void secretTrigger_SpellIsPlayed(Minion target)
         {
- 
+
         }
 
         public void secretTrigger_MinionDied()
         {
- 
+
         }
 
         public void doDeathrattles(List<Minion> deathrattles)
@@ -3387,7 +3385,7 @@ namespace HREngine.Bots
                 this.enemyWeaponName = c.name;
             }
 
-            
+
 
             hero.Angr += c.Attack;
 
@@ -3982,7 +3980,7 @@ namespace HREngine.Bots
             return null;
         }
 
-        public void printActions(bool toBuffer=false)
+        public void printActions(bool toBuffer = false)
         {
             foreach (Action a in this.playactions)
             {

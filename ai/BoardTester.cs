@@ -75,6 +75,7 @@ namespace HREngine.Bots
 
         bool feugendead = false;
         bool stalaggdead = false;
+        public bool datareaded = false;
 
         public BoardTester(string data = "")
         {
@@ -96,13 +97,16 @@ namespace HREngine.Bots
             string[] lines = new string[0] { };
             if (data == "")
             {
+                this.datareaded = false;
                 try
                 {
                     string path = Settings.Instance.path;
                     lines = System.IO.File.ReadAllLines(path + "test.txt");
+                    this.datareaded = true;
                 }
                 catch
                 {
+                    this.datareaded = false;
                     Helpfunctions.Instance.logg("cant find test.txt");
                     Helpfunctions.Instance.ErrorLog("cant find test.txt");
                     return;
@@ -110,6 +114,7 @@ namespace HREngine.Bots
             }
             else
             {
+                this.datareaded = true;
                 lines = data.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             }
 

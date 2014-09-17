@@ -289,6 +289,7 @@ namespace HREngine.Bots
             help.logg("simulating board ");
 
             BoardTester bt = new BoardTester(data);
+            if (!bt.datareaded) return;
             hp.printHero();
             hp.printOwnMinions();
             hp.printEnemyMinions();

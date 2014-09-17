@@ -1,5 +1,4 @@
-﻿using HREngine.API;
-using HREngine.API.Actions;
+﻿using HREngine.API.Actions;
 using HREngine.API.Utilities;
 using System;
 using System.Collections.Generic;
@@ -931,7 +930,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "111.801";
+        public string versionnumber = "111.9";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -1796,7 +1795,7 @@ namespace HREngine.Bots
             foreach (Minion m in p.ownMinions)
             {
                 retval += 5;
-                retval += m.Hp * 1;
+                retval += m.Hp * 2;
                 retval += m.Angr * 2;
                 retval += m.handcard.card.rarity;
                 if (!m.playedThisTurn && m.windfury) retval += m.Angr;
@@ -1808,7 +1807,7 @@ namespace HREngine.Bots
                 }
                 else
                 {
-                    if (m.Angr <= 2 && m.Hp <= 2) retval -= 5;
+                    if (m.Angr <= 2 && m.Hp <= 2 && !m.divineshild) retval -= 5;
                 }
                 //if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
                 //if (m.poisonous) retval += 1;
@@ -2816,10 +2815,8 @@ namespace HREngine.Bots
                 if (m.playedThisTurn && m.name == CardDB.cardName.loatheb) this.loatheb = true;
 
                 spellpower = spellpower + m.spellpower;
-                spellpower += m.handcard.card.spellpowervalue;
-
                 if (m.silenced) continue;
-
+                spellpower += m.handcard.card.spellpowervalue;
                 if (m.name == CardDB.cardName.prophetvelen) this.doublepriest++;
 
 
@@ -6707,7 +6704,7 @@ namespace HREngine.Bots
             {
                 help.logg("-a-");
                 this.bestActions.Add(new Action(a));
-                this.bestActions[this.bestActions.Count-1].print();
+                this.bestActions[this.bestActions.Count - 1].print();
             }
 
             if (this.bestActions.Count >= 1)
@@ -6730,16 +6727,15 @@ namespace HREngine.Bots
                 }
                 catch (Exception ex)
                 {
-                    Helpfunctions.Instance.ErrorLog("Error!!!");
                     Helpfunctions.Instance.logg("Message ---");
-                    Helpfunctions.Instance.logg("Message ---"+ ex.Message);
-                    Helpfunctions.Instance.logg("Source ---"+ ex.Source);
-                    Helpfunctions.Instance.logg("StackTrace ---"+ ex.StackTrace);
-                    Helpfunctions.Instance.logg("TargetSite ---\n{0}"+ ex.TargetSite);
+                    Helpfunctions.Instance.logg("Message ---" + ex.Message);
+                    Helpfunctions.Instance.logg("Source ---" + ex.Source);
+                    Helpfunctions.Instance.logg("StackTrace ---" + ex.StackTrace);
+                    Helpfunctions.Instance.logg("TargetSite ---\n{0}" + ex.TargetSite);
 
                 }
                 Helpfunctions.Instance.logg("nmgsime-");
-                
+
 
             }
             else
@@ -6773,7 +6769,6 @@ namespace HREngine.Bots
                 }
                 catch (Exception ex)
                 {
-                    Helpfunctions.Instance.ErrorLog("Error!!!");
                     Helpfunctions.Instance.logg("Message ---");
                     Helpfunctions.Instance.logg("Message ---" + ex.Message);
                     Helpfunctions.Instance.logg("Source ---" + ex.Source);
@@ -6852,6 +6847,7 @@ namespace HREngine.Bots
             help.logg("simulating board ");
 
             BoardTester bt = new BoardTester(data);
+            if (!bt.datareaded) return;
             hp.printHero();
             hp.printOwnMinions();
             hp.printEnemyMinions();
@@ -18740,6 +18736,7 @@ namespace HREngine.Bots
 
         bool feugendead = false;
         bool stalaggdead = false;
+        public bool datareaded = false;
 
         public BoardTester(string data = "")
         {
@@ -18761,13 +18758,16 @@ namespace HREngine.Bots
             string[] lines = new string[0] { };
             if (data == "")
             {
+                this.datareaded = false;
                 try
                 {
                     string path = Settings.Instance.path;
                     lines = System.IO.File.ReadAllLines(path + "test.txt");
+                    this.datareaded = true;
                 }
                 catch
                 {
+                    this.datareaded = false;
                     Helpfunctions.Instance.logg("cant find test.txt");
                     Helpfunctions.Instance.ErrorLog("cant find test.txt");
                     return;
@@ -18775,6 +18775,7 @@ namespace HREngine.Bots
             }
             else
             {
+                this.datareaded = true;
                 lines = data.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             }
 
