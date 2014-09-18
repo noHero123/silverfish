@@ -22,10 +22,12 @@ namespace SilverfishRush
         DateTime starttime = DateTime.Now;
         Silverfish sf;
         bool enemyConcede = false;
-        bool useExternalProcess = true;
-        public bool learnmode = false;
 
+        public bool learnmode = false;
         public bool printlearnmode = true;
+
+        bool useExternalProcess = true;
+        public bool passiveWaiting = false;
 
         Behavior behave = new BehaviorRush();//change this to new BehaviorRush() for rush mode
 
@@ -194,6 +196,15 @@ namespace SilverfishRush
         /// </summary>
         public IEnumerator SelectCard()
         {
+            if (this.passiveWaiting && sf.waitingForSilver)
+            {
+                if (!this.sf.readActionFile(true))
+                {
+                    yield return Coroutine.Sleep(50);
+                    yield break;
+                }
+            }
+
             if (this.learnmode && (TritonHS.IsInTargetMode() || TritonHS.IsInChoiceMode()))
             {
                 yield return Coroutine.Sleep(50);
@@ -257,7 +268,13 @@ namespace SilverfishRush
                 yield break;
             }
 
-            this.printlearnmode = sf.updateEverything(behave, this.useExternalProcess);
+            this.printlearnmode = sf.updateEverything(behave, this.useExternalProcess, this.passiveWaiting);
+
+            if (this.passiveWaiting && sf.waitingForSilver)
+            {
+                yield return Coroutine.Sleep(50);
+                yield break;
+            }
 
             if (this.learnmode)
             {
@@ -543,9 +560,10 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "112";
+        public string versionnumber = "112.1";
         private bool singleLog = false;
         private string botbehave = "rush";
+        public bool waitingForSilver = false;
 
         Playfield lastpf;
         Settings sttngs = Settings.Instance;
@@ -631,7 +649,7 @@ namespace SilverfishRush
             }
         }
 
-        public bool updateEverything(Behavior botbase, bool runExtern = false)
+        public bool updateEverything(Behavior botbase, bool runExtern = false, bool passiveWait = false)
         {
             this.updateBehaveString(botbase);
 
@@ -708,7 +726,7 @@ namespace SilverfishRush
                 else
                 {
                     printstuff(true);
-                    readActionFile();
+                    readActionFile(passiveWait);
                 }
             }
             else
@@ -1200,12 +1218,13 @@ namespace SilverfishRush
 
         }
 
-        private void readActionFile(bool passiveWaiting = false)
+        public bool readActionFile(bool passiveWaiting = false)
         {
             bool readed = true;
             List<string> alist = new List<string>();
             float value = 0f;
             string boardnumm = "-1";
+            this.waitingForSilver = true;
             while (readed)
             {
                 try
@@ -1228,7 +1247,7 @@ namespace SilverfishRush
                                 if (passiveWaiting)
                                 {
                                     System.Threading.Thread.Sleep(10);
-                                    return;
+                                    return false;
                                 }
                                 continue;
                             }
@@ -1246,7 +1265,7 @@ namespace SilverfishRush
                         System.Threading.Thread.Sleep(10);
                         if (passiveWaiting)
                         {
-                            return;
+                            return false;
                         }
                     }
 
@@ -1257,7 +1276,7 @@ namespace SilverfishRush
                 }
 
             }
-            Helpfunctions.Instance.ErrorLog("actions received");
+            this.waitingForSilver = false;
             Helpfunctions.Instance.logg("received " + boardnumm + " actions to do:");
             Ai.Instance.currentCalculatedBoard = "0";
             Playfield p = new Playfield();
@@ -1268,9 +1287,10 @@ namespace SilverfishRush
                 aclist.Add(new Action(a, p));
                 Helpfunctions.Instance.logg(a);
             }
-            Helpfunctions.Instance.logg("---------------");
+
             Ai.Instance.setBestMoves(aclist, value);
 
+            return true;
         }
 
     }
@@ -6232,6 +6252,8 @@ namespace SilverfishRush
                 this.bestActions.Add(new Action(a));
                 a.print();
             }
+            //this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
+
             if (this.bestActions.Count >= 1)
             {
                 this.bestmove = this.bestActions[0];
@@ -6239,7 +6261,7 @@ namespace SilverfishRush
             }
             this.bestmoveValue = bestval;
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
                 this.nextMoveGuess = new Playfield();
 
@@ -6264,6 +6286,7 @@ namespace SilverfishRush
                 this.bestActions.Add(new Action(a));
                 this.bestActions[this.bestActions.Count - 1].print();
             }
+            //this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
 
             if (this.bestActions.Count >= 1)
             {
@@ -6275,7 +6298,7 @@ namespace SilverfishRush
             //only debug:
             this.nextMoveGuess.printBoardDebug();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
                 Helpfunctions.Instance.logg("nmgsim-");
                 try
@@ -6316,7 +6339,7 @@ namespace SilverfishRush
             if (this.nextMoveGuess == null) this.nextMoveGuess = new Playfield();
             this.nextMoveGuess.printBoardDebug();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
                 //this.nextMoveGuess = new Playfield();
                 Helpfunctions.Instance.logg("nmgsim-");
@@ -6339,6 +6362,7 @@ namespace SilverfishRush
             }
             else
             {
+                //Helpfunctions.Instance.logg("nd trn");
                 nextMoveGuess.mana = -100;
             }
 
@@ -6457,7 +6481,7 @@ namespace SilverfishRush
 
             Playfield tempbestboard = new Playfield();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
                 bestmove.print();
 
@@ -6477,7 +6501,7 @@ namespace SilverfishRush
                 help.logg("stepp");
 
 
-                if (bestmovee != null) // save the guessed move, so we doesnt need to recalc!
+                if (bestmovee != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
                 {
                     bestmovee.print();
 
@@ -6507,7 +6531,7 @@ namespace SilverfishRush
 
             Playfield tempbestboard = new Playfield();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
 
                 tempbestboard.doAction(bestmove);
@@ -6523,7 +6547,7 @@ namespace SilverfishRush
             foreach (Action bestmovee in this.bestActions)
             {
 
-                if (bestmovee != null) // save the guessed move, so we doesnt need to recalc!
+                if (bestmovee != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
                 {
                     //bestmovee.print();
                     tempbestboard.doAction(bestmovee);
@@ -9426,7 +9450,7 @@ namespace SilverfishRush
             retval += getSilencePenality(name, target, p, choice, lethal);
             retval += getDamagePenality(name, target, p, choice, lethal);
             retval += getHealPenality(name, target, p, choice, lethal);
-            retval += getCardDrawPenality(name, target, p, choice);
+            retval += getCardDrawPenality(name, target, p, choice, lethal);
             retval += getCardDrawofEffectMinions(card, p);
             retval += getCardDiscardPenality(name, p);
             retval += getDestroyOwnPenality(name, target, p, lethal);
@@ -9920,7 +9944,7 @@ namespace SilverfishRush
             return pen;
         }
 
-        private int getCardDrawPenality(CardDB.cardName name, Minion target, Playfield p, int choice)
+        private int getCardDrawPenality(CardDB.cardName name, Minion target, Playfield p, int choice, bool lethal)
         {
             // penality if carddraw is late or you have enough cards
             int pen = 0;
@@ -9968,6 +9992,7 @@ namespace SilverfishRush
 
             if (name == CardDB.cardName.lifetap)
             {
+                if (lethal) return 500;
                 int minmana = 10;
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {

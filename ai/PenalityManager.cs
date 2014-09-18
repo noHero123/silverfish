@@ -169,7 +169,7 @@ namespace HREngine.Bots
             retval += getSilencePenality(name, target, p, choice, lethal);
             retval += getDamagePenality(name, target, p, choice, lethal);
             retval += getHealPenality(name, target, p, choice, lethal);
-            retval += getCardDrawPenality(name, target, p, choice);
+            retval += getCardDrawPenality(name, target, p, choice, lethal);
             retval += getCardDrawofEffectMinions(card, p);
             retval += getCardDiscardPenality(name, p);
             retval += getDestroyOwnPenality(name, target, p, lethal);
@@ -663,7 +663,7 @@ namespace HREngine.Bots
             return pen;
         }
 
-        private int getCardDrawPenality(CardDB.cardName name, Minion target, Playfield p, int choice)
+        private int getCardDrawPenality(CardDB.cardName name, Minion target, Playfield p, int choice, bool lethal)
         {
             // penality if carddraw is late or you have enough cards
             int pen = 0;
@@ -711,6 +711,7 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.lifetap)
             {
+                if(lethal) return 500;
                 int minmana = 10;
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {

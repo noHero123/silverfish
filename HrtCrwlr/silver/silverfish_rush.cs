@@ -25,10 +25,11 @@ namespace HREngine.Bots
 
         public bool learnmode = true;
         public bool printlearnmode = true;
+
         bool useExternalProcess = true;
+        public bool passiveWaiting = false;
+
         Behavior behave = new BehaviorRush();
-
-
 
         //crawlerstuff
         bool isgoingtoconcede = false;
@@ -45,6 +46,8 @@ namespace HREngine.Bots
             bool concede = false;
             bool writeToSingleFile = false;
 
+
+
             try
             {
                 this.learnmode = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.wwuaid") == "true") ? true : false;
@@ -57,6 +60,24 @@ namespace HREngine.Bots
             {
                 Helpfunctions.Instance.ErrorLog("a wild error occurrs! cant read the settings...");
             }
+
+            try
+            {
+                this.passiveWaiting = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.passivewait") == "true") ? true : false;
+                if (this.passiveWaiting)
+                {
+                    Helpfunctions.Instance.ErrorLog("Passive Waiting is ON");
+                }
+                else
+                {
+                    Helpfunctions.Instance.ErrorLog("Passive Waiting is OFF");
+                }
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("cant read passive waiting...");
+            }
+
             try
             {
                 concede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.autoconcede") == "true") ? true : false;
@@ -571,6 +592,14 @@ namespace HREngine.Bots
                     }
                 }
 
+                if (this.passiveWaiting && sf.waitingForSilver)
+                {
+                    if (!this.sf.readActionFile(true))
+                    {
+                        return new HREngine.API.Actions.MakeNothingAction();
+                    }
+                }
+
                 if (this.learnmode && (HRBattle.IsInTargetMode() || HRChoice.IsChoiceActive()))
                 {
                     return new HREngine.API.Actions.MakeNothingAction();
@@ -689,7 +718,12 @@ namespace HREngine.Bots
                     }
                 }
 
-                this.printlearnmode = sf.updateEverything(behave, this.useExternalProcess);
+                this.printlearnmode = sf.updateEverything(behave, this.useExternalProcess, this.passiveWaiting);
+
+                if (this.passiveWaiting && sf.waitingForSilver)
+                {
+                    return new HREngine.API.Actions.MakeNothingAction();
+                }
 
                 if (this.learnmode)
                 {
@@ -705,7 +739,7 @@ namespace HREngine.Bots
 
                 Action moveTodo = Ai.Instance.bestmove;
 
-                if (moveTodo == null)
+                if (moveTodo == null || moveTodo.actionType == actionEnum.endturn)
                 {
                     Helpfunctions.Instance.ErrorLog("end turn");
                     return null;
@@ -931,9 +965,10 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "112";
+        public string versionnumber = "112.1";
         private bool singleLog = false;
         private string botbehave = "rush";
+        public bool waitingForSilver = false;
 
         Playfield lastpf;
         Settings sttngs = Settings.Instance;
@@ -1018,10 +1053,9 @@ namespace HREngine.Bots
             }
         }
 
-        public bool updateEverything(Behavior botbase, bool runExtern = false)
+        public bool updateEverything(Behavior botbase, bool runExtern = false, bool passiveWait = false)
         {
             this.updateBehaveString(botbase);
-
 
             HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
             HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
@@ -1081,15 +1115,19 @@ namespace HREngine.Bots
             if (runExtern)
             {
                 Helpfunctions.Instance.logg("recalc-check###########");
+                p.printBoard();
+                Ai.Instance.nextMoveGuess.printBoard();
                 if (p.isEqual(Ai.Instance.nextMoveGuess, true))
                 {
+
                     printstuff(false);
                     Ai.Instance.doNextCalcedMove();
+
                 }
                 else
                 {
                     printstuff(true);
-                    readActionFile();
+                    readActionFile(passiveWait);
                 }
             }
             else
@@ -1640,12 +1678,13 @@ namespace HREngine.Bots
 
         }
 
-        private void readActionFile(bool passiveWaiting = false)
+        public bool readActionFile(bool passiveWaiting = false)
         {
             bool readed = true;
             List<string> alist = new List<string>();
             float value = 0f;
             string boardnumm = "-1";
+            this.waitingForSilver = true;
             while (readed)
             {
                 try
@@ -1668,7 +1707,7 @@ namespace HREngine.Bots
                                 if (passiveWaiting)
                                 {
                                     System.Threading.Thread.Sleep(10);
-                                    return;
+                                    return false;
                                 }
                                 continue;
                             }
@@ -1686,7 +1725,7 @@ namespace HREngine.Bots
                         System.Threading.Thread.Sleep(10);
                         if (passiveWaiting)
                         {
-                            return;
+                            return false;
                         }
                     }
 
@@ -1697,7 +1736,7 @@ namespace HREngine.Bots
                 }
 
             }
-            Helpfunctions.Instance.ErrorLog("actions received");
+            this.waitingForSilver = false;
             Helpfunctions.Instance.logg("received " + boardnumm + " actions to do:");
             Ai.Instance.currentCalculatedBoard = "0";
             Playfield p = new Playfield();
@@ -1708,9 +1747,10 @@ namespace HREngine.Bots
                 aclist.Add(new Action(a, p));
                 Helpfunctions.Instance.logg(a);
             }
-            Helpfunctions.Instance.logg("---------------");
+
             Ai.Instance.setBestMoves(aclist, value);
 
+            return true;
         }
 
 
@@ -6675,6 +6715,8 @@ namespace HREngine.Bots
                 this.bestActions.Add(new Action(a));
                 a.print();
             }
+            //this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
+
             if (this.bestActions.Count >= 1)
             {
                 this.bestmove = this.bestActions[0];
@@ -6682,7 +6724,7 @@ namespace HREngine.Bots
             }
             this.bestmoveValue = bestval;
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
                 this.nextMoveGuess = new Playfield();
 
@@ -6707,6 +6749,7 @@ namespace HREngine.Bots
                 this.bestActions.Add(new Action(a));
                 this.bestActions[this.bestActions.Count - 1].print();
             }
+            //this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
 
             if (this.bestActions.Count >= 1)
             {
@@ -6718,7 +6761,7 @@ namespace HREngine.Bots
             //only debug:
             this.nextMoveGuess.printBoardDebug();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
                 Helpfunctions.Instance.logg("nmgsim-");
                 try
@@ -6759,7 +6802,7 @@ namespace HREngine.Bots
             if (this.nextMoveGuess == null) this.nextMoveGuess = new Playfield();
             this.nextMoveGuess.printBoardDebug();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
                 //this.nextMoveGuess = new Playfield();
                 Helpfunctions.Instance.logg("nmgsim-");
@@ -6782,6 +6825,7 @@ namespace HREngine.Bots
             }
             else
             {
+                //Helpfunctions.Instance.logg("nd trn");
                 nextMoveGuess.mana = -100;
             }
 
@@ -6900,7 +6944,7 @@ namespace HREngine.Bots
 
             Playfield tempbestboard = new Playfield();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
                 bestmove.print();
 
@@ -6920,7 +6964,7 @@ namespace HREngine.Bots
                 help.logg("stepp");
 
 
-                if (bestmovee != null) // save the guessed move, so we doesnt need to recalc!
+                if (bestmovee != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
                 {
                     bestmovee.print();
 
@@ -6950,7 +6994,7 @@ namespace HREngine.Bots
 
             Playfield tempbestboard = new Playfield();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
 
                 tempbestboard.doAction(bestmove);
@@ -6966,7 +7010,7 @@ namespace HREngine.Bots
             foreach (Action bestmovee in this.bestActions)
             {
 
-                if (bestmovee != null) // save the guessed move, so we doesnt need to recalc!
+                if (bestmovee != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
                 {
                     //bestmovee.print();
                     tempbestboard.doAction(bestmovee);
@@ -9869,7 +9913,7 @@ namespace HREngine.Bots
             retval += getSilencePenality(name, target, p, choice, lethal);
             retval += getDamagePenality(name, target, p, choice, lethal);
             retval += getHealPenality(name, target, p, choice, lethal);
-            retval += getCardDrawPenality(name, target, p, choice);
+            retval += getCardDrawPenality(name, target, p, choice, lethal);
             retval += getCardDrawofEffectMinions(card, p);
             retval += getCardDiscardPenality(name, p);
             retval += getDestroyOwnPenality(name, target, p, lethal);
@@ -10363,7 +10407,7 @@ namespace HREngine.Bots
             return pen;
         }
 
-        private int getCardDrawPenality(CardDB.cardName name, Minion target, Playfield p, int choice)
+        private int getCardDrawPenality(CardDB.cardName name, Minion target, Playfield p, int choice, bool lethal)
         {
             // penality if carddraw is late or you have enough cards
             int pen = 0;
@@ -10411,6 +10455,7 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.lifetap)
             {
+                if (lethal) return 500;
                 int minmana = 10;
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {

@@ -116,6 +116,8 @@ namespace HREngine.Bots
                 this.bestActions.Add(new Action(a));
                 a.print();
             }
+            //this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
+
             if (this.bestActions.Count >= 1)
             {
                 this.bestmove = this.bestActions[0];
@@ -123,7 +125,7 @@ namespace HREngine.Bots
             }
             this.bestmoveValue = bestval;
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
                 this.nextMoveGuess = new Playfield();
 
@@ -148,6 +150,7 @@ namespace HREngine.Bots
                 this.bestActions.Add(new Action(a));
                 this.bestActions[this.bestActions.Count - 1].print();
             }
+            //this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
 
             if (this.bestActions.Count >= 1)
             {
@@ -159,7 +162,7 @@ namespace HREngine.Bots
             //only debug:
             this.nextMoveGuess.printBoardDebug();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
                 Helpfunctions.Instance.logg("nmgsim-");
                 try
@@ -200,7 +203,7 @@ namespace HREngine.Bots
             if (this.nextMoveGuess == null) this.nextMoveGuess = new Playfield();
             this.nextMoveGuess.printBoardDebug();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
                 //this.nextMoveGuess = new Playfield();
                 Helpfunctions.Instance.logg("nmgsim-");
@@ -223,6 +226,7 @@ namespace HREngine.Bots
             }
             else
             {
+                //Helpfunctions.Instance.logg("nd trn");
                 nextMoveGuess.mana = -100;
             }
 
@@ -341,7 +345,7 @@ namespace HREngine.Bots
 
             Playfield tempbestboard = new Playfield();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
                 bestmove.print();
 
@@ -361,7 +365,7 @@ namespace HREngine.Bots
                 help.logg("stepp");
 
 
-                if (bestmovee != null) // save the guessed move, so we doesnt need to recalc!
+                if (bestmovee != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
                 {
                     bestmovee.print();
 
@@ -391,7 +395,7 @@ namespace HREngine.Bots
 
             Playfield tempbestboard = new Playfield();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
 
                 tempbestboard.doAction(bestmove);
@@ -407,7 +411,7 @@ namespace HREngine.Bots
             foreach (Action bestmovee in this.bestActions)
             {
 
-                if (bestmovee != null) // save the guessed move, so we doesnt need to recalc!
+                if (bestmovee != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
                 {
                     //bestmovee.print();
                     tempbestboard.doAction(bestmovee);

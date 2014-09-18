@@ -11,9 +11,10 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "112";
+        public string versionnumber = "112.1";
         private bool singleLog = false;
         private string botbehave = "rush";
+        public bool waitingForSilver = false;
 
 
         Playfield lastpf;
@@ -99,7 +100,7 @@ namespace HREngine.Bots
             }
         }
 
-        public bool updateEverything(Behavior botbase, bool runExtern=false)
+        public bool updateEverything(Behavior botbase, bool runExtern = false, bool passiveWait = false)
         {
             this.updateBehaveString(botbase);
 
@@ -173,7 +174,7 @@ namespace HREngine.Bots
                 else
                 {
                     printstuff(true);
-                    readActionFile();
+                    readActionFile(passiveWait);
                 }
             }
             else
@@ -737,12 +738,13 @@ namespace HREngine.Bots
 
         }
 
-        private void readActionFile(bool passiveWaiting = false)
+        public bool readActionFile(bool passiveWaiting = false)
         {
             bool readed = true;
             List<string> alist = new List<string>();
             float value = 0f;
             string boardnumm = "-1";
+            this.waitingForSilver = true;
             while (readed)
             {
                 try
@@ -765,7 +767,7 @@ namespace HREngine.Bots
                                 if (passiveWaiting)
                                 {
                                     System.Threading.Thread.Sleep(10);
-                                    return;
+                                    return false;
                                 }
                                 continue;
                             }
@@ -783,7 +785,7 @@ namespace HREngine.Bots
                         System.Threading.Thread.Sleep(10);
                         if (passiveWaiting)
                         {
-                            return;
+                            return false;
                         }
                     }
 
@@ -794,6 +796,7 @@ namespace HREngine.Bots
                 }
                
             }
+            this.waitingForSilver = false;
             Helpfunctions.Instance.logg("received " + boardnumm + " actions to do:");
             Ai.Instance.currentCalculatedBoard = "0";
             Playfield p = new Playfield();
@@ -807,6 +810,7 @@ namespace HREngine.Bots
             
             Ai.Instance.setBestMoves(aclist, value);
 
+            return true;
         }
 
 

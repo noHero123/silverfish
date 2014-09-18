@@ -5,6 +5,8 @@
 <Setting name="uai.wwuaid" type="boolean" description="tutor mode" />
 <Setting name="uai.extern" default="true" type="boolean" description="use external process for calculations (recomended)" />
 <Label>uses Silver.exe for calculations, make sure you started it manually.</Label>
+<Setting name="uai.passivewait" default="true" type="boolean" description="Hearthstone doesnt freez while waiting for silver.exe" />
+<Label>while waiting for the result of the external calculation, Hearthstone will not freeze.</Label>
 <Setting name="uai.autoconcede" type="boolean" description="autoconcede" />
 <Setting name="uai.concedelvl" default="20" type="text" description="concede till rank: (is ignored if autoconcede isnt checked)" />
 <Label></Label>

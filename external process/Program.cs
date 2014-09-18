@@ -216,7 +216,7 @@ namespace ConsoleApplication1
 
     public class Silverfish
     {
-        public int versionnumber = 97;
+        public int versionnumber = 112;
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -5343,6 +5343,8 @@ namespace ConsoleApplication1
                 this.bestActions.Add(new Action(a));
                 a.print();
             }
+            //this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
+
             if (this.bestActions.Count >= 1)
             {
                 this.bestmove = this.bestActions[0];
@@ -5350,7 +5352,7 @@ namespace ConsoleApplication1
             }
             this.bestmoveValue = bestval;
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
                 this.nextMoveGuess = new Playfield();
 
@@ -5375,6 +5377,7 @@ namespace ConsoleApplication1
                 this.bestActions.Add(new Action(a));
                 this.bestActions[this.bestActions.Count - 1].print();
             }
+            //this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
 
             if (this.bestActions.Count >= 1)
             {
@@ -5386,7 +5389,7 @@ namespace ConsoleApplication1
             //only debug:
             this.nextMoveGuess.printBoardDebug();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
                 Helpfunctions.Instance.logg("nmgsim-");
                 try
@@ -5427,7 +5430,7 @@ namespace ConsoleApplication1
             if (this.nextMoveGuess == null) this.nextMoveGuess = new Playfield();
             this.nextMoveGuess.printBoardDebug();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
                 //this.nextMoveGuess = new Playfield();
                 Helpfunctions.Instance.logg("nmgsim-");
@@ -5450,6 +5453,7 @@ namespace ConsoleApplication1
             }
             else
             {
+                //Helpfunctions.Instance.logg("nd trn");
                 nextMoveGuess.mana = -100;
             }
 
@@ -5568,7 +5572,7 @@ namespace ConsoleApplication1
 
             Playfield tempbestboard = new Playfield();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
                 bestmove.print();
 
@@ -5588,7 +5592,7 @@ namespace ConsoleApplication1
                 help.logg("stepp");
 
 
-                if (bestmovee != null) // save the guessed move, so we doesnt need to recalc!
+                if (bestmovee != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
                 {
                     bestmovee.print();
 
@@ -5618,7 +5622,7 @@ namespace ConsoleApplication1
 
             Playfield tempbestboard = new Playfield();
 
-            if (bestmove != null) // save the guessed move, so we doesnt need to recalc!
+            if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
 
                 tempbestboard.doAction(bestmove);
@@ -5634,7 +5638,7 @@ namespace ConsoleApplication1
             foreach (Action bestmovee in this.bestActions)
             {
 
-                if (bestmovee != null) // save the guessed move, so we doesnt need to recalc!
+                if (bestmovee != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
                 {
                     //bestmovee.print();
                     tempbestboard.doAction(bestmovee);
@@ -7109,7 +7113,7 @@ namespace ConsoleApplication1
             // attack with minions ###############################################################################################################
 
             List<Minion> playedMinions = new List<Minion>(8);
-
+            bool attackordermatters = this.didAttackOrderMatters(p);
             foreach (Minion m in p.ownMinions)
             {
 
@@ -7117,43 +7121,47 @@ namespace ConsoleApplication1
                 {
                     //BEGIN:cut (double/similar) attacking minions out#####################################
                     // DONT LET SIMMILAR MINIONS ATTACK IN ONE TURN (example 3 unlesh the hounds-hounds doesnt need to simulated hole)
-                    List<Minion> tempoo = new List<Minion>(playedMinions);
-                    bool dontattacked = true;
-                    bool isSpecial = pen.specialMinions.ContainsKey(m.name);
-                    foreach (Minion mnn in tempoo)
+                    if (attackordermatters)
                     {
-                        // special minions are allowed to attack in silended and unsilenced state!
-                        //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
-
-                        bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
-
-                        if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
+                        List<Minion> tempoo = new List<Minion>(playedMinions);
+                        bool dontattacked = true;
+                        bool isSpecial = pen.specialMinions.ContainsKey(m.name);
+                        foreach (Minion mnn in tempoo)
                         {
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
-                            continue;
-                        }
+                            // special minions are allowed to attack in silended and unsilenced state!
+                            //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
 
-                        if (isSpecial == otherisSpecial && !m.silenced && !mnn.silenced) // same are special
-                        {
-                            if (m.name != mnn.name) // different name -> take it
+                            bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
+
+                            if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                             {
+                                if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
                                 continue;
                             }
-                            // same name -> test whether they are equal
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
-                            continue;
+
+                            if (isSpecial == otherisSpecial && !m.silenced && !mnn.silenced) // same are special
+                            {
+                                if (m.name != mnn.name) // different name -> take it
+                                {
+                                    continue;
+                                }
+                                // same name -> test whether they are equal
+                                if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
+                                continue;
+                            }
+
                         }
 
-                    }
 
-                    if (dontattacked)
-                    {
-                        playedMinions.Add(m);
-                    }
-                    else
-                    {
-                        //help.logg(m.name + " doesnt need to attack!");
-                        continue;
+                        if (dontattacked)
+                        {
+                            playedMinions.Add(m);
+                        }
+                        else
+                        {
+                            //help.logg(m.name + " doesnt need to attack!");
+                            continue;
+                        }
                     }
                     //END: cut (double/similar) attacking minions out#####################################
 
@@ -7215,6 +7223,8 @@ namespace ConsoleApplication1
                     {
                         break;
                     }
+
+                    if (!attackordermatters) break;
                 }
 
             }
@@ -7391,6 +7401,7 @@ namespace ConsoleApplication1
             // attack with minions ###############################################################################################################
 
             List<Minion> playedMinions = new List<Minion>(8);
+            bool attackordermatters = this.didAttackOrderMatters(p);
 
             foreach (Minion m in p.enemyMinions)
             {
@@ -7399,43 +7410,46 @@ namespace ConsoleApplication1
                 {
                     //BEGIN:cut (double/similar) attacking minions out#####################################
                     // DONT LET SIMMILAR MINIONS ATTACK IN ONE TURN (example 3 unlesh the hounds-hounds doesnt need to simulated hole)
-                    List<Minion> tempoo = new List<Minion>(playedMinions);
-                    bool dontattacked = true;
-                    bool isSpecial = pen.specialMinions.ContainsKey(m.name);
-                    foreach (Minion mnn in tempoo)
+                    if (attackordermatters)
                     {
-                        // special minions are allowed to attack in silended and unsilenced state!
-                        //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
-
-                        bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
-
-                        if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
+                        List<Minion> tempoo = new List<Minion>(playedMinions);
+                        bool dontattacked = true;
+                        bool isSpecial = pen.specialMinions.ContainsKey(m.name);
+                        foreach (Minion mnn in tempoo)
                         {
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
-                            continue;
-                        }
+                            // special minions are allowed to attack in silended and unsilenced state!
+                            //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
 
-                        if (isSpecial == otherisSpecial && !m.silenced && !mnn.silenced) // same are special
-                        {
-                            if (m.name != mnn.name) // different name -> take it
+                            bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
+
+                            if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                             {
+                                if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
                                 continue;
                             }
-                            // same name -> test whether they are equal
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
-                            continue;
+
+                            if (isSpecial == otherisSpecial && !m.silenced && !mnn.silenced) // same are special
+                            {
+                                if (m.name != mnn.name) // different name -> take it
+                                {
+                                    continue;
+                                }
+                                // same name -> test whether they are equal
+                                if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
+                                continue;
+                            }
+
                         }
 
-                    }
-
-                    if (dontattacked)
-                    {
-                        playedMinions.Add(m);
-                    }
-                    else
-                    {
-                        //help.logg(m.name + " doesnt need to attack!");
-                        continue;
+                        if (dontattacked)
+                        {
+                            playedMinions.Add(m);
+                        }
+                        else
+                        {
+                            //help.logg(m.name + " doesnt need to attack!");
+                            continue;
+                        }
                     }
                     //END: cut (double/similar) attacking minions out#####################################
 
@@ -7450,11 +7464,14 @@ namespace ConsoleApplication1
                         ret.Add(a);
                     }
 
+
                     if ((!m.stealth) && trgts.Count == 1 && trgts[0].isHero)//only enemy hero is available als attack
                     {
                         break;
                     }
+                    if (!attackordermatters) break;
                 }
+
 
             }
 
@@ -7482,7 +7499,7 @@ namespace ConsoleApplication1
         public List<Minion> cutAttackTargets(List<Minion> oldlist, Playfield p, bool own)
         {
             //sorts out attack targets (minion + hero attack)
-
+            oldlist.Sort((a, b) => -(a.Hp.CompareTo(b.Hp)));
             List<Minion> retvalues = new List<Minion>(oldlist.Count);
             List<Minion> addedmins = new List<Minion>(oldlist.Count);
 
@@ -7507,7 +7524,7 @@ namespace ConsoleApplication1
 
                         if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                         {
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp <= m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) goingtoadd = false;
                             continue;
                         }
 
@@ -7543,6 +7560,77 @@ namespace ConsoleApplication1
             return retvalues;
         }
 
+        public bool didAttackOrderMatters(Playfield p)
+        {
+            //return true;
+            if (p.isOwnTurn)
+            {
+                if (p.enemySecretCount >= 1) return true;
+                if (p.enemyHero.immune) return true;
+
+            }
+            else
+            {
+                if (p.ownHero.immune) return true;
+            }
+            List<Minion> enemym = (p.isOwnTurn) ? p.enemyMinions : p.ownMinions;
+            List<Minion> ownm = (p.isOwnTurn) ? p.ownMinions : p.enemyMinions;
+
+            int strongestAttack = 0;
+            foreach (Minion m in enemym)
+            {
+                if (m.Angr > strongestAttack) strongestAttack = m.Angr;
+                if (m.taunt) return true;
+                if (m.name == CardDB.cardName.dancingswords || m.name == CardDB.cardName.deathlord) return true;
+            }
+
+            int haspets = 0;
+            bool hashyena = false;
+            bool hasJuggler = false;
+            bool spawnminions = false;
+            foreach (Minion m in ownm)
+            {
+                if (m.name == CardDB.cardName.cultmaster) return true;
+                if (m.name == CardDB.cardName.knifejuggler) hasJuggler = true;
+                if (m.Ready && m.Angr >= 1)
+                {
+                    if (m.AdjacentAngr >= 1) return true;//wolphalfa or flametongue is in play
+                    if (m.name == CardDB.cardName.northshirecleric) return true;
+                    if (m.name == CardDB.cardName.armorsmith) return true;
+                    if (m.name == CardDB.cardName.loothoarder) return true;
+                    //if (m.name == CardDB.cardName.madscientist) return true; // dont change the tactic
+                    if (m.name == CardDB.cardName.sylvanaswindrunner) return true;
+                    if (m.name == CardDB.cardName.darkcultist) return true;
+                    if (m.ownBlessingOfWisdom >= 1) return true;
+                    if (m.name == CardDB.cardName.acolyteofpain) return true;
+                    if (m.name == CardDB.cardName.frothingberserker) return true;
+                    if (m.name == CardDB.cardName.flesheatingghoul) return true;
+                    if (m.name == CardDB.cardName.bloodmagethalnos) return true;
+                    if (m.name == CardDB.cardName.webspinner) return true;
+                    if (m.name == CardDB.cardName.tirionfordring) return true;
+                    if (m.name == CardDB.cardName.baronrivendare) return true;
+
+
+                    //if (m.name == CardDB.cardName.manawraith) return true;
+                    //buffing minions (attack with them last)
+                    if (m.name == CardDB.cardName.raidleader || m.name == CardDB.cardName.stormwindchampion || m.name == CardDB.cardName.timberwolf || m.name == CardDB.cardName.southseacaptain || m.name == CardDB.cardName.murlocwarleader || m.name == CardDB.cardName.grimscaleoracle || m.name == CardDB.cardName.leokk) return true;
+
+
+                    if (m.name == CardDB.cardName.scavenginghyena) hashyena = true;
+                    if (m.handcard.card.race == 20) haspets++;
+                    if (m.name == CardDB.cardName.harvestgolem || m.name == CardDB.cardName.hauntedcreeper || m.souloftheforest >= 1 || m.ancestralspirit >= 1 || m.name == CardDB.cardName.nerubianegg || m.name == CardDB.cardName.savannahhighmane || m.name == CardDB.cardName.sludgebelcher || m.name == CardDB.cardName.cairnebloodhoof || m.name == CardDB.cardName.feugen || m.name == CardDB.cardName.stalagg || m.name == CardDB.cardName.thebeast) spawnminions = true;
+
+                }
+            }
+
+            if (haspets >= 1 && hashyena) return true;
+            if (hasJuggler && spawnminions) return true;
+
+
+
+
+            return false;
+        }
     }
 
     public class Handmanager
@@ -8453,7 +8541,7 @@ namespace ConsoleApplication1
             retval += getSilencePenality(name, target, p, choice, lethal);
             retval += getDamagePenality(name, target, p, choice, lethal);
             retval += getHealPenality(name, target, p, choice, lethal);
-            retval += getCardDrawPenality(name, target, p, choice);
+            retval += getCardDrawPenality(name, target, p, choice, lethal);
             retval += getCardDrawofEffectMinions(card, p);
             retval += getCardDiscardPenality(name, p);
             retval += getDestroyOwnPenality(name, target, p, lethal);
@@ -8947,7 +9035,7 @@ namespace ConsoleApplication1
             return pen;
         }
 
-        private int getCardDrawPenality(CardDB.cardName name, Minion target, Playfield p, int choice)
+        private int getCardDrawPenality(CardDB.cardName name, Minion target, Playfield p, int choice, bool lethal)
         {
             // penality if carddraw is late or you have enough cards
             int pen = 0;
@@ -8995,6 +9083,7 @@ namespace ConsoleApplication1
 
             if (name == CardDB.cardName.lifetap)
             {
+                if (lethal) return 500;
                 int minmana = 10;
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
@@ -9353,8 +9442,40 @@ namespace ConsoleApplication1
                 return 20;
             }
 
-
+            //------------------------------------------------------------------------------------------------------
             Minion m = target;
+
+            if (card.name == CardDB.cardName.reincarnate)
+            {
+                if (m.own)
+                {
+                    if (m.handcard.card.deathrattle || m.ancestralspirit >= 1 || m.souloftheforest >= 1 || m.enemyBlessingOfWisdom >= 1) return 0;
+                    if (m.handcard.card.Charge && ((m.numAttacksThisTurn == 1 && !m.windfury) || (m.numAttacksThisTurn == 2 && m.windfury))) return 0;
+                    if (m.wounded || m.Angr < m.handcard.card.Attack || (m.silenced && PenalityManager.instance.specialMinions.ContainsKey(m.name))) return 0;
+
+
+                    bool hasOnMinionDiesMinion = false;
+                    foreach (Minion mnn in p.ownMinions)
+                    {
+                        if (mnn.name == CardDB.cardName.scavenginghyena && m.handcard.card.race == 20) hasOnMinionDiesMinion = true;
+                        if (mnn.name == CardDB.cardName.flesheatingghoul || mnn.name == CardDB.cardName.cultmaster) hasOnMinionDiesMinion = true;
+                    }
+                    if (hasOnMinionDiesMinion) return 0;
+
+                    return 500;
+                }
+                else
+                {
+                    if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 4 && !m.taunt) return 500;
+                    if (m.taunt && !m.handcard.card.tank) return 0;
+                    if (m.enemyBlessingOfWisdom >= 1) return 0;
+                    if (m.Angr > m.handcard.card.Attack || m.Hp > m.handcard.card.Health) return 0;
+                    if (m.name == CardDB.cardName.abomination || m.name == CardDB.cardName.zombiechow || m.name == CardDB.cardName.unstableghoul || m.name == CardDB.cardName.dancingswords) return 0;
+                    return 500;
+
+                }
+
+            }
 
             if (card.name == CardDB.cardName.knifejuggler && p.mobsplayedThisTurn > 1 || (p.ownHeroName == HeroEnum.shaman && p.ownAbilityReady == false))
             {
