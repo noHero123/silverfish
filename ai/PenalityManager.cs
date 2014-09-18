@@ -1069,8 +1069,40 @@ namespace HREngine.Bots
                 return 20;
             }
 
-
+            //------------------------------------------------------------------------------------------------------
             Minion m = target;
+
+            if (card.name == CardDB.cardName.reincarnate)
+            {
+                if (m.own)
+                {
+                    if (m.handcard.card.deathrattle || m.ancestralspirit >= 1 || m.souloftheforest >= 1 || m.enemyBlessingOfWisdom >= 1) return 0;
+                    if (m.handcard.card.Charge && ((m.numAttacksThisTurn == 1 && !m.windfury) || (m.numAttacksThisTurn ==2 && m.windfury)) ) return 0;
+                    if (m.wounded || m.Angr < m.handcard.card.Attack || (m.silenced && PenalityManager.instance.specialMinions.ContainsKey(m.name))) return 0;
+
+
+                    bool hasOnMinionDiesMinion = false;
+                    foreach (Minion mnn in p.ownMinions)
+                    {
+                        if (mnn.name == CardDB.cardName.scavenginghyena && m.handcard.card.race == 20) hasOnMinionDiesMinion = true;
+                        if (mnn.name == CardDB.cardName.flesheatingghoul || mnn.name == CardDB.cardName.cultmaster) hasOnMinionDiesMinion = true;
+                    }
+                    if (hasOnMinionDiesMinion) return 0;
+
+                    return 500;
+                }
+                else
+                {
+                    if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 4 && !m.taunt) return 500;
+                    if (m.taunt && !m.handcard.card.tank) return 0;
+                    if (m.enemyBlessingOfWisdom>=1) return 0;
+                    if (m.Angr > m.handcard.card.Attack || m.Hp > m.handcard.card.Health) return 0;
+                    if (m.name == CardDB.cardName.abomination || m.name == CardDB.cardName.zombiechow || m.name == CardDB.cardName.unstableghoul || m.name == CardDB.cardName.dancingswords) return 0;
+                    return 500;
+
+                }
+ 
+            }
 
             if (card.name == CardDB.cardName.knifejuggler && p.mobsplayedThisTurn > 1 ||(p.ownHeroName == HeroEnum.shaman && p.ownAbilityReady==false))
             {

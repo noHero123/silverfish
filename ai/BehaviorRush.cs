@@ -105,7 +105,7 @@ namespace HREngine.Bots
             if (p.enemyMinions.Count >= 4 || m.taunt || (penman.priorityTargets.ContainsKey(m.name) && !m.silenced) || m.Angr >= 5)
             {
                 retval += m.Hp;
-                if (!m.frozen && !(m.handcard.card.name == CardDB.cardName.ancientwatcher && !m.silenced))
+                if (!m.frozen && !((m.name == CardDB.cardName.ancientwatcher || m.name == CardDB.cardName.ragnarosthefirelord) && !m.silenced))
                 {
                     retval += m.Angr * 2;
                     if (m.windfury) retval += 2 * m.Angr;

@@ -32,7 +32,7 @@ namespace HREngine.Bots
         {
             List<Action> returnlist = new List<Action>();
 
-            if (hc.card.type == CardDB.cardtype.MOB && p.ownMinions.Count>=7) return returnlist;
+            if (hc.card.type == CardDB.cardtype.MOB && p.ownMinions.Count >= 7) return returnlist;
 
             for (int i = 1; i < 3; i++)
             {
@@ -86,7 +86,7 @@ namespace HREngine.Bots
                 }
                 if (c.name == CardDB.cardName.ancientofwar)
                 {
-                    
+
                     if (i == 1)
                     {
                         c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_178a);
@@ -110,7 +110,7 @@ namespace HREngine.Bots
                 //cenarius dont need
                 if (c.name == CardDB.cardName.keeperofthegrove)//keeper of the grove
                 {
-                    
+
                     if (i == 1)
                     {
                         c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_166a);
@@ -256,9 +256,9 @@ namespace HREngine.Bots
                     {
                         List<Minion> trgts = c.getTargetsForCard(p);
 
-                        if (isLethalCheck && trgts.Count >=1 && (pen.DamageTargetDatabase.ContainsKey(c.name) || pen.DamageTargetSpecialDatabase.ContainsKey(c.name)))// only target enemy hero during Lethal check!
+                        if (isLethalCheck && trgts.Count >= 1 && (pen.DamageTargetDatabase.ContainsKey(c.name) || pen.DamageTargetSpecialDatabase.ContainsKey(c.name)))// only target enemy hero during Lethal check!
                         {
-                            if (trgts.Count>=1 && trgts[0].isHero && !trgts[0].own) // first minion is enemy hero (or he is not in list)
+                            if (trgts.Count >= 1 && trgts[0].isHero && !trgts[0].own) // first minion is enemy hero (or he is not in list)
                             {
                                 trgts.Clear();
                                 trgts.Add(p.enemyHero);
@@ -339,7 +339,7 @@ namespace HREngine.Bots
             // attack with minions ###############################################################################################################
 
             List<Minion> playedMinions = new List<Minion>(8);
-
+            bool attackordermatters = this.didAttackOrderMatters(p);
             foreach (Minion m in p.ownMinions)
             {
 
@@ -347,43 +347,47 @@ namespace HREngine.Bots
                 {
                     //BEGIN:cut (double/similar) attacking minions out#####################################
                     // DONT LET SIMMILAR MINIONS ATTACK IN ONE TURN (example 3 unlesh the hounds-hounds doesnt need to simulated hole)
-                    List<Minion> tempoo = new List<Minion>(playedMinions);
-                    bool dontattacked = true;
-                    bool isSpecial = pen.specialMinions.ContainsKey(m.name);
-                    foreach (Minion mnn in tempoo)
+                    if (attackordermatters)
                     {
-                        // special minions are allowed to attack in silended and unsilenced state!
-                        //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
-
-                        bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
-
-                        if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
+                        List<Minion> tempoo = new List<Minion>(playedMinions);
+                        bool dontattacked = true;
+                        bool isSpecial = pen.specialMinions.ContainsKey(m.name);
+                        foreach (Minion mnn in tempoo)
                         {
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
-                            continue;
-                        }
+                            // special minions are allowed to attack in silended and unsilenced state!
+                            //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
 
-                        if (isSpecial == otherisSpecial && !m.silenced && !mnn.silenced) // same are special
-                        {
-                            if (m.name != mnn.name) // different name -> take it
+                            bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
+
+                            if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                             {
+                                if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
                                 continue;
                             }
-                            // same name -> test whether they are equal
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
-                            continue;
+
+                            if (isSpecial == otherisSpecial && !m.silenced && !mnn.silenced) // same are special
+                            {
+                                if (m.name != mnn.name) // different name -> take it
+                                {
+                                    continue;
+                                }
+                                // same name -> test whether they are equal
+                                if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
+                                continue;
+                            }
+
                         }
 
-                    }
 
-                    if (dontattacked)
-                    {
-                        playedMinions.Add(m);
-                    }
-                    else
-                    {
-                        //help.logg(m.name + " doesnt need to attack!");
-                        continue;
+                        if (dontattacked)
+                        {
+                            playedMinions.Add(m);
+                        }
+                        else
+                        {
+                            //help.logg(m.name + " doesnt need to attack!");
+                            continue;
+                        }
                     }
                     //END: cut (double/similar) attacking minions out#####################################
 
@@ -445,13 +449,15 @@ namespace HREngine.Bots
                     {
                         break;
                     }
+
+                    if (!attackordermatters) break;
                 }
 
             }
 
 
             // attack with hero
-            if (p.ownHero.Ready && p.ownHero.Angr>=1)
+            if (p.ownHero.Ready && p.ownHero.Angr >= 1)
             {
                 List<Minion> trgts = p.getAttackTargets(true);
 
@@ -498,14 +504,14 @@ namespace HREngine.Bots
             {
                 int abilityPenality = 0;
                 // if we have mage or priest, we have to target something####################################################
-               if (p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS2_034 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.EX1_625t || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.EX1_625t2)
-               {
+                if (p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS2_034 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.EX1_625t || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.EX1_625t2)
+                {
 
                     List<Minion> trgts = p.ownHeroAblility.card.getTargetsForCard(p);
 
                     if (isLethalCheck && (p.ownHeroName == HeroEnum.mage || (p.ownHeroName == HeroEnum.priest && (p.ownHeroAblility.card.name != CardDB.cardName.lesserheal || (p.ownHeroAblility.card.name == CardDB.cardName.lesserheal && p.anzOwnAuchenaiSoulpriest >= 1)))))// only target enemy hero during Lethal check!
                     {
-                        if (trgts.Count >=1 && trgts[0].entitiyID == p.enemyHero.entitiyID)
+                        if (trgts.Count >= 1 && trgts[0].entitiyID == p.enemyHero.entitiyID)
                         {
                             trgts.Clear();
                             trgts.Add(p.enemyHero);
@@ -621,6 +627,7 @@ namespace HREngine.Bots
             // attack with minions ###############################################################################################################
 
             List<Minion> playedMinions = new List<Minion>(8);
+            bool attackordermatters = this.didAttackOrderMatters(p);
 
             foreach (Minion m in p.enemyMinions)
             {
@@ -629,43 +636,46 @@ namespace HREngine.Bots
                 {
                     //BEGIN:cut (double/similar) attacking minions out#####################################
                     // DONT LET SIMMILAR MINIONS ATTACK IN ONE TURN (example 3 unlesh the hounds-hounds doesnt need to simulated hole)
-                    List<Minion> tempoo = new List<Minion>(playedMinions);
-                    bool dontattacked = true;
-                    bool isSpecial = pen.specialMinions.ContainsKey(m.name);
-                    foreach (Minion mnn in tempoo)
+                    if (attackordermatters)
                     {
-                        // special minions are allowed to attack in silended and unsilenced state!
-                        //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
-
-                        bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
-
-                        if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
+                        List<Minion> tempoo = new List<Minion>(playedMinions);
+                        bool dontattacked = true;
+                        bool isSpecial = pen.specialMinions.ContainsKey(m.name);
+                        foreach (Minion mnn in tempoo)
                         {
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
-                            continue;
-                        }
+                            // special minions are allowed to attack in silended and unsilenced state!
+                            //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
 
-                        if (isSpecial == otherisSpecial && !m.silenced && !mnn.silenced) // same are special
-                        {
-                            if (m.name != mnn.name) // different name -> take it
+                            bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
+
+                            if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                             {
+                                if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
                                 continue;
                             }
-                            // same name -> test whether they are equal
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
-                            continue;
+
+                            if (isSpecial == otherisSpecial && !m.silenced && !mnn.silenced) // same are special
+                            {
+                                if (m.name != mnn.name) // different name -> take it
+                                {
+                                    continue;
+                                }
+                                // same name -> test whether they are equal
+                                if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) dontattacked = false;
+                                continue;
+                            }
+
                         }
 
-                    }
-
-                    if (dontattacked)
-                    {
-                        playedMinions.Add(m);
-                    }
-                    else
-                    {
-                        //help.logg(m.name + " doesnt need to attack!");
-                        continue;
+                        if (dontattacked)
+                        {
+                            playedMinions.Add(m);
+                        }
+                        else
+                        {
+                            //help.logg(m.name + " doesnt need to attack!");
+                            continue;
+                        }
                     }
                     //END: cut (double/similar) attacking minions out#####################################
 
@@ -680,17 +690,20 @@ namespace HREngine.Bots
                         ret.Add(a);
                     }
 
+
                     if ((!m.stealth) && trgts.Count == 1 && trgts[0].isHero)//only enemy hero is available als attack
                     {
                         break;
                     }
+                    if (!attackordermatters) break;
                 }
+
 
             }
 
 
             // attack with hero
-            if (p.enemyHero.Ready && p.enemyHero.Angr >=1)
+            if (p.enemyHero.Ready && p.enemyHero.Angr >= 1)
             {
                 List<Minion> trgts = p.getAttackTargets(false);
 
@@ -712,7 +725,7 @@ namespace HREngine.Bots
         public List<Minion> cutAttackTargets(List<Minion> oldlist, Playfield p, bool own)
         {
             //sorts out attack targets (minion + hero attack)
-
+            oldlist.Sort((a, b) => -(a.Hp.CompareTo(b.Hp)));
             List<Minion> retvalues = new List<Minion>(oldlist.Count);
             List<Minion> addedmins = new List<Minion>(oldlist.Count);
 
@@ -737,7 +750,7 @@ namespace HREngine.Bots
 
                         if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                         {
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp <= m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) goingtoadd = false;
                             continue;
                         }
 
@@ -773,6 +786,77 @@ namespace HREngine.Bots
             return retvalues;
         }
 
+        public bool didAttackOrderMatters(Playfield p)
+        {
+            //return true;
+            if (p.isOwnTurn)
+            {
+                if (p.enemySecretCount >= 1) return true;
+                if (p.enemyHero.immune) return true;
+
+            }
+            else
+            {
+                if (p.ownHero.immune) return true;
+            }
+            List<Minion> enemym = (p.isOwnTurn) ? p.enemyMinions : p.ownMinions;
+            List<Minion> ownm = (p.isOwnTurn) ? p.ownMinions : p.enemyMinions;
+
+            int strongestAttack = 0;
+            foreach (Minion m in enemym)
+            {
+                if (m.Angr > strongestAttack) strongestAttack = m.Angr;
+                if (m.taunt) return true;
+                if (m.name == CardDB.cardName.dancingswords || m.name == CardDB.cardName.deathlord) return true;
+            }
+
+            int haspets = 0;
+            bool hashyena = false;
+            bool hasJuggler = false;
+            bool spawnminions = false;
+            foreach (Minion m in ownm)
+            {
+                if (m.name == CardDB.cardName.cultmaster) return true;
+                if (m.name == CardDB.cardName.knifejuggler) hasJuggler = true;
+                if (m.Ready && m.Angr >= 1)
+                {
+                    if (m.AdjacentAngr >= 1) return true;//wolphalfa or flametongue is in play
+                    if (m.name == CardDB.cardName.northshirecleric) return true;
+                    if (m.name == CardDB.cardName.armorsmith) return true;
+                    if (m.name == CardDB.cardName.loothoarder) return true;
+                    //if (m.name == CardDB.cardName.madscientist) return true; // dont change the tactic
+                    if (m.name == CardDB.cardName.sylvanaswindrunner) return true;
+                    if (m.name == CardDB.cardName.darkcultist) return true;
+                    if (m.ownBlessingOfWisdom >= 1) return true;
+                    if (m.name == CardDB.cardName.acolyteofpain) return true;
+                    if (m.name == CardDB.cardName.frothingberserker) return true;
+                    if (m.name == CardDB.cardName.flesheatingghoul) return true;
+                    if (m.name == CardDB.cardName.bloodmagethalnos) return true;
+                    if (m.name == CardDB.cardName.webspinner) return true;
+                    if (m.name == CardDB.cardName.tirionfordring) return true;
+                    if (m.name == CardDB.cardName.baronrivendare) return true;
+
+
+                    //if (m.name == CardDB.cardName.manawraith) return true;
+                    //buffing minions (attack with them last)
+                    if (m.name == CardDB.cardName.raidleader || m.name == CardDB.cardName.stormwindchampion || m.name == CardDB.cardName.timberwolf || m.name == CardDB.cardName.southseacaptain || m.name == CardDB.cardName.murlocwarleader || m.name == CardDB.cardName.grimscaleoracle || m.name == CardDB.cardName.leokk) return true;
+
+
+                    if (m.name == CardDB.cardName.scavenginghyena) hashyena = true;
+                    if (m.handcard.card.race == 20) haspets++;
+                    if (m.name == CardDB.cardName.harvestgolem || m.name == CardDB.cardName.hauntedcreeper || m.souloftheforest >= 1 || m.ancestralspirit >= 1 || m.name == CardDB.cardName.nerubianegg || m.name == CardDB.cardName.savannahhighmane || m.name == CardDB.cardName.sludgebelcher || m.name == CardDB.cardName.cairnebloodhoof || m.name == CardDB.cardName.feugen || m.name == CardDB.cardName.stalagg || m.name == CardDB.cardName.thebeast) spawnminions = true;
+
+                }
+            }
+
+            if (haspets >= 1 && hashyena) return true;
+            if (hasJuggler && spawnminions) return true;
+
+
+
+
+            return false;
+        }
     }
 
 }

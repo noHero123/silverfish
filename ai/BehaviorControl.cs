@@ -174,7 +174,7 @@ namespace HREngine.Bots
         {
             int retval = 5;
             retval += m.Hp * 2;
-            if (!m.frozen && !(m.handcard.card.name == CardDB.cardName.ancientwatcher && !m.silenced))
+            if (!m.frozen && !((m.name == CardDB.cardName.ancientwatcher || m.name == CardDB.cardName.ragnarosthefirelord) && !m.silenced))
             {
                 retval += m.Angr * 2;
                 if (m.windfury) retval += m.Angr * 2;
