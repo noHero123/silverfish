@@ -87,7 +87,7 @@ namespace HREngine.Bots
             }
         }
 
-        public float doallmoves(Playfield playf, bool isLethalCheck)
+        public float doallmoves(Playfield playf, bool isLethalCheck, bool print = false)
         {
             //Helpfunctions.Instance.logg("NXTTRN" + playf.mana);
             if (botBase == null) botBase = Ai.Instance.botBase;
@@ -193,6 +193,7 @@ namespace HREngine.Bots
                     }
                     else
                     {
+                        p.sEnemTurn = this.doEnemySecondTurn;
                         p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
                     }
                 }
@@ -215,7 +216,17 @@ namespace HREngine.Bots
                     }
 
                 }
+                this.bestboard = new Playfield(bestplay);
 
+                if (print)
+                {
+                    Helpfunctions.Instance.ErrorLog("best board after your second turn (value included enemy second turn)----------");
+                    bestplay.printBoard();
+                    bestplay.value = int.MinValue;
+                    bestplay.sEnemTurn = this.doEnemySecondTurn;
+                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(bestplay, false, playaround, true, this.playaroundprob, this.playaroundprob2);
+
+                }
                 this.bestmove = bestplay.getNextAction();
                 this.bestmoveValue = bestval;
                 this.bestboard = new Playfield(bestplay);

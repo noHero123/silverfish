@@ -345,6 +345,8 @@ namespace HREngine.Bots
 
             Playfield tempbestboard = new Playfield();
 
+            tempbestboard.printBoard();
+
             if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
                 bestmove.print();
@@ -380,9 +382,13 @@ namespace HREngine.Bots
                 tempbestboard.printBoard();
             }
 
-            help.logg("AFTER ENEMY TURN:");
-            tempbestboard.sEnemTurn = this.simulateEnemyTurn;
-            tempbestboard.endTurn(this.secondturnsim, this.playaround, true);
+            //help.logg("AFTER ENEMY TURN:" );
+            tempbestboard.sEnemTurn = true;
+            tempbestboard.endTurn(false, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+            help.logg("ENEMY TURN:-----------------------------");
+            tempbestboard.value = int.MinValue;
+            tempbestboard.prepareNextTurn(tempbestboard.isOwnTurn);
+            Ai.Instance.enemyTurnSim.simulateEnemysTurn(tempbestboard, true, playaround, true, this.playaroundprob, this.playaroundprob2);
         }
 
         public void simmulateWholeTurnandPrint()
@@ -401,12 +407,17 @@ namespace HREngine.Bots
                 tempbestboard.doAction(bestmove);
                 tempbestboard.printActionforDummies(tempbestboard.playactions[tempbestboard.playactions.Count - 1]);
 
+                if (this.bestActions.Count == 0)
+                {
+                    help.ErrorLog("end turn");
+                }
             }
             else
             {
                 tempbestboard.mana = -100;
                 help.ErrorLog("end turn");
             }
+
 
             foreach (Action bestmovee in this.bestActions)
             {

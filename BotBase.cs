@@ -693,12 +693,8 @@ namespace HREngine.Bots
                     }
                 }
 
-                this.printlearnmode = sf.updateEverything(behave, this.useExternalProcess, this.passiveWaiting);
-
-                if (this.passiveWaiting && sf.waitingForSilver)
-                {
-                    return new HREngine.API.Actions.MakeNothingAction();
-                }
+                bool templearn = sf.updateEverything(behave, this.useExternalProcess, this.passiveWaiting);
+                if (templearn == true) this.printlearnmode = true;
 
                 if (this.learnmode)
                 {
@@ -707,6 +703,11 @@ namespace HREngine.Bots
                         Ai.Instance.simmulateWholeTurnandPrint();
                     }
                     this.printlearnmode = false;
+                    return new HREngine.API.Actions.MakeNothingAction();
+                }
+
+                if (this.passiveWaiting && sf.waitingForSilver)
+                {
                     return new HREngine.API.Actions.MakeNothingAction();
                 }
 

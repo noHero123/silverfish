@@ -3046,7 +3046,7 @@ namespace ConsoleApplication1
                 this.playedPreparation = false;
                 this.playedmagierinderkirintor = false;
                 this.optionsPlayedThisTurn = 0;
-
+                this.owncarddraw = 0;
                 this.sEnemTurn = false;
             }
             else
@@ -3640,7 +3640,7 @@ namespace ConsoleApplication1
 
             if (this.tempTrigger.minionsGotHealed >= 1)
             {
-                triggerACharGotHealed();//possible effects: draw card
+                triggerAMinionGotHealed();//possible effects: draw card
                 this.tempTrigger.minionsGotHealed = 0;
             }
 
@@ -3676,7 +3676,7 @@ namespace ConsoleApplication1
         {
             foreach (Minion mnn in this.ownMinions)
             {
-                if (mnn.silenced || mnn.Hp <= 0) continue;
+                if (mnn.silenced) continue;
                 if (mnn.handcard.card.name == CardDB.cardName.lightwarden)
                 {
                     minionGetBuffed(mnn, 2 * this.tempTrigger.charsGotHealed, 0);
@@ -3684,7 +3684,7 @@ namespace ConsoleApplication1
             }
             foreach (Minion mnn in this.enemyMinions)
             {
-                if (mnn.silenced || mnn.Hp <= 0) continue;
+                if (mnn.silenced) continue;
                 if (mnn.handcard.card.name == CardDB.cardName.lightwarden)
                 {
                     minionGetBuffed(mnn, 2 * this.tempTrigger.charsGotHealed, 0);
@@ -3694,9 +3694,10 @@ namespace ConsoleApplication1
 
         public void triggerAMinionGotHealed()
         {
+            //also dead minions trigger this
             foreach (Minion mnn in this.ownMinions)
             {
-                if (mnn.silenced || mnn.Hp <= 0) continue;
+                if (mnn.silenced) continue;
                 if (mnn.handcard.card.name == CardDB.cardName.northshirecleric)
                 {
                     for (int i = 0; i < this.tempTrigger.minionsGotHealed; i++)
@@ -3708,7 +3709,7 @@ namespace ConsoleApplication1
 
             foreach (Minion mnn in this.enemyMinions)
             {
-                if (mnn.silenced || mnn.Hp <= 0) continue;
+                if (mnn.silenced) continue;
                 if (mnn.handcard.card.name == CardDB.cardName.northshirecleric)
                 {
                     for (int i = 0; i < this.tempTrigger.minionsGotHealed; i++)
@@ -5070,7 +5071,7 @@ namespace ConsoleApplication1
             Helpfunctions.Instance.logg("board: " + value);
             Helpfunctions.Instance.logg("pen " + this.evaluatePenality);
             Helpfunctions.Instance.logg("mana " + this.mana + "/" + this.ownMaxMana);
-            Helpfunctions.Instance.logg("cardsplayed: " + this.cardsPlayedThisTurn + " handsize: " + this.owncards.Count);
+            Helpfunctions.Instance.logg("cardsplayed: " + this.cardsPlayedThisTurn + " handsize: " + this.owncards.Count + " eh " + this.enemyAnzCards);
 
             Helpfunctions.Instance.logg("ownhero: ");
             Helpfunctions.Instance.logg("ownherohp: " + this.ownHero.Hp + " + " + this.ownHero.armor);
@@ -5572,6 +5573,8 @@ namespace ConsoleApplication1
 
             Playfield tempbestboard = new Playfield();
 
+            tempbestboard.printBoard();
+
             if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
                 bestmove.print();
@@ -5607,9 +5610,13 @@ namespace ConsoleApplication1
                 tempbestboard.printBoard();
             }
 
-            help.logg("AFTER ENEMY TURN:");
-            tempbestboard.sEnemTurn = this.simulateEnemyTurn;
-            tempbestboard.endTurn(this.secondturnsim, this.playaround, true);
+            //help.logg("AFTER ENEMY TURN:" );
+            tempbestboard.sEnemTurn = true;
+            tempbestboard.endTurn(false, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+            help.logg("ENEMY TURN:-----------------------------");
+            tempbestboard.value = int.MinValue;
+            tempbestboard.prepareNextTurn(tempbestboard.isOwnTurn);
+            Ai.Instance.enemyTurnSim.simulateEnemysTurn(tempbestboard, true, playaround, true, this.playaroundprob, this.playaroundprob2);
         }
 
         public void simmulateWholeTurnandPrint()
@@ -5628,12 +5635,17 @@ namespace ConsoleApplication1
                 tempbestboard.doAction(bestmove);
                 tempbestboard.printActionforDummies(tempbestboard.playactions[tempbestboard.playactions.Count - 1]);
 
+                if (this.bestActions.Count == 0)
+                {
+                    help.ErrorLog("end turn");
+                }
             }
             else
             {
                 tempbestboard.mana = -100;
                 help.ErrorLog("end turn");
             }
+
 
             foreach (Action bestmovee in this.bestActions)
             {
@@ -6126,9 +6138,12 @@ namespace ConsoleApplication1
 
         public void printPosmoves()
         {
+            int i = 0;
             foreach (Playfield p in this.posmoves)
             {
                 p.printBoard();
+                i++;
+                if (i >= 400) break;
             }
         }
 
@@ -6145,7 +6160,11 @@ namespace ConsoleApplication1
         {
             bool havedonesomething = true;
             posmoves.Clear();
-
+            if (print)
+            {
+                Helpfunctions.Instance.ErrorLog("board at enemyturn start-----------------------------");
+                rootfield.printBoard();
+            }
             posmoves.Add(new Playfield(rootfield));
             //posmoves[0].prepareNextTurn(false);
             List<Playfield> temp = new List<Playfield>();
@@ -6279,12 +6298,16 @@ namespace ConsoleApplication1
                     bestval = val;
                 }
             }
-            if (print) bestplay.printBoard();
+            if (print)
+            {
+                Helpfunctions.Instance.ErrorLog("best enemy board----------------------------------");
+                bestplay.printBoard();
+            }
             rootfield.value = bestplay.value;
             if (simulateTwoTurns && bestplay.value > -1000)
             {
                 bestplay.prepareNextTurn(true);
-                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false);
+                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false, print);
             }
 
 
@@ -6496,7 +6519,7 @@ namespace ConsoleApplication1
             }
         }
 
-        public float doallmoves(Playfield playf, bool isLethalCheck)
+        public float doallmoves(Playfield playf, bool isLethalCheck, bool print = false)
         {
             //Helpfunctions.Instance.logg("NXTTRN" + playf.mana);
             if (botBase == null) botBase = Ai.Instance.botBase;
@@ -6602,6 +6625,7 @@ namespace ConsoleApplication1
                     }
                     else
                     {
+                        p.sEnemTurn = this.doEnemySecondTurn;
                         p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
                     }
                 }
@@ -6624,7 +6648,17 @@ namespace ConsoleApplication1
                     }
 
                 }
+                this.bestboard = new Playfield(bestplay);
 
+                if (print)
+                {
+                    Helpfunctions.Instance.ErrorLog("best board after your second turn (value included enemy second turn)----------");
+                    bestplay.printBoard();
+                    bestplay.value = int.MinValue;
+                    bestplay.sEnemTurn = this.doEnemySecondTurn;
+                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(bestplay, false, playaround, true, this.playaroundprob, this.playaroundprob2);
+
+                }
                 this.bestmove = bestplay.getNextAction();
                 this.bestmoveValue = bestval;
                 this.bestboard = new Playfield(bestplay);
@@ -9083,22 +9117,32 @@ namespace ConsoleApplication1
 
             if (name == CardDB.cardName.lifetap)
             {
-                if (lethal) return 500;
+                if (lethal) return 500; //RR no benefit for lethal check
                 int minmana = 10;
+                bool cardOnLimit = false;
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
                     if (hc.manacost <= minmana)
                     {
                         minmana = hc.manacost;
                     }
+                    if (hc.getManaCost(p) == p.ownMaxMana)
+                    {
+                        cardOnLimit = true;
+                    }
+
                 }
+
+                if (Ai.Instance.botBase is BehaviorRush && p.ownMaxMana <= 3 && cardOnLimit) return 6; //RR penalization for drawing the 3 first turns if we have a card in hand that we won't be able to play in Rush
+
+
                 if (p.owncards.Count + p.cardsPlayedThisTurn <= 5 && minmana > p.ownMaxMana) return 0;
                 if (p.owncards.Count + p.cardsPlayedThisTurn > 5) return 25;
                 return Math.Max(-carddraw + 2 * p.optionsPlayedThisTurn + p.ownMaxMana - p.mana, 0);
             }
 
-            if (p.owncards.Count + carddraw > 10) return 15 * (p.owncarddraw + p.owncards.Count - 10);
-            if (p.owncards.Count + p.cardsPlayedThisTurn > 5) return 5;
+            if (p.owncards.Count + carddraw > 10) return 15 * (p.owncards.Count + carddraw - 10);
+            if (p.owncards.Count + p.cardsPlayedThisTurn > 5) return (5 * carddraw) + 1;
 
             return -carddraw + 2 * p.optionsPlayedThisTurn + p.ownMaxMana - p.mana;
             /*pen = -carddraw + p.ownMaxMana - p.mana;
@@ -18766,7 +18810,7 @@ namespace ConsoleApplication1
 
             if (!silenced && (name == CardDB.cardName.ragnarosthefirelord || name == CardDB.cardName.ancientwatcher)) return;
 
-            if (!frozen && ((charge >= 1 && playedThisTurn) || !playedThisTurn) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury))) Ready = true;
+            if (!frozen && ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury))) Ready = true;
 
         }
 

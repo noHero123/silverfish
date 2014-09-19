@@ -1905,7 +1905,7 @@ namespace HREngine.Bots
                 this.playedPreparation = false;
                 this.playedmagierinderkirintor = false;
                 this.optionsPlayedThisTurn = 0;
-
+                this.owncarddraw = 0;
                 this.sEnemTurn = false;
             }
             else
@@ -2499,7 +2499,7 @@ namespace HREngine.Bots
 
             if (this.tempTrigger.minionsGotHealed >= 1)
             {
-                triggerACharGotHealed();//possible effects: draw card
+                triggerAMinionGotHealed();//possible effects: draw card
                 this.tempTrigger.minionsGotHealed = 0;
             }
 
@@ -2535,7 +2535,7 @@ namespace HREngine.Bots
         {
             foreach (Minion mnn in this.ownMinions)
             {
-                if (mnn.silenced || mnn.Hp <= 0) continue;
+                if (mnn.silenced) continue;
                 if (mnn.handcard.card.name == CardDB.cardName.lightwarden)
                 {
                     minionGetBuffed(mnn, 2 * this.tempTrigger.charsGotHealed, 0);
@@ -2543,7 +2543,7 @@ namespace HREngine.Bots
             }
             foreach (Minion mnn in this.enemyMinions)
             {
-                if (mnn.silenced || mnn.Hp <= 0) continue;
+                if (mnn.silenced) continue;
                 if (mnn.handcard.card.name == CardDB.cardName.lightwarden)
                 {
                     minionGetBuffed(mnn, 2 * this.tempTrigger.charsGotHealed, 0);
@@ -2553,9 +2553,10 @@ namespace HREngine.Bots
 
         public void triggerAMinionGotHealed()
         {
+            //also dead minions trigger this
             foreach (Minion mnn in this.ownMinions)
             {
-                if (mnn.silenced || mnn.Hp <= 0) continue;
+                if (mnn.silenced) continue;
                 if (mnn.handcard.card.name == CardDB.cardName.northshirecleric)
                 {
                     for (int i = 0; i < this.tempTrigger.minionsGotHealed; i++)
@@ -2567,7 +2568,7 @@ namespace HREngine.Bots
 
             foreach (Minion mnn in this.enemyMinions)
             {
-                if (mnn.silenced || mnn.Hp <= 0) continue;
+                if (mnn.silenced) continue;
                 if (mnn.handcard.card.name == CardDB.cardName.northshirecleric)
                 {
                     for (int i = 0; i < this.tempTrigger.minionsGotHealed; i++)
@@ -3929,7 +3930,7 @@ namespace HREngine.Bots
             Helpfunctions.Instance.logg("board: " + value);
             Helpfunctions.Instance.logg("pen " + this.evaluatePenality);
             Helpfunctions.Instance.logg("mana " + this.mana + "/" + this.ownMaxMana);
-            Helpfunctions.Instance.logg("cardsplayed: " + this.cardsPlayedThisTurn + " handsize: " + this.owncards.Count);
+            Helpfunctions.Instance.logg("cardsplayed: " + this.cardsPlayedThisTurn + " handsize: " + this.owncards.Count + " eh " + this.enemyAnzCards);
 
             Helpfunctions.Instance.logg("ownhero: ");
             Helpfunctions.Instance.logg("ownherohp: " + this.ownHero.Hp + " + " + this.ownHero.armor);

@@ -711,22 +711,32 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.lifetap)
             {
-                if(lethal) return 500;
+                if (lethal) return 500; //RR no benefit for lethal check
                 int minmana = 10;
+                bool cardOnLimit = false;
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
                     if (hc.manacost <= minmana)
                     {
                         minmana = hc.manacost;
                     }
+                    if (hc.getManaCost(p) == p.ownMaxMana)
+                    {
+                        cardOnLimit = true;
+                    }
+
                 }
+
+                if (Ai.Instance.botBase is BehaviorRush && p.ownMaxMana <= 3 && cardOnLimit) return 6; //RR penalization for drawing the 3 first turns if we have a card in hand that we won't be able to play in Rush
+
+
                 if (p.owncards.Count + p.cardsPlayedThisTurn <= 5 && minmana > p.ownMaxMana) return 0;
                 if (p.owncards.Count + p.cardsPlayedThisTurn > 5) return 25;
                 return Math.Max(-carddraw + 2 * p.optionsPlayedThisTurn + p.ownMaxMana - p.mana, 0);
             }
 
-            if (p.owncards.Count + carddraw > 10) return 15 * (p.owncarddraw + p.owncards.Count - 10);
-            if (p.owncards.Count + p.cardsPlayedThisTurn > 5) return 5;
+            if (p.owncards.Count + carddraw > 10) return 15 * (p.owncards.Count + carddraw - 10);
+            if (p.owncards.Count + p.cardsPlayedThisTurn > 5) return (5 * carddraw) + 1;
 
             return -carddraw + 2 * p.optionsPlayedThisTurn + p.ownMaxMana - p.mana;
             /*pen = -carddraw + p.ownMaxMana - p.mana;

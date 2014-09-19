@@ -17,7 +17,11 @@ namespace HREngine.Bots
         {
             bool havedonesomething = true;
             posmoves.Clear();
-
+            if (print)
+            {
+                Helpfunctions.Instance.ErrorLog("board at enemyturn start-----------------------------");
+                rootfield.printBoard();
+            }
             posmoves.Add(new Playfield(rootfield));
             //posmoves[0].prepareNextTurn(false);
             List<Playfield> temp = new List<Playfield>();
@@ -38,7 +42,7 @@ namespace HREngine.Bots
                 }
             }
 
-           
+
 
             //play ability!
             if (posmoves[0].enemyAbilityReady && enemMana >= 2 && posmoves[0].enemyHeroAblility.card.canplayCard(posmoves[0], 0) && !rootfield.loatheb)
@@ -80,7 +84,7 @@ namespace HREngine.Bots
                 m.updateReadyness();
             }
 
-             doSomeBasicEnemyAi(posmoves[0]);
+            doSomeBasicEnemyAi(posmoves[0]);
 
             int count = 0;
             //movegen...
@@ -151,12 +155,16 @@ namespace HREngine.Bots
                     bestval = val;
                 }
             }
-            if (print) bestplay.printBoard();
+            if (print)
+            {
+                Helpfunctions.Instance.ErrorLog("best enemy board----------------------------------");
+                bestplay.printBoard();
+            }
             rootfield.value = bestplay.value;
             if (simulateTwoTurns && bestplay.value > -1000)
             {
                 bestplay.prepareNextTurn(true);
-                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false);
+                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false, print);
             }
 
 
@@ -174,7 +182,7 @@ namespace HREngine.Bots
 
             foreach (Minion m in p.enemyMinions.ToArray())
             {
-                if(m.silenced) continue;
+                if (m.silenced) continue;
                 if (p.enemyAnzCards >= 2 && (m.name == CardDB.cardName.gadgetzanauctioneer || m.name == CardDB.cardName.starvingbuzzard))
                 {
                     if (p.enemyDeckSize >= 1)
@@ -199,7 +207,7 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (m.name == CardDB.cardName.illidanstormrage && p.enemyAnzCards>=1)
+                if (m.name == CardDB.cardName.illidanstormrage && p.enemyAnzCards >= 1)
                 {
                     p.callKid(flame, p.enemyMinions.Count, false);
                 }
@@ -207,7 +215,7 @@ namespace HREngine.Bots
                 if (m.name == CardDB.cardName.questingadventurer && p.enemyAnzCards >= 1)
                 {
                     p.minionGetBuffed(m, 1, 1);
-                    if (p.enemyAnzCards >= 3 && p.enemyMaxMana >=5)
+                    if (p.enemyAnzCards >= 3 && p.enemyMaxMana >= 5)
                     {
                         p.minionGetBuffed(m, 1, 1);
                     }
@@ -256,7 +264,7 @@ namespace HREngine.Bots
                     p.minionGetBuffed(m, 1, 0);
                 }
 
-                if (m.name == CardDB.cardName.gurubashiberserker && m.Hp>=5 && p.enemyAnzCards >=3)
+                if (m.name == CardDB.cardName.gurubashiberserker && m.Hp >= 5 && p.enemyAnzCards >= 3)
                 {
                     p.minionGetBuffed(m, 3, 0);
                 }

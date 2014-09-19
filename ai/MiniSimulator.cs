@@ -453,9 +453,12 @@ namespace HREngine.Bots
 
         public void printPosmoves()
         {
+            int i = 0;
             foreach (Playfield p in this.posmoves)
             {
                 p.printBoard();
+                i++;
+                if (i >= 400) break;
             }
         }
 
