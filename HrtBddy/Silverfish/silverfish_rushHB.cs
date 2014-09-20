@@ -561,7 +561,7 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "112.2";
+        public string versionnumber = "112.3";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1119,7 +1119,7 @@ namespace SilverfishRush
                         graveYard.Add(gyi);
                     }
 
-                    if (ent.GetTag(GAME_TAG.CREATOR) != owncontroler || ent.GetTag(GAME_TAG.CREATOR) != enemycontroler) continue; //if creator is someone else, it was not played
+                    if (ent.GetTag(GAME_TAG.CREATOR) != owncontroler && ent.GetTag(GAME_TAG.CREATOR) != enemycontroler) continue; //if creator is someone else, it was not played
 
 
                     if (ent.GetTag(GAME_TAG.CREATOR) == owncontroler)

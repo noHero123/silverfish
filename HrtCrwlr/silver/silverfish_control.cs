@@ -968,7 +968,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "112.2";
+        public string versionnumber = "112.3";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1581,7 +1581,7 @@ namespace HREngine.Bots
                             GraveYardItem gyi = new GraveYardItem(cardid, ent.GetEntityId(), ent.GetControllerId() == owncontroler);
                             graveYard.Add(gyi);
                         }
-                        if (ent.GetTag(HRGameTag.CREATOR) != owncontroler || ent.GetTag(HRGameTag.CREATOR) != enemycontroler) continue; //if creator is someone else, it was not played
+                        if (ent.GetTag(HRGameTag.CREATOR) != owncontroler && ent.GetTag(HRGameTag.CREATOR) != enemycontroler) continue; //if creator is someone else, it was not played
                         if (ent.GetControllerId() == owncontroler)
                         {
                             ownCards.Add(cardid);
