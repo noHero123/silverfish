@@ -1119,7 +1119,7 @@ namespace SilverfishRush
                         graveYard.Add(gyi);
                     }
 
-                    int creator = ent.GetTag(HRGameTag.CREATOR);
+                    int creator = ent.GetTag(GAME_TAG.CREATOR);
                     if (creator != 0 && creator != owncontroler && creator != enemycontroler) continue; //if creator is someone else, it was not played
 
                     if (ent.GetTag(GAME_TAG.CONTROLLER) == owncontroler)
