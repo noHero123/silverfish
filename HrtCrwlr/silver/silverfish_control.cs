@@ -968,7 +968,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "112.3";
+        public string versionnumber = "112.4";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1118,8 +1118,8 @@ namespace HREngine.Bots
             if (runExtern)
             {
                 Helpfunctions.Instance.logg("recalc-check###########");
-                p.printBoard();
-                Ai.Instance.nextMoveGuess.printBoard();
+                //p.printBoard();
+                //Ai.Instance.nextMoveGuess.printBoard();
                 if (p.isEqual(Ai.Instance.nextMoveGuess, true))
                 {
 
@@ -1581,7 +1581,8 @@ namespace HREngine.Bots
                             GraveYardItem gyi = new GraveYardItem(cardid, ent.GetEntityId(), ent.GetControllerId() == owncontroler);
                             graveYard.Add(gyi);
                         }
-                        if (ent.GetTag(HRGameTag.CREATOR) != owncontroler && ent.GetTag(HRGameTag.CREATOR) != enemycontroler) continue; //if creator is someone else, it was not played
+                        int creator = ent.GetTag(HRGameTag.CREATOR);
+                        if (creator != 0 && creator != owncontroler && creator != enemycontroler ) continue; //if creator is someone else, it was not played
                         if (ent.GetControllerId() == owncontroler)
                         {
                             ownCards.Add(cardid);
@@ -1926,7 +1927,7 @@ namespace HREngine.Bots
             }
             if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
             {
-                retval += p.owncarddraw * 500;
+                if (p.turnCounter < 2) retval += p.owncarddraw * 500;
                 retval -= 1000;
             }
             if (p.ownHero.Hp <= 0) retval = -10000;
@@ -2053,7 +2054,7 @@ namespace HREngine.Bots
             }
             if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
             {
-                retval += p.owncarddraw * 500;
+                if (p.turnCounter < 2) retval += p.owncarddraw * 500;
                 retval -= 1000;
             }
             if (p.ownHero.Hp <= 0) retval = -10000;
@@ -6368,9 +6369,9 @@ namespace HREngine.Bots
             this.minionGetOrEraseAllAreaBuffs(m, true);
         }
 
-        public void minionGetDamageOrHeal(Minion m, int dmgOrHeal)
+        public void minionGetDamageOrHeal(Minion m, int dmgOrHeal, bool dontDmgLoss = false)
         {
-            m.getDamageOrHeal(dmgOrHeal, this, false, false);
+            m.getDamageOrHeal(dmgOrHeal, this, false, dontDmgLoss);
         }
 
 
@@ -6381,7 +6382,7 @@ namespace HREngine.Bots
             foreach (Minion m in temp)
             {
                 if (frozen) m.frozen = true;
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
         }
 
@@ -6391,7 +6392,7 @@ namespace HREngine.Bots
             List<Minion> temp = (own) ? this.ownMinions : this.enemyMinions;
             foreach (Minion m in temp)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             if (own) minionGetDamageOrHeal(this.ownHero, damages);
             else minionGetDamageOrHeal(this.enemyHero, damages);
@@ -6401,11 +6402,11 @@ namespace HREngine.Bots
         {
             foreach (Minion m in this.ownMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             foreach (Minion m in this.enemyMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             minionGetDamageOrHeal(this.ownHero, damages);
             minionGetDamageOrHeal(this.enemyHero, damages);
@@ -6415,11 +6416,11 @@ namespace HREngine.Bots
         {
             foreach (Minion m in this.ownMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             foreach (Minion m in this.enemyMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
         }
 
@@ -6763,7 +6764,7 @@ namespace HREngine.Bots
 
             this.nextMoveGuess = new Playfield();
             //only debug:
-            this.nextMoveGuess.printBoardDebug();
+            //this.nextMoveGuess.printBoardDebug();
 
             if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
@@ -6804,7 +6805,7 @@ namespace HREngine.Bots
                 this.bestActions.RemoveAt(0);
             }
             if (this.nextMoveGuess == null) this.nextMoveGuess = new Playfield();
-            this.nextMoveGuess.printBoardDebug();
+            //this.nextMoveGuess.printBoardDebug();
 
             if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
@@ -7805,7 +7806,7 @@ namespace HREngine.Bots
                 int bval = 1;
                 if (p.enemyMaxMana > 4) bval = 2;
                 if (p.enemyMaxMana > 7) bval = 3;
-                p.minionGetBuffed(p.enemyMinions[p.enemyMinions.Count - 1], bval - 1, bval);
+                if (p.enemyMinions.Count >= 1) p.minionGetBuffed(p.enemyMinions[p.enemyMinions.Count - 1], bval - 1, bval);
             }
         }
 

@@ -287,7 +287,7 @@ namespace HREngine.Bots
                 int bval = 1;
                 if (p.enemyMaxMana > 4) bval = 2;
                 if (p.enemyMaxMana > 7) bval = 3;
-                p.minionGetBuffed(p.enemyMinions[p.enemyMinions.Count - 1], bval - 1, bval);
+                if(p.enemyMinions.Count >=1) p.minionGetBuffed(p.enemyMinions[p.enemyMinions.Count - 1], bval - 1, bval);
             }
         }
 

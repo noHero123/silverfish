@@ -159,7 +159,7 @@ namespace HREngine.Bots
             }
             if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
             {
-                retval += p.owncarddraw * 500;
+                if (p.turnCounter < 2) retval += p.owncarddraw * 500;
                 retval -= 1000;
             }
             if (p.ownHero.Hp <= 0) retval = -10000;

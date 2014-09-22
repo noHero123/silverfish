@@ -61,7 +61,6 @@
     <Compile Include="ai\Playfield.cs" />
     <Compile Include="ai\Probabilitymaker.cs" />
     <Compile Include="BotBase.cs" />
-    <Compile Include="BoardControl.cs" />
     <Compile Include="ai\PenalityManager.cs" />
     <Compile Include="cards\Sim_CS1h_001.cs" />
     <Compile Include="cards\Sim_CS1_042.cs" />
@@ -1124,8 +1123,6 @@
     <Compile Include="Penalties\Pen_tt_010.cs" />
     <Compile Include="Penalties\Pen_tt_010a.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Ruler.cs" />
-    <Compile Include="Rush.cs" />
     <Compile Include="ai\Settings.cs" />
     <Compile Include="Silverfish.cs" />
     <Compile Include="ai\action.cs" />

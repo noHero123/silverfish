@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "112.3";
+        public string versionnumber = "112.4";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -66,17 +66,19 @@ namespace HREngine.Bots
         {
             this.singleLog = snglLg;
             Helpfunctions.Instance.ErrorLog("init Silverfish");
-            string path = (HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "UltimateLogs" + System.IO.Path.DirectorySeparatorChar;
+            string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "UltimateLogs" + System.IO.Path.DirectorySeparatorChar;
             System.IO.Directory.CreateDirectory(path);
-            sttngs.setFilePath((HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "Bots" + System.IO.Path.DirectorySeparatorChar + "silver" + System.IO.Path.DirectorySeparatorChar);
-
+            sttngs.setFilePath(HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "Bots" + System.IO.Path.DirectorySeparatorChar + "silver" + System.IO.Path.DirectorySeparatorChar);
+            
+            Helpfunctions.Instance.ErrorLog(path);
+            
             if (!singleLog)
             {
                 sttngs.setLoggPath(path);
             }
             else
             {
-                sttngs.setLoggPath((HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13));
+                sttngs.setLoggPath(HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar);
                 sttngs.setLoggFile("UILogg.txt");
                 Helpfunctions.Instance.createNewLoggfile();
             }
@@ -162,8 +164,8 @@ namespace HREngine.Bots
             if (runExtern)
             {
                 Helpfunctions.Instance.logg("recalc-check###########");
-                p.printBoard();
-                Ai.Instance.nextMoveGuess.printBoard();
+                //p.printBoard();
+                //Ai.Instance.nextMoveGuess.printBoard();
                 if (p.isEqual(Ai.Instance.nextMoveGuess, true))
                 {
                    
@@ -628,8 +630,10 @@ namespace HREngine.Bots
                             graveYard.Add(gyi);
                         }
 
-                        if (ent.GetTag(HRGameTag.CREATOR) != owncontroler && ent.GetTag(HRGameTag.CREATOR) != enemycontroler) continue; //if creator is someone else, it was not played
-                        if (ent.GetCreatorId() == owncontroler) //or controler?
+                        int creator = ent.GetTag(HRGameTag.CREATOR);
+                        if (creator != 0 && creator != owncontroler && creator != enemycontroler) continue; //if creator is someone else, it was not played
+
+                        if (ent.GetControllerId() == owncontroler) //or controler?
                         {
                             ownCards.Add(cardid);
                         }

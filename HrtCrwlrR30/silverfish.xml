@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Hearthcrawler.CustomClass>
+   <InputFile>silver/silver.dll</InputFile>
+   <SettingsFile>silver/silverfish.xml</SettingsFile>
+   <ClassName>Bot</ClassName>
+</Hearthcrawler.CustomClass>

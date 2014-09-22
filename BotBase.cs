@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace HREngine.Bots
 {
 
-   public abstract class Bot : API.IBot
+   public class Bot : API.IBot
    {
        //private int stopAfterWins = 30;
        private int concedeLvl = 5; // the rank, till you want to concede
@@ -33,6 +33,7 @@ namespace HREngine.Bots
 
        public Bot()
        {
+           Helpfunctions.Instance.ErrorLog("gogo");
            OnVictory = HandleWining;
            OnLost = HandleLosing;
            OnBattleStateUpdate = HandleOnBattleStateUpdate;
@@ -41,7 +42,16 @@ namespace HREngine.Bots
            bool concede = false;
            bool writeToSingleFile = false;
 
-
+           try
+           {
+               string comboselect = HRSettings.Get.ReadSetting("silverfish.xml", "uai.profile");
+               if (comboselect == "rush") this.behave = new BehaviorRush();
+               if (comboselect == "mana") this.behave = new BehaviorMana();
+           }
+           catch
+           {
+               Helpfunctions.Instance.ErrorLog("cant read behaviour");
+           }
 
            try
            {
@@ -349,7 +359,8 @@ namespace HREngine.Bots
             string[] lines = new string[0] { };
             try
             {
-                string path = (HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "Common" + System.IO.Path.DirectorySeparatorChar;
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "Common" + System.IO.Path.DirectorySeparatorChar;
+                //string path = (HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "Common" + System.IO.Path.DirectorySeparatorChar;
                 lines = System.IO.File.ReadAllLines(path + "Settings.ini");
             }
             catch
@@ -373,7 +384,7 @@ namespace HREngine.Bots
 
             try
             {
-                string path = (HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "Common" + System.IO.Path.DirectorySeparatorChar;
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "Common" + System.IO.Path.DirectorySeparatorChar;
                 System.IO.File.WriteAllLines(path + "Settings.ini", newlines.ToArray());
             }
             catch
@@ -388,7 +399,7 @@ namespace HREngine.Bots
             string[] lines = new string[0] { };
             try
             {
-                string path = (HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "Common" + System.IO.Path.DirectorySeparatorChar;
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "Common" + System.IO.Path.DirectorySeparatorChar;
                 lines = System.IO.File.ReadAllLines(path + "Settings.ini");
             }
             catch
@@ -449,7 +460,7 @@ namespace HREngine.Bots
 
             try
             {
-                string path = (HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "Common" + System.IO.Path.DirectorySeparatorChar;
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "Common" + System.IO.Path.DirectorySeparatorChar;
                 System.IO.File.WriteAllLines(path + "Settings.ini", newlines.ToArray());
             }
             catch
@@ -932,7 +943,7 @@ namespace HREngine.Bots
         }
 
 
-        protected virtual HRCard GetMinionByPriority(HRCard lastMinion = null)
+       /* protected virtual HRCard GetMinionByPriority(HRCard lastMinion = null)
         {
             return null;
         }
@@ -940,7 +951,7 @@ namespace HREngine.Bots
         protected virtual Behavior getBotBehave()
         {
             return null;
-        }
+        }*/
 
     }
 

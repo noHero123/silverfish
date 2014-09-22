@@ -3852,9 +3852,9 @@ namespace HREngine.Bots
             this.minionGetOrEraseAllAreaBuffs(m, true);
         }
 
-        public void minionGetDamageOrHeal(Minion m, int dmgOrHeal)
+        public void minionGetDamageOrHeal(Minion m, int dmgOrHeal, bool dontDmgLoss = false)
         {
-            m.getDamageOrHeal(dmgOrHeal, this, false, false);
+            m.getDamageOrHeal(dmgOrHeal, this, false, dontDmgLoss);
         }
 
 
@@ -3865,7 +3865,7 @@ namespace HREngine.Bots
             foreach (Minion m in temp)
             {
                 if (frozen) m.frozen = true;
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
         }
 
@@ -3875,7 +3875,7 @@ namespace HREngine.Bots
             List<Minion> temp = (own) ? this.ownMinions : this.enemyMinions;
             foreach (Minion m in temp)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             if (own) minionGetDamageOrHeal(this.ownHero, damages);
             else minionGetDamageOrHeal(this.enemyHero, damages);
@@ -3885,11 +3885,11 @@ namespace HREngine.Bots
         {
             foreach (Minion m in this.ownMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             foreach (Minion m in this.enemyMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             minionGetDamageOrHeal(this.ownHero, damages);
             minionGetDamageOrHeal(this.enemyHero, damages);
@@ -3899,11 +3899,11 @@ namespace HREngine.Bots
         {
             foreach (Minion m in this.ownMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             foreach (Minion m in this.enemyMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
         }
 

@@ -160,7 +160,7 @@ namespace HREngine.Bots
 
             this.nextMoveGuess = new Playfield();
             //only debug:
-            this.nextMoveGuess.printBoardDebug();
+            //this.nextMoveGuess.printBoardDebug();
 
             if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
@@ -201,7 +201,7 @@ namespace HREngine.Bots
                 this.bestActions.RemoveAt(0);
             }
             if (this.nextMoveGuess == null) this.nextMoveGuess = new Playfield();
-            this.nextMoveGuess.printBoardDebug();
+            //this.nextMoveGuess.printBoardDebug();
 
             if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {

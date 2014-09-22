@@ -1,0 +1,87 @@
+<Settings>
+<Sections>
+<Section id="silver0" title="behaviour">
+	<Setting name="uai.profile" type="combo" description="Available Profiles:" default="control">
+            <SettingItem type="combo-item" value="control" />
+            <SettingItem type="combo-item" value="rush" />
+        </Setting>
+</Section>
+<Section id="silver1" title="settings">
+<Description>General settings related to ultimate AI.&lt;br&gt;</Description>
+<Setting name="uai.wwuaid" type="boolean" description="tutor mode" />
+<Setting name="uai.extern" default="true" type="boolean" description="use external process for calculations (recomended)" />
+<Label>uses Silver.exe for calculations, make sure you started it manually.</Label>
+<Setting name="uai.passivewait" default="true" type="boolean" description="Hearthstone doesnt freez while waiting for silver.exe" />
+<Label>while waiting for the result of the external calculation, Hearthstone will not freeze.</Label>
+<Setting name="uai.autoconcede" type="boolean" description="autoconcede" />
+<Setting name="uai.concedelvl" default="20" type="text" description="concede till rank: (is ignored if autoconcede isnt checked)" />
+<Label></Label>
+<Setting name="uai.enemyconcede" type="boolean" description="concede whether enemy has lethal" />
+<Label></Label>
+<Setting name="uai.enemyfacehp" default="15" type="text" description="attack enemys face hp:" />
+<Label>the hp of the enemy, when your hero is allowed to attack his face (if he doesnt own another weapon).</Label>
+</Section>
+<Section id="silver2" title="info">
+<Description>info about uai.&lt;br&gt;</Description>
+<Setting name="uai.version" default="0" type="text" description="VersionNumber:" />
+<Label></Label>
+<Setting name="uai.wins" default="0" type="text" description="wins" />
+<Label></Label>
+<Setting name="uai.loses" default="0" type="text" description="loses" />
+<Label></Label>
+<Setting name="uai.concedes" default="0" type="text" description="concedes" />
+<Label></Label>
+<Setting name="uai.winrate" default="0" type="text" description="real winrate" />
+<Label></Label>
+<Setting name="uai.winph" default="0" type="text" description="wins per hour" />
+<Label></Label>
+<Setting name="uai.rank" default="20" type="text" description="current rank" />
+<Label></Label>
+</Section>
+<Section id="silver3" title="advanced settings">
+<Description>Advanced settings related to Hearthcrawler.&lt;br&gt;</Description>
+<Setting name="uai.maxwide" default="3000" type="text" description="maxwide:" />
+<Label>raise this state to do more calculations, but dont overdo it (default is 3000). Isnt allowed to be below 100.</Label>
+<Label></Label>
+<Setting name="uai.maxBoardsEnemysTurn" default="20" type="text" description="max boards enemys turn:" />
+<Label>number of boards that are simulated in enemys turn</Label>
+<Label></Label>
+<Setting name="uai.simulateTwoTurnCounter" default="256" type="text" description="amount of Two-Turn-simulations" />
+<Label>number of boards, where the second turn is simulated, write a 0 to turn it off</Label>
+<Label></Label>
+<Setting name="uai.nextTurnSimDeep" default="6" type="text" description="max deep in your second turn simulation:" />
+<Label>deepness of simulation in your second turn </Label>
+<Label></Label>
+<Setting name="uai.nextTurnSimWide" default="10" type="text" description="max wide in your second turn simulation:" />
+<Label>maximum width of your second turn simulation</Label>
+<Label></Label>
+<Setting name="uai.nextTurnSimBoards" default="50" type="text" description="max boards in your second turn simulation:" />
+<Label>maximum amount of boards calculated in your second turn simulation</Label>
+<Label></Label>
+<Setting name="uai.simulateEnemyOnSecondTurn" default="true" type="boolean" description="simulate enemys second turn" />
+<Label>simulate the enemys response on your second turn</Label>
+<Label></Label>
+<Setting name="uai.maxBoardsEnemysSecondTurn" default="20" type="text" description="max boards enemys second turn:" />
+<Label>number of boards that are simulated in enemys second turn. requires "simulate enemys second turn" activated</Label>
+<Label></Label>
+<Label></Label>
+<Setting name="uai.playAround" type="boolean" description="play arround specific cards" />
+<Label>(EXPERIMENTAL) check this and the ai will play around some cards (like flamestrike) (will not change calculation time mutch)</Label>
+<Setting name="uai.playAroundProb" default="50" type="text" description="play around min probability:" />
+<Label>which probability does the enemy needs, to use the aoe, but wont kill your minions. insert a value from 0 to 100.</Label>
+<Setting name="uai.playAroundProb2" default="80" type="text" description="play around max probability:" />
+<Label>which probability does the enemy needs, to use the aoe and kill your minions with it. insert a value from 0 to 100.</Label>
+</Section>
+<Section id="silver4" title="developper options">
+<Description>Developper settings, ignore them if you are not one.&lt;br&gt;</Description>
+<Setting name="uai.teststuff" type="boolean" description="simulating test file" />
+<Label>requires a test.txt file in hearthcrawler-folder.</Label>
+<Label></Label>
+<Setting name="uai.longteststuff" type="boolean" description="print simulated solution" />
+<Label>prints each step of the simulated board</Label>
+<Label></Label>
+<Setting name="uai.singleLog" type="boolean" description="write uai-log into single file" />
+<Label>if the above box is checked, your logs will be written in one file, but will be deleted if you restart the ai.</Label>
+</Section>
+</Sections>
+</Settings>
