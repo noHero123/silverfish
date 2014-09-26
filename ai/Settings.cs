@@ -9,6 +9,8 @@ namespace HREngine.Bots
     class Settings
     {
 
+        public bool useSecretsPlayArround = false;
+
         public string path="";
         public string logpath = "";
         public string logfile = "Logg.txt";

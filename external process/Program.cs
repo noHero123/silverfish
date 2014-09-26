@@ -551,7 +551,7 @@ namespace ConsoleApplication1
             }
             if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
             {
-                retval += p.owncarddraw * 500;
+                if (p.turnCounter < 2) retval += p.owncarddraw * 500;
                 retval -= 1000;
             }
             if (p.ownHero.Hp <= 0) retval = -10000;
@@ -566,7 +566,7 @@ namespace ConsoleApplication1
         {
             int retval = 5;
             retval += m.Hp * 2;
-            if (!m.frozen && !(m.handcard.card.name == CardDB.cardName.ancientwatcher && !m.silenced))
+            if (!m.frozen && !((m.name == CardDB.cardName.ancientwatcher || m.name == CardDB.cardName.ragnarosthefirelord) && !m.silenced))
             {
                 retval += m.Angr * 2;
                 if (m.windfury) retval += m.Angr * 2;
@@ -678,7 +678,7 @@ namespace ConsoleApplication1
             }
             if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
             {
-                retval += p.owncarddraw * 500;
+                if (p.turnCounter < 2) retval += p.owncarddraw * 500;
                 retval -= 1000;
             }
             if (p.ownHero.Hp <= 0) retval = -10000;
@@ -693,7 +693,7 @@ namespace ConsoleApplication1
             if (p.enemyMinions.Count >= 4 || m.taunt || (penman.priorityTargets.ContainsKey(m.name) && !m.silenced) || m.Angr >= 5)
             {
                 retval += m.Hp;
-                if (!m.frozen && !(m.handcard.card.name == CardDB.cardName.ancientwatcher && !m.silenced))
+                if (!m.frozen && !((m.name == CardDB.cardName.ancientwatcher || m.name == CardDB.cardName.ragnarosthefirelord) && !m.silenced))
                 {
                     retval += m.Angr * 2;
                     if (m.windfury) retval += 2 * m.Angr;
@@ -4993,9 +4993,9 @@ namespace ConsoleApplication1
             this.minionGetOrEraseAllAreaBuffs(m, true);
         }
 
-        public void minionGetDamageOrHeal(Minion m, int dmgOrHeal)
+        public void minionGetDamageOrHeal(Minion m, int dmgOrHeal, bool dontDmgLoss = false)
         {
-            m.getDamageOrHeal(dmgOrHeal, this, false, false);
+            m.getDamageOrHeal(dmgOrHeal, this, false, dontDmgLoss);
         }
 
 
@@ -5006,7 +5006,7 @@ namespace ConsoleApplication1
             foreach (Minion m in temp)
             {
                 if (frozen) m.frozen = true;
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
         }
 
@@ -5016,7 +5016,7 @@ namespace ConsoleApplication1
             List<Minion> temp = (own) ? this.ownMinions : this.enemyMinions;
             foreach (Minion m in temp)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             if (own) minionGetDamageOrHeal(this.ownHero, damages);
             else minionGetDamageOrHeal(this.enemyHero, damages);
@@ -5026,11 +5026,11 @@ namespace ConsoleApplication1
         {
             foreach (Minion m in this.ownMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             foreach (Minion m in this.enemyMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             minionGetDamageOrHeal(this.ownHero, damages);
             minionGetDamageOrHeal(this.enemyHero, damages);
@@ -5040,11 +5040,11 @@ namespace ConsoleApplication1
         {
             foreach (Minion m in this.ownMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
             foreach (Minion m in this.enemyMinions)
             {
-                minionGetDamageOrHeal(m, damages);
+                minionGetDamageOrHeal(m, damages, true);
             }
         }
 
@@ -5388,7 +5388,7 @@ namespace ConsoleApplication1
 
             this.nextMoveGuess = new Playfield();
             //only debug:
-            this.nextMoveGuess.printBoardDebug();
+            //this.nextMoveGuess.printBoardDebug();
 
             if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
@@ -5429,7 +5429,7 @@ namespace ConsoleApplication1
                 this.bestActions.RemoveAt(0);
             }
             if (this.nextMoveGuess == null) this.nextMoveGuess = new Playfield();
-            this.nextMoveGuess.printBoardDebug();
+            //this.nextMoveGuess.printBoardDebug();
 
             if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
             {
@@ -6430,7 +6430,7 @@ namespace ConsoleApplication1
                 int bval = 1;
                 if (p.enemyMaxMana > 4) bval = 2;
                 if (p.enemyMaxMana > 7) bval = 3;
-                p.minionGetBuffed(p.enemyMinions[p.enemyMinions.Count - 1], bval - 1, bval);
+                if (p.enemyMinions.Count >= 1) p.minionGetBuffed(p.enemyMinions[p.enemyMinions.Count - 1], bval - 1, bval);
             }
         }
 

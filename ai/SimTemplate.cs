@@ -7,6 +7,22 @@ namespace HREngine.Bots
     public class SimTemplate
     {
 
+        public virtual void onSecretPlay(Playfield p, bool ownplay, Minion attacker, Minion target, out int number)
+        {
+            number = 0;
+        }
+
+        public virtual void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
+        {
+            return;
+        }
+
+        public virtual void onSecretPlay(Playfield p, bool ownplay, int number)
+        {
+            return;
+        }
+
+
 
         public virtual void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
@@ -99,4 +115,5 @@ namespace HREngine.Bots
 
 
     }
+
 }

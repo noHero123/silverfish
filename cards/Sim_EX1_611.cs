@@ -8,7 +8,20 @@ namespace HREngine.Bots
 	{
         //todo secret
 //    geheimnis:/ wenn ein feindlicher diener angreift, lasst ihn auf die hand seines besitzers zurückkehren. zusätzlich kostet er (2) mehr.
-		
+
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
+        {
+            if (ownplay)
+            {
+                p.minionReturnToHand(target, false, 2);
+            }
+            else
+            {
+                p.minionReturnToHand(target, true, 2);
+            }
+            target.Hp = -100;
+        }
 
 	}
+
 }

@@ -9,7 +9,11 @@ namespace HREngine.Bots
 
         //todo secret
 //    geheimnis:/ wenn euer held angegriffen wird, erhält er 8 rüstung.
-
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
+        {
+            target.armor += 8;
+        }
 
 	}
+
 }

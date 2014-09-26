@@ -60,6 +60,8 @@ namespace SilverfishRush
             int nextturnsimDeep = 6;
             int nextturnsimMaxWidth = 10;
             int nexttunsimMaxBoards = 50;
+
+            bool secrets = false; // playing arround enemys secrets
             //###########################################################
 
 
@@ -81,6 +83,14 @@ namespace SilverfishRush
                 Ai.Instance.nextTurnSimulator.setEnemyTurnsim(enemySecondTurnSim);
                 if (enemySecondTurnSim) Helpfunctions.Instance.ErrorLog("simulates the enemy turn on your second turn");
             }
+
+            if (secrets)
+            {
+
+                Settings.Instance.useSecretsPlayArround = secrets;
+                Helpfunctions.Instance.ErrorLog("playing arround secrets is " + secrets);
+            }
+
 
             if (playaround)
             {
@@ -561,7 +571,7 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "112.4";
+        public string versionnumber = "112.5";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -575,6 +585,7 @@ namespace SilverfishRush
         int ownPlayerController = 0;
         List<string> ownSecretList = new List<string>();
         int enemySecretCount = 0;
+        List<int> enemySecretList = new List<int>();
 
         int currentMana = 0;
         int ownMaxMana = 0;
@@ -697,15 +708,21 @@ namespace SilverfishRush
 
             Hrtprozis.Instance.updateFatigueStats(this.ownDecksize, this.ownHeroFatigue, this.enemyDecksize, this.enemyHeroFatigue);
 
+            Probabilitymaker.Instance.getEnemySecretGuesses(this.enemySecretList, Hrtprozis.Instance.heroNametoEnum(this.enemyHeroname));
             //learnmode :D
 
             Playfield p = new Playfield();
+
             if (lastpf != null)
             {
                 if (lastpf.isEqualf(p))
                 {
                     return false;
                 }
+
+                //board changed we update secrets!
+                //if(Ai.Instance.nextMoveGuess!=null) Probabilitymaker.Instance.updateSecretList(Ai.Instance.nextMoveGuess.enemySecretList);
+                Probabilitymaker.Instance.updateSecretList(p, lastpf);
                 lastpf = p;
             }
             else
@@ -713,7 +730,7 @@ namespace SilverfishRush
                 lastpf = p;
             }
 
-
+            p = new Playfield();//secrets have updated :D
             // calculate stuff
             Helpfunctions.Instance.ErrorLog("calculating stuff... " + DateTime.Now.ToString("HH:mm:ss.ffff"));
             if (runExtern)
@@ -770,12 +787,19 @@ namespace SilverfishRush
             ownSecretList = new List<string>(); // the CARDIDS of the secrets
             enemySecretCount = 0;
             //count enemy secrets:
+            enemySecretList.Clear();
             foreach (HSCard ent in allcards)
             {
-                if (ent.IsSecret && ent.ControllerId != ownPlayerController && ent.GetTag(GAME_TAG.ZONE) == 7) enemySecretCount++;
+                if (ent.IsSecret && ent.ControllerId != ownPlayerController && ent.GetTag(GAME_TAG.ZONE) == 7)
+                {
+                    enemySecretCount++;
+                    enemySecretList.Add(ent.GetTag(GAME_TAG.ENTITY_ID));
+
+                }
                 if (ent.IsSecret && ent.ControllerId == ownPlayerController && ent.GetTag(GAME_TAG.ZONE) == 7)
                 {
                     ownSecretList.Add(ent.Id);
+
                 }
             }
 
@@ -1152,6 +1176,7 @@ namespace SilverfishRush
             if (botbase is BehaviorControl) this.botbehave = "control";
             if (botbase is BehaviorMana) this.botbehave = "mana";
             this.botbehave += " " + Ai.Instance.maxwide;
+            this.botbehave += " face " + ComboBreaker.Instance.attackFaceHP;
             if (Ai.Instance.secondTurnAmount > 0)
             {
                 if (Ai.Instance.nextMoveGuess.mana == -100)
@@ -1174,7 +1199,39 @@ namespace SilverfishRush
                 this.botbehave += " ents " + Ai.Instance.enemySecondTurnSim.maxwide;
             }
 
+            if (Settings.Instance.useSecretsPlayArround)
+            {
+                this.botbehave += " secret";
+            }
 
+
+
+        }
+
+        public static int getLastAffected(int entityid)
+        {
+
+            List<HSCard> allEntitys = TritonHS.GetAllCards();
+
+            foreach (HSCard ent in allEntitys)
+            {
+                if (ent.GetTag(GAME_TAG.LAST_AFFECTED_BY) == entityid) return ent.GetTag(GAME_TAG.ENTITY_ID);
+            }
+
+            return 0;
+        }
+
+        public static int getCardTarget(int entityid)
+        {
+
+            List<HSCard> allEntitys = TritonHS.GetAllCards();
+
+            foreach (HSCard ent in allEntitys)
+            {
+                if (ent.GetTag(GAME_TAG.ENTITY_ID) == entityid) return ent.GetTag(GAME_TAG.CARD_TARGET);
+            }
+
+            return 0;
 
         }
 
@@ -1182,6 +1239,8 @@ namespace SilverfishRush
         {
             int ownsecretcount = ownSecretList.Count;
             string dtimes = DateTime.Now.ToString("HH:mm:ss:ffff");
+            string enemysecretIds = "";
+            enemysecretIds = Probabilitymaker.Instance.getEnemySecretData();
             Helpfunctions.Instance.logg("#######################################################################");
             Helpfunctions.Instance.logg("#######################################################################");
             Helpfunctions.Instance.logg("start calculations, current time: " + dtimes + " V" + this.versionnumber + " " + this.botbehave);
@@ -1189,7 +1248,7 @@ namespace SilverfishRush
             Helpfunctions.Instance.logg("mana " + currentMana + "/" + ownMaxMana);
             Helpfunctions.Instance.logg("emana " + enemyMaxMana);
             Helpfunctions.Instance.logg("own secretsCount: " + ownsecretcount);
-            Helpfunctions.Instance.logg("enemy secretsCount: " + enemySecretCount);
+            Helpfunctions.Instance.logg("enemy secretsCount: " + enemySecretCount + " ;" + enemysecretIds);
 
             Ai.Instance.currentCalculatedBoard = dtimes;
 
@@ -1206,7 +1265,7 @@ namespace SilverfishRush
                 Helpfunctions.Instance.writeToBuffer("mana " + currentMana + "/" + ownMaxMana);
                 Helpfunctions.Instance.writeToBuffer("emana " + enemyMaxMana);
                 Helpfunctions.Instance.writeToBuffer("own secretsCount: " + ownsecretcount);
-                Helpfunctions.Instance.writeToBuffer("enemy secretsCount: " + enemySecretCount);
+                Helpfunctions.Instance.writeToBuffer("enemy secretsCount: " + enemySecretCount + " ;" + enemysecretIds);
             }
             Hrtprozis.Instance.printHero(runEx);
             Hrtprozis.Instance.printOwnMinions(runEx);
@@ -2114,7 +2173,7 @@ namespace SilverfishRush
 
         public bool weHavePlayedMillhouseManastorm = false;
 
-        public bool hasorcanplayKelThuzad = false;
+        public bool needGraveyard = false;
 
 
         public int doublepriest = 0;
@@ -2149,6 +2208,8 @@ namespace SilverfishRush
 
 
         public List<CardDB.cardIDEnum> ownSecretsIDList = new List<CardDB.cardIDEnum>();
+        public List<SecretItem> enemySecretList = new List<SecretItem>();
+
         public int enemySecretCount = 0;
 
         public Minion ownHero;
@@ -2227,6 +2288,10 @@ namespace SilverfishRush
         public bool enemyAbilityReady = false;
         public Handmanager.Handcard enemyHeroAblility;
 
+        // just for saving which minion to revive with secrets (=the first one that died);
+        public CardDB.cardIDEnum revivingOwnMinion = CardDB.cardIDEnum.None;
+        public CardDB.cardIDEnum revivingEnemyMinion = CardDB.cardIDEnum.None;
+
         //Helpfunctions help = Helpfunctions.Instance;
 
         private void addMinionsReal(List<Minion> source, List<Minion> trgt)
@@ -2275,6 +2340,15 @@ namespace SilverfishRush
             this.ownHero = new Minion(Hrtprozis.Instance.ownHero);
             this.enemyHero = new Minion(Hrtprozis.Instance.enemyHero);
             addCardsReal(Handmanager.Instance.handCards);
+
+            this.enemySecretList.Clear();
+            if (Settings.Instance.useSecretsPlayArround)
+            {
+                foreach (SecretItem si in Probabilitymaker.Instance.enemySecrets)
+                {
+                    this.enemySecretList.Add(new SecretItem(si));
+                }
+            }
 
             this.ownHeroName = Hrtprozis.Instance.heroname;
             this.enemyHeroName = Hrtprozis.Instance.enemyHeroname;
@@ -2383,7 +2457,7 @@ namespace SilverfishRush
             this.ownBaronRivendare = 0;
             this.enemyBaronRivendare = 0;
 
-            hasorcanplayKelThuzad = false;
+            needGraveyard = false;
             this.loatheb = false;
             this.spellpower = 0;
             this.enemyspellpower = 0;
@@ -2431,7 +2505,7 @@ namespace SilverfishRush
                 }
                 if (m.handcard.card.name == CardDB.cardName.kelthuzad)
                 {
-                    this.hasorcanplayKelThuzad = true;
+                    this.needGraveyard = true;
                 }
 
                 if (m.name == CardDB.cardName.raidleader) this.anzOwnRaidleader++;
@@ -2457,7 +2531,7 @@ namespace SilverfishRush
 
                 if (hc.card.name == CardDB.cardName.kelthuzad)
                 {
-                    this.hasorcanplayKelThuzad = true;
+                    this.needGraveyard = true;
                 }
             }
 
@@ -2483,7 +2557,7 @@ namespace SilverfishRush
                 }
                 if (m.handcard.card.name == CardDB.cardName.kelthuzad)
                 {
-                    this.hasorcanplayKelThuzad = true;
+                    this.needGraveyard = true;
                 }
 
                 if (m.name == CardDB.cardName.raidleader) this.anzEnemyRaidleader++;
@@ -2500,7 +2574,8 @@ namespace SilverfishRush
                 }
                 if (m.name == CardDB.cardName.southseacaptain) this.anzEnemySouthseacaptain++;
             }
-            if (this.hasorcanplayKelThuzad) this.diedMinions = new List<GraveYardItem>(Probabilitymaker.Instance.turngraveyard);
+            if (this.enemySecretCount >= 1) this.needGraveyard = true;
+            if (this.needGraveyard) this.diedMinions = new List<GraveYardItem>(Probabilitymaker.Instance.turngraveyard);
 
         }
 
@@ -2522,6 +2597,16 @@ namespace SilverfishRush
             this.ownSecretsIDList.AddRange(p.ownSecretsIDList);
 
             this.enemySecretCount = p.enemySecretCount;
+
+            this.enemySecretList.Clear();
+            if (Settings.Instance.useSecretsPlayArround)
+            {
+                foreach (SecretItem si in p.enemySecretList)
+                {
+                    this.enemySecretList.Add(new SecretItem(si));
+                }
+            }
+
             this.mana = p.mana;
             this.manaTurnEnd = p.manaTurnEnd;
             this.ownMaxMana = p.ownMaxMana;
@@ -2597,8 +2682,8 @@ namespace SilverfishRush
             this.spellpower = p.spellpower;
             this.enemyspellpower = p.enemyspellpower;
 
-            this.hasorcanplayKelThuzad = p.hasorcanplayKelThuzad;
-            if (p.hasorcanplayKelThuzad) this.diedMinions = new List<GraveYardItem>(p.diedMinions);
+            this.needGraveyard = p.needGraveyard;
+            if (p.needGraveyard) this.diedMinions = new List<GraveYardItem>(p.diedMinions);
 
             //####buffs#############################
 
@@ -2651,6 +2736,18 @@ namespace SilverfishRush
 
                 if (logg) Helpfunctions.Instance.logg("enemy secrets changed ");
                 return false;
+            }
+
+            if (this.enemySecretCount >= 1)
+            {
+                for (int i = 0; i < this.enemySecretCount; i++)
+                {
+                    if (!this.enemySecretList[i].isEqual(p.enemySecretList[i]))
+                    {
+                        if (logg) Helpfunctions.Instance.logg("enemy secrets changed! ");
+                        return false;
+                    }
+                }
             }
 
             if (this.mana != p.mana || this.enemyMaxMana != p.enemyMaxMana || this.ownMaxMana != p.ownMaxMana)
@@ -2796,7 +2893,7 @@ namespace SilverfishRush
 
             if (this.mana != p.mana || this.enemyMaxMana != p.enemyMaxMana || this.ownMaxMana != p.ownMaxMana) return false;
 
-            if (this.ownHeroName != p.ownHeroName || this.enemyHeroName != p.enemyHeroName) return false;
+            if (this.ownHeroName != p.ownHeroName || this.enemyHeroName != p.enemyHeroName || this.enemySecretCount != p.enemySecretCount) return false;
 
             if (this.ownHero.Hp != p.ownHero.Hp || this.ownHero.Angr != p.ownHero.Angr || this.ownHero.armor != p.ownHero.armor || this.ownHero.frozen != p.ownHero.frozen || this.ownHero.immuneWhileAttacking != p.ownHero.immuneWhileAttacking || this.ownHero.immune != p.ownHero.immune) return false;
 
@@ -2856,6 +2953,17 @@ namespace SilverfishRush
                 if (dishc.position != pishc.position || dishc.entity != pishc.entity || dishc.manacost != pishc.manacost)
                 {
                     return false;
+                }
+            }
+
+            if (this.enemySecretCount >= 1)
+            {
+                for (int i = 0; i < this.enemySecretCount; i++)
+                {
+                    if (!this.enemySecretList[i].isEqual(p.enemySecretList[i]))
+                    {
+                        return false;
+                    }
                 }
             }
 
@@ -3771,7 +3879,7 @@ namespace SilverfishRush
                     this.ownHero.armor += 8;
                 }
 
-                if (secretID == CardDB.cardIDEnum.EX1_295) //ice barrier
+                if (secretID == CardDB.cardIDEnum.EX1_295) //ice block
                 {
                     //set the guessed Damage to zero
                     this.ownHero.immune = true;
@@ -3824,10 +3932,8 @@ namespace SilverfishRush
                 {
                     //spawn a 2/1 taunt!
                     int posi = this.ownMinions.Count - 1;
-                    CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_121);//frostwolfgrunt
+                    CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130a);
                     callKid(kid, posi, true);
-                    this.ownMinions[this.ownMinions.Count - 1].maxHp = 1;
-                    this.ownMinions[this.ownMinions.Count - 1].Hp = 1;
 
                 }
 
@@ -4135,35 +4241,76 @@ namespace SilverfishRush
             //save the action if its our first turn
             if (this.turnCounter == 0) this.playactions.Add(a);
 
+            // its a minion attack--------------------------------
             if (a.actionType == actionEnum.attackWithMinion)
             {
-                this.secretTrigger_MinionIsGoingToAttack(a.own, a.target);
-                this.secretTrigger_CharIsAttacked(a.own, a.target);
-                if (a.own.Hp >= 0) minionAttacksMinion(a.own, a.target);
-            }
+                Minion target = a.target;
+                //secret stuff
+                int newTarget = this.secretTrigger_CharIsAttacked(a.own, target);
 
-            if (a.actionType == actionEnum.attackWithHero)
-            {
-                //secret trigger is inside
-                attackWithWeapon(a.target, a.penalty);
-            }
-
-            if (a.actionType == actionEnum.playcard)
-            {
-                if (this.isOwnTurn)
+                if (newTarget >= 1)
                 {
-                    playACard(a.card, a.target, a.place, a.druidchoice, a.penalty);
+                    //search new target!
+                    foreach (Minion m in this.ownMinions)
+                    {
+                        if (m.entitiyID == newTarget)
+                        {
+                            target = m;
+                            break;
+                        }
+                    }
+                    foreach (Minion m in this.enemyMinions)
+                    {
+                        if (m.entitiyID == newTarget)
+                        {
+                            target = m;
+                            break;
+                        }
+                    }
+                    if (this.ownHero.entitiyID == newTarget) target = this.ownHero;
+                    if (this.enemyHero.entitiyID == newTarget) target = this.enemyHero;
+                    //Helpfunctions.Instance.ErrorLog("missdirection target = " + target.entitiyID);
+                }
+                if (a.own.Hp >= 1) minionAttacksMinion(a.own, target);
+            }
+            else
+            {
+                // its an hero attack--------------------------------
+                if (a.actionType == actionEnum.attackWithHero)
+                {
+                    //secret trigger is inside
+                    attackWithWeapon(a.target, a.penalty);
                 }
                 else
                 {
-                    //enemyplaysACard();
+                    // its an playing-card--------------------------------
+                    if (a.actionType == actionEnum.playcard)
+                    {
+                        if (this.isOwnTurn)
+                        {
+                            playACard(a.card, a.target, a.place, a.druidchoice, a.penalty);
+                        }
+                        else
+                        {
+                            //enemyplaysACard();
+                        }
+                    }
+                    else
+                    {
+                        // its using the hero power--------------------------------
+                        if (a.actionType == actionEnum.useHeroPower)
+                        {
+                            playHeroPower(a.target, a.penalty, this.isOwnTurn);
+                        }
+                    }
                 }
             }
 
-            if (a.actionType == actionEnum.useHeroPower)
-            {
-                playHeroPower(a.target, a.penalty, this.isOwnTurn);
-            }
+
+
+
+
+
 
             if (this.isOwnTurn)
             {
@@ -4309,7 +4456,33 @@ namespace SilverfishRush
 
             // hero attacks enemy----------------------------------------------------------------------------------
 
-            if (target.isHero) this.secretTrigger_CharIsAttacked(hero, target);
+            if (target.isHero)// trigger secret and change target if necessary
+            {
+                int newTarget = this.secretTrigger_CharIsAttacked(hero, target);
+                if (newTarget >= 1)
+                {
+                    //search new target!
+                    foreach (Minion m in this.ownMinions)
+                    {
+                        if (m.entitiyID == newTarget)
+                        {
+                            target = m;
+                            break;
+                        }
+                    }
+                    foreach (Minion m in this.enemyMinions)
+                    {
+                        if (m.entitiyID == newTarget)
+                        {
+                            target = m;
+                            break;
+                        }
+                    }
+                    if (this.ownHero.entitiyID == newTarget) target = this.ownHero;
+                    if (this.enemyHero.entitiyID == newTarget) target = this.enemyHero;
+                }
+
+            }
             this.minionAttacksMinion(hero, target);
             //-----------------------------------------------------------------------------------------------------
 
@@ -4373,28 +4546,54 @@ namespace SilverfishRush
 
 
             this.triggerACardWillBePlayed(c, true);
-
-            if (c.type == CardDB.cardtype.MOB)
+            int newTarget = secretTrigger_SpellIsPlayed(target, c.type == CardDB.cardtype.SPELL);
+            if (newTarget >= 1)
             {
-                this.placeAmobSomewhere(hc, target, choice, position);
-                this.mobsplayedThisTurn++;
-
+                //search new target!
+                foreach (Minion m in this.ownMinions)
+                {
+                    if (m.entitiyID == newTarget)
+                    {
+                        target = m;
+                        break;
+                    }
+                }
+                foreach (Minion m in this.enemyMinions)
+                {
+                    if (m.entitiyID == newTarget)
+                    {
+                        target = m;
+                        break;
+                    }
+                }
+                if (this.ownHero.entitiyID == newTarget) target = this.ownHero;
+                if (this.enemyHero.entitiyID == newTarget) target = this.enemyHero;
             }
-            else
+            if (newTarget != -2) // trigger spell-secrets!
             {
 
-                c.sim_card.onCardPlay(this, true, target, choice);
-                this.doDmgTriggers();
-                //secret trigger? do here
+                if (c.type == CardDB.cardtype.MOB)
+                {
+                    this.placeAmobSomewhere(hc, target, choice, position);
+                    this.mobsplayedThisTurn++;
+
+                }
+                else
+                {
+
+                    c.sim_card.onCardPlay(this, true, target, choice);
+                    this.doDmgTriggers();
+                    //secret trigger? do here
 
 
-            }
+                }
 
-            //atm only 2 cards trigger this
-            if (c.type == CardDB.cardtype.SPELL)
-            {
-                this.triggerACardWasPlayed(c, true);
-                this.doDmgTriggers();
+                //atm only 2 cards trigger this
+                if (c.type == CardDB.cardtype.SPELL)
+                {
+                    this.triggerACardWasPlayed(c, true);
+                    this.doDmgTriggers();
+                }
             }
 
             //this.ueberladung += c.recallValue;
@@ -4411,20 +4610,45 @@ namespace SilverfishRush
 
 
             this.triggerACardWillBePlayed(c, false);
-
-            if (c.type == CardDB.cardtype.MOB)
+            int newTarget = secretTrigger_SpellIsPlayed(target, c.type == CardDB.cardtype.SPELL);
+            if (newTarget >= 1)
             {
-                //todo mob playing
-                //this.placeAmobSomewhere(hc, target, choice, position);
-
+                //search new target!
+                foreach (Minion m in this.ownMinions)
+                {
+                    if (m.entitiyID == newTarget)
+                    {
+                        target = m;
+                        break;
+                    }
+                }
+                foreach (Minion m in this.enemyMinions)
+                {
+                    if (m.entitiyID == newTarget)
+                    {
+                        target = m;
+                        break;
+                    }
+                }
+                if (this.ownHero.entitiyID == newTarget) target = this.ownHero;
+                if (this.enemyHero.entitiyID == newTarget) target = this.enemyHero;
             }
-            else
+            if (newTarget != -2) // trigger spell-secrets!
             {
-                c.sim_card.onCardPlay(this, false, target, choice);
-                this.doDmgTriggers();
-                //secret trigger? do here
+                if (c.type == CardDB.cardtype.MOB)
+                {
+                    //todo mob playing
+                    //this.placeAmobSomewhere(hc, target, choice, position);
+
+                }
+                else
+                {
+                    c.sim_card.onCardPlay(this, false, target, choice);
+                    this.doDmgTriggers();
+                    //secret trigger? do here
 
 
+                }
             }
 
             //atm only 2 cards trigger this
@@ -4564,7 +4788,6 @@ namespace SilverfishRush
             if (this.tempTrigger.ownMinionsDied + this.tempTrigger.enemyMinionsDied >= 1)
             {
                 triggerAMinionDied(); //possible effects: draw card, gain attack + hp
-                secretTrigger_MinionDied();
                 if (this.tempTrigger.ownMinionsDied >= 1) this.tempTrigger.ownMinionsChanged = true;
                 if (this.tempTrigger.enemyMinionsDied >= 1) this.tempTrigger.enemyMininsChanged = true;
                 this.tempTrigger.ownMinionsDied = 0;
@@ -5049,29 +5272,288 @@ namespace SilverfishRush
 
 
 
-        public void secretTrigger_CharIsAttacked(Minion attacker, Minion defender)
+        public int secretTrigger_CharIsAttacked(Minion attacker, Minion defender)
         {
+            int newTarget = 0;
+            if (this.isOwnTurn && this.enemySecretCount >= 1)
+            {
 
+                if (defender.isHero && !defender.own)
+                {
+                    foreach (SecretItem si in this.enemySecretList)
+                    {
+                        if (si.canBe_explosive)
+                        {
+                            CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_610).sim_card.onSecretPlay(this, false, 0);
+                            doDmgTriggers();
+                            //Helpfunctions.Instance.ErrorLog("trigger explosive" + attacker.Hp);
+                            si.usedTrigger_CharIsAttacked(true);
+                            foreach (SecretItem sii in this.enemySecretList)
+                            {
+                                sii.canBe_explosive = false;
+                            }
+                        }
+
+                        if (!attacker.isHero && si.canBe_vaporize)
+                        {
+                            CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_594).sim_card.onSecretPlay(this, false, attacker, 0);
+                            doDmgTriggers();
+
+                            si.usedTrigger_CharIsAttacked(true);
+                            foreach (SecretItem sii in this.enemySecretList)
+                            {
+                                sii.canBe_vaporize = false;
+                            }
+                        }
+
+                        if (si.canBe_missdirection)
+                        {
+                            if (!(attacker.isHero && this.ownMinions.Count + this.enemyMinions.Count == 0))
+                            {
+                                CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_533).sim_card.onSecretPlay(this, false, attacker, defender, out newTarget);
+                                si.usedTrigger_CharIsAttacked(true);
+                                //Helpfunctions.Instance.ErrorLog("trigger miss " + attacker.Hp);
+                                foreach (SecretItem sii in this.enemySecretList)
+                                {
+                                    sii.canBe_missdirection = false;
+                                }
+                            }
+                        }
+
+                        if (si.canBe_icebarrier)
+                        {
+                            CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_289).sim_card.onSecretPlay(this, false, defender, 0);
+                            si.usedTrigger_CharIsAttacked(true);
+                            foreach (SecretItem sii in this.enemySecretList)
+                            {
+                                sii.canBe_icebarrier = false;
+                            }
+                        }
+
+                    }
+
+                }
+
+                if (!defender.isHero && !defender.own)
+                {
+                    foreach (SecretItem si in this.enemySecretList)
+                    {
+
+                        if (si.canBe_snaketrap)
+                        {
+                            CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_554).sim_card.onSecretPlay(this, false, 0);
+                            si.usedTrigger_CharIsAttacked(false);
+                            foreach (SecretItem sii in this.enemySecretList)
+                            {
+                                sii.canBe_snaketrap = false;
+                            }
+                        }
+                    }
+                }
+
+                if (!attacker.isHero && attacker.own) // minion attacks
+                {
+                    foreach (SecretItem si in this.enemySecretList)
+                    {
+                        if (si.canBe_freezing)
+                        {
+                            CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_611).sim_card.onSecretPlay(this, false, attacker, 0);
+                            si.usedTrigger_MinionIsGoingToAttack();
+                            //Helpfunctions.Instance.ErrorLog("trigger freeze " + attacker.Hp);
+                            foreach (SecretItem sii in this.enemySecretList)
+                            {
+                                sii.canBe_freezing = false;
+                            }
+                        }
+                    }
+                }
+
+                foreach (SecretItem si in this.enemySecretList)
+                {
+
+                    if (si.canBe_noblesacrifice)
+                    {
+                        bool ishero = defender.isHero;
+                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130).sim_card.onSecretPlay(this, false, attacker, defender, out newTarget);
+                        si.usedTrigger_CharIsAttacked(ishero);
+                        foreach (SecretItem sii in this.enemySecretList)
+                        {
+                            sii.canBe_noblesacrifice = false;
+                        }
+                    }
+                }
+
+
+            }
+
+            return newTarget;
         }
 
-        public void secretTrigger_MinionIsGoingToAttack(Minion attacker, Minion defender)
+        public void secretTrigger_HeroGotDmg(bool own, int dmg)
         {
+            if (own != this.isOwnTurn)
+            {
+                if (this.isOwnTurn && this.enemySecretCount >= 1)
+                {
+                    foreach (SecretItem si in this.enemySecretList)
+                    {
+                        if (si.canBe_eyeforaneye)
+                        {
+                            CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_132).sim_card.onSecretPlay(this, false, dmg);
+                            si.usedTrigger_HeroGotDmg();
+                            foreach (SecretItem sii in this.enemySecretList)
+                            {
+                                sii.canBe_eyeforaneye = false;
+                            }
+                        }
 
+                        if (si.canBe_iceblock && this.enemyHero.Hp <= 0)
+                        {
+                            CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_295).sim_card.onSecretPlay(this, false, this.enemyHero, dmg);
+                            si.usedTrigger_HeroGotDmg(true);
+                            foreach (SecretItem sii in this.enemySecretList)
+                            {
+                                sii.canBe_iceblock = false;
+                            }
+
+                        }
+                    }
+                }
+            }
         }
 
         public void secretTrigger_MinionIsPlayed(Minion playedMinion)
         {
+
+            if (this.isOwnTurn && playedMinion.own && this.enemySecretCount >= 1)
+            {
+                foreach (SecretItem si in this.enemySecretList)
+                {
+                    if (si.canBe_snipe)
+                    {
+                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_609).sim_card.onSecretPlay(this, false, playedMinion, 0);
+                        doDmgTriggers();
+                        si.usedTrigger_MinionIsPlayed();
+                        foreach (SecretItem sii in this.enemySecretList)
+                        {
+                            sii.canBe_snipe = false;
+                        }
+                    }
+
+                    if (si.canBe_mirrorentity)
+                    {
+                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_294).sim_card.onSecretPlay(this, false, playedMinion, 0);
+                        si.usedTrigger_MinionIsPlayed();
+                        foreach (SecretItem sii in this.enemySecretList)
+                        {
+                            sii.canBe_mirrorentity = false;
+                        }
+
+                    }
+
+                    if (si.canBe_repentance)
+                    {
+                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_379).sim_card.onSecretPlay(this, false, playedMinion, 0);
+                        si.usedTrigger_MinionIsPlayed();
+                        foreach (SecretItem sii in this.enemySecretList)
+                        {
+                            sii.canBe_repentance = false;
+                        }
+                    }
+                }
+            }
+
         }
 
-        public void secretTrigger_SpellIsPlayed(Minion target)
+        public int secretTrigger_SpellIsPlayed(Minion target, bool isSpell)
         {
+            if (this.isOwnTurn && isSpell && this.enemySecretCount >= 1) //actual secrets need a spell played!
+            {
+                foreach (SecretItem si in this.enemySecretList)
+                {
+
+                    if (si.canBe_counterspell)
+                    {
+                        // dont use spell!
+                        si.usedTrigger_SpellIsPlayed(false);
+                        foreach (SecretItem sii in this.enemySecretList)
+                        {
+                            sii.canBe_counterspell = false;
+                        }
+                        return -2;//spellbender will NEVER trigger
+                    }
+                }
+
+
+
+                foreach (SecretItem si in this.enemySecretList)
+                {
+
+                    if (si.canBe_spellbender && target != null && !target.isHero)
+                    {
+                        int retval = 0;
+                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.tt_010).sim_card.onSecretPlay(this, false, null, target, out retval);
+                        si.usedTrigger_SpellIsPlayed(true);
+                        foreach (SecretItem sii in this.enemySecretList)
+                        {
+                            sii.canBe_spellbender = false;
+                        }
+                        return retval;// the new target
+                    }
+
+
+
+
+                }
+
+            }
+
+            return 0;
 
         }
 
-        public void secretTrigger_MinionDied()
+        public void secretTrigger_MinionDied(bool own)
         {
+            if (this.isOwnTurn && !own && this.enemySecretCount >= 1)
+            {
+                foreach (SecretItem si in this.enemySecretList)
+                {
+                    if (si.canBe_duplicate)
+                    {
+                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.FP1_018).sim_card.onSecretPlay(this, false, 0);
+                        si.usedTrigger_MinionDied();
+                        foreach (SecretItem sii in this.enemySecretList)
+                        {
+                            sii.canBe_duplicate = false;
+                        }
+                    }
 
+                    if (si.canBe_redemption)
+                    {
+                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_136).sim_card.onSecretPlay(this, false, 0);
+                        si.usedTrigger_MinionDied();
+                        foreach (SecretItem sii in this.enemySecretList)
+                        {
+                            sii.canBe_redemption = false;
+                        }
+                    }
+
+                    if (si.canBe_avenge)
+                    {
+                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.FP1_020).sim_card.onSecretPlay(this, false, 0);
+                        si.usedTrigger_MinionDied();
+                        foreach (SecretItem sii in this.enemySecretList)
+                        {
+                            sii.canBe_avenge = false;
+                        }
+                    }
+
+
+                }
+            }
         }
+
+
 
         public void doDeathrattles(List<Minion> deathrattles)
         {
@@ -5126,6 +5608,9 @@ namespace SilverfishRush
             if (!this.tempTrigger.ownMinionsChanged && !this.tempTrigger.enemyMininsChanged) return;
             List<Minion> deathrattles = new List<Minion>();
 
+            bool minionOwnReviving = false;
+            bool minionEnemyReviving = false;
+
             if (this.tempTrigger.ownMinionsChanged)
             {
                 this.tempTrigger.ownMinionsChanged = false;
@@ -5136,6 +5621,12 @@ namespace SilverfishRush
                     this.minionGetAdjacentBuff(m, -m.AdjacentAngr, 0);
                     if (m.Hp <= 0)
                     {
+                        if (this.revivingOwnMinion == CardDB.cardIDEnum.None)
+                        {
+                            this.revivingOwnMinion = m.handcard.card.cardIDenum;
+                            minionOwnReviving = true;
+                        }
+
                         if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.souloftheforest >= 1)
                         {
                             deathrattles.Add(m);
@@ -5171,6 +5662,12 @@ namespace SilverfishRush
                     this.minionGetAdjacentBuff(m, -m.AdjacentAngr, 0);
                     if (m.Hp <= 0)
                     {
+                        if (this.revivingEnemyMinion == CardDB.cardIDEnum.None)
+                        {
+                            this.revivingEnemyMinion = m.handcard.card.cardIDenum;
+                            minionEnemyReviving = true;
+                        }
+
                         if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.souloftheforest >= 1)
                         {
                             deathrattles.Add(m);
@@ -5196,6 +5693,18 @@ namespace SilverfishRush
 
 
             if (deathrattles.Count >= 1) this.doDeathrattles(deathrattles);
+
+            if (minionOwnReviving)
+            {
+                this.secretTrigger_MinionDied(true);
+                this.revivingOwnMinion = CardDB.cardIDEnum.None;
+            }
+
+            if (minionEnemyReviving)
+            {
+                this.secretTrigger_MinionDied(false);
+                this.revivingEnemyMinion = CardDB.cardIDEnum.None;
+            }
             //update buffs
         }
 
@@ -5626,6 +6135,109 @@ namespace SilverfishRush
 
         }
 
+        public void drawACard(CardDB.cardIDEnum ss, bool own, bool nopen = false)
+        {
+            CardDB.cardIDEnum s = ss;
+
+            // cant hold more than 10 cards
+
+            if (own)
+            {
+                if (s == CardDB.cardIDEnum.None && !nopen) // draw a card from deck :D
+                {
+                    if (ownDeckSize == 0)
+                    {
+                        this.ownHeroFatigue++;
+                        this.ownHero.getDamageOrHeal(this.ownHeroFatigue, this, false, true);
+                    }
+                    else
+                    {
+                        this.ownDeckSize--;
+                        if (this.owncards.Count >= 10)
+                        {
+                            this.evaluatePenality += 5;
+                            return;
+                        }
+                        this.owncarddraw++;
+                    }
+
+                }
+                else
+                {
+                    if (this.owncards.Count >= 10)
+                    {
+                        this.evaluatePenality += 5;
+                        return;
+                    }
+                    this.owncarddraw++;
+
+                }
+
+
+            }
+            else
+            {
+                if (s == CardDB.cardIDEnum.None && !nopen) // draw a card from deck :D
+                {
+                    if (enemyDeckSize == 0)
+                    {
+                        this.enemyHeroFatigue++;
+                        this.enemyHero.getDamageOrHeal(this.enemyHeroFatigue, this, false, true);
+                    }
+                    else
+                    {
+                        this.enemyDeckSize--;
+                        if (this.enemyAnzCards >= 10)
+                        {
+                            this.evaluatePenality -= 50;
+                            return;
+                        }
+                        this.enemycarddraw++;
+                        this.enemyAnzCards++;
+                    }
+
+                }
+                else
+                {
+                    if (this.enemyAnzCards >= 10)
+                    {
+                        this.evaluatePenality -= 50;
+                        return;
+                    }
+                    this.enemycarddraw++;
+                    this.enemyAnzCards++;
+
+                }
+                return;
+            }
+
+            if (s == CardDB.cardIDEnum.None)
+            {
+                CardDB.Card plchldr = new CardDB.Card();
+                plchldr.name = CardDB.cardName.unknown;
+                Handmanager.Handcard hc = new Handmanager.Handcard();
+                hc.card = plchldr;
+                hc.position = this.owncards.Count + 1;
+                hc.manacost = 1000;
+                hc.entity = this.nextEntity;
+                this.nextEntity++;
+                this.owncards.Add(hc);
+            }
+            else
+            {
+                CardDB.Card c = CardDB.Instance.getCardDataFromID(s);
+                Handmanager.Handcard hc = new Handmanager.Handcard();
+                hc.card = c;
+                hc.position = this.owncards.Count + 1;
+                hc.manacost = c.calculateManaCost(this);
+                hc.entity = this.nextEntity;
+                this.nextEntity++;
+                this.owncards.Add(hc);
+            }
+
+        }
+
+
         public void removeCard(Handmanager.Handcard hcc)
         {
             //todo test this and remove toarray()
@@ -5977,7 +6589,7 @@ namespace SilverfishRush
 
         public void printBoard()
         {
-            Helpfunctions.Instance.logg("board: " + value);
+            Helpfunctions.Instance.logg("board: " + value + " ++++++++++++++++++++++");
             Helpfunctions.Instance.logg("pen " + this.evaluatePenality);
             Helpfunctions.Instance.logg("mana " + this.mana + "/" + this.ownMaxMana);
             Helpfunctions.Instance.logg("cardsplayed: " + this.cardsPlayedThisTurn + " handsize: " + this.owncards.Count + " eh " + this.enemyAnzCards);
@@ -5987,18 +6599,24 @@ namespace SilverfishRush
             Helpfunctions.Instance.logg("ownheroattac: " + this.ownHero.Angr);
             Helpfunctions.Instance.logg("ownheroweapon: " + this.ownWeaponAttack + " " + this.ownWeaponDurability + " " + this.ownWeaponName);
             Helpfunctions.Instance.logg("ownherostatus: frozen" + this.ownHero.frozen + " ");
-            Helpfunctions.Instance.logg("enemyherohp: " + this.enemyHero.Hp + " + " + this.enemyHero.armor);
+            Helpfunctions.Instance.logg("enemyherohp: " + this.enemyHero.Hp + " + " + this.enemyHero.armor + " immune: " + this.enemyHero.immune);
+
+            if (this.enemySecretCount >= 1) Helpfunctions.Instance.logg("enemySecrets: " + Probabilitymaker.Instance.getEnemySecretData(this.enemySecretList));
+            foreach (Action a in this.playactions)
+            {
+                a.print();
+            }
             Helpfunctions.Instance.logg("OWN MINIONS################");
 
             foreach (Minion m in this.ownMinions)
             {
-                Helpfunctions.Instance.logg("name,ang, hp: " + m.name + ", " + m.Angr + ", " + m.Hp);
+                Helpfunctions.Instance.logg("name,ang, hp: " + m.name + ", " + m.Angr + ", " + m.Hp + " " + m.entitiyID);
             }
 
             Helpfunctions.Instance.logg("ENEMY MINIONS############");
             foreach (Minion m in this.enemyMinions)
             {
-                Helpfunctions.Instance.logg("name,ang, hp: " + m.name + ", " + m.Angr + ", " + m.Hp);
+                Helpfunctions.Instance.logg("name,ang, hp: " + m.name + ", " + m.Angr + ", " + m.Hp + " " + m.entitiyID);
             }
 
 
@@ -6155,6 +6773,7 @@ namespace SilverfishRush
         private bool useComparison = true;
         public int playaroundprob = 40;
         public int playaroundprob2 = 80;
+
 
 
         public MiniSimulator mainTurnSimulator;
@@ -6598,6 +7217,7 @@ namespace SilverfishRush
         }
 
     }
+
 
     public class MiniSimulator
     {
@@ -11687,6 +12307,178 @@ namespace SilverfishRush
         }
     }
 
+    public class SecretItem
+    {
+        public bool triggered = false;
+
+        public bool canBe_snaketrap = true;
+        public bool canBe_snipe = true;
+        public bool canBe_explosive = true;
+        public bool canBe_freezing = true;
+        public bool canBe_missdirection = true;
+
+        public bool canBe_counterspell = true;
+        public bool canBe_icebarrier = true;
+        public bool canBe_iceblock = true;
+        public bool canBe_mirrorentity = true;
+        public bool canBe_spellbender = true;
+        public bool canBe_vaporize = true;
+        public bool canBe_duplicate = true;
+
+        public bool canBe_eyeforaneye = true;
+        public bool canBe_noblesacrifice = true;
+        public bool canBe_redemption = true;
+        public bool canBe_repentance = true;
+        public bool canBe_avenge = true;
+
+        public int entityId = 0;
+
+        public SecretItem()
+        {
+        }
+
+        public SecretItem(SecretItem sec)
+        {
+            this.triggered = sec.triggered;
+
+            this.canBe_avenge = sec.canBe_avenge;
+            this.canBe_counterspell = sec.canBe_counterspell;
+            this.canBe_duplicate = sec.canBe_duplicate;
+            this.canBe_explosive = sec.canBe_explosive;
+            this.canBe_eyeforaneye = sec.canBe_eyeforaneye;
+            this.canBe_freezing = sec.canBe_freezing;
+            this.canBe_icebarrier = sec.canBe_icebarrier;
+            this.canBe_iceblock = sec.canBe_iceblock;
+            this.canBe_mirrorentity = sec.canBe_mirrorentity;
+            this.canBe_missdirection = sec.canBe_missdirection;
+            this.canBe_noblesacrifice = sec.canBe_noblesacrifice;
+            this.canBe_redemption = sec.canBe_redemption;
+            this.canBe_repentance = sec.canBe_repentance;
+            this.canBe_snaketrap = sec.canBe_snaketrap;
+            this.canBe_snipe = sec.canBe_snipe;
+            this.canBe_spellbender = sec.canBe_spellbender;
+            this.canBe_vaporize = sec.canBe_vaporize;
+
+            this.entityId = sec.entityId;
+
+        }
+
+        public SecretItem(string secdata)
+        {
+            this.entityId = Convert.ToInt32(secdata.Split('.')[0]);
+
+            string canbe = secdata.Split('.')[1];
+            if (canbe.Length < 17) Helpfunctions.Instance.ErrorLog("cant read secret " + secdata + " " + canbe.Length);
+            this.canBe_snaketrap = (canbe[0] == '1') ? true : false;
+            this.canBe_snipe = (canbe[1] == '1') ? true : false;
+            this.canBe_explosive = (canbe[2] == '1') ? true : false;
+            this.canBe_freezing = (canbe[3] == '1') ? true : false;
+            this.canBe_missdirection = (canbe[4] == '1') ? true : false;
+
+            this.canBe_counterspell = (canbe[5] == '1') ? true : false;
+            this.canBe_icebarrier = (canbe[6] == '1') ? true : false;
+            this.canBe_iceblock = (canbe[7] == '1') ? true : false;
+            this.canBe_mirrorentity = (canbe[8] == '1') ? true : false;
+            this.canBe_spellbender = (canbe[9] == '1') ? true : false;
+            this.canBe_vaporize = (canbe[10] == '1') ? true : false;
+            this.canBe_duplicate = (canbe[11] == '1') ? true : false;
+
+            this.canBe_eyeforaneye = (canbe[12] == '1') ? true : false;
+            this.canBe_noblesacrifice = (canbe[13] == '1') ? true : false;
+            this.canBe_redemption = (canbe[14] == '1') ? true : false;
+            this.canBe_repentance = (canbe[15] == '1') ? true : false;
+            this.canBe_avenge = (canbe[16] == '1') ? true : false;
+
+        }
+
+
+        public void usedTrigger_CharIsAttacked(bool isHero)
+        {
+            if (isHero)
+            {
+                this.canBe_explosive = false;
+                this.canBe_missdirection = false;
+
+                this.canBe_icebarrier = false;
+                this.canBe_vaporize = false;
+
+            }
+            else
+            {
+                this.canBe_snaketrap = false;
+            }
+            this.canBe_noblesacrifice = false;
+        }
+
+        public void usedTrigger_MinionIsGoingToAttack()
+        {
+            this.canBe_freezing = false;
+        }
+
+        public void usedTrigger_MinionIsPlayed()
+        {
+            this.canBe_snipe = false;
+            this.canBe_mirrorentity = false;
+            this.canBe_repentance = false;
+        }
+
+        public void usedTrigger_SpellIsPlayed(bool minionIsTarget)
+        {
+            this.canBe_counterspell = false;
+            if (minionIsTarget) this.canBe_spellbender = false;
+        }
+
+        public void usedTrigger_MinionDied()
+        {
+            this.canBe_avenge = false;
+            this.canBe_redemption = false;
+            this.canBe_duplicate = false;
+        }
+
+        public void usedTrigger_HeroGotDmg(bool deadly = false)
+        {
+            this.canBe_eyeforaneye = false;
+            if (deadly) this.canBe_iceblock = false;
+        }
+
+        public string returnAString()
+        {
+            string retval = "" + this.entityId + ".";
+            retval += "" + ((canBe_snaketrap) ? "1" : "0");
+            retval += "" + ((canBe_snipe) ? "1" : "0");
+            retval += "" + ((canBe_explosive) ? "1" : "0");
+            retval += "" + ((canBe_freezing) ? "1" : "0");
+            retval += "" + ((canBe_missdirection) ? "1" : "0");
+
+            retval += "" + ((canBe_counterspell) ? "1" : "0");
+            retval += "" + ((canBe_icebarrier) ? "1" : "0");
+            retval += "" + ((canBe_iceblock) ? "1" : "0");
+            retval += "" + ((canBe_mirrorentity) ? "1" : "0");
+            retval += "" + ((canBe_spellbender) ? "1" : "0");
+            retval += "" + ((canBe_vaporize) ? "1" : "0");
+            retval += "" + ((canBe_duplicate) ? "1" : "0");
+
+            retval += "" + ((canBe_eyeforaneye) ? "1" : "0");
+            retval += "" + ((canBe_noblesacrifice) ? "1" : "0");
+            retval += "" + ((canBe_redemption) ? "1" : "0");
+            retval += "" + ((canBe_repentance) ? "1" : "0");
+            retval += "" + ((canBe_avenge) ? "1" : "0");
+            return retval + ",";
+        }
+
+        public bool isEqual(SecretItem s)
+        {
+            bool result = this.entityId == s.entityId;
+            result = result && this.canBe_avenge == s.canBe_avenge && this.canBe_counterspell == s.canBe_counterspell && this.canBe_duplicate == s.canBe_duplicate && this.canBe_explosive == s.canBe_explosive;
+            result = result && this.canBe_eyeforaneye == s.canBe_eyeforaneye && this.canBe_freezing == s.canBe_freezing && this.canBe_icebarrier == s.canBe_icebarrier && this.canBe_iceblock == s.canBe_iceblock;
+            result = result && this.canBe_mirrorentity == s.canBe_mirrorentity && this.canBe_missdirection == s.canBe_missdirection && this.canBe_noblesacrifice == s.canBe_noblesacrifice && this.canBe_redemption == s.canBe_redemption;
+            result = result && this.canBe_repentance == s.canBe_repentance && this.canBe_snaketrap == s.canBe_snaketrap && this.canBe_snipe == s.canBe_snipe && this.canBe_spellbender == s.canBe_spellbender && this.canBe_vaporize == s.canBe_vaporize;
+
+            return result;
+        }
+
+    }
+
     public class Probabilitymaker
     {
         public Dictionary<CardDB.cardIDEnum, int> ownCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
@@ -11696,6 +12488,8 @@ namespace SilverfishRush
         List<GraveYardItem> graveyard = new List<GraveYardItem>();
         public List<GraveYardItem> turngraveyard = new List<GraveYardItem>();//MOBS only
         List<GraveYardItem> graveyartTillTurnStart = new List<GraveYardItem>();
+
+        public List<SecretItem> enemySecrets = new List<SecretItem>();
 
         public bool feugenDead = false;
         public bool stalaggDead = false;
@@ -11973,6 +12767,371 @@ namespace SilverfishRush
             }
             return false;
         }
+
+        public void getEnemySecretGuesses(List<int> enemySecretIds, HeroEnum enemyHeroName)
+        {
+            List<SecretItem> newlist = new List<SecretItem>();
+
+            foreach (int i in enemySecretIds)
+            {
+                if (i >= 1000) continue;
+                Helpfunctions.Instance.logg("detect secret with id" + i);
+                SecretItem sec = getNewSecretGuessedItem(i, enemyHeroName);
+
+                newlist.Add(new SecretItem(sec));
+            }
+
+            this.enemySecrets.Clear();
+            this.enemySecrets.AddRange(newlist);
+        }
+
+        public SecretItem getNewSecretGuessedItem(int entityid, HeroEnum enemyHeroName)
+        {
+            foreach (SecretItem si in this.enemySecrets)
+            {
+                if (si.entityId == entityid && entityid < 1000) return si;
+            }
+
+            SecretItem sec = new SecretItem();
+            sec.entityId = entityid;
+            if (enemyHeroName == HeroEnum.hunter)
+            {
+
+                sec.canBe_counterspell = false;
+                sec.canBe_icebarrier = false;
+                sec.canBe_iceblock = false;
+                sec.canBe_mirrorentity = false;
+                sec.canBe_spellbender = false;
+                sec.canBe_vaporize = false;
+                sec.canBe_duplicate = false;
+
+                sec.canBe_eyeforaneye = false;
+                sec.canBe_noblesacrifice = false;
+                sec.canBe_redemption = false;
+                sec.canBe_repentance = false;
+                sec.canBe_avenge = false;
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_554) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_554] >= 2)
+                {
+                    sec.canBe_snaketrap = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_609) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_609] >= 2)
+                {
+                    sec.canBe_snipe = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_610) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_610] >= 2)
+                {
+                    sec.canBe_explosive = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_611) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_611] >= 2)
+                {
+                    sec.canBe_freezing = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_533) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_533] >= 2)
+                {
+                    sec.canBe_missdirection = false;
+                }
+            }
+
+            if (enemyHeroName == HeroEnum.mage)
+            {
+                sec.canBe_snaketrap = false;
+                sec.canBe_snipe = false;
+                sec.canBe_explosive = false;
+                sec.canBe_freezing = false;
+                sec.canBe_missdirection = false;
+
+                sec.canBe_eyeforaneye = false;
+                sec.canBe_noblesacrifice = false;
+                sec.canBe_redemption = false;
+                sec.canBe_repentance = false;
+                sec.canBe_avenge = false;
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_287) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_287] >= 2)
+                {
+                    sec.canBe_counterspell = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_289) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_289] >= 2)
+                {
+                    sec.canBe_icebarrier = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_295) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_295] >= 2)
+                {
+                    sec.canBe_iceblock = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_294) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_294] >= 2)
+                {
+                    sec.canBe_mirrorentity = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.tt_010) && enemyCardsPlayed[CardDB.cardIDEnum.tt_010] >= 2)
+                {
+                    sec.canBe_spellbender = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_594) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_594] >= 2)
+                {
+                    sec.canBe_vaporize = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.FP1_018) && enemyCardsPlayed[CardDB.cardIDEnum.FP1_018] >= 2)
+                {
+                    sec.canBe_duplicate = false;
+                }
+            }
+
+            if (enemyHeroName == HeroEnum.pala)
+            {
+
+                sec.canBe_snaketrap = false;
+                sec.canBe_snipe = false;
+                sec.canBe_explosive = false;
+                sec.canBe_freezing = false;
+                sec.canBe_missdirection = false;
+
+                sec.canBe_counterspell = false;
+                sec.canBe_icebarrier = false;
+                sec.canBe_iceblock = false;
+                sec.canBe_mirrorentity = false;
+                sec.canBe_spellbender = false;
+                sec.canBe_vaporize = false;
+                sec.canBe_duplicate = false;
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_132) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_132] >= 2)
+                {
+                    sec.canBe_eyeforaneye = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_130) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_130] >= 2)
+                {
+                    sec.canBe_noblesacrifice = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_136) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_136] >= 2)
+                {
+                    sec.canBe_redemption = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_379) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_379] >= 2)
+                {
+                    sec.canBe_repentance = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.FP1_020) && enemyCardsPlayed[CardDB.cardIDEnum.FP1_020] >= 2)
+                {
+                    sec.canBe_avenge = false;
+                }
+
+            }
+
+            return sec;
+        }
+
+        public string getEnemySecretData()
+        {
+            string retval = "";
+            foreach (SecretItem si in this.enemySecrets)
+            {
+
+                retval += si.returnAString();
+            }
+
+            return retval;
+        }
+
+        public string getEnemySecretData(List<SecretItem> list)
+        {
+            string retval = "";
+            foreach (SecretItem si in list)
+            {
+
+                retval += si.returnAString();
+            }
+
+            return retval;
+        }
+
+
+        public void setEnemySecretData(List<SecretItem> enemySecretl)
+        {
+            this.enemySecrets.Clear();
+            foreach (SecretItem si in enemySecretl)
+            {
+                this.enemySecrets.Add(new SecretItem(si));
+            }
+        }
+
+        public void updateSecretList(List<SecretItem> enemySecretl)
+        {
+            List<SecretItem> temp = new List<SecretItem>();
+            foreach (SecretItem si in this.enemySecrets)
+            {
+                bool add = false;
+                SecretItem seit = null;
+                foreach (SecretItem sit in enemySecretl) // enemySecrets have to be updated to latest entitys
+                {
+                    if (si.entityId == sit.entityId)
+                    {
+                        seit = sit;
+                        add = true;
+                    }
+                }
+
+                if (add)
+                {
+                    temp.Add(new SecretItem(seit));
+                }
+                else
+                {
+                    temp.Add(new SecretItem(si));
+                }
+            }
+
+            this.enemySecrets.Clear();
+            this.enemySecrets.AddRange(temp);
+
+        }
+
+        public void updateSecretList(Playfield p, Playfield old)
+        {
+            if (p.enemySecretCount == 0) return;
+
+            bool usedspell = false;
+            int lastEffectedIsMinion = 0; //2 = minion, 1 = hero
+            bool playedMob = false;
+            bool enemyMinionDied = false;
+            bool attackedWithMob = false;
+            bool attackedWithHero = false;
+            int attackTargetIsMinion = 0;
+            bool enemyHeroGotDmg = false;
+
+            Handmanager.Handcard hcard = null;
+            if (p.cardsPlayedThisTurn > old.cardsPlayedThisTurn)
+            {
+                for (int i = 0; i < old.owncards.Count - 1; i++)
+                {
+                    if (p.owncards.Count - 1 >= i)
+                    {
+                        if (old.owncards[i].entity != p.owncards[i].entity)
+                        {
+                            hcard = old.owncards[i];
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        hcard = old.owncards[i];
+                        break;
+                    }
+                }
+
+                if (hcard != null && hcard.card.type == CardDB.cardtype.SPELL)
+                {
+                    if (hcard.card.type == CardDB.cardtype.SPELL) usedspell = true;
+                    int entityOfLastAffected = Silverfish.getCardTarget(hcard.entity);
+                    if (entityOfLastAffected >= 1) lastEffectedIsMinion = 2;
+                    if (entityOfLastAffected == p.enemyHero.entitiyID) lastEffectedIsMinion = 1;
+                }
+
+                if (hcard != null && hcard.card.type == CardDB.cardtype.MOB)
+                {
+                    int entityOfLastAffected = Silverfish.getLastAffected(hcard.entity);
+                    if (entityOfLastAffected >= 1) lastEffectedIsMinion = 2;
+                    if (entityOfLastAffected == p.enemyHero.entitiyID && (p.enemyHero.Hp < old.enemyHero.Hp || p.enemyHero.immune)) lastEffectedIsMinion = 1;
+
+                    entityOfLastAffected = Silverfish.getCardTarget(hcard.entity);
+                    if (entityOfLastAffected >= 1)
+                    {
+                        lastEffectedIsMinion = 2;
+                        if (entityOfLastAffected == p.enemyHero.entitiyID) lastEffectedIsMinion = 1;
+                    }
+                }
+            }
+
+            if (p.mobsplayedThisTurn > old.mobsplayedThisTurn)
+            {
+                playedMob = true;
+            }
+            if (p.diedMinions != null && old.diedMinions != null)
+            {
+                int pcount = 0;
+                int ocount = 0;
+                foreach (GraveYardItem gyi in p.diedMinions)
+                {
+                    if (!gyi.own) pcount++;
+                }
+                foreach (GraveYardItem gyi in old.diedMinions)
+                {
+                    if (!gyi.own) ocount++;
+                }
+                if (pcount > ocount) enemyMinionDied = true;
+            }
+
+
+            //attacked with mob?
+
+            int newAttackers = 0;
+            int oldAttackers = 0;
+            foreach (Minion m in p.ownMinions)
+            {
+                newAttackers += m.numAttacksThisTurn;
+            }
+            foreach (Minion m in old.ownMinions)
+            {
+                oldAttackers += m.numAttacksThisTurn;
+            }
+
+            if (newAttackers > oldAttackers) attackedWithMob = true;
+
+            if (p.ownHero.numAttacksThisTurn > old.ownHero.numAttacksThisTurn) attackedWithHero = true;
+
+            if (p.enemyHero.Hp < old.enemyHero.Hp) enemyHeroGotDmg = true;
+
+            if (attackedWithHero || attackedWithMob)
+            {
+                //check hero first, so we can exclude deathrattles!
+                if (p.enemyHero.Hp < old.enemyHero.Hp) attackTargetIsMinion = 1;
+
+                int newDefenders = 0; int oldDefenders = 0;
+
+                foreach (Minion m in p.ownMinions)
+                {
+                    newDefenders += m.Hp;
+                }
+                foreach (Minion m in old.ownMinions)
+                {
+                    oldDefenders += m.Hp;
+                }
+
+                if (newDefenders < oldDefenders) attackTargetIsMinion = 2;
+            }
+
+
+            foreach (SecretItem si in this.enemySecrets)
+            {
+
+                if (attackedWithHero || attackedWithMob) si.usedTrigger_CharIsAttacked(attackTargetIsMinion == 1);
+
+                if (enemyHeroGotDmg) si.usedTrigger_HeroGotDmg();
+
+                if (enemyMinionDied) si.usedTrigger_MinionDied();
+
+                if (attackedWithMob) si.usedTrigger_MinionIsGoingToAttack();
+
+                if (playedMob) si.usedTrigger_MinionIsPlayed();
+
+                if (usedspell) si.usedTrigger_SpellIsPlayed(lastEffectedIsMinion == 2);
+
+            }
+        }
+
     }
 
     public class ComboBreaker
@@ -16916,7 +18075,7 @@ namespace SilverfishRush
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
-                Helpfunctions.Instance.ErrorLog("cant find _carddb.txt");
+                Helpfunctions.Instance.ErrorLog("cant find _carddb.txt in " + Settings.Instance.path);
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
@@ -18457,7 +19616,8 @@ namespace SilverfishRush
         bool heroImmune = false;
         bool enemyHeroImmune = false;
 
-        int enemySecrets = 0;
+        int enemySecretAmount = 0;
+        List<SecretItem> enemySecrets = new List<SecretItem>();
 
         bool ownHeroFrozen = false;
 
@@ -18495,6 +19655,8 @@ namespace SilverfishRush
             int ntssw = 10;
             int ntssd = 6;
             int ntssm = 50;
+
+            bool dosecrets = false;
 
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
@@ -18556,6 +19718,12 @@ namespace SilverfishRush
                     this.twoturnsim = 256;
                     if (s.Contains("twoturnsim ")) this.twoturnsim = Convert.ToInt32(s.Split(new string[] { "twoturnsim " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
 
+                    if (s.Contains(" face "))
+                    {
+                        string facehp = s.Split(new string[] { "face " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0];
+                        ComboBreaker.Instance.attackFaceHP = Convert.ToInt32(facehp);
+                    }
+
                     this.playarround = false;
                     if (s.Contains("playaround "))
                     {
@@ -18588,12 +19756,25 @@ namespace SilverfishRush
 
                     if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
 
+                    if (s.Contains(" secret")) dosecrets = true;
+
                     continue;
                 }
 
                 if (s.StartsWith("enemy secretsCount:"))
                 {
-                    this.enemySecrets = Convert.ToInt32(s.Split(' ')[2]);
+                    this.enemySecretAmount = Convert.ToInt32(s.Split(' ')[2]);
+                    this.enemySecrets.Clear();
+                    if (this.enemySecretAmount >= 1 && s.Contains(";"))
+                    {
+                        string secretstuff = s.Split(';')[1];
+                        foreach (string sec in secretstuff.Split(','))
+                        {
+                            if (sec == "" || sec == String.Empty || sec == " ") continue;
+                            this.enemySecrets.Add(new SecretItem(sec));
+                        }
+
+                    }
                     continue;
                 }
 
@@ -19187,7 +20368,7 @@ namespace SilverfishRush
 
 
             Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, 100, 200);
-            Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecrets);
+            Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);
 
             bool herowindfury = false;
             if (this.ownHeroWeapon == "doomhammer") herowindfury = true;
@@ -19250,6 +20431,8 @@ namespace SilverfishRush
 
             Handmanager.Instance.setHandcards(this.handcards, this.handcards.Count, enemyNumberHand);
 
+            Probabilitymaker.Instance.setEnemySecretData(enemySecrets);
+
             Probabilitymaker.Instance.setTurnGraveYard(this.turnGraveYard);
             Probabilitymaker.Instance.stalaggDead = this.stalaggdead;
             Probabilitymaker.Instance.feugenDead = this.feugendead;
@@ -19260,6 +20443,7 @@ namespace SilverfishRush
             Ai.Instance.enemySecondTurnSim.maxwide = ents;
             Ai.Instance.nextTurnSimulator.updateParams(ntssd, ntssw, ntssm);
 
+            Settings.Instance.useSecretsPlayArround = dosecrets;
 
 
         }
@@ -19529,6 +20713,10 @@ namespace SilverfishRush
                     {
                         p.tempTrigger.charsGotHealed++;
                     }
+                    if (copy - this.Hp >= 1)
+                    {
+                        p.secretTrigger_HeroGotDmg(this.own, copy - this.Hp);
+                    }
                 }
                 else
                 {
@@ -19539,6 +20727,7 @@ namespace SilverfishRush
                         if (rest < 0)
                         {
                             this.Hp += rest;
+                            p.secretTrigger_HeroGotDmg(this.own, rest);
                         }
                         this.armor = Math.Max(0, this.armor - dmg);
 
@@ -20024,6 +21213,8 @@ namespace SilverfishRush
     class Settings
     {
 
+        public bool useSecretsPlayArround = false;
+
         public string path = "";
         public string logpath = "";
         public string logfile = "Logg.txt";
@@ -20063,6 +21254,22 @@ namespace SilverfishRush
 
     public class SimTemplate
     {
+
+        public virtual void onSecretPlay(Playfield p, bool ownplay, Minion attacker, Minion target, out int number)
+        {
+            number = 0;
+        }
+
+        public virtual void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
+        {
+            return;
+        }
+
+        public virtual void onSecretPlay(Playfield p, bool ownplay, int number)
+        {
+            return;
+        }
+
 
 
         public virtual void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
@@ -20151,6 +21358,9 @@ namespace SilverfishRush
         {
             return;
         }
+
+
+
 
     }
 
@@ -23304,10 +24514,41 @@ namespace SilverfishRush
 
     class Sim_EX1_130 : SimTemplate //noblesacrifice
     {
-        CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130a);
         //todo secret
         //    geheimnis:/ wenn ein feind angreift, ruft ihr einen verteidiger (2/1) als neues ziel herbei.
 
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130a);
+
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion attacker, Minion target, out int number)
+        {
+            number = 0;
+            if (ownplay)
+            {
+                int posi = p.ownMinions.Count;
+                p.callKid(kid, posi, true);
+                if (p.ownMinions.Count >= 1)
+                {
+                    if (p.ownMinions[p.ownMinions.Count - 1].name == CardDB.cardName.defender)
+                    {
+                        number = p.ownMinions[p.ownMinions.Count - 1].entitiyID;
+                    }
+                }
+            }
+            else
+            {
+                int posi = p.enemyMinions.Count;
+                p.callKid(kid, posi, false);
+
+                if (p.enemyMinions.Count >= 1)
+                {
+                    if (p.enemyMinions[p.enemyMinions.Count - 1].name == CardDB.cardName.defender)
+                    {
+                        number = p.enemyMinions[p.enemyMinions.Count - 1].entitiyID;
+                    }
+                }
+            }
+
+        }
 
     }
 
@@ -23346,6 +24587,19 @@ namespace SilverfishRush
     {
         //todo secret
         //    geheimnis:/ wenn euer held schaden erleidet, wird dem feindlichen helden ebenso viel schaden zugefügt.
+        public override void onSecretPlay(Playfield p, bool ownplay, int number)
+        {
+            int dmg = (ownplay) ? p.getSpellDamageDamage(number) : p.getEnemySpellDamageDamage(number);
+
+            if (ownplay)
+            {
+                p.minionGetDamageOrHeal(p.enemyHero, dmg);
+            }
+            else
+            {
+                p.minionGetDamageOrHeal(p.ownHero, dmg);
+            }
+        }
 
     }
 
@@ -23381,6 +24635,60 @@ namespace SilverfishRush
     {
         //todo secret
         //    geheimnis:/ wenn einer eurer diener stirbt, wird er mit 1 leben wiederbelebt.
+
+        public override void onSecretPlay(Playfield p, bool ownplay, int number)
+        {
+            int posi = 0;
+            if (ownplay)
+            {
+                posi = p.ownMinions.Count;
+            }
+            else
+            {
+                posi = p.enemyMinions.Count;
+            }
+            CardDB.Card kid = null;
+            if (ownplay)
+            {
+                kid = CardDB.Instance.getCardDataFromID(p.revivingOwnMinion);
+            }
+            else
+            {
+                kid = CardDB.Instance.getCardDataFromID(p.revivingEnemyMinion);
+            }
+            p.callKid(kid, posi, ownplay);
+            if (ownplay)
+            {
+                if (p.ownMinions.Count >= 1)
+                {
+                    if (p.ownMinions[p.ownMinions.Count - 1].handcard.card.cardIDenum == kid.cardIDenum)
+                    {
+                        p.ownMinions[p.ownMinions.Count - 1].Hp = 1;
+                        p.ownMinions[p.ownMinions.Count - 1].wounded = false;
+                        if (p.ownMinions[p.ownMinions.Count - 1].Hp < p.ownMinions[p.ownMinions.Count - 1].maxHp)
+                        {
+                            p.ownMinions[p.ownMinions.Count - 1].wounded = true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (p.enemyMinions.Count >= 1)
+                {
+                    if (p.enemyMinions[p.enemyMinions.Count - 1].handcard.card.cardIDenum == kid.cardIDenum)
+                    {
+                        p.enemyMinions[p.enemyMinions.Count - 1].Hp = 1;
+                        p.enemyMinions[p.enemyMinions.Count - 1].wounded = false;
+                        if (p.enemyMinions[p.enemyMinions.Count - 1].Hp < p.enemyMinions[p.enemyMinions.Count - 1].maxHp)
+                        {
+                            p.enemyMinions[p.enemyMinions.Count - 1].wounded = true;
+                        }
+                    }
+                }
+            }
+
+        }
 
     }
 
@@ -23704,19 +25012,21 @@ namespace SilverfishRush
             {
                 if (ownplay)
                 {
-                    if (p.ownMaxMana == 10)
+                    if (p.ownMaxMana >= 10)
                     {
-                        p.drawACard(CardDB.cardName.excessmana, true);
+                        //p.drawACard(CardDB.cardName.excessmana, true);
+                        p.mana++;
                     }
                     else
                     {
                         p.ownMaxMana++;
                         p.mana++;
                     }
-                    if (p.ownMaxMana == 10)
+                    if (p.ownMaxMana >= 10)
                     {
                         //this.owncarddraw++;
-                        p.drawACard(CardDB.cardName.excessmana, true);
+                        //p.drawACard(CardDB.cardName.excessmana, true);
+                        p.mana++;
                     }
                     else
                     {
@@ -23728,7 +25038,7 @@ namespace SilverfishRush
                 {
                     if (p.enemyMaxMana == 10)
                     {
-                        p.drawACard(CardDB.cardName.excessmana, false);
+                        //p.drawACard(CardDB.cardName.excessmana, false);
                     }
                     else
                     {
@@ -23737,7 +25047,7 @@ namespace SilverfishRush
                     if (p.enemyMaxMana == 10)
                     {
                         //this.owncarddraw++;
-                        p.drawACard(CardDB.cardName.excessmana, false);
+                        //p.drawACard(CardDB.cardName.excessmana, false);
                     }
                     else
                     {
@@ -23765,19 +25075,21 @@ namespace SilverfishRush
         {
             if (ownplay)
             {
-                if (p.ownMaxMana == 10)
+                if (p.ownMaxMana >= 10)
                 {
-                    p.drawACard(CardDB.cardName.excessmana, true);
+                    //p.drawACard(CardDB.cardName.excessmana, true);
+                    p.mana++;
                 }
                 else
                 {
                     p.ownMaxMana++;
                     p.mana++;
                 }
-                if (p.ownMaxMana == 10)
+                if (p.ownMaxMana >= 10)
                 {
                     //this.owncarddraw++;
-                    p.drawACard(CardDB.cardName.excessmana, true);
+                    //p.drawACard(CardDB.cardName.excessmana, true);
+                    p.mana++;
                 }
                 else
                 {
@@ -23789,7 +25101,7 @@ namespace SilverfishRush
             {
                 if (p.enemyMaxMana == 10)
                 {
-                    p.drawACard(CardDB.cardName.excessmana, false);
+                    //p.drawACard(CardDB.cardName.excessmana, false);
                 }
                 else
                 {
@@ -23798,7 +25110,7 @@ namespace SilverfishRush
                 if (p.enemyMaxMana == 10)
                 {
                     //this.owncarddraw++;
-                    p.drawACard(CardDB.cardName.excessmana, false);
+                    //p.drawACard(CardDB.cardName.excessmana, false);
                 }
                 else
                 {
@@ -24395,7 +25707,10 @@ namespace SilverfishRush
 
         //todo secret
         //    geheimnis:/ wenn euer held angegriffen wird, erhält er 8 rüstung.
-
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
+        {
+            target.armor += 8;
+        }
 
     }
 
@@ -24404,6 +25719,32 @@ namespace SilverfishRush
         //todo secret
         //    geheimnis:/ wenn euer gegner einen diener ausspielt, beschwört ihr eine kopie desselben herbei.
 
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
+        {
+
+            int posi = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
+            p.callKid(target.handcard.card, posi, ownplay);
+            if (ownplay)
+            {
+                if (p.ownMinions.Count >= 1 && p.ownMinions[p.ownMinions.Count - 1].name == target.handcard.card.name)
+                {
+                    int e = p.ownMinions[p.ownMinions.Count - 1].entitiyID;
+                    p.ownMinions[p.ownMinions.Count - 1].setMinionTominion(target);
+                    p.ownMinions[p.ownMinions.Count - 1].entitiyID = e;
+                    p.ownMinions[p.ownMinions.Count - 1].own = true;
+                }
+            }
+            else
+            {
+                if (p.enemyMinions.Count >= 1 && p.enemyMinions[p.enemyMinions.Count - 1].name == target.handcard.card.name)
+                {
+                    int e = p.enemyMinions[p.enemyMinions.Count - 1].entitiyID;
+                    p.enemyMinions[p.enemyMinions.Count - 1].setMinionTominion(target);
+                    p.enemyMinions[p.enemyMinions.Count - 1].entitiyID = e;
+                    p.enemyMinions[p.enemyMinions.Count - 1].own = false;
+                }
+            }
+        }
 
     }
 
@@ -24411,7 +25752,11 @@ namespace SilverfishRush
     {
         //todo secret
         //    geheimnis:/ wenn euer held tödlichen schaden erleidet, wird dieser verhindert und der held wird immun/ in diesem zug.
-
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
+        {
+            target.Hp += number;
+            target.immune = true;
+        }
 
     }
 
@@ -24443,6 +25788,7 @@ namespace SilverfishRush
                     }
                     else
                     {
+
                         p.minionGetDamageOrHeal(p.ownHero, 8);
                     }
                 }
@@ -25063,6 +26409,13 @@ namespace SilverfishRush
         //todo secret
         //    geheimnis:/ wenn euer gegner einen diener ausspielt, wird dessen leben auf 1 verringert.
 
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
+        {
+            target.Hp = 1;
+            target.maxHp = 1;
+            target.wounded = false;
+
+        }
 
     }
 
@@ -25578,7 +26931,70 @@ namespace SilverfishRush
     class Sim_EX1_533 : SimTemplate//Misdirection
     {
         //todo secret
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion attacker, Minion target, out int number)
+        {
+            number = 0;
+            Minion newTarget = null;
+            if (ownplay)
+            {
+                foreach (Minion m in p.enemyMinions)
+                {
+                    if (target.entitiyID != m.entitiyID && attacker.entitiyID != m.entitiyID)
+                    {
+                        newTarget = m;
+                    }
+                }
 
+                if (newTarget == null)
+                {
+                    foreach (Minion m in p.ownMinions)
+                    {
+                        if (target.entitiyID != m.entitiyID && attacker.entitiyID != m.entitiyID)
+                        {
+                            newTarget = m;
+                        }
+                    }
+                }
+
+                if (newTarget == null)
+                {
+                    newTarget = p.enemyHero;
+                }
+            }
+
+            else
+            {
+                foreach (Minion m in p.ownMinions)
+                {
+                    if (target.entitiyID != m.entitiyID && attacker.entitiyID != m.entitiyID)
+                    {
+                        newTarget = m;
+                    }
+                }
+
+                if (newTarget == null)
+                {
+                    foreach (Minion m in p.enemyMinions)
+                    {
+                        if (target.entitiyID != m.entitiyID && attacker.entitiyID != m.entitiyID)
+                        {
+                            newTarget = m;
+                        }
+                    }
+                }
+
+                if (newTarget == null)
+                {
+                    newTarget = p.ownHero;
+                }
+            }
+
+
+            if (newTarget != null)
+            {
+                number = newTarget.entitiyID;
+            }
+        }
 
     }
 
@@ -25714,7 +27130,11 @@ namespace SilverfishRush
             {
                 m.stealth = false;
             }
-            if (ownplay) p.enemySecretCount = 0;
+            if (ownplay)
+            {
+                p.enemySecretCount = 0;
+                p.enemySecretList.Clear();
+            }
             else
             {
                 p.ownSecretsIDList.Clear();
@@ -25740,8 +27160,25 @@ namespace SilverfishRush
     {
         //todo secret
         //    geheimnis:/ wenn einer eurer diener angegriffen wird, ruft ihr drei schlangen (1/1) herbei.
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_554t);//snake
 
-
+        public override void onSecretPlay(Playfield p, bool ownplay, int number)
+        {
+            if (ownplay)
+            {
+                int posi = p.ownMinions.Count;
+                p.callKid(kid, posi, true);
+                p.callKid(kid, posi, true);
+                p.callKid(kid, posi, true);
+            }
+            else
+            {
+                int posi = p.enemyMinions.Count;
+                p.callKid(kid, posi, false);
+                p.callKid(kid, posi, false);
+                p.callKid(kid, posi, false);
+            }
+        }
     }
 
     class Sim_EX1_554t : SimTemplate //snake
@@ -26322,7 +27759,10 @@ namespace SilverfishRush
     {
         //todo secret
         //    geheimnis:/ wenn ein diener euren helden angreift, wird er vernichtet.
-
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
+        {
+            p.minionGetDestroyed(target);
+        }
 
     }
 
@@ -26486,13 +27926,24 @@ namespace SilverfishRush
         //todo secret
         //    geheimnis:/ wenn euer gegner einen diener ausspielt, werden diesem $4 schaden zugefügt.
 
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
+        {
+            int dmg = (ownplay) ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);
+
+            p.minionGetDamageOrHeal(target, dmg);
+        }
+
     }
 
     class Sim_EX1_610 : SimTemplate //explosivetrap
     {
         //todo secret
         //    geheimnis:/ wenn euer held angegriffen wird, erleiden alle feinde $2 schaden.
-
+        public override void onSecretPlay(Playfield p, bool ownplay, int number)
+        {
+            int dmg = (ownplay) ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
+            p.allMinionOfASideGetDamage(!ownplay, dmg);
+        }
 
     }
 
@@ -26501,6 +27952,18 @@ namespace SilverfishRush
         //todo secret
         //    geheimnis:/ wenn ein feindlicher diener angreift, lasst ihn auf die hand seines besitzers zurückkehren. zusätzlich kostet er (2) mehr.
 
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
+        {
+            if (ownplay)
+            {
+                p.minionReturnToHand(target, false, 2);
+            }
+            else
+            {
+                p.minionReturnToHand(target, true, 2);
+            }
+            target.Hp = -100;
+        }
 
     }
 
@@ -26908,7 +28371,20 @@ namespace SilverfishRush
             {
                 if (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.hunter || p.enemyHeroName == HeroEnum.pala)
                 {
-                    p.enemySecretCount++;
+                    if (p.enemySecretCount <= 4)
+                    {
+                        p.enemySecretCount++;
+                        SecretItem si = Probabilitymaker.Instance.getNewSecretGuessedItem(p.nextEntity, p.enemyHeroName);
+                        if (p.enemyHeroName == HeroEnum.pala)
+                        {
+                            si.canBe_redemption = false;
+                        }
+                        if (Settings.Instance.useSecretsPlayArround)
+                        {
+                            p.enemySecretList.Add(si);
+                        }
+                        p.nextEntity++;
+                    }
                 }
             }
 
@@ -27121,6 +28597,21 @@ namespace SilverfishRush
         //todo secret
         //    geheimnis:/ wenn ein befreundeter diener stirbt, erhaltet ihr 2 kopien dieses dieners auf eure hand.
 
+        public override void onSecretPlay(Playfield p, bool ownplay, int number)
+        {
+            if (ownplay)
+            {
+                p.drawACard(p.revivingOwnMinion, ownplay, true);
+                p.drawACard(p.revivingOwnMinion, ownplay, true);
+            }
+            else
+            {
+                p.drawACard(p.revivingEnemyMinion, ownplay, true);
+                p.drawACard(p.revivingEnemyMinion, ownplay, true);
+            }
+
+        }
+
     }
 
     class Sim_FP1_019 : SimTemplate //poisonseeds
@@ -27158,6 +28649,43 @@ namespace SilverfishRush
         //todo secret
         //    geheimnis:/ wenn einer eurer diener stirbt, erhält ein zufälliger befreundeter diener +3/+2.
 
+        public override void onSecretPlay(Playfield p, bool ownplay, int number)
+        {
+            List<Minion> temp = new List<Minion>();
+
+
+            if (ownplay)
+            {
+                List<Minion> temp2 = new List<Minion>(p.ownMinions);
+                temp2.Sort((a, b) => -a.Angr.CompareTo(b.Angr));
+                temp.AddRange(temp2);
+            }
+            else
+            {
+                List<Minion> temp2 = new List<Minion>(p.enemyMinions);
+                temp2.Sort((a, b) => a.Angr.CompareTo(b.Angr));
+                temp.AddRange(temp2);
+            }
+
+            if (temp.Count >= 1)
+            {
+                if (ownplay)
+                {
+                    Minion trgt = temp[0];
+                    if (temp.Count >= 2 && trgt.taunt && !temp[1].taunt) trgt = temp[1];
+                    p.minionGetBuffed(trgt, 3, 2);
+                }
+                else
+                {
+
+                    Minion trgt = temp[0];
+                    if (temp.Count >= 2 && !trgt.taunt && temp[1].taunt) trgt = temp[1];
+                    p.minionGetBuffed(trgt, 3, 2);
+                }
+            }
+
+
+        }
     }
 
     class Sim_FP1_021 : SimTemplate//Death's Bite
@@ -27972,7 +29500,8 @@ namespace SilverfishRush
                     foreach (Minion m in temp)
                     {
                         if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2) continue; //dont attack nerubianegg!
-
+                        if (m.name == CardDB.cardName.defender) continue;
+                        if (m.name == CardDB.cardName.spellbender) continue;
                         if (m.Hp >= 1 && minhp > m.Hp)
                         {
                             enemy = m;
@@ -28007,6 +29536,7 @@ namespace SilverfishRush
         }
 
     }
+
 
     class Sim_NEW1_020 : SimTemplate //wildpyromancer
     {
@@ -28463,6 +29993,38 @@ namespace SilverfishRush
         //todo secret
         //    geheimnis:/ wenn ein feind einen zauber auf einen diener wirkt, ruft ihr einen diener (1/3) als neues ziel herbei.
 
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.tt_010a);
+
+        public override void onSecretPlay(Playfield p, bool ownplay, Minion attacker, Minion target, out int number)
+        {
+            number = 0;
+            if (ownplay)
+            {
+                int posi = p.ownMinions.Count;
+                p.callKid(kid, posi, true);
+                if (p.ownMinions.Count >= 1)
+                {
+                    if (p.ownMinions[p.ownMinions.Count - 1].name == CardDB.cardName.spellbender)
+                    {
+                        number = p.ownMinions[p.ownMinions.Count - 1].entitiyID;
+                    }
+                }
+            }
+            else
+            {
+                int posi = p.enemyMinions.Count;
+                p.callKid(kid, posi, false);
+
+                if (p.enemyMinions.Count >= 1)
+                {
+                    if (p.enemyMinions[p.enemyMinions.Count - 1].name == CardDB.cardName.spellbender)
+                    {
+                        number = p.enemyMinions[p.enemyMinions.Count - 1].entitiyID;
+                    }
+                }
+            }
+
+        }
 
     }
 

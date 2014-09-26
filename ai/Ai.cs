@@ -19,6 +19,7 @@ namespace HREngine.Bots
         public int playaroundprob = 40;
         public int playaroundprob2 = 80;
 
+        
 
         public MiniSimulator mainTurnSimulator;
         public EnemyTurnSimulator enemyTurnSim;

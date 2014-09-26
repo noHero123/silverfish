@@ -29,10 +29,24 @@ namespace HREngine.Bots
             {
                 if (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.hunter || p.enemyHeroName == HeroEnum.pala)
                 {
-                    p.enemySecretCount++;
+                    if (p.enemySecretCount <= 4)
+                    {
+                        p.enemySecretCount++;
+                        SecretItem si = Probabilitymaker.Instance.getNewSecretGuessedItem(p.nextEntity, p.enemyHeroName);
+                        if (p.enemyHeroName == HeroEnum.pala)
+                        {
+                            si.canBe_redemption = false;
+                        }
+                        if (Settings.Instance.useSecretsPlayArround)
+                        {
+                            p.enemySecretList.Add(si);
+                        }
+                        p.nextEntity++;
+                    }
                 }
             }
             
         }
     }
+
 }

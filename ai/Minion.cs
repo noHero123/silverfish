@@ -232,6 +232,10 @@ namespace HREngine.Bots
                     {
                         p.tempTrigger.charsGotHealed++;
                     }
+                    if (copy - this.Hp >= 1)
+                    {
+                        p.secretTrigger_HeroGotDmg(this.own, copy - this.Hp);
+                    }
                 }
                 else
                 {
@@ -242,6 +246,7 @@ namespace HREngine.Bots
                         if (rest < 0)
                         {
                             this.Hp += rest;
+                            p.secretTrigger_HeroGotDmg(this.own, rest);
                         }
                         this.armor = Math.Max(0, this.armor - dmg);
 

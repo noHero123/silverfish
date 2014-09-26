@@ -59,6 +59,9 @@
 <Label>number of boards that are simulated in enemys second turn. requires "simulate enemys second turn" activated</Label>
 <Label></Label>
 <Label></Label>
+<Setting name="uai.secrets" default="false" type="boolean" description="play arround secrets" />
+<Label>(EXPERIMENTAL) check this and the ai will play around enemys secrets</Label>
+<Label></Label>
 <Setting name="uai.playAround" type="boolean" description="play arround specific cards" />
 <Label>(EXPERIMENTAL) check this and the ai will play around some cards (like flamestrike) (will not change calculation time mutch)</Label>
 <Setting name="uai.playAroundProb" default="50" type="text" description="play around min probability:" />

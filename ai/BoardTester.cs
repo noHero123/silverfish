@@ -53,7 +53,8 @@ namespace HREngine.Bots
         bool heroImmune = false;
         bool enemyHeroImmune = false;
 
-        int enemySecrets = 0;
+        int enemySecretAmount = 0;
+        List<SecretItem> enemySecrets = new List<SecretItem>();
 
         bool ownHeroFrozen = false;
 
@@ -91,6 +92,8 @@ namespace HREngine.Bots
             int ntssw = 10;
             int ntssd = 6;
             int ntssm = 50;
+
+            bool dosecrets = false;
 
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
@@ -152,6 +155,12 @@ namespace HREngine.Bots
                     this.twoturnsim = 256;
                     if (s.Contains("twoturnsim ")) this.twoturnsim = Convert.ToInt32(s.Split(new string[] { "twoturnsim " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
 
+                    if (s.Contains(" face "))
+                    {
+                        string facehp = s.Split(new string[] { "face " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0];
+                        ComboBreaker.Instance.attackFaceHP = Convert.ToInt32(facehp);
+                    }
+
                     this.playarround = false;
                     if (s.Contains("playaround "))
                     {
@@ -184,12 +193,25 @@ namespace HREngine.Bots
 
                     if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
 
+                    if (s.Contains(" secret")) dosecrets = true;
+
                     continue;
                 }
 
                 if (s.StartsWith("enemy secretsCount:"))
                 {
-                    this.enemySecrets = Convert.ToInt32(s.Split(' ')[2]);
+                    this.enemySecretAmount = Convert.ToInt32(s.Split(' ')[2]);
+                    this.enemySecrets.Clear();
+                    if (this.enemySecretAmount >= 1 && s.Contains(";"))
+                    {
+                        string secretstuff = s.Split(';')[1];
+                        foreach (string sec in secretstuff.Split(','))
+                        {
+                            if (sec == "" || sec == String.Empty || sec == " ") continue;
+                            this.enemySecrets.Add(new SecretItem(sec));
+                        }
+
+                    }
                     continue;
                 }
 
@@ -783,7 +805,7 @@ namespace HREngine.Bots
 
 
             Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, 100, 200);
-            Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecrets);
+            Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);
 
             bool herowindfury = false;
             if (this.ownHeroWeapon == "doomhammer") herowindfury = true;
@@ -846,6 +868,8 @@ namespace HREngine.Bots
 
             Handmanager.Instance.setHandcards(this.handcards, this.handcards.Count, enemyNumberHand);
 
+            Probabilitymaker.Instance.setEnemySecretData(enemySecrets);
+
             Probabilitymaker.Instance.setTurnGraveYard(this.turnGraveYard);
             Probabilitymaker.Instance.stalaggDead = this.stalaggdead;
             Probabilitymaker.Instance.feugenDead = this.feugendead;
@@ -856,6 +880,7 @@ namespace HREngine.Bots
             Ai.Instance.enemySecondTurnSim.maxwide = ents;
             Ai.Instance.nextTurnSimulator.updateParams(ntssd, ntssw, ntssm);
 
+            Settings.Instance.useSecretsPlayArround = dosecrets;
 
 
         }

@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "112.4";
+        public string versionnumber = "112.5";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -26,6 +26,7 @@ namespace HREngine.Bots
         int ownPlayerController = 0;
         List<string> ownSecretList = new List<string>();
         int enemySecretCount = 0;
+        List<int> enemySecretList = new List<int>();
 
         int currentMana = 0;
         int ownMaxMana = 0;
@@ -142,15 +143,24 @@ namespace HREngine.Bots
 
             Hrtprozis.Instance.updateFatigueStats(this.ownDecksize, this.ownHeroFatigue, this.enemyDecksize, this.enemyHeroFatigue);
 
+            Probabilitymaker.Instance.getEnemySecretGuesses(this.enemySecretList, Hrtprozis.Instance.heroNametoEnum(this.enemyHeroname));
+
             //learnmode :D
 
             Playfield p = new Playfield();
+
+            
+
             if (lastpf != null)
             {
                 if (lastpf.isEqualf(p))
                 {
                     return false;
                 }
+
+                //board changed we update secrets!
+                //if(Ai.Instance.nextMoveGuess!=null) Probabilitymaker.Instance.updateSecretList(Ai.Instance.nextMoveGuess.enemySecretList);
+                Probabilitymaker.Instance.updateSecretList(p, lastpf);
                 lastpf = p;
             }
             else
@@ -158,7 +168,7 @@ namespace HREngine.Bots
                 lastpf = p;
             }
 
-
+            p = new Playfield();//secrets have updated :D
             // calculate stuff
             Helpfunctions.Instance.ErrorLog("calculating stuff... " + DateTime.Now.ToString("HH:mm:ss.ffff"));
             if (runExtern)
@@ -208,9 +218,14 @@ namespace HREngine.Bots
             enemySecretCount = HRCard.GetCards(enemyPlayer, HRCardZone.SECRET).Count;
             enemySecretCount = 0;
             //count enemy secrets
+            enemySecretList.Clear();
             foreach (HREntity ent in allEntitys.Values)
             {
-                if (ent.IsSecret() && ent.GetControllerId() == enemyPlayer.GetControllerId() && ent.GetZone() == HRCardZone.SECRET) enemySecretCount++;
+                if (ent.IsSecret() && ent.GetControllerId() == enemyPlayer.GetControllerId() && ent.GetZone() == HRCardZone.SECRET)
+                {
+                    enemySecretCount++;
+                    enemySecretList.Add(ent.GetTag(HRGameTag.ENTITY_ID));
+                }
             }
             
 
@@ -664,6 +679,7 @@ namespace HREngine.Bots
             if (botbase is BehaviorControl) this.botbehave = "control";
             if (botbase is BehaviorMana) this.botbehave = "mana";
             this.botbehave += " " + Ai.Instance.maxwide;
+            this.botbehave += " face " + ComboBreaker.Instance.attackFaceHP;
             if (Ai.Instance.secondTurnAmount > 0)
             {
                 if (Ai.Instance.nextMoveGuess.mana == -100)
@@ -686,8 +702,40 @@ namespace HREngine.Bots
                 this.botbehave += " ents " + Ai.Instance.enemySecondTurnSim.maxwide;
             }
 
+            if (Settings.Instance.useSecretsPlayArround)
+            {
+                this.botbehave += " secret";
+            }
+
+
             
 
+        }
+
+        public static int getLastAffected(int entityid)
+        {
+
+            Dictionary<int, HREntity> allEntitys = HRGame.GetEntityMap();
+
+            foreach (HREntity ent in allEntitys.Values)
+            {
+                if (ent.GetTag(HRGameTag.LAST_AFFECTED_BY) == entityid) return ent.GetTag(HRGameTag.ENTITY_ID);
+            }
+
+            return 0;
+        }
+
+        public static int getCardTarget(int entityid)
+        {
+
+            Dictionary<int, HREntity> allEntitys = HRGame.GetEntityMap();
+
+            foreach (HREntity ent in allEntitys.Values)
+            {
+                if (ent.GetTag(HRGameTag.ENTITY_ID) == entityid) return ent.GetTag(HRGameTag.CARD_TARGET);
+            }
+
+            return 0;
         }
 
         public void testExternal()
@@ -705,6 +753,8 @@ namespace HREngine.Bots
             HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
             int ownsecretcount = ownPlayer.GetSecretDefinitions().Count;
             string dtimes = DateTime.Now.ToString("HH:mm:ss:ffff");
+            string enemysecretIds = "";
+            enemysecretIds = Probabilitymaker.Instance.getEnemySecretData();
             Helpfunctions.Instance.logg("#######################################################################");
             Helpfunctions.Instance.logg("#######################################################################");
             Helpfunctions.Instance.logg("start calculations, current time: " + dtimes + " V" + this.versionnumber + " " + this.botbehave);
@@ -712,7 +762,8 @@ namespace HREngine.Bots
             Helpfunctions.Instance.logg("mana " + currentMana + "/" + ownMaxMana);
             Helpfunctions.Instance.logg("emana " + enemyMaxMana);
             Helpfunctions.Instance.logg("own secretsCount: " + ownsecretcount);
-            Helpfunctions.Instance.logg("enemy secretsCount: " + enemySecretCount);
+
+            Helpfunctions.Instance.logg("enemy secretsCount: " + enemySecretCount + " ;" + enemysecretIds);
 
             Ai.Instance.currentCalculatedBoard = dtimes;
 
@@ -729,7 +780,7 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.writeToBuffer("mana " + currentMana + "/" + ownMaxMana);
                 Helpfunctions.Instance.writeToBuffer("emana " + enemyMaxMana);
                 Helpfunctions.Instance.writeToBuffer("own secretsCount: " + ownsecretcount);
-                Helpfunctions.Instance.writeToBuffer("enemy secretsCount: " + enemySecretCount);
+                Helpfunctions.Instance.writeToBuffer("enemy secretsCount: " + enemySecretCount + " ;" + enemysecretIds);
             }
             Hrtprozis.Instance.printHero(runEx);
             Hrtprozis.Instance.printOwnMinions(runEx);

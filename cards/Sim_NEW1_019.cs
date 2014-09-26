@@ -23,7 +23,8 @@ namespace HREngine.Bots
                     foreach (Minion m in temp)
                     {
                         if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2) continue; //dont attack nerubianegg!
-
+                        if (m.name == CardDB.cardName.defender) continue;
+                        if (m.name == CardDB.cardName.spellbender) continue;
                         if (m.Hp >= 1 && minhp > m.Hp)
                         {
                             enemy = m;

@@ -33,7 +33,6 @@ namespace HREngine.Bots
 
        public Bot()
        {
-           Helpfunctions.Instance.ErrorLog("gogo");
            OnVictory = HandleWining;
            OnLost = HandleLosing;
            OnBattleStateUpdate = HandleOnBattleStateUpdate;
@@ -44,14 +43,20 @@ namespace HREngine.Bots
 
            try
            {
-               string comboselect = HRSettings.Get.ReadSetting("silverfish.xml", "uai.profile");
-               if (comboselect == "rush") this.behave = new BehaviorRush();
-               if (comboselect == "mana") this.behave = new BehaviorMana();
+               concede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.autoconcede") == "true") ? true : false;
+               writeToSingleFile = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.singleLog") == "true") ? true : false;
            }
            catch
            {
-               Helpfunctions.Instance.ErrorLog("cant read behaviour");
+               Helpfunctions.Instance.ErrorLog("a wild error occurrs! cant read the settings...");
            }
+
+           this.sf = new Silverfish(writeToSingleFile);
+           CardDB cdb = CardDB.Instance;
+           if (cdb.installedWrong) return;
+           Mulligan.Instance.setAutoConcede(concede);
+           sf.setnewLoggFile();
+
 
            try
            {
@@ -83,15 +88,7 @@ namespace HREngine.Bots
                Helpfunctions.Instance.ErrorLog("cant read passive waiting...");
            }
 
-           try
-           {
-               concede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.autoconcede") == "true") ? true : false;
-               writeToSingleFile = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.singleLog") == "true") ? true : false;
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("a wild error occurrs! cant read the settings...");
-           }
+
            try
            {
                this.concedeLvl = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.concedelvl")));
@@ -127,16 +124,18 @@ namespace HREngine.Bots
                Helpfunctions.Instance.ErrorLog("cant read enemy concede");
            }
 
-           this.sf = new Silverfish(writeToSingleFile);
 
 
-           CardDB cdb = CardDB.Instance;
-           if (cdb.installedWrong) return;
-
-
-           Mulligan.Instance.setAutoConcede(concede);
-
-           sf.setnewLoggFile();
+           try
+           {
+               bool secrets = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.secrets") == "true") ? true : false;
+               Settings.Instance.useSecretsPlayArround = secrets;
+               Helpfunctions.Instance.ErrorLog("playing arround secrets is " + secrets);
+           }
+           catch
+           {
+               Helpfunctions.Instance.ErrorLog("cant read secrets");
+           }
 
            try
            {
