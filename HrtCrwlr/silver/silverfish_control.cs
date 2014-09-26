@@ -3208,7 +3208,7 @@ namespace HREngine.Bots
 
             if (this.enemySecretCount >= 1)
             {
-                for (int i = 0; i < this.enemySecretCount; i++)
+                for (int i = 0; i < this.enemySecretList.Count; i++)
                 {
                     if (!this.enemySecretList[i].isEqual(p.enemySecretList[i]))
                     {
@@ -3426,7 +3426,7 @@ namespace HREngine.Bots
 
             if (this.enemySecretCount >= 1)
             {
-                for (int i = 0; i < this.enemySecretCount; i++)
+                for (int i = 0; i < this.enemySecretList.Count; i++)
                 {
                     if (!this.enemySecretList[i].isEqual(p.enemySecretList[i]))
                     {
@@ -5883,6 +5883,7 @@ namespace HREngine.Bots
                             {
                                 sii.canBe_iceblock = false;
                             }
+
                         }
                     }
                 }
@@ -5915,6 +5916,7 @@ namespace HREngine.Bots
                         {
                             sii.canBe_mirrorentity = false;
                         }
+
                     }
 
                     if (si.canBe_repentance)
@@ -7076,13 +7078,13 @@ namespace HREngine.Bots
 
             foreach (Minion m in this.ownMinions)
             {
-                Helpfunctions.Instance.logg("name,ang, hp: " + m.name + ", " + m.Angr + ", " + m.Hp);
+                Helpfunctions.Instance.logg("name,ang, hp: " + m.name + ", " + m.Angr + ", " + m.Hp + " " + m.entitiyID);
             }
 
             Helpfunctions.Instance.logg("ENEMY MINIONS############");
             foreach (Minion m in this.enemyMinions)
             {
-                Helpfunctions.Instance.logg("name,ang, hp: " + m.name + ", " + m.Angr + ", " + m.Hp);
+                Helpfunctions.Instance.logg("name,ang, hp: " + m.name + ", " + m.Angr + ", " + m.Hp + " " + m.entitiyID);
             }
 
 
