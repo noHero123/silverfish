@@ -925,7 +925,7 @@ namespace HREngine.Bots
         {
             try
             {
-                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "uaibattletrigger.txt";
+                string path = (HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "uaibattletrigger.txt";
                 string w = "concede";
                 if (what == 1) w = "win";
                 if (what == 2) w = "loss";
