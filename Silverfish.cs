@@ -196,6 +196,7 @@ namespace HREngine.Bots
             }
 
             Helpfunctions.Instance.ErrorLog("calculating ended! " + DateTime.Now.ToString("HH:mm:ss.ffff"));
+
             return true;
         }
 

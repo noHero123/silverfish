@@ -706,6 +706,11 @@ namespace HREngine.Bots
                 bool templearn = sf.updateEverything(behave, this.useExternalProcess, this.passiveWaiting);
                 if (templearn == true) this.printlearnmode = true;
 
+                if (this.passiveWaiting && sf.waitingForSilver)
+                {
+                    return new HREngine.API.Actions.MakeNothingAction();
+                }
+
                 if (this.learnmode)
                 {
                     if (this.printlearnmode)
@@ -716,10 +721,7 @@ namespace HREngine.Bots
                     return new HREngine.API.Actions.MakeNothingAction();
                 }
 
-                if (this.passiveWaiting && sf.waitingForSilver)
-                {
-                    return new HREngine.API.Actions.MakeNothingAction();
-                }
+               
 
                 if (Ai.Instance.bestmoveValue <= -900 && enemyConcede) { return new HREngine.API.Actions.ConcedeAction(); }
 
@@ -844,6 +846,7 @@ namespace HREngine.Bots
                 this.isgoingtoconcede = false;
             }
             writeSettings();
+            writeTrigger(1);
             int totalwin = this.wins;
             int totallose = this.loses;
             if ((totalwin + totallose - KeepConcede) != 0)
@@ -873,7 +876,12 @@ namespace HREngine.Bots
             if (this.isgoingtoconcede)
             {
                 this.isgoingtoconcede = false;
+                writeTrigger(0);
                 this.KeepConcede++;
+            }
+            else
+            {
+                writeTrigger(2);
             }
             writeSettings();
             int totalwin = this.wins;
@@ -887,6 +895,22 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + KeepConcede + " lose:" + (totallose - KeepConcede) + " real winrate: infinity!!!! (division by zero :D)");
             }
             return null;
+        }
+
+        private void writeTrigger(int what)
+        {
+            try
+            {
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "uaibattletrigger.txt";
+                string w = "concede";
+                if (what == 1) w = "win";
+                if (what == 2) w = "loss";
+                System.IO.File.WriteAllText(path, w);
+            }
+            catch
+            {
+                Helpfunctions.Instance.logg("cant write trigger");
+            }
         }
 
         private HREntity getEntityWithNumber(int number)
