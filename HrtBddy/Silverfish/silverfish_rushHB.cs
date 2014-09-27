@@ -5280,7 +5280,7 @@ namespace SilverfishRush
 
                 if (defender.isHero && !defender.own)
                 {
-                    foreach (SecretItem si in this.enemySecretList)
+                    foreach (SecretItem si in this.enemySecretList.ToArray())
                     {
                         if (si.canBe_explosive)
                         {
@@ -5427,7 +5427,7 @@ namespace SilverfishRush
 
             if (this.isOwnTurn && playedMinion.own && this.enemySecretCount >= 1)
             {
-                foreach (SecretItem si in this.enemySecretList)
+                foreach (SecretItem si in this.enemySecretList.ToArray())
                 {
                     if (si.canBe_snipe)
                     {

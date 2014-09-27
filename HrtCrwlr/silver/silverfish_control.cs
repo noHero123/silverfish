@@ -5748,7 +5748,7 @@ namespace HREngine.Bots
 
                 if (defender.isHero && !defender.own)
                 {
-                    foreach (SecretItem si in this.enemySecretList)
+                    foreach (SecretItem si in this.enemySecretList.ToArray())
                     {
                         if (si.canBe_explosive)
                         {
@@ -5895,7 +5895,7 @@ namespace HREngine.Bots
 
             if (this.isOwnTurn && playedMinion.own && this.enemySecretCount >= 1)
             {
-                foreach (SecretItem si in this.enemySecretList)
+                foreach (SecretItem si in this.enemySecretList.ToArray())
                 {
                     if (si.canBe_snipe)
                     {
