@@ -68,6 +68,7 @@ namespace HREngine.Bots
             retval -= p.enemycarddraw * 15;
 
             //int owntaunt = 0;
+            int readycount = 0;
             int ownMinionsCount = 0;
             foreach (Minion m in p.ownMinions)
             {
@@ -96,6 +97,7 @@ namespace HREngine.Bots
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
                 if (m.handcard.card.name == CardDB.cardName.bloodmagethalnos) retval += 10;
+                if (m.Ready) readycount++;
             }
 
             /*if (p.enemyMinions.Count >= 0)
@@ -105,7 +107,7 @@ namespace HREngine.Bots
                 retval += owntaunt * 10 - 11 * anz;
             }*/
 
-            int playmobs = 0;
+            
             bool useAbili = false;
             bool usecoin = false;
             foreach (Action a in p.playactions)
@@ -126,21 +128,43 @@ namespace HREngine.Bots
             //if (usecoin && p.mana >= 1) retval -= 20;
 
             int mobsInHand = 0;
+            int bigMobsInHand = 0;
             foreach (Handmanager.Handcard hc in p.owncards)
             {
-                if (hc.card.type == CardDB.cardtype.MOB && hc.card.Attack >= 3) mobsInHand++;
+                if (hc.card.type == CardDB.cardtype.MOB)
+                {
+                    mobsInHand++;
+                    if(hc.card.Attack >= 3) bigMobsInHand++;
+                }
             }
 
-            if (ownMinionsCount - p.enemyMinions.Count >= 4 && mobsInHand >= 1)
+            if (ownMinionsCount - p.enemyMinions.Count >= 4 && bigMobsInHand >= 1)
             {
-                retval += mobsInHand * 25;
+                retval += bigMobsInHand * 25;
             }
 
 
-
+            bool hasTank = false;
             foreach (Minion m in p.enemyMinions)
             {
                 retval -= this.getEnemyMinionValue(m, p);
+                hasTank = hasTank || m.taunt;
+            }
+
+            foreach(SecretItem si in p.enemySecretList)
+            {
+                if (readycount >= 1 && !hasTank && si.canbeTriggeredWithAttackingHero)
+                {
+                    retval -= 100;
+                }
+                if (readycount >= 1 && p.enemyMinions.Count >= 1 && si.canbeTriggeredWithAttackingMinion)
+                {
+                    retval -= 100;
+                }
+                if (si.canbeTriggeredWithPlayingMinion && mobsInHand >= 1)
+                {
+                    retval -= 25;
+                }
             }
 
             retval -= p.enemySecretCount;

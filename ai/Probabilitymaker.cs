@@ -24,6 +24,10 @@ namespace HREngine.Bots
     {
         public bool triggered = false;
 
+        public bool canbeTriggeredWithAttackingHero = true;
+        public bool canbeTriggeredWithAttackingMinion = true;
+        public bool canbeTriggeredWithPlayingMinion = true;
+
         public bool canBe_snaketrap = true;
         public bool canBe_snipe = true;
         public bool canBe_explosive = true;
@@ -53,6 +57,9 @@ namespace HREngine.Bots
         public SecretItem(SecretItem sec)
         {
             this.triggered = sec.triggered;
+            this.canbeTriggeredWithAttackingHero = sec.canbeTriggeredWithAttackingHero;
+            this.canbeTriggeredWithAttackingMinion = sec.canbeTriggeredWithAttackingMinion;
+            this.canbeTriggeredWithPlayingMinion = sec.canbeTriggeredWithPlayingMinion;
 
             this.canBe_avenge = sec.canBe_avenge;
             this.canBe_counterspell = sec.canBe_counterspell;
@@ -102,12 +109,26 @@ namespace HREngine.Bots
             this.canBe_repentance = (canbe[15] == '1') ? true : false;
             this.canBe_avenge = (canbe[16] == '1') ? true : false;
 
+            this.updateCanBeTriggered();
         }
 
-
-        public void usedTrigger_CharIsAttacked(bool isHero)
+        public void updateCanBeTriggered()
         {
-            if (isHero)
+            this.canbeTriggeredWithAttackingHero = false;
+            this.canbeTriggeredWithAttackingMinion = false;
+            this.canbeTriggeredWithPlayingMinion = false;
+
+            if(this.canBe_snipe || this.canBe_mirrorentity || this.canBe_repentance) this.canbeTriggeredWithPlayingMinion = true;
+
+            if (this.canBe_explosive || this.canBe_missdirection || this.canBe_freezing || this.canBe_icebarrier || this.canBe_vaporize || this.canBe_noblesacrifice) this.canbeTriggeredWithAttackingHero = true;
+
+            if(this.canBe_snaketrap || this.canBe_freezing  || this.canBe_noblesacrifice) this.canbeTriggeredWithAttackingMinion=true;
+
+        }
+
+        public void usedTrigger_CharIsAttacked(bool DefenderIsHero, bool AttackerIsHero)
+        {
+            if (DefenderIsHero)
             {
                 this.canBe_explosive = false;
                 this.canBe_missdirection = false;
@@ -120,12 +141,12 @@ namespace HREngine.Bots
             {
                 this.canBe_snaketrap = false;
             }
+            if (!AttackerIsHero)
+            {
+                this.canBe_freezing = false;
+            }
             this.canBe_noblesacrifice = false;
-        }
-
-        public void usedTrigger_MinionIsGoingToAttack()
-        {
-            this.canBe_freezing = false;
+            updateCanBeTriggered();
         }
 
         public void usedTrigger_MinionIsPlayed()
@@ -133,12 +154,14 @@ namespace HREngine.Bots
             this.canBe_snipe = false;
             this.canBe_mirrorentity = false;
             this.canBe_repentance = false;
+            updateCanBeTriggered();
         }
 
         public void usedTrigger_SpellIsPlayed(bool minionIsTarget)
         {
             this.canBe_counterspell = false;
             if (minionIsTarget) this.canBe_spellbender = false;
+            updateCanBeTriggered();
         }
 
         public void usedTrigger_MinionDied()
@@ -146,12 +169,14 @@ namespace HREngine.Bots
             this.canBe_avenge = false;
             this.canBe_redemption = false;
             this.canBe_duplicate = false;
+            updateCanBeTriggered();
         }
 
         public void usedTrigger_HeroGotDmg(bool deadly = false)
         {
             this.canBe_eyeforaneye = false;
             if (deadly) this.canBe_iceblock = false;
+            updateCanBeTriggered();
         }
 
         public string returnAString()
@@ -830,13 +855,11 @@ namespace HREngine.Bots
             foreach (SecretItem si in this.enemySecrets)
             {
 
-                if (attackedWithHero || attackedWithMob) si.usedTrigger_CharIsAttacked(attackTargetIsMinion == 1);
+                if (attackedWithHero || attackedWithMob) si.usedTrigger_CharIsAttacked(attackTargetIsMinion == 1, attackedWithHero);
 
                 if(enemyHeroGotDmg) si.usedTrigger_HeroGotDmg();
 
                 if (enemyMinionDied) si.usedTrigger_MinionDied();
-
-                if (attackedWithMob) si.usedTrigger_MinionIsGoingToAttack();
 
                 if(playedMob) si.usedTrigger_MinionIsPlayed();
 

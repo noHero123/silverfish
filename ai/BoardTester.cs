@@ -804,7 +804,7 @@ namespace HREngine.Bots
             }
 
 
-            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, 100, 200);
+            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, ownHEntity, enemyHEntity);
             Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);
 
             bool herowindfury = false;

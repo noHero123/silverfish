@@ -410,6 +410,8 @@ namespace HREngine.Bots
             if (this.DamageAllDatabase.ContainsKey(name) || (p.anzOwnAuchenaiSoulpriest >= 1 && HealAllDatabase.ContainsKey(name))) // aoe penality
             {
 
+                if (p.enemyMinions.Count == 0) return 300;
+
                 foreach (Minion m in p.enemyMinions)
                 {
                     if ((m.Angr >= 4 || m.Hp >= 5) && !m.wounded)
@@ -429,6 +431,7 @@ namespace HREngine.Bots
 
             if (this.DamageAllEnemysDatabase.ContainsKey(name)) // aoe penality
             {
+                if (p.enemyMinions.Count == 0) return 300;
                 foreach (Minion m in p.enemyMinions)
                 {
                     if ((m.Angr >= 4 || m.Hp >= 5) && !m.wounded)
@@ -592,11 +595,14 @@ namespace HREngine.Bots
             {
                 int mheal = 0;
                 int wounded = 0;
+                //int eheal = 0;
                 foreach (Minion mi in p.ownMinions)
                 {
                     mheal += Math.Min((mi.maxHp - mi.Hp), 4);
                     if (mi.wounded) wounded++;
                 }
+                //Console.WriteLine(mheal + " circle");
+                if (mheal == 0) return 500;
                 if (mheal <= 7 && wounded <= 2) return 20;
             }
 
@@ -1088,7 +1094,7 @@ namespace HREngine.Bots
                 if (m.own)
                 {
                     if (m.handcard.card.deathrattle || m.ancestralspirit >= 1 || m.souloftheforest >= 1 || m.enemyBlessingOfWisdom >= 1) return 0;
-                    if (m.handcard.card.Charge && ((m.numAttacksThisTurn == 1 && !m.windfury) || (m.numAttacksThisTurn ==2 && m.windfury)) ) return 0;
+                    if (m.handcard.card.Charge && ((m.numAttacksThisTurn == 1 && !m.windfury) || (m.numAttacksThisTurn == 2 && m.windfury))) return 0;
                     if (m.wounded || m.Angr < m.handcard.card.Attack || (m.silenced && PenalityManager.instance.specialMinions.ContainsKey(m.name))) return 0;
 
 
@@ -1106,16 +1112,16 @@ namespace HREngine.Bots
                 {
                     if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 4 && !m.taunt) return 500;
                     if (m.taunt && !m.handcard.card.tank) return 0;
-                    if (m.enemyBlessingOfWisdom>=1) return 0;
+                    if (m.enemyBlessingOfWisdom >= 1) return 0;
                     if (m.Angr > m.handcard.card.Attack || m.Hp > m.handcard.card.Health) return 0;
                     if (m.name == CardDB.cardName.abomination || m.name == CardDB.cardName.zombiechow || m.name == CardDB.cardName.unstableghoul || m.name == CardDB.cardName.dancingswords) return 0;
                     return 500;
 
                 }
- 
+
             }
 
-            if (card.name == CardDB.cardName.knifejuggler && p.mobsplayedThisTurn > 1 ||(p.ownHeroName == HeroEnum.shaman && p.ownAbilityReady==false))
+            if (card.name == CardDB.cardName.knifejuggler && p.mobsplayedThisTurn > 1 || (p.ownHeroName == HeroEnum.shaman && p.ownAbilityReady == false))
             {
                 return 20;
             }

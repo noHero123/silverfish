@@ -86,8 +86,8 @@ namespace HREngine.Bots
         public int evaluatePenality = 0;
         public int ownController = 0;
 
-        public int ownHeroEntity = -1;
-        public int enemyHeroEntity = -1;
+        //public int ownHeroEntity = -1;
+        //public int enemyHeroEntity = -1;
 
         public int hashcode = 0;
         public float value = Int32.MinValue;
@@ -210,8 +210,8 @@ namespace HREngine.Bots
             //this.simulateEnemyTurn = Ai.Instance.simulateEnemyTurn;
             this.ownController = Hrtprozis.Instance.getOwnController();
 
-            this.ownHeroEntity = Hrtprozis.Instance.ownHeroEntity;
-            this.enemyHeroEntity = Hrtprozis.Instance.enemyHeroEntitiy;
+            //this.ownHeroEntity = Hrtprozis.Instance.ownHeroEntity;
+            //this.enemyHeroEntity = Hrtprozis.Instance.enemyHeroEntitiy;
 
             this.mana = Hrtprozis.Instance.currentMana;
             this.manaTurnEnd = this.mana;
@@ -481,8 +481,8 @@ namespace HREngine.Bots
             this.attacked = p.attacked;
             this.sEnemTurn = p.sEnemTurn;
             this.ownController = p.ownController;
-            this.ownHeroEntity = p.ownHeroEntity;
-            this.enemyHeroEntity = p.enemyHeroEntity;
+            //this.ownHeroEntity = p.ownHeroEntity;
+            //this.enemyHeroEntity = p.enemyHeroEntity;
 
             this.evaluatePenality = p.evaluatePenality;
             this.ownSecretsIDList.AddRange(p.ownSecretsIDList);
@@ -1365,6 +1365,7 @@ namespace HREngine.Bots
                     {
                         buffplaces[i] = 1;
                     }
+                    tempval++;
                     places[i] = tempval;
                     gesval += tempval;
                     i++;
@@ -1679,6 +1680,7 @@ namespace HREngine.Bots
                 if (this.enemyWeaponAttack >= 1)
                 {
                     ghd += enemyWeaponAttack;
+                    if (this.enemyHero.windfury || this.enemyWeaponName == CardDB.cardName.doomhammer) ghd += enemyWeaponAttack;
                 }
                 else
                 {
@@ -2131,6 +2133,7 @@ namespace HREngine.Bots
 
             //save the action if its our first turn
             if (this.turnCounter == 0) this.playactions.Add(a);
+            //if (this.isOwnTurn) this.playactions.Add(a);
 
             // its a minion attack--------------------------------
             if (a.actionType == actionEnum.attackWithMinion)
@@ -2924,9 +2927,16 @@ namespace HREngine.Bots
             if (own)
             {
                 int violetteacher = 0; //we count violetteacher to avoid copying ownminions
+                int illidan = 0;
                 foreach (Minion m in this.ownMinions)
                 {
                     if (m.silenced) continue;
+
+                    if (own && m.name == CardDB.cardName.illidanstormrage)
+                    {
+                        illidan++;
+                        continue;
+                    }
 
                     if (own && m.name == CardDB.cardName.violetteacher)
                     {
@@ -2944,15 +2954,25 @@ namespace HREngine.Bots
                     int pos = this.ownMinions.Count;
                     this.callKid(CardDB.Instance.teacherminion, pos, own);
                 }
+
+                for (int i = 0; i < illidan; i++)
+                {
+                    int pos = this.ownMinions.Count;
+                    this.callKid(CardDB.Instance.illidanminion, pos, own);
+                }
             }
             else
             {
                 int violetteacher = 0; //we count violetteacher to avoid copying ownminions
-
+                int illidan = 0;
                 foreach (Minion m in this.enemyMinions)
                 {
                     if (m.silenced) continue;
-
+                    if (own && m.name == CardDB.cardName.illidanstormrage)
+                    {
+                        illidan++;
+                        continue;
+                    }
                     if (!own && m.name == CardDB.cardName.violetteacher)
                     {
                         if (c.type == CardDB.cardtype.SPELL)
@@ -2968,6 +2988,11 @@ namespace HREngine.Bots
                 {
                     int pos = this.enemyMinions.Count;
                     this.callKid(CardDB.Instance.teacherminion, pos, own);
+                }
+                for (int i = 0; i < illidan; i++)
+                {
+                    int pos = this.enemyMinions.Count;
+                    this.callKid(CardDB.Instance.illidanminion, pos, own);
                 }
             }
 
@@ -3178,7 +3203,7 @@ namespace HREngine.Bots
                             CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_610).sim_card.onSecretPlay(this, false, 0);
                             doDmgTriggers();
                             //Helpfunctions.Instance.ErrorLog("trigger explosive" + attacker.Hp);
-                            si.usedTrigger_CharIsAttacked(true);
+                            si.usedTrigger_CharIsAttacked(true, attacker.isHero);
                             foreach (SecretItem sii in this.enemySecretList)
                             {
                                 sii.canBe_explosive = false;
@@ -3190,7 +3215,7 @@ namespace HREngine.Bots
                             CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_594).sim_card.onSecretPlay(this, false, attacker, 0);
                             doDmgTriggers();
 
-                            si.usedTrigger_CharIsAttacked(true);
+                            si.usedTrigger_CharIsAttacked(true, attacker.isHero);
                             foreach (SecretItem sii in this.enemySecretList)
                             {
                                 sii.canBe_vaporize = false;
@@ -3202,7 +3227,7 @@ namespace HREngine.Bots
                             if (!(attacker.isHero && this.ownMinions.Count + this.enemyMinions.Count == 0))
                             {
                                 CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_533).sim_card.onSecretPlay(this, false, attacker, defender, out newTarget);
-                                si.usedTrigger_CharIsAttacked(true);
+                                si.usedTrigger_CharIsAttacked(true, attacker.isHero);
                                 //Helpfunctions.Instance.ErrorLog("trigger miss " + attacker.Hp);
                                 foreach (SecretItem sii in this.enemySecretList)
                                 {
@@ -3214,7 +3239,7 @@ namespace HREngine.Bots
                         if (si.canBe_icebarrier)
                         {
                             CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_289).sim_card.onSecretPlay(this, false, defender, 0);
-                            si.usedTrigger_CharIsAttacked(true);
+                            si.usedTrigger_CharIsAttacked(true, attacker.isHero);
                             foreach (SecretItem sii in this.enemySecretList)
                             {
                                 sii.canBe_icebarrier = false;
@@ -3233,7 +3258,7 @@ namespace HREngine.Bots
                         if (si.canBe_snaketrap)
                         {
                             CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_554).sim_card.onSecretPlay(this, false, 0);
-                            si.usedTrigger_CharIsAttacked(false);
+                            si.usedTrigger_CharIsAttacked(false, attacker.isHero);
                             foreach (SecretItem sii in this.enemySecretList)
                             {
                                 sii.canBe_snaketrap = false;
@@ -3249,7 +3274,7 @@ namespace HREngine.Bots
                         if (si.canBe_freezing)
                         {
                             CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_611).sim_card.onSecretPlay(this, false, attacker, 0);
-                            si.usedTrigger_MinionIsGoingToAttack();
+                            si.usedTrigger_CharIsAttacked(defender.isHero, attacker.isHero);
                             //Helpfunctions.Instance.ErrorLog("trigger freeze " + attacker.Hp);
                             foreach (SecretItem sii in this.enemySecretList)
                             {
@@ -3266,7 +3291,7 @@ namespace HREngine.Bots
                     {
                         bool ishero = defender.isHero;
                         CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130).sim_card.onSecretPlay(this, false, attacker, defender, out newTarget);
-                        si.usedTrigger_CharIsAttacked(ishero);
+                        si.usedTrigger_CharIsAttacked(ishero, attacker.isHero);
                         foreach (SecretItem sii in this.enemySecretList)
                         {
                             sii.canBe_noblesacrifice = false;
@@ -4490,13 +4515,13 @@ namespace HREngine.Bots
             Helpfunctions.Instance.logg("ownheroattac: " + this.ownHero.Angr);
             Helpfunctions.Instance.logg("ownheroweapon: " + this.ownWeaponAttack + " " + this.ownWeaponDurability + " " + this.ownWeaponName);
             Helpfunctions.Instance.logg("ownherostatus: frozen" + this.ownHero.frozen + " ");
-            Helpfunctions.Instance.logg("enemyherohp: " + this.enemyHero.Hp + " + " + this.enemyHero.armor + " immune: " + this.enemyHero.immune);
+            Helpfunctions.Instance.logg("enemyherohp: " + this.enemyHero.Hp + " + " + this.enemyHero.armor + ((this.enemyHero.immune) ? " immune" : ""));
 
             if (this.enemySecretCount >= 1) Helpfunctions.Instance.logg("enemySecrets: " + Probabilitymaker.Instance.getEnemySecretData(this.enemySecretList));
-            foreach (Action a in this.playactions)
+            /*foreach (Action a in this.playactions)
             {
                 a.print();
-            }
+            }*/
             Helpfunctions.Instance.logg("OWN MINIONS################");
 
             foreach (Minion m in this.ownMinions)

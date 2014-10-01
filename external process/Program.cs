@@ -469,6 +469,7 @@ namespace ConsoleApplication1
             retval -= p.enemycarddraw * 15;
 
             //int owntaunt = 0;
+            int readycount = 0;
             int ownMinionsCount = 0;
             foreach (Minion m in p.ownMinions)
             {
@@ -497,6 +498,7 @@ namespace ConsoleApplication1
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
                 if (m.handcard.card.name == CardDB.cardName.bloodmagethalnos) retval += 10;
+                if (m.Ready) readycount++;
             }
 
             /*if (p.enemyMinions.Count >= 0)
@@ -506,7 +508,7 @@ namespace ConsoleApplication1
                 retval += owntaunt * 10 - 11 * anz;
             }*/
 
-            int playmobs = 0;
+
             bool useAbili = false;
             bool usecoin = false;
             foreach (Action a in p.playactions)
@@ -527,21 +529,43 @@ namespace ConsoleApplication1
             //if (usecoin && p.mana >= 1) retval -= 20;
 
             int mobsInHand = 0;
+            int bigMobsInHand = 0;
             foreach (Handmanager.Handcard hc in p.owncards)
             {
-                if (hc.card.type == CardDB.cardtype.MOB && hc.card.Attack >= 3) mobsInHand++;
+                if (hc.card.type == CardDB.cardtype.MOB)
+                {
+                    mobsInHand++;
+                    if (hc.card.Attack >= 3) bigMobsInHand++;
+                }
             }
 
-            if (ownMinionsCount - p.enemyMinions.Count >= 4 && mobsInHand >= 1)
+            if (ownMinionsCount - p.enemyMinions.Count >= 4 && bigMobsInHand >= 1)
             {
-                retval += mobsInHand * 25;
+                retval += bigMobsInHand * 25;
             }
 
 
-
+            bool hasTank = false;
             foreach (Minion m in p.enemyMinions)
             {
                 retval -= this.getEnemyMinionValue(m, p);
+                hasTank = hasTank || m.taunt;
+            }
+
+            foreach (SecretItem si in p.enemySecretList)
+            {
+                if (readycount >= 1 && !hasTank && si.canbeTriggeredWithAttackingHero)
+                {
+                    retval -= 100;
+                }
+                if (readycount >= 1 && p.enemyMinions.Count >= 1 && si.canbeTriggeredWithAttackingMinion)
+                {
+                    retval -= 100;
+                }
+                if (si.canbeTriggeredWithPlayingMinion && mobsInHand >= 1)
+                {
+                    retval -= 25;
+                }
             }
 
             retval -= p.enemySecretCount;
@@ -1237,8 +1261,8 @@ namespace ConsoleApplication1
         public int evaluatePenality = 0;
         public int ownController = 0;
 
-        public int ownHeroEntity = -1;
-        public int enemyHeroEntity = -1;
+        //public int ownHeroEntity = -1;
+        //public int enemyHeroEntity = -1;
 
         public int hashcode = 0;
         public float value = Int32.MinValue;
@@ -1361,8 +1385,8 @@ namespace ConsoleApplication1
             //this.simulateEnemyTurn = Ai.Instance.simulateEnemyTurn;
             this.ownController = Hrtprozis.Instance.getOwnController();
 
-            this.ownHeroEntity = Hrtprozis.Instance.ownHeroEntity;
-            this.enemyHeroEntity = Hrtprozis.Instance.enemyHeroEntitiy;
+            //this.ownHeroEntity = Hrtprozis.Instance.ownHeroEntity;
+            //this.enemyHeroEntity = Hrtprozis.Instance.enemyHeroEntitiy;
 
             this.mana = Hrtprozis.Instance.currentMana;
             this.manaTurnEnd = this.mana;
@@ -1632,8 +1656,8 @@ namespace ConsoleApplication1
             this.attacked = p.attacked;
             this.sEnemTurn = p.sEnemTurn;
             this.ownController = p.ownController;
-            this.ownHeroEntity = p.ownHeroEntity;
-            this.enemyHeroEntity = p.enemyHeroEntity;
+            //this.ownHeroEntity = p.ownHeroEntity;
+            //this.enemyHeroEntity = p.enemyHeroEntity;
 
             this.evaluatePenality = p.evaluatePenality;
             this.ownSecretsIDList.AddRange(p.ownSecretsIDList);
@@ -2516,6 +2540,7 @@ namespace ConsoleApplication1
                     {
                         buffplaces[i] = 1;
                     }
+                    tempval++;
                     places[i] = tempval;
                     gesval += tempval;
                     i++;
@@ -2830,6 +2855,7 @@ namespace ConsoleApplication1
                 if (this.enemyWeaponAttack >= 1)
                 {
                     ghd += enemyWeaponAttack;
+                    if (this.enemyHero.windfury || this.enemyWeaponName == CardDB.cardName.doomhammer) ghd += enemyWeaponAttack;
                 }
                 else
                 {
@@ -3282,6 +3308,7 @@ namespace ConsoleApplication1
 
             //save the action if its our first turn
             if (this.turnCounter == 0) this.playactions.Add(a);
+            //if (this.isOwnTurn) this.playactions.Add(a);
 
             // its a minion attack--------------------------------
             if (a.actionType == actionEnum.attackWithMinion)
@@ -4075,9 +4102,16 @@ namespace ConsoleApplication1
             if (own)
             {
                 int violetteacher = 0; //we count violetteacher to avoid copying ownminions
+                int illidan = 0;
                 foreach (Minion m in this.ownMinions)
                 {
                     if (m.silenced) continue;
+
+                    if (own && m.name == CardDB.cardName.illidanstormrage)
+                    {
+                        illidan++;
+                        continue;
+                    }
 
                     if (own && m.name == CardDB.cardName.violetteacher)
                     {
@@ -4095,15 +4129,25 @@ namespace ConsoleApplication1
                     int pos = this.ownMinions.Count;
                     this.callKid(CardDB.Instance.teacherminion, pos, own);
                 }
+
+                for (int i = 0; i < illidan; i++)
+                {
+                    int pos = this.ownMinions.Count;
+                    this.callKid(CardDB.Instance.illidanminion, pos, own);
+                }
             }
             else
             {
                 int violetteacher = 0; //we count violetteacher to avoid copying ownminions
-
+                int illidan = 0;
                 foreach (Minion m in this.enemyMinions)
                 {
                     if (m.silenced) continue;
-
+                    if (own && m.name == CardDB.cardName.illidanstormrage)
+                    {
+                        illidan++;
+                        continue;
+                    }
                     if (!own && m.name == CardDB.cardName.violetteacher)
                     {
                         if (c.type == CardDB.cardtype.SPELL)
@@ -4119,6 +4163,11 @@ namespace ConsoleApplication1
                 {
                     int pos = this.enemyMinions.Count;
                     this.callKid(CardDB.Instance.teacherminion, pos, own);
+                }
+                for (int i = 0; i < illidan; i++)
+                {
+                    int pos = this.enemyMinions.Count;
+                    this.callKid(CardDB.Instance.illidanminion, pos, own);
                 }
             }
 
@@ -4329,7 +4378,7 @@ namespace ConsoleApplication1
                             CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_610).sim_card.onSecretPlay(this, false, 0);
                             doDmgTriggers();
                             //Helpfunctions.Instance.ErrorLog("trigger explosive" + attacker.Hp);
-                            si.usedTrigger_CharIsAttacked(true);
+                            si.usedTrigger_CharIsAttacked(true, attacker.isHero);
                             foreach (SecretItem sii in this.enemySecretList)
                             {
                                 sii.canBe_explosive = false;
@@ -4341,7 +4390,7 @@ namespace ConsoleApplication1
                             CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_594).sim_card.onSecretPlay(this, false, attacker, 0);
                             doDmgTriggers();
 
-                            si.usedTrigger_CharIsAttacked(true);
+                            si.usedTrigger_CharIsAttacked(true, attacker.isHero);
                             foreach (SecretItem sii in this.enemySecretList)
                             {
                                 sii.canBe_vaporize = false;
@@ -4353,7 +4402,7 @@ namespace ConsoleApplication1
                             if (!(attacker.isHero && this.ownMinions.Count + this.enemyMinions.Count == 0))
                             {
                                 CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_533).sim_card.onSecretPlay(this, false, attacker, defender, out newTarget);
-                                si.usedTrigger_CharIsAttacked(true);
+                                si.usedTrigger_CharIsAttacked(true, attacker.isHero);
                                 //Helpfunctions.Instance.ErrorLog("trigger miss " + attacker.Hp);
                                 foreach (SecretItem sii in this.enemySecretList)
                                 {
@@ -4365,7 +4414,7 @@ namespace ConsoleApplication1
                         if (si.canBe_icebarrier)
                         {
                             CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_289).sim_card.onSecretPlay(this, false, defender, 0);
-                            si.usedTrigger_CharIsAttacked(true);
+                            si.usedTrigger_CharIsAttacked(true, attacker.isHero);
                             foreach (SecretItem sii in this.enemySecretList)
                             {
                                 sii.canBe_icebarrier = false;
@@ -4384,7 +4433,7 @@ namespace ConsoleApplication1
                         if (si.canBe_snaketrap)
                         {
                             CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_554).sim_card.onSecretPlay(this, false, 0);
-                            si.usedTrigger_CharIsAttacked(false);
+                            si.usedTrigger_CharIsAttacked(false, attacker.isHero);
                             foreach (SecretItem sii in this.enemySecretList)
                             {
                                 sii.canBe_snaketrap = false;
@@ -4400,7 +4449,7 @@ namespace ConsoleApplication1
                         if (si.canBe_freezing)
                         {
                             CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_611).sim_card.onSecretPlay(this, false, attacker, 0);
-                            si.usedTrigger_MinionIsGoingToAttack();
+                            si.usedTrigger_CharIsAttacked(defender.isHero, attacker.isHero);
                             //Helpfunctions.Instance.ErrorLog("trigger freeze " + attacker.Hp);
                             foreach (SecretItem sii in this.enemySecretList)
                             {
@@ -4417,7 +4466,7 @@ namespace ConsoleApplication1
                     {
                         bool ishero = defender.isHero;
                         CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130).sim_card.onSecretPlay(this, false, attacker, defender, out newTarget);
-                        si.usedTrigger_CharIsAttacked(ishero);
+                        si.usedTrigger_CharIsAttacked(ishero, attacker.isHero);
                         foreach (SecretItem sii in this.enemySecretList)
                         {
                             sii.canBe_noblesacrifice = false;
@@ -4490,7 +4539,7 @@ namespace ConsoleApplication1
                         {
                             sii.canBe_mirrorentity = false;
                         }
-                        
+
                     }
 
                     if (si.canBe_repentance)
@@ -5641,13 +5690,13 @@ namespace ConsoleApplication1
             Helpfunctions.Instance.logg("ownheroattac: " + this.ownHero.Angr);
             Helpfunctions.Instance.logg("ownheroweapon: " + this.ownWeaponAttack + " " + this.ownWeaponDurability + " " + this.ownWeaponName);
             Helpfunctions.Instance.logg("ownherostatus: frozen" + this.ownHero.frozen + " ");
-            Helpfunctions.Instance.logg("enemyherohp: " + this.enemyHero.Hp + " + " + this.enemyHero.armor + " immune: " + this.enemyHero.immune);
+            Helpfunctions.Instance.logg("enemyherohp: " + this.enemyHero.Hp + " + " + this.enemyHero.armor + ((this.enemyHero.immune) ? " immune" : ""));
 
             if (this.enemySecretCount >= 1) Helpfunctions.Instance.logg("enemySecrets: " + Probabilitymaker.Instance.getEnemySecretData(this.enemySecretList));
-            foreach (Action a in this.playactions)
+            /*foreach (Action a in this.playactions)
             {
                 a.print();
-            }
+            }*/
             Helpfunctions.Instance.logg("OWN MINIONS################");
 
             foreach (Minion m in this.ownMinions)
@@ -6260,7 +6309,6 @@ namespace ConsoleApplication1
 
     }
 
-
     public class MiniSimulator
     {
         //#####################################################################################################################
@@ -6749,6 +6797,7 @@ namespace ConsoleApplication1
                 enemMana = posmoves[0].EnemyCardPlaying(rootfield.enemyHeroName, enemMana, rootfield.enemyAnzCards, pprob, pprob2);
                 float newval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
                 posmoves[0].value = int.MinValue;
+                posmoves[0].enemyAnzCards--;
                 if (oldval < newval)
                 {
                     posmoves.Clear();
@@ -6800,8 +6849,13 @@ namespace ConsoleApplication1
 
             doSomeBasicEnemyAi(posmoves[0]);
 
-            int count = 0;
+            int boardcount = 0;
             //movegen...
+
+            int i = 0;
+            int count = 0;
+            Playfield p = null;
+
             while (havedonesomething)
             {
 
@@ -6810,9 +6864,12 @@ namespace ConsoleApplication1
                 havedonesomething = false;
                 Playfield bestold = null;
                 float bestoldval = 20000000;
-                foreach (Playfield p in temp)
-                {
 
+                //foreach (Playfield p in temp)
+                count = temp.Count;
+                for (i = 0; i < count; i++)
+                {
+                    p = temp[i];
                     if (p.complete)
                     {
                         continue;
@@ -6826,7 +6883,7 @@ namespace ConsoleApplication1
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
                         posmoves.Add(pf);
-                        count++;
+                        boardcount++;
                     }
 
                     //p.endCurrentPlayersTurnAndStartTheNextOne(1, false);
@@ -6839,7 +6896,7 @@ namespace ConsoleApplication1
                     }
                     posmoves.Remove(p);
 
-                    if (count >= maxwide) break;
+                    if (boardcount >= maxwide) break;
                 }
 
                 if (bestoldval <= 10000 && bestold != null)
@@ -6848,19 +6905,25 @@ namespace ConsoleApplication1
                 }
 
                 deep++;
-                if (count >= maxwide) break;
+                if (boardcount >= maxwide) break;
             }
 
-            foreach (Playfield p in posmoves)
+            //foreach (Playfield p in posmoves)
+            count = posmoves.Count;
+            for (i = 0; i < count; i++)
             {
-                if (!p.complete) p.endEnemyTurn();
+
+                if (!posmoves[i].complete) posmoves[i].endEnemyTurn();
             }
 
             float bestval = int.MaxValue;
             Playfield bestplay = posmoves[0];
 
-            foreach (Playfield p in posmoves)
+            //foreach (Playfield p in posmoves)
+            count = posmoves.Count;
+            for (i = 0; i < count; i++)
             {
+                p = posmoves[i];
                 p.guessingHeroHP = rootfield.guessingHeroHP;
                 float val = Ai.Instance.botBase.getPlayfieldValue(p);
                 if (bestval > val)// we search the worst value
@@ -6893,6 +6956,14 @@ namespace ConsoleApplication1
             {
                 if (Probabilitymaker.Instance.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_561)) p.ownHero.Hp = Math.Max(5, p.ownHero.Hp - 7);
             }
+
+            //play some cards (to not overdraw)
+            if (p.enemyAnzCards >= 8) p.enemyAnzCards--;
+            if (p.enemyAnzCards >= 4) p.enemyAnzCards--;
+            if (p.enemyAnzCards >= 2) p.enemyAnzCards--;
+            //int i = 0;
+            //int count = 0;
+
 
             foreach (Minion m in p.enemyMinions.ToArray())
             {
@@ -8440,7 +8511,6 @@ namespace ConsoleApplication1
 
     }
 
-
     public enum HeroEnum
     {
         None,
@@ -9387,6 +9457,8 @@ namespace ConsoleApplication1
             if (this.DamageAllDatabase.ContainsKey(name) || (p.anzOwnAuchenaiSoulpriest >= 1 && HealAllDatabase.ContainsKey(name))) // aoe penality
             {
 
+                if (p.enemyMinions.Count == 0) return 300;
+
                 foreach (Minion m in p.enemyMinions)
                 {
                     if ((m.Angr >= 4 || m.Hp >= 5) && !m.wounded)
@@ -9406,6 +9478,7 @@ namespace ConsoleApplication1
 
             if (this.DamageAllEnemysDatabase.ContainsKey(name)) // aoe penality
             {
+                if (p.enemyMinions.Count == 0) return 300;
                 foreach (Minion m in p.enemyMinions)
                 {
                     if ((m.Angr >= 4 || m.Hp >= 5) && !m.wounded)
@@ -9569,11 +9642,14 @@ namespace ConsoleApplication1
             {
                 int mheal = 0;
                 int wounded = 0;
+                //int eheal = 0;
                 foreach (Minion mi in p.ownMinions)
                 {
                     mheal += Math.Min((mi.maxHp - mi.Hp), 4);
                     if (mi.wounded) wounded++;
                 }
+                //Console.WriteLine(mheal + " circle");
+                if (mheal == 0) return 500;
                 if (mheal <= 7 && wounded <= 2) return 20;
             }
 
@@ -11353,6 +11429,10 @@ namespace ConsoleApplication1
     {
         public bool triggered = false;
 
+        public bool canbeTriggeredWithAttackingHero = true;
+        public bool canbeTriggeredWithAttackingMinion = true;
+        public bool canbeTriggeredWithPlayingMinion = true;
+
         public bool canBe_snaketrap = true;
         public bool canBe_snipe = true;
         public bool canBe_explosive = true;
@@ -11382,6 +11462,9 @@ namespace ConsoleApplication1
         public SecretItem(SecretItem sec)
         {
             this.triggered = sec.triggered;
+            this.canbeTriggeredWithAttackingHero = sec.canbeTriggeredWithAttackingHero;
+            this.canbeTriggeredWithAttackingMinion = sec.canbeTriggeredWithAttackingMinion;
+            this.canbeTriggeredWithPlayingMinion = sec.canbeTriggeredWithPlayingMinion;
 
             this.canBe_avenge = sec.canBe_avenge;
             this.canBe_counterspell = sec.canBe_counterspell;
@@ -11431,12 +11514,26 @@ namespace ConsoleApplication1
             this.canBe_repentance = (canbe[15] == '1') ? true : false;
             this.canBe_avenge = (canbe[16] == '1') ? true : false;
 
+            this.updateCanBeTriggered();
         }
 
-
-        public void usedTrigger_CharIsAttacked(bool isHero)
+        public void updateCanBeTriggered()
         {
-            if (isHero)
+            this.canbeTriggeredWithAttackingHero = false;
+            this.canbeTriggeredWithAttackingMinion = false;
+            this.canbeTriggeredWithPlayingMinion = false;
+
+            if (this.canBe_snipe || this.canBe_mirrorentity || this.canBe_repentance) this.canbeTriggeredWithPlayingMinion = true;
+
+            if (this.canBe_explosive || this.canBe_missdirection || this.canBe_freezing || this.canBe_icebarrier || this.canBe_vaporize || this.canBe_noblesacrifice) this.canbeTriggeredWithAttackingHero = true;
+
+            if (this.canBe_snaketrap || this.canBe_freezing || this.canBe_noblesacrifice) this.canbeTriggeredWithAttackingMinion = true;
+
+        }
+
+        public void usedTrigger_CharIsAttacked(bool DefenderIsHero, bool AttackerIsHero)
+        {
+            if (DefenderIsHero)
             {
                 this.canBe_explosive = false;
                 this.canBe_missdirection = false;
@@ -11449,12 +11546,12 @@ namespace ConsoleApplication1
             {
                 this.canBe_snaketrap = false;
             }
+            if (!AttackerIsHero)
+            {
+                this.canBe_freezing = false;
+            }
             this.canBe_noblesacrifice = false;
-        }
-
-        public void usedTrigger_MinionIsGoingToAttack()
-        {
-            this.canBe_freezing = false;
+            updateCanBeTriggered();
         }
 
         public void usedTrigger_MinionIsPlayed()
@@ -11462,12 +11559,14 @@ namespace ConsoleApplication1
             this.canBe_snipe = false;
             this.canBe_mirrorentity = false;
             this.canBe_repentance = false;
+            updateCanBeTriggered();
         }
 
         public void usedTrigger_SpellIsPlayed(bool minionIsTarget)
         {
             this.canBe_counterspell = false;
             if (minionIsTarget) this.canBe_spellbender = false;
+            updateCanBeTriggered();
         }
 
         public void usedTrigger_MinionDied()
@@ -11475,12 +11574,14 @@ namespace ConsoleApplication1
             this.canBe_avenge = false;
             this.canBe_redemption = false;
             this.canBe_duplicate = false;
+            updateCanBeTriggered();
         }
 
         public void usedTrigger_HeroGotDmg(bool deadly = false)
         {
             this.canBe_eyeforaneye = false;
             if (deadly) this.canBe_iceblock = false;
+            updateCanBeTriggered();
         }
 
         public string returnAString()
@@ -12159,13 +12260,11 @@ namespace ConsoleApplication1
             foreach (SecretItem si in this.enemySecrets)
             {
 
-                if (attackedWithHero || attackedWithMob) si.usedTrigger_CharIsAttacked(attackTargetIsMinion == 1);
+                if (attackedWithHero || attackedWithMob) si.usedTrigger_CharIsAttacked(attackTargetIsMinion == 1, attackedWithHero);
 
                 if (enemyHeroGotDmg) si.usedTrigger_HeroGotDmg();
 
                 if (enemyMinionDied) si.usedTrigger_MinionDied();
-
-                if (attackedWithMob) si.usedTrigger_MinionIsGoingToAttack();
 
                 if (playedMob) si.usedTrigger_MinionIsPlayed();
 
@@ -17075,6 +17174,7 @@ namespace ConsoleApplication1
         public bool installedWrong = false;
 
         public Card teacherminion;
+        public Card illidanminion;
 
         private static CardDB instance;
 
@@ -17629,6 +17729,7 @@ namespace ConsoleApplication1
             }
 
             this.teacherminion = this.getCardDataFromID(CardDB.cardIDEnum.NEW1_026t);
+            this.illidanminion = this.getCardDataFromID(CardDB.cardIDEnum.EX1_614t);
 
         }
 
@@ -19409,7 +19510,7 @@ namespace ConsoleApplication1
             }
 
 
-            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, 100, 200);
+            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, ownHEntity, enemyHEntity);
             Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);
 
             bool herowindfury = false;
@@ -24322,11 +24423,11 @@ namespace ConsoleApplication1
         //    wählt aus:/ +5 angriff; oder +5 leben und spott/.
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (choice == 1)
+            if (choice == 2)
             {
                 p.minionGetBuffed(own, 5, 0);
             }
-            if (choice == 2)
+            if (choice == 1)
             {
                 p.minionGetBuffed(own, 0, 5);
                 own.taunt = true;
@@ -29078,5 +29179,6 @@ namespace ConsoleApplication1
 
     }
 
+   
 
 }

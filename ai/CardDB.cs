@@ -3207,7 +3207,7 @@ namespace HREngine.Bots
             REQ_MUST_TARGET_TAUNTER,//=46
             REQ_UNDAMAGED_TARGET//=47
         }
-        
+
         public class Card
         {
             //public string CardID = "";
@@ -4027,6 +4027,7 @@ namespace HREngine.Bots
         public bool installedWrong = false;
 
         public Card teacherminion;
+        public Card illidanminion;
 
         private static CardDB instance;
 
@@ -4069,7 +4070,7 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
-                Helpfunctions.Instance.ErrorLog("cant find _carddb.txt");
+                Helpfunctions.Instance.ErrorLog("cant find _carddb.txt in " + Settings.Instance.path);
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
                 Helpfunctions.Instance.ErrorLog("ERROR#################################################");
@@ -4137,7 +4138,7 @@ namespace HREngine.Bots
                     {
                         c.isToken = true;
                     }
-                    if(temp.Equals("ds1_whelptoken")) c.isToken=true;
+                    if (temp.Equals("ds1_whelptoken")) c.isToken = true;
                     if (temp.Equals("CS2_mirror")) c.isToken = true;
                     if (temp.Equals("CS2_050")) c.isToken = true;
                     if (temp.Equals("CS2_052")) c.isToken = true;
@@ -4581,6 +4582,7 @@ namespace HREngine.Bots
             }
 
             this.teacherminion = this.getCardDataFromID(CardDB.cardIDEnum.NEW1_026t);
+            this.illidanminion = this.getCardDataFromID(CardDB.cardIDEnum.EX1_614t);
 
         }
 

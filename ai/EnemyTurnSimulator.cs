@@ -35,6 +35,7 @@ namespace HREngine.Bots
                 enemMana = posmoves[0].EnemyCardPlaying(rootfield.enemyHeroName, enemMana, rootfield.enemyAnzCards, pprob, pprob2);
                 float newval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
                 posmoves[0].value = int.MinValue;
+                posmoves[0].enemyAnzCards--;
                 if (oldval < newval)
                 {
                     posmoves.Clear();
@@ -86,8 +87,13 @@ namespace HREngine.Bots
 
             doSomeBasicEnemyAi(posmoves[0]);
 
-            int count = 0;
+            int boardcount = 0;
             //movegen...
+
+            int i = 0;
+            int count = 0;
+            Playfield p = null;
+
             while (havedonesomething)
             {
 
@@ -96,9 +102,12 @@ namespace HREngine.Bots
                 havedonesomething = false;
                 Playfield bestold = null;
                 float bestoldval = 20000000;
-                foreach (Playfield p in temp)
-                {
 
+                //foreach (Playfield p in temp)
+                count = temp.Count;
+                for (i = 0; i < count; i++)
+                {
+                    p = temp[i];
                     if (p.complete)
                     {
                         continue;
@@ -112,7 +121,7 @@ namespace HREngine.Bots
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
                         posmoves.Add(pf);
-                        count++;
+                        boardcount++;
                     }
 
                     //p.endCurrentPlayersTurnAndStartTheNextOne(1, false);
@@ -125,7 +134,7 @@ namespace HREngine.Bots
                     }
                     posmoves.Remove(p);
 
-                    if (count >= maxwide) break;
+                    if (boardcount >= maxwide) break;
                 }
 
                 if (bestoldval <= 10000 && bestold != null)
@@ -134,19 +143,25 @@ namespace HREngine.Bots
                 }
 
                 deep++;
-                if (count >= maxwide) break;
+                if (boardcount >= maxwide) break;
             }
 
-            foreach (Playfield p in posmoves)
+            //foreach (Playfield p in posmoves)
+            count = posmoves.Count;
+            for (i = 0; i < count; i++)
             {
-                if (!p.complete) p.endEnemyTurn();
+
+                if (!posmoves[i].complete) posmoves[i].endEnemyTurn();
             }
 
             float bestval = int.MaxValue;
             Playfield bestplay = posmoves[0];
 
-            foreach (Playfield p in posmoves)
+            //foreach (Playfield p in posmoves)
+            count = posmoves.Count;
+            for (i = 0; i < count; i++)
             {
+                p = posmoves[i];
                 p.guessingHeroHP = rootfield.guessingHeroHP;
                 float val = Ai.Instance.botBase.getPlayfieldValue(p);
                 if (bestval > val)// we search the worst value
@@ -179,6 +194,14 @@ namespace HREngine.Bots
             {
                 if (Probabilitymaker.Instance.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_561)) p.ownHero.Hp = Math.Max(5, p.ownHero.Hp - 7);
             }
+
+            //play some cards (to not overdraw)
+            if (p.enemyAnzCards >= 8) p.enemyAnzCards--;
+            if (p.enemyAnzCards >= 4) p.enemyAnzCards--;
+            if (p.enemyAnzCards >= 2) p.enemyAnzCards--;
+            //int i = 0;
+            //int count = 0;
+
 
             foreach (Minion m in p.enemyMinions.ToArray())
             {
@@ -287,7 +310,7 @@ namespace HREngine.Bots
                 int bval = 1;
                 if (p.enemyMaxMana > 4) bval = 2;
                 if (p.enemyMaxMana > 7) bval = 3;
-                if(p.enemyMinions.Count >=1) p.minionGetBuffed(p.enemyMinions[p.enemyMinions.Count - 1], bval - 1, bval);
+                if (p.enemyMinions.Count >= 1) p.minionGetBuffed(p.enemyMinions[p.enemyMinions.Count - 1], bval - 1, bval);
             }
         }
 
