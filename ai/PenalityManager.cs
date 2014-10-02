@@ -12,12 +12,12 @@ namespace HREngine.Bots
 
         ComboBreaker cb;
 
-        
+
         Dictionary<CardDB.cardName, int> HealTargetDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> HealHeroDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> HealAllDatabase = new Dictionary<CardDB.cardName, int>();
 
-        
+
         Dictionary<CardDB.cardName, int> DamageAllDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> DamageHeroDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> DamageRandomDatabase = new Dictionary<CardDB.cardName, int>();
@@ -33,7 +33,7 @@ namespace HREngine.Bots
 
         Dictionary<CardDB.cardName, int> lethalHelpers = new Dictionary<CardDB.cardName, int>();
 
-        
+
         Dictionary<CardDB.cardName, int> cardDiscardDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> destroyOwnDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> destroyDatabase = new Dictionary<CardDB.cardName, int>();
@@ -789,7 +789,15 @@ namespace HREngine.Bots
             if ((card.name == CardDB.cardName.cleave || card.name == CardDB.cardName.multishot) && p.enemyMinions.Count == 2) return 0;
             if ((card.name == CardDB.cardName.deadlyshot) && p.enemyMinions.Count == 1) return 0;
             if ((card.name == CardDB.cardName.arcanemissiles || card.name == CardDB.cardName.avengingwrath) && p.enemyMinions.Count == 0) return 0;
-            int cards = randomEffects[card.name];
+            int cards = 0;
+            if (this.randomEffects.ContainsKey(card.name))
+            {
+                cards = randomEffects[card.name];
+            }
+            else
+            {
+                cards = cardDrawBattleCryDatabase[card.name];
+            }
             bool first = true;
             bool hasgadget = false;
             bool hasstarving = false;

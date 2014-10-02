@@ -10395,7 +10395,15 @@ namespace SilverfishControl
             if ((card.name == CardDB.cardName.cleave || card.name == CardDB.cardName.multishot) && p.enemyMinions.Count == 2) return 0;
             if ((card.name == CardDB.cardName.deadlyshot) && p.enemyMinions.Count == 1) return 0;
             if ((card.name == CardDB.cardName.arcanemissiles || card.name == CardDB.cardName.avengingwrath) && p.enemyMinions.Count == 0) return 0;
-            int cards = randomEffects[card.name];
+            int cards = 0;
+            if (this.randomEffects.ContainsKey(card.name))
+            {
+                cards = randomEffects[card.name];
+            }
+            else
+            {
+                cards = cardDrawBattleCryDatabase[card.name];
+            }
             bool first = true;
             bool hasgadget = false;
             bool hasstarving = false;
