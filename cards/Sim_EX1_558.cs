@@ -6,7 +6,6 @@ namespace HREngine.Bots
 {
 	class Sim_EX1_558 : SimTemplate //harrisonjones
 	{
-        //todo enemy
 //    kampfschrei:/ zerstört die waffe eures gegners. zieht ihrer haltbarkeit entsprechend karten.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{

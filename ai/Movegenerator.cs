@@ -256,7 +256,7 @@ namespace HREngine.Bots
                     {
                         List<Minion> trgts = c.getTargetsForCard(p);
 
-                        if (isLethalCheck && trgts.Count >= 1 && (pen.DamageTargetDatabase.ContainsKey(c.name) || pen.DamageTargetSpecialDatabase.ContainsKey(c.name)))// only target enemy hero during Lethal check!
+                        if (isLethalCheck && trgts.Count >= 1 && (c.damagesTarget || c.damagesTargetWithSpecial))// only target enemy hero during Lethal check!
                         {
                             if (trgts.Count >= 1 && trgts[0].isHero && !trgts[0].own) // first minion is enemy hero (or he is not in list)
                             {
@@ -351,13 +351,13 @@ namespace HREngine.Bots
                     {
                         List<Minion> tempoo = new List<Minion>(playedMinions);
                         bool dontattacked = true;
-                        bool isSpecial = pen.specialMinions.ContainsKey(m.name);
+                        bool isSpecial = m.handcard.card.isSpecialMinion;
                         foreach (Minion mnn in tempoo)
                         {
                             // special minions are allowed to attack in silended and unsilenced state!
                             //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
 
-                            bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
+                            bool otherisSpecial = mnn.handcard.card.isSpecialMinion;
 
                             if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                             {
@@ -640,13 +640,13 @@ namespace HREngine.Bots
                     {
                         List<Minion> tempoo = new List<Minion>(playedMinions);
                         bool dontattacked = true;
-                        bool isSpecial = pen.specialMinions.ContainsKey(m.name);
+                        bool isSpecial = m.handcard.card.isSpecialMinion;
                         foreach (Minion mnn in tempoo)
                         {
                             // special minions are allowed to attack in silended and unsilenced state!
                             //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
 
-                            bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
+                            bool otherisSpecial = mnn.handcard.card.isSpecialMinion;
 
                             if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                             {
@@ -740,13 +740,13 @@ namespace HREngine.Bots
                 {
 
                     bool goingtoadd = true;
-                    bool isSpecial = pen.specialMinions.ContainsKey(m.name);
+                    bool isSpecial = m.handcard.card.isSpecialMinion;
                     foreach (Minion mnn in addedmins)
                     {
                         // special minions are allowed to attack in silended and unsilenced state!
                         //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
 
-                        bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
+                        bool otherisSpecial = mnn.handcard.card.isSpecialMinion;
 
                         if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                         {

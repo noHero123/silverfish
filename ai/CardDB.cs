@@ -3217,9 +3217,6 @@ namespace HREngine.Bots
             public int cost = 0;
             public cardtype type = CardDB.cardtype.NONE;
             //public string description = "";
-            public int carddraw = 0;
-
-            public bool hasEffect = false;// has the minion an effect, but not battlecry
 
             public int Attack = 0;
             public int Health = 0;
@@ -3260,7 +3257,15 @@ namespace HREngine.Bots
             public int needMinNumberOfEnemy = 0;
             public int needMinTotalMinions = 0;
             public int needMinionsCapIfAvailable = 0;
+
+
+            //additional data
             public bool isToken = false;
+            public int isCarddraw = 0;
+            public bool damagesTarget = false;
+            public bool damagesTargetWithSpecial = false;
+            public int targetPriority = 0;
+            public bool isSpecialMinion = false;
 
             public int spellpowervalue = 0;
             public cardIDEnum cardIDenum = cardIDEnum.None;
@@ -3276,13 +3281,11 @@ namespace HREngine.Bots
             public Card(Card c)
             {
                 //this.entityID = c.entityID;
-                this.hasEffect = c.hasEffect;
                 this.rarity = c.rarity;
                 this.AdjacentBuff = c.AdjacentBuff;
                 this.Attack = c.Attack;
                 this.Aura = c.Aura;
                 this.battlecry = c.battlecry;
-                this.carddraw = c.carddraw;
                 //this.CardID = c.CardID;
                 this.Charge = c.Charge;
                 this.choice = c.choice;
@@ -4048,7 +4051,7 @@ namespace HREngine.Bots
                     {
                         c.sim_card = instance.getSimCard(c.cardIDenum);
                     }
-
+                    instance.setAdditionalData();
                 }
                 return instance;
             }
@@ -4281,7 +4284,7 @@ namespace HREngine.Bots
                         //Helpfunctions.Instance.logg(temp);
                         c.name = this.cardNamestringToEnum(temp);
                         name = temp;
-                        if (PenalityManager.Instance.specialMinions.ContainsKey(this.cardNamestringToEnum(temp))) c.hasEffect = true;
+                        
 
                     }
                     if (de == 1)
@@ -4588,8 +4591,7 @@ namespace HREngine.Bots
 
         public Card getCardData(CardDB.cardName cardname)
         {
-            Card c = new Card();
-
+            
             foreach (Card ca in this.cardlist)
             {
                 if (ca.name == cardname)
@@ -4598,7 +4600,7 @@ namespace HREngine.Bots
                 }
             }
 
-            return c;
+            return unknownCard;
         }
 
         public Card getCardDataFromID(cardIDEnum id)
@@ -4609,7 +4611,7 @@ namespace HREngine.Bots
                 //return new Card(cardidToCardList[id]);
             }
 
-            return new Card();
+            return unknownCard;
         }
 
         public SimTemplate getSimCard(cardIDEnum id)
@@ -5561,6 +5563,39 @@ namespace HREngine.Bots
 
         }
 
+        private void setAdditionalData()
+        {
+            PenalityManager pen = PenalityManager.Instance;
+
+            foreach (Card c in this.cardlist)
+            {
+                if (pen.cardDrawBattleCryDatabase.ContainsKey(c.name))
+                {
+                    c.isCarddraw = pen.cardDrawBattleCryDatabase[c.name];
+                }
+
+                if (pen.DamageTargetSpecialDatabase.ContainsKey(c.name))
+                {
+                    c.damagesTargetWithSpecial = true;
+                }
+
+                if (pen.DamageTargetDatabase.ContainsKey(c.name))
+                {
+                    c.damagesTarget = true;
+                }
+
+                if (pen.priorityTargets.ContainsKey(c.name))
+                {
+                    c.targetPriority = pen.priorityTargets[c.name];
+                }
+
+                if (pen.specialMinions.ContainsKey(c.name))
+                {
+                    c.isSpecialMinion = true;
+                    Helpfunctions.Instance.ErrorLog(c.name + "isspecial :D");
+                }
+            }
+        }
 
     }
 

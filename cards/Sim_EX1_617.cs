@@ -6,7 +6,6 @@ namespace HREngine.Bots
 {
 	class Sim_EX1_617 : SimTemplate //deadlyshot
 	{
-        //todo enemy
 //    vernichtet einen zufälligen feindlichen diener.
 
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)

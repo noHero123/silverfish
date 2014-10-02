@@ -1118,7 +1118,7 @@ namespace HREngine.Bots
                 Minion target = null;
                 foreach (Minion mnn in temp)
                 {
-                    if (mnn.Hp <= damage || PenalityManager.Instance.specialMinions.ContainsKey(mnn.name))
+                    if (mnn.Hp <= damage || mnn.handcard.card.isSpecialMinion)
                     {
                         target = mnn;
                     }
@@ -2336,6 +2336,7 @@ namespace HREngine.Bots
                 if (this.ownWeaponName == CardDB.cardName.truesilverchampion)
                 {
                     this.minionGetDamageOrHeal(this.ownHero, -2);
+                    doDmgTriggers();
                 }
             }
             else
@@ -2343,6 +2344,7 @@ namespace HREngine.Bots
                 if (this.enemyWeaponName == CardDB.cardName.truesilverchampion)
                 {
                     this.minionGetDamageOrHeal(this.enemyHero, -2);
+                    doDmgTriggers();
                 }
             }
 

@@ -19,7 +19,7 @@ namespace HREngine.Bots
         public int playaroundprob = 40;
         public int playaroundprob2 = 80;
 
-        
+        public int lethalMissing = 30; //RR
 
         public MiniSimulator mainTurnSimulator;
         public EnemyTurnSimulator enemyTurnSim;
@@ -108,7 +108,17 @@ namespace HREngine.Bots
 
             help.loggonoff(true);
             help.logg("-------------------------------------");
-            help.logg("bestPlayvalue " + bestval);
+            help.logg("value of best board " + bestval);
+
+            if (isLethalCheck)
+            {
+                this.lethalMissing = bestplay.enemyHero.armor + bestplay.enemyHero.Hp;//RR
+                help.logg("missing dmg to lethal " + this.lethalMissing);
+            }
+            else
+            {
+                this.lethalMissing = 130;
+            }
 
             this.bestActions.Clear();
             this.bestmove = null;
@@ -334,14 +344,15 @@ namespace HREngine.Bots
             {
                 this.mainTurnSimulator.printPosmoves();
                 simmulateWholeTurn();
+                help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
             }
         }
 
         public void simmulateWholeTurn()
         {
-            help.ErrorLog("####################################################");
-            help.logg("simulate best board");
-            help.ErrorLog("####################################################");
+            help.ErrorLog("########################################################################################################");
+            help.ErrorLog("simulate best board");
+            help.ErrorLog("########################################################################################################");
             //this.bestboard.printActions();
 
             Playfield tempbestboard = new Playfield();

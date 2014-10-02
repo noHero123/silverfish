@@ -44,7 +44,7 @@ namespace HREngine.Bots
             }
             else
             {
-                retval += 3*(aggroboarder + 1 - p.enemyHero.Hp - p.enemyHero.armor);
+                retval += 3 * (aggroboarder + 1 - p.enemyHero.Hp - p.enemyHero.armor);
             }
 
             if (p.ownWeaponAttack >= 1)
@@ -64,6 +64,21 @@ namespace HREngine.Bots
                 }
             }
 
+            //RR card draw value depending on the turn and distance to lethal
+            //RR if lethal is close, carddraw value is increased
+            if (Ai.Instance.lethalMissing <= 5) //RR
+            {
+                retval += p.owncarddraw * 100;
+            }
+            if (p.ownMaxMana < 4)
+            {
+                retval += p.owncarddraw * 2;
+            }
+            else
+            {
+                retval += p.owncarddraw * 5;
+            }
+
             retval += p.owncarddraw * 5;
             retval -= p.enemycarddraw * 15;
 
@@ -79,8 +94,9 @@ namespace HREngine.Bots
                 if (!m.playedThisTurn && m.windfury) retval += m.Angr;
                 if (m.divineshild) retval += 1;
                 if (m.stealth) retval += 1;
-                if (penman.specialMinions.ContainsKey(m.name))
+                if (m.handcard.card.isSpecialMinion)
                 {
+                    retval += 1;
                     if (!m.taunt && m.stealth) retval += 20;
                 }
                 else
@@ -92,7 +108,6 @@ namespace HREngine.Bots
                 if (m.divineshild && m.taunt) retval += 4;
                 //if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
                 if (m.Angr > 1 || m.Hp > 1) ownMinionsCount++;
-                if (m.handcard.card.hasEffect) retval += 1;
                 //if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
@@ -107,7 +122,7 @@ namespace HREngine.Bots
                 retval += owntaunt * 10 - 11 * anz;
             }*/
 
-            
+
             bool useAbili = false;
             bool usecoin = false;
             foreach (Action a in p.playactions)
@@ -124,7 +139,7 @@ namespace HREngine.Bots
                 if (p.ownHeroName == HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (a.target.isHero && !a.target.own)) retval -= 11;
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
-            if (usecoin) retval -= 5*p.manaTurnEnd;
+            if (usecoin) retval -= 5 * p.manaTurnEnd;
             //if (usecoin && p.mana >= 1) retval -= 20;
 
             int mobsInHand = 0;
@@ -134,7 +149,7 @@ namespace HREngine.Bots
                 if (hc.card.type == CardDB.cardtype.MOB)
                 {
                     mobsInHand++;
-                    if(hc.card.Attack >= 3) bigMobsInHand++;
+                    if (hc.card.Attack >= 3) bigMobsInHand++;
                 }
             }
 
@@ -151,7 +166,7 @@ namespace HREngine.Bots
                 hasTank = hasTank || m.taunt;
             }
 
-            foreach(SecretItem si in p.enemySecretList)
+            foreach (SecretItem si in p.enemySecretList)
             {
                 if (readycount >= 1 && !hasTank && si.canbeTriggeredWithAttackingHero)
                 {
@@ -216,14 +231,14 @@ namespace HREngine.Bots
 
             if (m.poisonous) retval += 4;
 
-            if (penman.priorityTargets.ContainsKey(m.name) && !m.silenced)
-            { 
-                retval += penman.priorityTargets[m.name];
+            if (m.handcard.card.targetPriority >=1 && !m.silenced)
+            {
+                retval += m.handcard.card.targetPriority;
             }
             if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 3 && !m.taunt) retval = 0;
             return retval;
         }
-   
+
     }
 
 }

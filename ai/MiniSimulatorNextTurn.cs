@@ -324,13 +324,13 @@ namespace HREngine.Bots
 
                     bool goingtoadd = true;
                     List<Minion> temp = new List<Minion>(addedmins);
-                    bool isSpecial = pen.specialMinions.ContainsKey(m.name);
+                    bool isSpecial = m.handcard.card.isSpecialMinion;
                     foreach (Minion mnn in temp)
                     {
                         // special minions are allowed to attack in silended and unsilenced state!
                         //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
 
-                        bool otherisSpecial = pen.specialMinions.ContainsKey(mnn.name);
+                        bool otherisSpecial = mnn.handcard.card.isSpecialMinion;
 
                         if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                         {

@@ -6,7 +6,6 @@ namespace HREngine.Bots
 {
     class Sim_EX1_533 : SimTemplate//Misdirection
     {
-        //todo secret
         public override void onSecretPlay(Playfield p, bool ownplay, Minion attacker, Minion target, out int number)
         {
             number = 0;

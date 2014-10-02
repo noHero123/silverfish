@@ -12,13 +12,12 @@ namespace HREngine.Bots
 
         ComboBreaker cb;
 
-        public Dictionary<CardDB.cardName, int> priorityDatabase = new Dictionary<CardDB.cardName, int>();
+        
         Dictionary<CardDB.cardName, int> HealTargetDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> HealHeroDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> HealAllDatabase = new Dictionary<CardDB.cardName, int>();
 
-        public Dictionary<CardDB.cardName, int> DamageTargetDatabase = new Dictionary<CardDB.cardName, int>();
-        public Dictionary<CardDB.cardName, int> DamageTargetSpecialDatabase = new Dictionary<CardDB.cardName, int>();
+        
         Dictionary<CardDB.cardName, int> DamageAllDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> DamageHeroDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> DamageRandomDatabase = new Dictionary<CardDB.cardName, int>();
@@ -34,7 +33,7 @@ namespace HREngine.Bots
 
         Dictionary<CardDB.cardName, int> lethalHelpers = new Dictionary<CardDB.cardName, int>();
 
-        Dictionary<CardDB.cardName, int> cardDrawBattleCryDatabase = new Dictionary<CardDB.cardName, int>();
+        
         Dictionary<CardDB.cardName, int> cardDiscardDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> destroyOwnDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> destroyDatabase = new Dictionary<CardDB.cardName, int>();
@@ -46,8 +45,13 @@ namespace HREngine.Bots
         Dictionary<CardDB.cardName, int> silenceTargets = new Dictionary<CardDB.cardName, int>();
 
         Dictionary<CardDB.cardName, int> returnHandDatabase = new Dictionary<CardDB.cardName, int>();
-        public Dictionary<CardDB.cardName, int> priorityTargets = new Dictionary<CardDB.cardName, int>();
 
+        Dictionary<CardDB.cardName, int> priorityDatabase = new Dictionary<CardDB.cardName, int>();
+
+        public Dictionary<CardDB.cardName, int> DamageTargetDatabase = new Dictionary<CardDB.cardName, int>();
+        public Dictionary<CardDB.cardName, int> DamageTargetSpecialDatabase = new Dictionary<CardDB.cardName, int>();
+        public Dictionary<CardDB.cardName, int> cardDrawBattleCryDatabase = new Dictionary<CardDB.cardName, int>();
+        public Dictionary<CardDB.cardName, int> priorityTargets = new Dictionary<CardDB.cardName, int>();
         public Dictionary<CardDB.cardName, int> specialMinions = new Dictionary<CardDB.cardName, int>(); //minions with cardtext, but no battlecry
 
 
@@ -300,7 +304,7 @@ namespace HREngine.Bots
                         break;
                     }
                 }
-                if (enemyhasTaunts && this.priorityDatabase.ContainsKey(target.name))
+                if (enemyhasTaunts && this.priorityDatabase.ContainsKey(target.name) && !target.silenced && !target.taunt)
                 {
                     return 0;
                 }
@@ -779,7 +783,8 @@ namespace HREngine.Bots
 
         private int getRandomPenaltiy(CardDB.Card card, Playfield p, Minion target)
         {
-            if (!this.randomEffects.ContainsKey(card.name)) return 0;
+            if (p.turnCounter >= 1) return 0;
+            if (!this.randomEffects.ContainsKey(card.name) && !this.cardDrawBattleCryDatabase.ContainsKey(card.name)) return 0;
             if (card.name == CardDB.cardName.brawl) return 0;
             if ((card.name == CardDB.cardName.cleave || card.name == CardDB.cardName.multishot) && p.enemyMinions.Count == 2) return 0;
             if ((card.name == CardDB.cardName.deadlyshot) && p.enemyMinions.Count == 1) return 0;
@@ -802,7 +807,7 @@ namespace HREngine.Bots
                     first = false;
                     continue;
                 }
-                if (a.actionType == actionEnum.useHeroPower && p.ownHeroName != HeroEnum.shaman)
+                if (a.actionType == actionEnum.useHeroPower && (p.ownHeroName != HeroEnum.shaman && p.ownHeroName != HeroEnum.warlock))
                 {
                     first = false;
                     continue;
@@ -2360,6 +2365,7 @@ namespace HREngine.Bots
             this.randomEffects.Add(CardDB.cardName.tinkmasteroverspark, 1);
             this.randomEffects.Add(CardDB.cardName.totemiccall, 1);
             this.randomEffects.Add(CardDB.cardName.elitetaurenchieftain, 1);
+            this.randomEffects.Add(CardDB.cardName.lifetap, 1);
         }
 
     }

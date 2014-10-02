@@ -39,6 +39,22 @@ namespace HREngine.Bots
                 }
             }
 
+            //RR card draw value depending on the turn and distance to lethal
+            //RR if lethal is close, carddraw value is increased
+
+
+            if (Ai.Instance.lethalMissing <= 5) //RR
+            {
+                retval += p.owncarddraw * 100;
+            }
+            if (p.ownMaxMana < 4)
+            {
+                retval += p.owncarddraw * 2;
+            }
+            else
+            {
+                retval += p.owncarddraw * 5;
+            }
             retval += p.owncarddraw * 5;
             retval -= p.enemycarddraw * 15;
 
@@ -64,7 +80,7 @@ namespace HREngine.Bots
                 retval += m.handcard.card.rarity;
                 if (m.windfury) retval += m.Angr;
                 if (m.taunt) retval += 1;
-                if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
+                if (!m.taunt && m.stealth && m.handcard.card.isSpecialMinion) retval += 20;
                 if (m.handcard.card.name == CardDB.cardName.silverhandrecruit && m.Angr == 1 && m.Hp == 1) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
             }
@@ -102,7 +118,7 @@ namespace HREngine.Bots
         public override int getEnemyMinionValue(Minion m, Playfield p)
         {
             int retval = 0;
-            if (p.enemyMinions.Count >= 4 || m.taunt || (penman.priorityTargets.ContainsKey(m.name) && !m.silenced) || m.Angr >= 5)
+            if (p.enemyMinions.Count >= 4 || m.taunt || (m.handcard.card.targetPriority >= 1 && !m.silenced) || m.Angr >= 5)
             {
                 retval += m.Hp;
                 if (!m.frozen && !((m.name == CardDB.cardName.ancientwatcher || m.name == CardDB.cardName.ragnarosthefirelord) && !m.silenced))
@@ -118,7 +134,7 @@ namespace HREngine.Bots
             }
 
 
-            if (penman.priorityTargets.ContainsKey(m.name) && !m.silenced) retval += penman.priorityTargets[m.name];
+            if (m.handcard.card.targetPriority >= 1 && !m.silenced) retval += m.handcard.card.targetPriority;
             if (m.Angr >= 4) retval += 20;
             if (m.Angr >= 7) retval += 50;
             if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 3 && !m.taunt) retval = 0;

@@ -16,7 +16,7 @@ namespace HREngine.Bots
             }
             else
             {
-                //todo enemy
+                p.mana++;
             }
         }
 

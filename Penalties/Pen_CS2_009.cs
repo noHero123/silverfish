@@ -32,7 +32,7 @@ namespace HREngine.Bots
                 {
                     if (e.taunt) enemyHasTaunts = true;
                 }
-                if (!target.taunt && PenalityManager.Instance.priorityTargets.ContainsKey(target.name) && enemyHasTaunts)
+                if (!target.taunt && !target.silenced && target.handcard.card.targetPriority >= 1 && enemyHasTaunts)
                 {
                     return 0;
                 }
@@ -42,4 +42,5 @@ namespace HREngine.Bots
 		}
 
 	}
+
 }
