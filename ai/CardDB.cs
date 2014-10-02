@@ -5592,7 +5592,6 @@ namespace HREngine.Bots
                 if (pen.specialMinions.ContainsKey(c.name))
                 {
                     c.isSpecialMinion = true;
-                    Helpfunctions.Instance.ErrorLog(c.name + "isspecial :D");
                 }
             }
         }
