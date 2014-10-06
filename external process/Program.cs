@@ -7246,7 +7246,7 @@ namespace ConsoleApplication1
 
                             if (usePenalityManager)
                             {
-                                cardplayPenality = pen.getPlayCardPenality(hc.card, trgt, p, 0, lethalcheck);
+                                cardplayPenality = pen.getPlayCardPenality(hc.card, trgt, p, i, lethalcheck);
 
                                 if (cardplayPenality <= 499)
                                 {
@@ -9040,6 +9040,7 @@ namespace ConsoleApplication1
                     //todo add "new" enchantments (good or bad ones)
                     if (m.Angr <= m.handcard.card.Attack && m.maxHp <= m.handcard.card.Health && !m.taunt && !m.windfury && !m.divineshild && !m.poisonous && !this.specialMinions.ContainsKey(name))
                     {
+                        if (name == CardDB.cardName.keeperofthegrove) return 500;
                         return 30;
                     }
 
@@ -9340,7 +9341,7 @@ namespace ConsoleApplication1
             if (name == CardDB.cardName.divinefavor)
             {
                 carddraw = p.enemyAnzCards - (p.owncards.Count);
-                if (carddraw == 0) return 500;
+                if (carddraw <= 0) return 500;
             }
 
             if (name == CardDB.cardName.battlerage)
@@ -9439,7 +9440,15 @@ namespace ConsoleApplication1
             if ((card.name == CardDB.cardName.cleave || card.name == CardDB.cardName.multishot) && p.enemyMinions.Count == 2) return 0;
             if ((card.name == CardDB.cardName.deadlyshot) && p.enemyMinions.Count == 1) return 0;
             if ((card.name == CardDB.cardName.arcanemissiles || card.name == CardDB.cardName.avengingwrath) && p.enemyMinions.Count == 0) return 0;
-            int cards = randomEffects[card.name];
+            int cards = 0;
+            if (this.randomEffects.ContainsKey(card.name))
+            {
+                cards = randomEffects[card.name];
+            }
+            else
+            {
+                cards = cardDrawBattleCryDatabase[card.name];
+            }
             bool first = true;
             bool hasgadget = false;
             bool hasstarving = false;

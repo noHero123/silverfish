@@ -1000,7 +1000,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "112.7";
+        public string versionnumber = "112.8";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -8695,7 +8695,7 @@ namespace HREngine.Bots
 
                             if (usePenalityManager)
                             {
-                                cardplayPenality = pen.getPlayCardPenality(hc.card, trgt, p, 0, lethalcheck);
+                                cardplayPenality = pen.getPlayCardPenality(hc.card, trgt, p, i, lethalcheck);
 
                                 if (cardplayPenality <= 499)
                                 {
@@ -10489,6 +10489,7 @@ namespace HREngine.Bots
                     //todo add "new" enchantments (good or bad ones)
                     if (m.Angr <= m.handcard.card.Attack && m.maxHp <= m.handcard.card.Health && !m.taunt && !m.windfury && !m.divineshild && !m.poisonous && !this.specialMinions.ContainsKey(name))
                     {
+                        if (name == CardDB.cardName.keeperofthegrove) return 500;
                         return 30;
                     }
 
@@ -10789,7 +10790,7 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.divinefavor)
             {
                 carddraw = p.enemyAnzCards - (p.owncards.Count);
-                if (carddraw == 0) return 500;
+                if (carddraw <= 0) return 500;
             }
 
             if (name == CardDB.cardName.battlerage)

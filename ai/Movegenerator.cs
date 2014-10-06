@@ -193,7 +193,7 @@ namespace HREngine.Bots
 
                             if (usePenalityManager)
                             {
-                                cardplayPenality = pen.getPlayCardPenality(hc.card, trgt, p, 0, lethalcheck);
+                                cardplayPenality = pen.getPlayCardPenality(hc.card, trgt, p, i, lethalcheck);
 
                                 if (cardplayPenality <= 499)
                                 {
