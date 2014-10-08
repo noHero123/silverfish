@@ -8,10 +8,25 @@ namespace HREngine.Bots
 
     class Settings
     {
-
+        public int numberOfThreads = 32;
         public bool useSecretsPlayArround = false;
 
-        public string path="";
+        public bool simulateEnemysTurn = true;
+        public int enemyTurnMaxWide = 20;
+
+        public int secondTurnAmount = 256;
+        public bool simEnemySecondTurn = true;
+        public int enemySecondTurnMaxWide = 20;
+
+        public int nextTurnDeep = 6;
+        public int nextTurnMaxWide = 20;
+        public int nextTurnTotalBoards = 50;
+
+        public bool playarround = false;
+        public int playaroundprob = 50;
+        public int playaroundprob2 = 80;
+
+        public string path = "";
         public string logpath = "";
         public string logfile = "Logg.txt";
         private static Settings instance;
@@ -32,10 +47,10 @@ namespace HREngine.Bots
         private Settings()
         {
         }
-        
+
         public void setFilePath(string path)
         {
-            this.path=path;
+            this.path = path;
         }
         public void setLoggPath(string path)
         {

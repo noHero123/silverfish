@@ -183,7 +183,8 @@ namespace HREngine.Bots
                try
                {
                    bool enemySecondTurnSim = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateEnemyOnSecondTurn") == "true") ? true : false;
-                   Ai.Instance.nextTurnSimulator.setEnemyTurnsim(enemySecondTurnSim);
+                   Settings.Instance.simEnemySecondTurn = enemySecondTurnSim;
+                   //Ai.Instance.nextTurnSimulator.setEnemyTurnsim(enemySecondTurnSim);
                    if (enemySecondTurnSim) Helpfunctions.Instance.ErrorLog("simulates the enemy turn on your second turn");
 
 
@@ -207,7 +208,11 @@ namespace HREngine.Bots
                if (playaroundprob2 < 0) playaroundprob2 = 0;
                if (playaround)
                {
-                   Ai.Instance.setPlayAround(playaround, playaroundprob, playaroundprob2);
+
+                   Settings.Instance.playarround = playaround;
+                   Settings.Instance.playaroundprob = playaroundprob;
+                   Settings.Instance.playaroundprob2 = playaroundprob2;
+                   Ai.Instance.setPlayAround();
                    Helpfunctions.Instance.ErrorLog("activated playaround");
                }
 
@@ -248,9 +253,12 @@ namespace HREngine.Bots
                nextturnsimMaxWidth = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimWide"));
                nexttunsimMaxBoards = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimBoards"));
 
-               Ai.Instance.enemyTurnSim.maxwide = amountBoardsInEnemyTurnSim;
-               Ai.Instance.enemySecondTurnSim.maxwide = amountBoardsInEnemySecondTurnSim;
-               Ai.Instance.nextTurnSimulator.updateParams(nextturnsimDeep, nextturnsimMaxWidth, nexttunsimMaxBoards);
+               Settings.Instance.enemyTurnMaxWide = amountBoardsInEnemyTurnSim;
+               Settings.Instance.enemySecondTurnMaxWide = amountBoardsInEnemySecondTurnSim;
+
+               Settings.Instance.nextTurnDeep = nextturnsimDeep;
+               Settings.Instance.nextTurnMaxWide = nextturnsimMaxWidth;
+               Settings.Instance.nextTurnTotalBoards = nexttunsimMaxBoards;
            }
            catch
            {

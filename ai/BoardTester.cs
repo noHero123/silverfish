@@ -854,9 +854,12 @@ namespace HREngine.Bots
 
             Ai.Instance.setMaxWide(this.maxwide);
             Ai.Instance.setTwoTurnSimulation(false, this.twoturnsim);
-            Ai.Instance.nextTurnSimulator.setEnemyTurnsim(this.simEnemy2Turn);
+            Settings.Instance.simEnemySecondTurn = this.simEnemy2Turn;
             //Ai.Instance.nextTurnSimulator.updateParams();
-            Ai.Instance.setPlayAround(this.playarround, this.pprob1, this.pprob2);
+            Settings.Instance.playarround = this.playarround;
+            Settings.Instance.playaroundprob = this.pprob1;
+            Settings.Instance.playaroundprob2 = this.pprob2;
+            Ai.Instance.setPlayAround();
 
             //save data
             Hrtprozis.Instance.updateOwnHero(this.ownHeroWeapon, this.ownHeroWeaponAttack, this.ownHeroWeaponDurability, this.ownheroname, heroability, abilityReady, this.ownHero);
@@ -876,9 +879,15 @@ namespace HREngine.Bots
 
             if (og != "") Probabilitymaker.Instance.readGraveyards(og, eg);
             if (omd != "") Probabilitymaker.Instance.readTurnGraveYard(omd, emd);
-            Ai.Instance.enemyTurnSim.maxwide = ets;
-            Ai.Instance.enemySecondTurnSim.maxwide = ents;
-            Ai.Instance.nextTurnSimulator.updateParams(ntssd, ntssw, ntssm);
+            //Ai.Instance.enemyTurnSim.maxwide = ets;
+            //Ai.Instance.enemySecondTurnSim.maxwide = ents;
+            Settings.Instance.enemyTurnMaxWide = ets;
+            Settings.Instance.enemySecondTurnMaxWide = ents;
+
+            Settings.Instance.nextTurnDeep = ntssd;
+            Settings.Instance.nextTurnMaxWide = ntssw;
+            Settings.Instance.nextTurnTotalBoards = ntssm;
+            //Ai.Instance.nextTurnSimulator.updateParams(ntssd, ntssw, ntssm);
 
             Settings.Instance.useSecretsPlayArround = dosecrets;
 

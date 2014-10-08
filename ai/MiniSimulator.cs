@@ -22,7 +22,9 @@ namespace HREngine.Bots
 
         List<Playfield> posmoves = new List<Playfield>(7000);
         List<Playfield> twoturnfields = new List<Playfield>(500);
-        public int dirtyTwoTurnSim = 256;
+
+        List<List<Playfield>> threadresults = new List<List<Playfield>>(64);
+        private int dirtyTwoTurnSim = 256;
 
         public Action bestmove = null;
         public float bestmoveValue = 0;
@@ -92,6 +94,19 @@ namespace HREngine.Bots
             }
         }
 
+        private void startEnemyTurnSim(Playfield p, bool simulateTwoTurns, bool print)
+        {
+            if (p.guessingHeroHP >= 1)
+            {
+                //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+                p.prepareNextTurn(p.isOwnTurn);
+
+                Ai.Instance.enemyTurnSim[0].simulateEnemysTurn(p, simulateTwoTurns, playaround, print, playaroundprob, playaroundprob2);
+
+            }
+            p.complete = true;
+        }
+
         public float doallmoves(Playfield playf, bool isLethalCheck)
         {
             //Helpfunctions.Instance.logg("NXTTRN" + playf.mana);
@@ -140,7 +155,10 @@ namespace HREngine.Bots
                     }
                     else
                     {
+                        //end turn of enemy
                         p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                        //simulate the enemys response
+                        this.startEnemyTurnSim(p, this.simulateSecondTurn, false);
                     }
 
                     //sort stupid stuff ouf
@@ -201,6 +219,7 @@ namespace HREngine.Bots
                     else
                     {
                         p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                        this.startEnemyTurnSim(p, this.simulateSecondTurn, false);
                     }
                 }
             }
@@ -249,21 +268,94 @@ namespace HREngine.Bots
             //return;
             if (this.dirtyTwoTurnSim == 0) return;
             this.posmoves.Clear();
-            foreach (Playfield p in this.twoturnfields)
+            int thread = 0;
+            //DateTime started = DateTime.Now;
+            if (Settings.Instance.numberOfThreads == 1)
             {
-
-                if (p.guessingHeroHP >= 1)
+                foreach (Playfield p in this.twoturnfields)
                 {
-                    p.value = int.MinValue;
-                    //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
-                    p.prepareNextTurn(p.isOwnTurn);
-                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
+
+                    if (p.guessingHeroHP >= 1)
+                    {
+                        p.value = int.MinValue;
+                        //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+                        p.prepareNextTurn(p.isOwnTurn);
+                        Ai.Instance.enemyTurnSim[thread].simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
+                    }
+                    //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                    this.posmoves.Add(p);
                 }
-                //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
-                this.posmoves.Add(p);
+            }
+            else
+            {
+                //multithreading!
+
+                List<System.Threading.Thread> tasks = new List<System.Threading.Thread>(Settings.Instance.numberOfThreads);
+                for (int kl = 0; kl < Settings.Instance.numberOfThreads; kl++)
+                {
+                    if (this.threadresults.Count > kl)
+                    {
+                        this.threadresults[kl].Clear();
+                        continue;
+                    }
+                    this.threadresults.Add(new List<Playfield>());
+                }
+
+
+                int k = 0;
+                for (k = 0; k < Settings.Instance.numberOfThreads; k++)
+                {
+                    //System.Threading.Thread threadl = new System.Threading.Thread(() => this.Workthread(test, botBase, isLethalCheck, playfieldsTasklist[k], threadnumbers[k]));
+                    System.Threading.Thread threadl = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(this.dirtyWorkthread));
+                    //System.Threading.Tasks.Task tsk = new System.Threading.Tasks.Task(this.Workthread, (object)new threadobject(test, botBase, isLethalCheck, playfieldsTasklist[k], threadnumbers[k]));
+                    int i = k;
+                    threadl.Start((object)i);
+
+                    tasks.Add(threadl);
+
+                }
+
+                System.Threading.Thread.Sleep(1);
+
+                for (int j = 0; j < Settings.Instance.numberOfThreads; j++)
+                {
+                    tasks[j].Join();
+                    posmoves.AddRange(this.threadresults[j]);
+                }
+
+
+            }
+            //Helpfunctions.Instance.ErrorLog("time needed for parallel: " + (DateTime.Now - started).TotalSeconds);
+        }
+
+        //workthread for dirtyTwoTurnsim
+        private void dirtyWorkthread(object to)
+        {
+            int threadnumber = (int)to;
+            //Helpfunctions.Instance.ErrorLog("Hi, i'm no " + threadnumber);
+            for (int i = 0; i < this.twoturnfields.Count; i++)
+            {
+                if (i % Settings.Instance.numberOfThreads == threadnumber)
+                {
+                    //if(threadnumber ==0)Helpfunctions.Instance.ErrorLog("no " + threadnumber + " calculates " + i);
+                    Playfield p = this.twoturnfields[i];
+                    if (p.guessingHeroHP >= 1)
+                    {
+                        p.value = int.MinValue;
+                        //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+                        p.prepareNextTurn(p.isOwnTurn);
+                        Ai.Instance.enemyTurnSim[threadnumber].simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
+                    }
+                    //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+
+
+                    this.threadresults[threadnumber].Add(p);
+
+                }
             }
 
         }
+
 
 
         public void cuttingposibilities()

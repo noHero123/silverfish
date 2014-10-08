@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "112.8";
+        public string versionnumber = "113";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -681,26 +681,27 @@ namespace HREngine.Bots
             if (botbase is BehaviorMana) this.botbehave = "mana";
             this.botbehave += " " + Ai.Instance.maxwide;
             this.botbehave += " face " + ComboBreaker.Instance.attackFaceHP;
-            if (Ai.Instance.secondTurnAmount > 0)
+            if (Settings.Instance.secondTurnAmount > 0)
             {
                 if (Ai.Instance.nextMoveGuess.mana == -100)
                 {
                     Ai.Instance.updateTwoTurnSim();
                 }
-                this.botbehave += " twoturnsim " + Ai.Instance.mainTurnSimulator.dirtyTwoTurnSim + " ntss " + Ai.Instance.nextTurnSimulator.maxdeep + " " + Ai.Instance.nextTurnSimulator.maxwide + " " + Ai.Instance.nextTurnSimulator.totalboards;
+                this.botbehave += " twoturnsim " + Settings.Instance.secondTurnAmount + " ntss " + Settings.Instance.nextTurnDeep + " " + Settings.Instance.nextTurnMaxWide + " " + Settings.Instance.nextTurnTotalBoards;
             }
-            if (Ai.Instance.playaround)
+
+            if (Settings.Instance.playarround)
             {
                 this.botbehave += " playaround";
-                this.botbehave += " " + Ai.Instance.playaroundprob + " " + Ai.Instance.playaroundprob2;
+                this.botbehave += " " + Settings.Instance.playaroundprob + " " + Settings.Instance.playaroundprob2;
             }
 
-            this.botbehave += " ets " + Ai.Instance.enemyTurnSim.maxwide;
+            this.botbehave += " ets " + Settings.Instance.enemyTurnMaxWide;
 
-            if (Ai.Instance.nextTurnSimulator.doEnemySecondTurn)
+            if (Settings.Instance.simEnemySecondTurn)
             {
                 this.botbehave += " simEnemy2Turn";
-                this.botbehave += " ents " + Ai.Instance.enemySecondTurnSim.maxwide;
+                this.botbehave += " ents " + Settings.Instance.enemySecondTurnMaxWide;
             }
 
             if (Settings.Instance.useSecretsPlayArround)

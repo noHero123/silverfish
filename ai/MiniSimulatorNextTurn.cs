@@ -8,9 +8,12 @@ namespace HREngine.Bots
     public class MiniSimulatorNextTurn
     {
         //#####################################################################################################################
-        public int maxdeep = 6;
-        public int maxwide = 10;
-        public int totalboards = 50;
+        //public int maxdeep = 6;
+        //public int maxwide = 10;
+        //public int totalboards = 50;
+
+        public int thread = 0;
+
         private bool usePenalityManager = true;
         private bool useCutingTargets = true;
         private bool dontRecalc = true;
@@ -18,8 +21,6 @@ namespace HREngine.Bots
         private bool useComparison = true;
 
         public bool doEnemySecondTurn = false;
-
-        private bool printNormalstuff = false;
 
         List<Playfield> posmoves = new List<Playfield>(7000);
 
@@ -31,47 +32,17 @@ namespace HREngine.Bots
         private int calculated = 0;
 
         private bool simulateSecondTurn = false;
-        private bool playaround = false;
-        private int playaroundprob = 50;
-        private int playaroundprob2 = 80;
 
         Movegenerator movegen = Movegenerator.Instance;
-        PenalityManager pen = PenalityManager.Instance;
+
 
         public MiniSimulatorNextTurn()
         {
         }
 
-        public void updateParams(int deep, int wide, int ttlboards)
-        {
-            this.maxdeep = deep;
-            this.maxwide = wide;
-            this.totalboards = ttlboards;
-        }
 
-        public void setPrintingstuff(bool sp)
-        {
-            this.printNormalstuff = sp;
-        }
 
-        public void setSecondTurnSimu(bool sts)
-        {
-            this.simulateSecondTurn = sts;
-        }
-
-        public void setEnemyTurnsim(bool ets)
-        {
-            this.doEnemySecondTurn = ets;
-        }
-
-        public void setPlayAround(bool spa, int pprob, int pprob2)
-        {
-            this.playaround = spa;
-            this.playaroundprob = pprob;
-            this.playaroundprob2 = pprob2;
-        }
-
-        private void addToPosmoves(Playfield pf)
+        private void addToPosmoves(Playfield pf, int totalboards)
         {
             if (pf.ownHero.Hp <= 0) return;
             /*foreach (Playfield p in this.posmoves)
@@ -81,19 +52,48 @@ namespace HREngine.Bots
             this.posmoves.Add(pf);
             //posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
             //if (posmoves.Count > this.maxwide) posmoves.RemoveAt(this.maxwide);
-            if (this.totalboards >= 1)
+            if (totalboards >= 1)
             {
                 this.calculated++;
             }
         }
 
+        private void startEnemyTurnSim(Playfield p, bool simulateTwoTurns, bool print, bool playaround, int playaroundprob, int playaroundprob2)
+        {
+            if (p.guessingHeroHP >= 1)
+            {
+                //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+                p.prepareNextTurn(p.isOwnTurn);
+
+                Ai.Instance.enemySecondTurnSim[this.thread].simulateEnemysTurn(p, simulateTwoTurns, playaround, print, playaroundprob, playaroundprob2);
+                /*
+                if (p.turnCounter >= 2)
+                    Ai.Instance.enemySecondTurnSim.simulateEnemysTurn(p, simulateTwoTurns, playaround, print, playaroundprob, playaroundprob2);
+                else
+                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, simulateTwoTurns, playaround, print, playaroundprob, playaroundprob2);
+                */
+            }
+            p.complete = true;
+        }
+
         public float doallmoves(Playfield playf, bool isLethalCheck, bool print = false)
         {
+
+            //todo only one time!
+            this.doEnemySecondTurn = Settings.Instance.simEnemySecondTurn;
+            int totalboards = Settings.Instance.nextTurnTotalBoards;
+            int maxwide = Settings.Instance.nextTurnMaxWide;
+            int maxdeep = Settings.Instance.nextTurnDeep;
+            bool playaround = Settings.Instance.playarround;
+            int playaroundprob = Settings.Instance.playaroundprob;
+            int playaroundprob2 = Settings.Instance.playaroundprob2;
+
+
             //Helpfunctions.Instance.logg("NXTTRN" + playf.mana);
             if (botBase == null) botBase = Ai.Instance.botBase;
             bool test = false;
             this.posmoves.Clear();
-            this.addToPosmoves(playf);
+            this.addToPosmoves(playf, totalboards);
             bool havedonesomething = true;
             List<Playfield> temp = new List<Playfield>();
             int deep = 0;
@@ -101,8 +101,8 @@ namespace HREngine.Bots
             this.calculated = 0;
             while (havedonesomething)
             {
-                if (this.printNormalstuff) Helpfunctions.Instance.logg("ailoop");
-                GC.Collect();
+                //if (this.printNormalstuff) Helpfunctions.Instance.logg("ailoop");
+                //GC.Collect();
                 temp.Clear();
                 temp.AddRange(this.posmoves);
                 havedonesomething = false;
@@ -122,7 +122,7 @@ namespace HREngine.Bots
                         havedonesomething = true;
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
-                        addToPosmoves(pf);
+                        addToPosmoves(pf, totalboards);
                     }
 
 
@@ -133,7 +133,8 @@ namespace HREngine.Bots
                     else
                     {
                         p.sEnemTurn = this.doEnemySecondTurn;
-                        p.endTurn(false, false, false, this.playaroundprob, this.playaroundprob2);
+                        p.endTurn(this.simulateSecondTurn, playaround, false, playaroundprob, playaroundprob2);
+                        this.startEnemyTurnSim(p, this.simulateSecondTurn, false, playaround, playaroundprob, playaroundprob2);
                     }
 
                     //sort stupid stuff ouf
@@ -148,7 +149,7 @@ namespace HREngine.Bots
                         posmoves.Remove(p);
                     }
 
-                    if (this.calculated > this.totalboards) break;
+                    if (this.calculated > totalboards) break;
                 }
 
                 if (!test && bestoldval >= -10000 && bestold != null)
@@ -157,7 +158,7 @@ namespace HREngine.Bots
                 }
 
                 //Helpfunctions.Instance.loggonoff(true);
-                if (this.printNormalstuff)
+                /*if (this.printNormalstuff)
                 {
                     int donec = 0;
                     foreach (Playfield p in posmoves)
@@ -165,22 +166,19 @@ namespace HREngine.Bots
                         if (p.complete) donec++;
                     }
                     Helpfunctions.Instance.logg("deep " + deep + " len " + this.posmoves.Count + " dones " + donec);
-                }
+                }*/
 
                 if (!test)
                 {
-                    cuttingposibilities();
+                    cuttingposibilities(maxwide);
                 }
 
-                if (this.printNormalstuff)
-                {
-                    Helpfunctions.Instance.logg("cut to len " + this.posmoves.Count);
-                }
+                //if (this.printNormalstuff) Helpfunctions.Instance.logg("cut to len " + this.posmoves.Count);
                 //Helpfunctions.Instance.loggonoff(false);
                 deep++;
 
-                if (this.calculated > this.totalboards) break;
-                if (deep >= this.maxdeep) break;//remove this?
+                if (this.calculated > totalboards) break;
+                if (deep >= maxdeep) break;//remove this?
             }
 
             foreach (Playfield p in posmoves)//temp
@@ -194,7 +192,8 @@ namespace HREngine.Bots
                     else
                     {
                         p.sEnemTurn = this.doEnemySecondTurn;
-                        p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                        p.endTurn(this.simulateSecondTurn, playaround, false, playaroundprob, playaroundprob2);
+                        this.startEnemyTurnSim(p, this.simulateSecondTurn, false, playaround, playaroundprob, playaroundprob2);
                     }
                 }
             }
@@ -224,7 +223,8 @@ namespace HREngine.Bots
                     bestplay.printBoard();
                     bestplay.value = int.MinValue;
                     bestplay.sEnemTurn = this.doEnemySecondTurn;
-                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(bestplay, false, playaround, true, this.playaroundprob, this.playaroundprob2);
+                    Ai.Instance.enemySecondTurnSim[this.thread].simulateEnemysTurn(bestplay, false, playaround, false, playaroundprob, playaroundprob2);
+                    //Ai.Instance.enemySecondTurnSim.simulateEnemysTurn(bestplay, false, false, true, 100, 100); //dont play arround in enemys second turn
 
                 }
                 this.bestmove = bestplay.getNextAction();
@@ -240,17 +240,16 @@ namespace HREngine.Bots
             return -10000;
         }
 
-        public void cuttingposibilities()
+        public void cuttingposibilities(int maxwide)
         {
             // take the x best values
-            int takenumber = this.maxwide;
             List<Playfield> temp = new List<Playfield>();
             posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
 
             if (this.useComparison)
             {
                 int i = 0;
-                int max = Math.Min(posmoves.Count, this.maxwide);
+                int max = Math.Min(posmoves.Count, maxwide);
 
                 Playfield p = null;
                 Playfield pp = null;
@@ -287,7 +286,7 @@ namespace HREngine.Bots
                 temp.AddRange(posmoves);
             }
             posmoves.Clear();
-            posmoves.AddRange(temp.GetRange(0, Math.Min(takenumber, temp.Count)));
+            posmoves.AddRange(temp.GetRange(0, Math.Min(maxwide, temp.Count)));
             //posmoves.Clear();
             //posmoves.AddRange(Helpfunctions.TakeList(temp, takenumber));
 

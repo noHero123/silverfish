@@ -868,6 +868,25 @@ namespace HREngine.Bots
             return retval;
         }
 
+
+        //stuff for playing around enemy aoes
+        public void enemyPlaysAoe(int pprob, int pprob2)
+        {
+            if (!this.loatheb)
+            {
+                Playfield p = new Playfield(this);
+                float oldval = Ai.Instance.botBase.getPlayfieldValue(p);
+                p.value = int.MinValue;
+                p.EnemyCardPlaying(p.enemyHeroName, p.mana, p.enemyAnzCards, pprob, pprob2);
+                float newval = Ai.Instance.botBase.getPlayfieldValue(p);
+                p.value = int.MinValue;
+                if (oldval > newval) // new board is better for enemy (value is smaller)
+                {
+                    this.copyValuesFrom(p);
+                }
+            }
+        }
+
         public int EnemyCardPlaying(HeroEnum enemyHeroNamee, int currmana, int cardcount, int playAroundProb, int pap2)
         {
             int mana = currmana;
@@ -1148,6 +1167,8 @@ namespace HREngine.Bots
 
             return currmana;
         }
+
+
 
 
         // get all minions which are attackable
@@ -1643,24 +1664,6 @@ namespace HREngine.Bots
             if (this.diedMinions != null) this.diedMinions.Clear();//contains only the minions that died in this turn!
         }
 
-        public void enemyPlaysAoe(int pprob, int pprob2)
-        {
-            if (!this.loatheb)
-            {
-                Playfield p = new Playfield(this);
-                float oldval = Ai.Instance.botBase.getPlayfieldValue(p);
-                p.value = int.MinValue;
-                p.EnemyCardPlaying(p.enemyHeroName, p.mana, p.enemyAnzCards, pprob, pprob2);
-                float newval = Ai.Instance.botBase.getPlayfieldValue(p);
-                p.value = int.MinValue;
-                if (oldval > newval) // new board is better for enemy (value is smaller)
-                {
-                    this.copyValuesFrom(p);
-                }
-            }
-        }
-
-
         public void guessHeroDamage()
         {
             int ghd = 0;
@@ -1901,6 +1904,7 @@ namespace HREngine.Bots
             else
             {
                 guessHeroDamage();
+                /*
                 if (this.guessingHeroHP >= 1)
                 {
                     //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
@@ -1911,11 +1915,12 @@ namespace HREngine.Bots
                     else
                         Ai.Instance.enemyTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
                 }
-                this.complete = true;
+                this.complete = true;*/
             }
 
         }
 
+        //prepares the turn for the next player
         public void prepareNextTurn(bool own)
         {
             //call this after start turn trigger!
@@ -2000,6 +2005,7 @@ namespace HREngine.Bots
         public void endEnemyTurn()
         {
             this.triggerEndTurn(false);
+            this.turnCounter++;
             this.isOwnTurn = true;
             this.triggerStartTurn(true);
             this.complete = true;
@@ -3292,7 +3298,7 @@ namespace HREngine.Bots
                     if (si.canBe_noblesacrifice)
                     {
                         bool ishero = defender.isHero;
-                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130).sim_card.onSecretPlay(this, false, attacker, defender, out newTarget);
+                        //CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130).sim_card.onSecretPlay(this, false, attacker, defender, out newTarget);
                         si.usedTrigger_CharIsAttacked(ishero, attacker.isHero);
                         foreach (SecretItem sii in this.enemySecretList)
                         {
@@ -3371,7 +3377,7 @@ namespace HREngine.Bots
 
                     if (si.canBe_repentance)
                     {
-                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_379).sim_card.onSecretPlay(this, false, playedMinion, 0);
+                        //CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_379).sim_card.onSecretPlay(this, false, playedMinion, 0);
                         si.usedTrigger_MinionIsPlayed();
                         foreach (SecretItem sii in this.enemySecretList)
                         {
@@ -3448,7 +3454,7 @@ namespace HREngine.Bots
 
                     if (si.canBe_redemption)
                     {
-                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_136).sim_card.onSecretPlay(this, false, 0);
+                        //CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_136).sim_card.onSecretPlay(this, false, 0);
                         si.usedTrigger_MinionDied();
                         foreach (SecretItem sii in this.enemySecretList)
                         {
@@ -3458,7 +3464,7 @@ namespace HREngine.Bots
 
                     if (si.canBe_avenge)
                     {
-                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.FP1_020).sim_card.onSecretPlay(this, false, 0);
+                        //CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.FP1_020).sim_card.onSecretPlay(this, false, 0);
                         si.usedTrigger_MinionDied();
                         foreach (SecretItem sii in this.enemySecretList)
                         {

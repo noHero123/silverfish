@@ -9,12 +9,23 @@ namespace HREngine.Bots
     public class EnemyTurnSimulator
     {
 
+        public int thread = 0;
+
         private List<Playfield> posmoves = new List<Playfield>(7000);
-        public int maxwide = 20;
+        //public int maxwide = 20;
         Movegenerator movegen = Movegenerator.Instance;
+        bool readSettings = true;
+        private int maxwide = 20;
 
         public void simulateEnemysTurn(Playfield rootfield, bool simulateTwoTurns, bool playaround, bool print, int pprob, int pprob2)
         {
+            if (readSettings)
+            {
+                maxwide = Settings.Instance.enemyTurnMaxWide;
+                if (rootfield.turnCounter >= 2) maxwide = Settings.Instance.enemyTurnMaxWide;
+                this.readSettings = false;
+            }
+
             bool havedonesomething = true;
             posmoves.Clear();
             if (print)
@@ -179,7 +190,7 @@ namespace HREngine.Bots
             if (simulateTwoTurns && bestplay.value > -1000)
             {
                 bestplay.prepareNextTurn(true);
-                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false, print);
+                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator[this.thread].doallmoves(bestplay, false, print);
             }
 
 

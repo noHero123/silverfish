@@ -8,23 +8,27 @@ namespace HREngine.Bots
 
     public class Ai
     {
+
         private int maxdeep = 12;
         public int maxwide = 3000;
-        public bool simulateEnemyTurn = true;
+        //public int playaroundprob = 40;
+        public int playaroundprob2 = 80;
+
+
         private bool usePenalityManager = true;
         private bool useCutingTargets = true;
         private bool dontRecalc = true;
         private bool useLethalCheck = true;
         private bool useComparison = true;
-        public int playaroundprob = 40;
-        public int playaroundprob2 = 80;
+
 
         public int lethalMissing = 30; //RR
 
         public MiniSimulator mainTurnSimulator;
-        public EnemyTurnSimulator enemyTurnSim;
-        public MiniSimulatorNextTurn nextTurnSimulator;
-        public EnemyTurnSimulator enemySecondTurnSim;
+
+        public List<EnemyTurnSimulator> enemyTurnSim = new List<EnemyTurnSimulator>();
+        public List<MiniSimulatorNextTurn> nextTurnSimulator = new List<MiniSimulatorNextTurn>();
+        public List<EnemyTurnSimulator> enemySecondTurnSim = new List<EnemyTurnSimulator>();
 
         public string currentCalculatedBoard = "1";
 
@@ -44,7 +48,7 @@ namespace HREngine.Bots
         public List<Action> bestActions = new List<Action>();
 
         public bool secondturnsim = false;
-        public int secondTurnAmount = 256;
+        //public int secondTurnAmount = 256;
         public bool playaround = false;
 
         private static Ai instance;
@@ -65,11 +69,25 @@ namespace HREngine.Bots
         {
             this.nextMoveGuess = new Playfield();
             this.nextMoveGuess.mana = -100;
-            this.nextTurnSimulator = new MiniSimulatorNextTurn();
+
             this.mainTurnSimulator = new MiniSimulator(maxdeep, maxwide, 0); // 0 for unlimited
-            this.enemyTurnSim = new EnemyTurnSimulator();
-            this.enemySecondTurnSim = new EnemyTurnSimulator();
             this.mainTurnSimulator.setPrintingstuff(true);
+
+            /*this.nextTurnSimulator = new MiniSimulatorNextTurn();
+            this.enemyTurnSim = new EnemyTurnSimulator();
+            this.enemySecondTurnSim = new EnemyTurnSimulator();*/
+
+            for (int i = 0; i < Settings.Instance.numberOfThreads; i++)
+            {
+                this.nextTurnSimulator.Add(new MiniSimulatorNextTurn());
+                this.enemyTurnSim.Add(new EnemyTurnSimulator());
+                this.enemySecondTurnSim.Add(new EnemyTurnSimulator());
+
+                this.nextTurnSimulator[i].thread = i;
+                this.enemyTurnSim[i].thread = i;
+                this.enemySecondTurnSim[i].thread = i;
+            }
+
         }
 
         public void setMaxWide(int mw)
@@ -83,20 +101,17 @@ namespace HREngine.Bots
         {
             this.mainTurnSimulator.setSecondTurnSimu(stts, amount);
             this.secondturnsim = stts;
-            this.secondTurnAmount = amount;
+            Settings.Instance.secondTurnAmount = amount;
         }
 
         public void updateTwoTurnSim()
         {
-            this.mainTurnSimulator.setSecondTurnSimu(this.secondturnsim, this.secondTurnAmount);
+            this.mainTurnSimulator.setSecondTurnSimu(Settings.Instance.simulateEnemysTurn, Settings.Instance.secondTurnAmount);
         }
 
-        public void setPlayAround(bool spa, int pprob, int pprob2)
+        public void setPlayAround()
         {
-            this.mainTurnSimulator.setPlayAround(spa, pprob, pprob2);
-            this.playaround = spa;
-            this.playaroundprob = pprob;
-            this.playaroundprob2 = pprob2;
+            this.mainTurnSimulator.setPlayAround(Settings.Instance.playarround, Settings.Instance.playaroundprob, Settings.Instance.playaroundprob2);
         }
 
         private void doallmoves(bool test, bool isLethalCheck)
@@ -254,7 +269,7 @@ namespace HREngine.Bots
 
             posmoves.Clear();
             posmoves.Add(new Playfield());
-            posmoves[0].sEnemTurn = this.simulateEnemyTurn;
+            posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
             /* foreach (var item in this.posmoves[0].owncards)
              {
                  help.logg("card " + item.handcard.card.name + " is playable :" + item.handcard.card.canplayCard(posmoves[0]) + " cost/mana: " + item.handcard.card.cost + "/" + posmoves[0].mana);
@@ -285,7 +300,7 @@ namespace HREngine.Bots
                 {
                     posmoves.Clear();
                     posmoves.Add(new Playfield());
-                    posmoves[0].sEnemTurn = this.simulateEnemyTurn;
+                    posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
                     help.logg("no lethal, do something random######");
                     strt = DateTime.Now;
                     doallmoves(false, false);
@@ -312,7 +327,7 @@ namespace HREngine.Bots
             //calculate the stuff
             posmoves.Clear();
             posmoves.Add(new Playfield());
-            posmoves[0].sEnemTurn = this.simulateEnemyTurn;
+            posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
             foreach (Playfield p in this.posmoves)
             {
                 p.printBoard();
@@ -330,13 +345,15 @@ namespace HREngine.Bots
             DateTime strt = DateTime.Now;
             doallmoves(false, true);
             help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
+            double timeneeded = 0;
             if (bestmoveValue < 10000)
             {
                 posmoves.Clear();
                 posmoves.Add(new Playfield());
-                posmoves[0].sEnemTurn = this.simulateEnemyTurn;
+                posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
                 strt = DateTime.Now;
                 doallmoves(false, false);
+                timeneeded = (DateTime.Now - strt).TotalSeconds;
                 help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
             }
 
@@ -344,7 +361,7 @@ namespace HREngine.Bots
             {
                 this.mainTurnSimulator.printPosmoves();
                 simmulateWholeTurn();
-                help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
+                help.logg("calculated " + timeneeded);
             }
         }
 
@@ -396,11 +413,11 @@ namespace HREngine.Bots
 
             //help.logg("AFTER ENEMY TURN:" );
             tempbestboard.sEnemTurn = true;
-            tempbestboard.endTurn(false, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+            tempbestboard.endTurn(false, this.playaround, false, Settings.Instance.playaroundprob, Settings.Instance.playaroundprob2);
             help.logg("ENEMY TURN:-----------------------------");
             tempbestboard.value = int.MinValue;
             tempbestboard.prepareNextTurn(tempbestboard.isOwnTurn);
-            Ai.Instance.enemyTurnSim.simulateEnemysTurn(tempbestboard, true, playaround, true, this.playaroundprob, this.playaroundprob2);
+            Ai.Instance.enemyTurnSim[0].simulateEnemysTurn(tempbestboard, true, playaround, true, Settings.Instance.playaroundprob, Settings.Instance.playaroundprob2);
         }
 
         public void simmulateWholeTurnandPrint()
