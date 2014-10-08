@@ -127,7 +127,10 @@ namespace ConsoleApplication1
 
                 if (playaround)
                 {
-                    Ai.Instance.setPlayAround(playaround, 50, 80);
+                    Settings.Instance.playarround = playaround;
+                    Settings.Instance.playaroundprob = 50;
+                    Settings.Instance.playaroundprob2 = 80;
+                    Ai.Instance.setPlayAround();
                     Helpfunctions.Instance.ErrorLog("activated playaround");
                 }
 
@@ -137,14 +140,22 @@ namespace ConsoleApplication1
                 Helpfunctions.Instance.ErrorLog("error in reading two-turn-simulation from settings");
             }
 
-            Ai.Instance.nextTurnSimulator.setEnemyTurnsim(true);
+            Settings.Instance.simulateEnemysTurn = true;
+            Settings.Instance.simEnemySecondTurn = true;
 
             Helpfunctions.Instance.ErrorLog("write to single log file is: " + writeToSingleFile);
 
 
-            Ai.Instance.enemyTurnSim.maxwide = 20;
-            Ai.Instance.enemySecondTurnSim.maxwide = 20;
-            Ai.Instance.nextTurnSimulator.updateParams(6, 20, 50);
+            //Ai.Instance.enemyTurnSim.maxwide = 20;
+            //Ai.Instance.enemySecondTurnSim.maxwide = 20;
+
+            Settings.Instance.enemyTurnMaxWide = 20;
+            Settings.Instance.enemySecondTurnMaxWide = 20;
+
+            Settings.Instance.nextTurnDeep = 6;
+            Settings.Instance.nextTurnMaxWide = 20;
+            Settings.Instance.nextTurnTotalBoards = 50;
+
             bool teststuff = false;
             bool printstuff = false;
             try
@@ -216,7 +227,7 @@ namespace ConsoleApplication1
 
     public class Silverfish
     {
-        public int versionnumber = 112;
+        public string versionnumber = "112.8";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -1633,6 +1644,25 @@ namespace ConsoleApplication1
             return retval;
         }
 
+
+        //stuff for playing around enemy aoes
+        public void enemyPlaysAoe(int pprob, int pprob2)
+        {
+            if (!this.loatheb)
+            {
+                Playfield p = new Playfield(this);
+                float oldval = Ai.Instance.botBase.getPlayfieldValue(p);
+                p.value = int.MinValue;
+                p.EnemyCardPlaying(p.enemyHeroName, p.mana, p.enemyAnzCards, pprob, pprob2);
+                float newval = Ai.Instance.botBase.getPlayfieldValue(p);
+                p.value = int.MinValue;
+                if (oldval > newval) // new board is better for enemy (value is smaller)
+                {
+                    this.copyValuesFrom(p);
+                }
+            }
+        }
+
         public int EnemyCardPlaying(HeroEnum enemyHeroNamee, int currmana, int cardcount, int playAroundProb, int pap2)
         {
             int mana = currmana;
@@ -1913,6 +1943,8 @@ namespace ConsoleApplication1
 
             return currmana;
         }
+
+
 
 
         // get all minions which are attackable
@@ -2408,24 +2440,6 @@ namespace ConsoleApplication1
             if (this.diedMinions != null) this.diedMinions.Clear();//contains only the minions that died in this turn!
         }
 
-        public void enemyPlaysAoe(int pprob, int pprob2)
-        {
-            if (!this.loatheb)
-            {
-                Playfield p = new Playfield(this);
-                float oldval = Ai.Instance.botBase.getPlayfieldValue(p);
-                p.value = int.MinValue;
-                p.EnemyCardPlaying(p.enemyHeroName, p.mana, p.enemyAnzCards, pprob, pprob2);
-                float newval = Ai.Instance.botBase.getPlayfieldValue(p);
-                p.value = int.MinValue;
-                if (oldval > newval) // new board is better for enemy (value is smaller)
-                {
-                    this.copyValuesFrom(p);
-                }
-            }
-        }
-
-
         public void guessHeroDamage()
         {
             int ghd = 0;
@@ -2666,6 +2680,7 @@ namespace ConsoleApplication1
             else
             {
                 guessHeroDamage();
+                /*
                 if (this.guessingHeroHP >= 1)
                 {
                     //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
@@ -2676,11 +2691,12 @@ namespace ConsoleApplication1
                     else
                         Ai.Instance.enemyTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
                 }
-                this.complete = true;
+                this.complete = true;*/
             }
 
         }
 
+        //prepares the turn for the next player
         public void prepareNextTurn(bool own)
         {
             //call this after start turn trigger!
@@ -2765,6 +2781,7 @@ namespace ConsoleApplication1
         public void endEnemyTurn()
         {
             this.triggerEndTurn(false);
+            this.turnCounter++;
             this.isOwnTurn = true;
             this.triggerStartTurn(true);
             this.complete = true;
@@ -4057,7 +4074,7 @@ namespace ConsoleApplication1
                     if (si.canBe_noblesacrifice)
                     {
                         bool ishero = defender.isHero;
-                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130).sim_card.onSecretPlay(this, false, attacker, defender, out newTarget);
+                        //CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130).sim_card.onSecretPlay(this, false, attacker, defender, out newTarget);
                         si.usedTrigger_CharIsAttacked(ishero, attacker.isHero);
                         foreach (SecretItem sii in this.enemySecretList)
                         {
@@ -4136,7 +4153,7 @@ namespace ConsoleApplication1
 
                     if (si.canBe_repentance)
                     {
-                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_379).sim_card.onSecretPlay(this, false, playedMinion, 0);
+                        //CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_379).sim_card.onSecretPlay(this, false, playedMinion, 0);
                         si.usedTrigger_MinionIsPlayed();
                         foreach (SecretItem sii in this.enemySecretList)
                         {
@@ -4213,7 +4230,7 @@ namespace ConsoleApplication1
 
                     if (si.canBe_redemption)
                     {
-                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_136).sim_card.onSecretPlay(this, false, 0);
+                        //CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_136).sim_card.onSecretPlay(this, false, 0);
                         si.usedTrigger_MinionDied();
                         foreach (SecretItem sii in this.enemySecretList)
                         {
@@ -4223,7 +4240,7 @@ namespace ConsoleApplication1
 
                     if (si.canBe_avenge)
                     {
-                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.FP1_020).sim_card.onSecretPlay(this, false, 0);
+                        //CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.FP1_020).sim_card.onSecretPlay(this, false, 0);
                         si.usedTrigger_MinionDied();
                         foreach (SecretItem sii in this.enemySecretList)
                         {
@@ -5446,23 +5463,27 @@ namespace ConsoleApplication1
 
     public class Ai
     {
+
         private int maxdeep = 12;
         public int maxwide = 3000;
-        public bool simulateEnemyTurn = true;
+        //public int playaroundprob = 40;
+        public int playaroundprob2 = 80;
+
+
         private bool usePenalityManager = true;
         private bool useCutingTargets = true;
         private bool dontRecalc = true;
         private bool useLethalCheck = true;
         private bool useComparison = true;
-        public int playaroundprob = 40;
-        public int playaroundprob2 = 80;
+
 
         public int lethalMissing = 30; //RR
 
         public MiniSimulator mainTurnSimulator;
-        public EnemyTurnSimulator enemyTurnSim;
-        public MiniSimulatorNextTurn nextTurnSimulator;
-        public EnemyTurnSimulator enemySecondTurnSim;
+
+        public List<EnemyTurnSimulator> enemyTurnSim = new List<EnemyTurnSimulator>();
+        public List<MiniSimulatorNextTurn> nextTurnSimulator = new List<MiniSimulatorNextTurn>();
+        public List<EnemyTurnSimulator> enemySecondTurnSim = new List<EnemyTurnSimulator>();
 
         public string currentCalculatedBoard = "1";
 
@@ -5482,7 +5503,7 @@ namespace ConsoleApplication1
         public List<Action> bestActions = new List<Action>();
 
         public bool secondturnsim = false;
-        public int secondTurnAmount = 256;
+        //public int secondTurnAmount = 256;
         public bool playaround = false;
 
         private static Ai instance;
@@ -5503,11 +5524,25 @@ namespace ConsoleApplication1
         {
             this.nextMoveGuess = new Playfield();
             this.nextMoveGuess.mana = -100;
-            this.nextTurnSimulator = new MiniSimulatorNextTurn();
+
             this.mainTurnSimulator = new MiniSimulator(maxdeep, maxwide, 0); // 0 for unlimited
-            this.enemyTurnSim = new EnemyTurnSimulator();
-            this.enemySecondTurnSim = new EnemyTurnSimulator();
             this.mainTurnSimulator.setPrintingstuff(true);
+
+            /*this.nextTurnSimulator = new MiniSimulatorNextTurn();
+            this.enemyTurnSim = new EnemyTurnSimulator();
+            this.enemySecondTurnSim = new EnemyTurnSimulator();*/
+
+            for (int i = 0; i < Settings.Instance.numberOfThreads; i++)
+            {
+                this.nextTurnSimulator.Add(new MiniSimulatorNextTurn());
+                this.enemyTurnSim.Add(new EnemyTurnSimulator());
+                this.enemySecondTurnSim.Add(new EnemyTurnSimulator());
+
+                this.nextTurnSimulator[i].thread = i;
+                this.enemyTurnSim[i].thread = i;
+                this.enemySecondTurnSim[i].thread = i;
+            }
+
         }
 
         public void setMaxWide(int mw)
@@ -5521,20 +5556,17 @@ namespace ConsoleApplication1
         {
             this.mainTurnSimulator.setSecondTurnSimu(stts, amount);
             this.secondturnsim = stts;
-            this.secondTurnAmount = amount;
+            Settings.Instance.secondTurnAmount = amount;
         }
 
         public void updateTwoTurnSim()
         {
-            this.mainTurnSimulator.setSecondTurnSimu(this.secondturnsim, this.secondTurnAmount);
+            this.mainTurnSimulator.setSecondTurnSimu(Settings.Instance.simulateEnemysTurn, Settings.Instance.secondTurnAmount);
         }
 
-        public void setPlayAround(bool spa, int pprob, int pprob2)
+        public void setPlayAround()
         {
-            this.mainTurnSimulator.setPlayAround(spa, pprob, pprob2);
-            this.playaround = spa;
-            this.playaroundprob = pprob;
-            this.playaroundprob2 = pprob2;
+            this.mainTurnSimulator.setPlayAround(Settings.Instance.playarround, Settings.Instance.playaroundprob, Settings.Instance.playaroundprob2);
         }
 
         private void doallmoves(bool test, bool isLethalCheck)
@@ -5692,7 +5724,7 @@ namespace ConsoleApplication1
 
             posmoves.Clear();
             posmoves.Add(new Playfield());
-            posmoves[0].sEnemTurn = this.simulateEnemyTurn;
+            posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
             /* foreach (var item in this.posmoves[0].owncards)
              {
                  help.logg("card " + item.handcard.card.name + " is playable :" + item.handcard.card.canplayCard(posmoves[0]) + " cost/mana: " + item.handcard.card.cost + "/" + posmoves[0].mana);
@@ -5723,7 +5755,7 @@ namespace ConsoleApplication1
                 {
                     posmoves.Clear();
                     posmoves.Add(new Playfield());
-                    posmoves[0].sEnemTurn = this.simulateEnemyTurn;
+                    posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
                     help.logg("no lethal, do something random######");
                     strt = DateTime.Now;
                     doallmoves(false, false);
@@ -5750,7 +5782,7 @@ namespace ConsoleApplication1
             //calculate the stuff
             posmoves.Clear();
             posmoves.Add(new Playfield());
-            posmoves[0].sEnemTurn = this.simulateEnemyTurn;
+            posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
             foreach (Playfield p in this.posmoves)
             {
                 p.printBoard();
@@ -5768,13 +5800,15 @@ namespace ConsoleApplication1
             DateTime strt = DateTime.Now;
             doallmoves(false, true);
             help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
+            double timeneeded = 0;
             if (bestmoveValue < 10000)
             {
                 posmoves.Clear();
                 posmoves.Add(new Playfield());
-                posmoves[0].sEnemTurn = this.simulateEnemyTurn;
+                posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
                 strt = DateTime.Now;
                 doallmoves(false, false);
+                timeneeded = (DateTime.Now - strt).TotalSeconds;
                 help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
             }
 
@@ -5782,7 +5816,7 @@ namespace ConsoleApplication1
             {
                 this.mainTurnSimulator.printPosmoves();
                 simmulateWholeTurn();
-                help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
+                help.logg("calculated " + timeneeded);
             }
         }
 
@@ -5834,11 +5868,11 @@ namespace ConsoleApplication1
 
             //help.logg("AFTER ENEMY TURN:" );
             tempbestboard.sEnemTurn = true;
-            tempbestboard.endTurn(false, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+            tempbestboard.endTurn(false, this.playaround, false, Settings.Instance.playaroundprob, Settings.Instance.playaroundprob2);
             help.logg("ENEMY TURN:-----------------------------");
             tempbestboard.value = int.MinValue;
             tempbestboard.prepareNextTurn(tempbestboard.isOwnTurn);
-            Ai.Instance.enemyTurnSim.simulateEnemysTurn(tempbestboard, true, playaround, true, this.playaroundprob, this.playaroundprob2);
+            Ai.Instance.enemyTurnSim[0].simulateEnemysTurn(tempbestboard, true, playaround, true, Settings.Instance.playaroundprob, Settings.Instance.playaroundprob2);
         }
 
         public void simmulateWholeTurnandPrint()
@@ -5929,7 +5963,9 @@ namespace ConsoleApplication1
 
         List<Playfield> posmoves = new List<Playfield>(7000);
         List<Playfield> twoturnfields = new List<Playfield>(500);
-        public int dirtyTwoTurnSim = 256;
+
+        List<List<Playfield>> threadresults = new List<List<Playfield>>(64);
+        private int dirtyTwoTurnSim = 256;
 
         public Action bestmove = null;
         public float bestmoveValue = 0;
@@ -5999,6 +6035,19 @@ namespace ConsoleApplication1
             }
         }
 
+        private void startEnemyTurnSim(Playfield p, bool simulateTwoTurns, bool print)
+        {
+            if (p.guessingHeroHP >= 1)
+            {
+                //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+                p.prepareNextTurn(p.isOwnTurn);
+
+                Ai.Instance.enemyTurnSim[0].simulateEnemysTurn(p, simulateTwoTurns, playaround, print, playaroundprob, playaroundprob2);
+
+            }
+            p.complete = true;
+        }
+
         public float doallmoves(Playfield playf, bool isLethalCheck)
         {
             //Helpfunctions.Instance.logg("NXTTRN" + playf.mana);
@@ -6047,7 +6096,10 @@ namespace ConsoleApplication1
                     }
                     else
                     {
+                        //end turn of enemy
                         p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                        //simulate the enemys response
+                        this.startEnemyTurnSim(p, this.simulateSecondTurn, false);
                     }
 
                     //sort stupid stuff ouf
@@ -6108,6 +6160,7 @@ namespace ConsoleApplication1
                     else
                     {
                         p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                        this.startEnemyTurnSim(p, this.simulateSecondTurn, false);
                     }
                 }
             }
@@ -6156,21 +6209,94 @@ namespace ConsoleApplication1
             //return;
             if (this.dirtyTwoTurnSim == 0) return;
             this.posmoves.Clear();
-            foreach (Playfield p in this.twoturnfields)
+            int thread = 0;
+            //DateTime started = DateTime.Now;
+            if (Settings.Instance.numberOfThreads == 1)
             {
-
-                if (p.guessingHeroHP >= 1)
+                foreach (Playfield p in this.twoturnfields)
                 {
-                    p.value = int.MinValue;
-                    //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
-                    p.prepareNextTurn(p.isOwnTurn);
-                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
+
+                    if (p.guessingHeroHP >= 1)
+                    {
+                        p.value = int.MinValue;
+                        //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+                        p.prepareNextTurn(p.isOwnTurn);
+                        Ai.Instance.enemyTurnSim[thread].simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
+                    }
+                    //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                    this.posmoves.Add(p);
                 }
-                //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
-                this.posmoves.Add(p);
+            }
+            else
+            {
+                //multithreading!
+
+                List<System.Threading.Thread> tasks = new List<System.Threading.Thread>(Settings.Instance.numberOfThreads);
+                for (int kl = 0; kl < Settings.Instance.numberOfThreads; kl++)
+                {
+                    if (this.threadresults.Count > kl)
+                    {
+                        this.threadresults[kl].Clear();
+                        continue;
+                    }
+                    this.threadresults.Add(new List<Playfield>());
+                }
+
+
+                int k = 0;
+                for (k = 0; k < Settings.Instance.numberOfThreads; k++)
+                {
+                    //System.Threading.Thread threadl = new System.Threading.Thread(() => this.Workthread(test, botBase, isLethalCheck, playfieldsTasklist[k], threadnumbers[k]));
+                    System.Threading.Thread threadl = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(this.dirtyWorkthread));
+                    //System.Threading.Tasks.Task tsk = new System.Threading.Tasks.Task(this.Workthread, (object)new threadobject(test, botBase, isLethalCheck, playfieldsTasklist[k], threadnumbers[k]));
+                    int i = k;
+                    threadl.Start((object)i);
+
+                    tasks.Add(threadl);
+
+                }
+
+                System.Threading.Thread.Sleep(1);
+
+                for (int j = 0; j < Settings.Instance.numberOfThreads; j++)
+                {
+                    tasks[j].Join();
+                    posmoves.AddRange(this.threadresults[j]);
+                }
+
+
+            }
+            //Helpfunctions.Instance.ErrorLog("time needed for parallel: " + (DateTime.Now - started).TotalSeconds);
+        }
+
+        //workthread for dirtyTwoTurnsim
+        private void dirtyWorkthread(object to)
+        {
+            int threadnumber = (int)to;
+            //Helpfunctions.Instance.ErrorLog("Hi, i'm no " + threadnumber);
+            for (int i = 0; i < this.twoturnfields.Count; i++)
+            {
+                if (i % Settings.Instance.numberOfThreads == threadnumber)
+                {
+                    //if(threadnumber ==0)Helpfunctions.Instance.ErrorLog("no " + threadnumber + " calculates " + i);
+                    Playfield p = this.twoturnfields[i];
+                    if (p.guessingHeroHP >= 1)
+                    {
+                        p.value = int.MinValue;
+                        //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+                        p.prepareNextTurn(p.isOwnTurn);
+                        Ai.Instance.enemyTurnSim[threadnumber].simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
+                    }
+                    //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+
+
+                    this.threadresults[threadnumber].Add(p);
+
+                }
             }
 
         }
+
 
 
         public void cuttingposibilities()
@@ -6374,12 +6500,23 @@ namespace ConsoleApplication1
     public class EnemyTurnSimulator
     {
 
+        public int thread = 0;
+
         private List<Playfield> posmoves = new List<Playfield>(7000);
-        public int maxwide = 20;
+        //public int maxwide = 20;
         Movegenerator movegen = Movegenerator.Instance;
+        bool readSettings = true;
+        private int maxwide = 20;
 
         public void simulateEnemysTurn(Playfield rootfield, bool simulateTwoTurns, bool playaround, bool print, int pprob, int pprob2)
         {
+            if (readSettings)
+            {
+                maxwide = Settings.Instance.enemyTurnMaxWide;
+                if (rootfield.turnCounter >= 2) maxwide = Settings.Instance.enemyTurnMaxWide;
+                this.readSettings = false;
+            }
+
             bool havedonesomething = true;
             posmoves.Clear();
             if (print)
@@ -6544,7 +6681,7 @@ namespace ConsoleApplication1
             if (simulateTwoTurns && bestplay.value > -1000)
             {
                 bestplay.prepareNextTurn(true);
-                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator.doallmoves(bestplay, false, print);
+                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator[this.thread].doallmoves(bestplay, false, print);
             }
 
 
@@ -6685,9 +6822,12 @@ namespace ConsoleApplication1
     public class MiniSimulatorNextTurn
     {
         //#####################################################################################################################
-        public int maxdeep = 6;
-        public int maxwide = 10;
-        public int totalboards = 50;
+        //public int maxdeep = 6;
+        //public int maxwide = 10;
+        //public int totalboards = 50;
+
+        public int thread = 0;
+
         private bool usePenalityManager = true;
         private bool useCutingTargets = true;
         private bool dontRecalc = true;
@@ -6695,8 +6835,6 @@ namespace ConsoleApplication1
         private bool useComparison = true;
 
         public bool doEnemySecondTurn = false;
-
-        private bool printNormalstuff = false;
 
         List<Playfield> posmoves = new List<Playfield>(7000);
 
@@ -6708,47 +6846,17 @@ namespace ConsoleApplication1
         private int calculated = 0;
 
         private bool simulateSecondTurn = false;
-        private bool playaround = false;
-        private int playaroundprob = 50;
-        private int playaroundprob2 = 80;
 
         Movegenerator movegen = Movegenerator.Instance;
-        PenalityManager pen = PenalityManager.Instance;
+
 
         public MiniSimulatorNextTurn()
         {
         }
 
-        public void updateParams(int deep, int wide, int ttlboards)
-        {
-            this.maxdeep = deep;
-            this.maxwide = wide;
-            this.totalboards = ttlboards;
-        }
 
-        public void setPrintingstuff(bool sp)
-        {
-            this.printNormalstuff = sp;
-        }
 
-        public void setSecondTurnSimu(bool sts)
-        {
-            this.simulateSecondTurn = sts;
-        }
-
-        public void setEnemyTurnsim(bool ets)
-        {
-            this.doEnemySecondTurn = ets;
-        }
-
-        public void setPlayAround(bool spa, int pprob, int pprob2)
-        {
-            this.playaround = spa;
-            this.playaroundprob = pprob;
-            this.playaroundprob2 = pprob2;
-        }
-
-        private void addToPosmoves(Playfield pf)
+        private void addToPosmoves(Playfield pf, int totalboards)
         {
             if (pf.ownHero.Hp <= 0) return;
             /*foreach (Playfield p in this.posmoves)
@@ -6758,19 +6866,48 @@ namespace ConsoleApplication1
             this.posmoves.Add(pf);
             //posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
             //if (posmoves.Count > this.maxwide) posmoves.RemoveAt(this.maxwide);
-            if (this.totalboards >= 1)
+            if (totalboards >= 1)
             {
                 this.calculated++;
             }
         }
 
+        private void startEnemyTurnSim(Playfield p, bool simulateTwoTurns, bool print, bool playaround, int playaroundprob, int playaroundprob2)
+        {
+            if (p.guessingHeroHP >= 1)
+            {
+                //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+                p.prepareNextTurn(p.isOwnTurn);
+
+                Ai.Instance.enemySecondTurnSim[this.thread].simulateEnemysTurn(p, simulateTwoTurns, playaround, print, playaroundprob, playaroundprob2);
+                /*
+                if (p.turnCounter >= 2)
+                    Ai.Instance.enemySecondTurnSim.simulateEnemysTurn(p, simulateTwoTurns, playaround, print, playaroundprob, playaroundprob2);
+                else
+                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, simulateTwoTurns, playaround, print, playaroundprob, playaroundprob2);
+                */
+            }
+            p.complete = true;
+        }
+
         public float doallmoves(Playfield playf, bool isLethalCheck, bool print = false)
         {
+
+            //todo only one time!
+            this.doEnemySecondTurn = Settings.Instance.simEnemySecondTurn;
+            int totalboards = Settings.Instance.nextTurnTotalBoards;
+            int maxwide = Settings.Instance.nextTurnMaxWide;
+            int maxdeep = Settings.Instance.nextTurnDeep;
+            bool playaround = Settings.Instance.playarround;
+            int playaroundprob = Settings.Instance.playaroundprob;
+            int playaroundprob2 = Settings.Instance.playaroundprob2;
+
+
             //Helpfunctions.Instance.logg("NXTTRN" + playf.mana);
             if (botBase == null) botBase = Ai.Instance.botBase;
             bool test = false;
             this.posmoves.Clear();
-            this.addToPosmoves(playf);
+            this.addToPosmoves(playf, totalboards);
             bool havedonesomething = true;
             List<Playfield> temp = new List<Playfield>();
             int deep = 0;
@@ -6778,8 +6915,8 @@ namespace ConsoleApplication1
             this.calculated = 0;
             while (havedonesomething)
             {
-                if (this.printNormalstuff) Helpfunctions.Instance.logg("ailoop");
-                GC.Collect();
+                //if (this.printNormalstuff) Helpfunctions.Instance.logg("ailoop");
+                //GC.Collect();
                 temp.Clear();
                 temp.AddRange(this.posmoves);
                 havedonesomething = false;
@@ -6799,7 +6936,7 @@ namespace ConsoleApplication1
                         havedonesomething = true;
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
-                        addToPosmoves(pf);
+                        addToPosmoves(pf, totalboards);
                     }
 
 
@@ -6810,7 +6947,8 @@ namespace ConsoleApplication1
                     else
                     {
                         p.sEnemTurn = this.doEnemySecondTurn;
-                        p.endTurn(false, false, false, this.playaroundprob, this.playaroundprob2);
+                        p.endTurn(this.simulateSecondTurn, playaround, false, playaroundprob, playaroundprob2);
+                        this.startEnemyTurnSim(p, this.simulateSecondTurn, false, playaround, playaroundprob, playaroundprob2);
                     }
 
                     //sort stupid stuff ouf
@@ -6825,7 +6963,7 @@ namespace ConsoleApplication1
                         posmoves.Remove(p);
                     }
 
-                    if (this.calculated > this.totalboards) break;
+                    if (this.calculated > totalboards) break;
                 }
 
                 if (!test && bestoldval >= -10000 && bestold != null)
@@ -6834,7 +6972,7 @@ namespace ConsoleApplication1
                 }
 
                 //Helpfunctions.Instance.loggonoff(true);
-                if (this.printNormalstuff)
+                /*if (this.printNormalstuff)
                 {
                     int donec = 0;
                     foreach (Playfield p in posmoves)
@@ -6842,22 +6980,19 @@ namespace ConsoleApplication1
                         if (p.complete) donec++;
                     }
                     Helpfunctions.Instance.logg("deep " + deep + " len " + this.posmoves.Count + " dones " + donec);
-                }
+                }*/
 
                 if (!test)
                 {
-                    cuttingposibilities();
+                    cuttingposibilities(maxwide);
                 }
 
-                if (this.printNormalstuff)
-                {
-                    Helpfunctions.Instance.logg("cut to len " + this.posmoves.Count);
-                }
+                //if (this.printNormalstuff) Helpfunctions.Instance.logg("cut to len " + this.posmoves.Count);
                 //Helpfunctions.Instance.loggonoff(false);
                 deep++;
 
-                if (this.calculated > this.totalboards) break;
-                if (deep >= this.maxdeep) break;//remove this?
+                if (this.calculated > totalboards) break;
+                if (deep >= maxdeep) break;//remove this?
             }
 
             foreach (Playfield p in posmoves)//temp
@@ -6871,7 +7006,8 @@ namespace ConsoleApplication1
                     else
                     {
                         p.sEnemTurn = this.doEnemySecondTurn;
-                        p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                        p.endTurn(this.simulateSecondTurn, playaround, false, playaroundprob, playaroundprob2);
+                        this.startEnemyTurnSim(p, this.simulateSecondTurn, false, playaround, playaroundprob, playaroundprob2);
                     }
                 }
             }
@@ -6901,7 +7037,8 @@ namespace ConsoleApplication1
                     bestplay.printBoard();
                     bestplay.value = int.MinValue;
                     bestplay.sEnemTurn = this.doEnemySecondTurn;
-                    Ai.Instance.enemyTurnSim.simulateEnemysTurn(bestplay, false, playaround, true, this.playaroundprob, this.playaroundprob2);
+                    Ai.Instance.enemySecondTurnSim[this.thread].simulateEnemysTurn(bestplay, false, playaround, false, playaroundprob, playaroundprob2);
+                    //Ai.Instance.enemySecondTurnSim.simulateEnemysTurn(bestplay, false, false, true, 100, 100); //dont play arround in enemys second turn
 
                 }
                 this.bestmove = bestplay.getNextAction();
@@ -6917,17 +7054,16 @@ namespace ConsoleApplication1
             return -10000;
         }
 
-        public void cuttingposibilities()
+        public void cuttingposibilities(int maxwide)
         {
             // take the x best values
-            int takenumber = this.maxwide;
             List<Playfield> temp = new List<Playfield>();
             posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
 
             if (this.useComparison)
             {
                 int i = 0;
-                int max = Math.Min(posmoves.Count, this.maxwide);
+                int max = Math.Min(posmoves.Count, maxwide);
 
                 Playfield p = null;
                 Playfield pp = null;
@@ -6964,7 +7100,7 @@ namespace ConsoleApplication1
                 temp.AddRange(posmoves);
             }
             posmoves.Clear();
-            posmoves.AddRange(temp.GetRange(0, Math.Min(takenumber, temp.Count)));
+            posmoves.AddRange(temp.GetRange(0, Math.Min(maxwide, temp.Count)));
             //posmoves.Clear();
             //posmoves.AddRange(Helpfunctions.TakeList(temp, takenumber));
 
@@ -9381,7 +9517,9 @@ namespace ConsoleApplication1
                     {
                         minmana = hc.manacost;
                     }
-                    if (hc.getManaCost(p) == p.ownMaxMana)
+                    //if (hc.getManaCost(p) == p.ownMaxMana)
+                    int manac = hc.getManaCost(p);
+                    if (manac > p.ownMaxMana - 2 && manac <= p.ownMaxMana)
                     {
                         cardOnLimit = true;
                     }
@@ -19212,9 +19350,12 @@ namespace ConsoleApplication1
 
             Ai.Instance.setMaxWide(this.maxwide);
             Ai.Instance.setTwoTurnSimulation(false, this.twoturnsim);
-            Ai.Instance.nextTurnSimulator.setEnemyTurnsim(this.simEnemy2Turn);
+            Settings.Instance.simEnemySecondTurn = this.simEnemy2Turn;
             //Ai.Instance.nextTurnSimulator.updateParams();
-            Ai.Instance.setPlayAround(this.playarround, this.pprob1, this.pprob2);
+            Settings.Instance.playarround = this.playarround;
+            Settings.Instance.playaroundprob = this.pprob1;
+            Settings.Instance.playaroundprob2 = this.pprob2;
+            Ai.Instance.setPlayAround();
 
             //save data
             Hrtprozis.Instance.updateOwnHero(this.ownHeroWeapon, this.ownHeroWeaponAttack, this.ownHeroWeaponDurability, this.ownheroname, heroability, abilityReady, this.ownHero);
@@ -19234,9 +19375,15 @@ namespace ConsoleApplication1
 
             if (og != "") Probabilitymaker.Instance.readGraveyards(og, eg);
             if (omd != "") Probabilitymaker.Instance.readTurnGraveYard(omd, emd);
-            Ai.Instance.enemyTurnSim.maxwide = ets;
-            Ai.Instance.enemySecondTurnSim.maxwide = ents;
-            Ai.Instance.nextTurnSimulator.updateParams(ntssd, ntssw, ntssm);
+            //Ai.Instance.enemyTurnSim.maxwide = ets;
+            //Ai.Instance.enemySecondTurnSim.maxwide = ents;
+            Settings.Instance.enemyTurnMaxWide = ets;
+            Settings.Instance.enemySecondTurnMaxWide = ents;
+
+            Settings.Instance.nextTurnDeep = ntssd;
+            Settings.Instance.nextTurnMaxWide = ntssw;
+            Settings.Instance.nextTurnTotalBoards = ntssm;
+            //Ai.Instance.nextTurnSimulator.updateParams(ntssd, ntssw, ntssm);
 
             Settings.Instance.useSecretsPlayArround = dosecrets;
 
@@ -20449,8 +20596,23 @@ namespace ConsoleApplication1
 
     class Settings
     {
-
+        public int numberOfThreads = 32;
         public bool useSecretsPlayArround = false;
+
+        public bool simulateEnemysTurn = true;
+        public int enemyTurnMaxWide = 20;
+
+        public int secondTurnAmount = 256;
+        public bool simEnemySecondTurn = true;
+        public int enemySecondTurnMaxWide = 20;
+
+        public int nextTurnDeep = 6;
+        public int nextTurnMaxWide = 20;
+        public int nextTurnTotalBoards = 50;
+
+        public bool playarround = false;
+        public int playaroundprob = 50;
+        public int playaroundprob2 = 80;
 
         public string path = "";
         public string logpath = "";

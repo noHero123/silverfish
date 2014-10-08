@@ -10965,7 +10965,8 @@ namespace HREngine.Bots
                     {
                         minmana = hc.manacost;
                     }
-                    if (hc.getManaCost(p) == p.ownMaxMana)
+                    int manac = hc.getManaCost(p);
+                    if (manac > p.ownMaxMana - 2 && manac <= p.ownMaxMana)
                     {
                         cardOnLimit = true;
                     }

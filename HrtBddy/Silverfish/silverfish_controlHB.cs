@@ -578,7 +578,7 @@ namespace SilverfishControl
         }
     }
 
-    public class HBMulligan : ICustromMulligan
+    public class HBMulligan : ICustomMulligan
     {
         private const int MaximumCost = 3;
         public IEnumerator DoMulligan()
@@ -1574,6 +1574,17 @@ namespace SilverfishControl
 
     // the ai :D
     //please ask/write me if you use this in your project
+    
+    public enum actionEnum
+    {
+        endturn = 0,
+        playcard,
+        attackWithHero,
+        useHeroPower,
+        attackWithMinion
+    }
+    //todo make to struct
+
     public class Action
     {
 
@@ -10536,7 +10547,8 @@ namespace SilverfishControl
                     {
                         minmana = hc.manacost;
                     }
-                    if (hc.getManaCost(p) == p.ownMaxMana)
+                    int manac = hc.getManaCost(p);
+                    if (manac > p.ownMaxMana - 2 && manac <= p.ownMaxMana)
                     {
                         cardOnLimit = true;
                     }
