@@ -102,7 +102,6 @@ namespace HREngine.Bots
            {
                Helpfunctions.Instance.ErrorLog("cant read your concede-Lvl");
            }
-
            /*try
            {
                this.stopAfterWins = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.stopwin")));

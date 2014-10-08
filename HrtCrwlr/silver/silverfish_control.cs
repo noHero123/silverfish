@@ -14,7 +14,7 @@ namespace HREngine.Bots
 
     public class Bot : IBot
     {
-        //private int stopAfterWins = 30;
+        private int stopAfterWins = 30;
         private int concedeLvl = 5; // the rank, till you want to concede
         private int dirtytarget = -1;
         private int dirtychoice = -1;
@@ -108,7 +108,7 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("cant read your concede-Lvl");
             }
 
-            /*try
+            try
             {
                 this.stopAfterWins = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.stopwin")));
                 if (this.stopAfterWins <= 0) this.stopAfterWins = 10000;
@@ -117,7 +117,7 @@ namespace HREngine.Bots
             catch
             {
                 Helpfunctions.Instance.ErrorLog("cant read stop after # of wins");
-            }*/
+            }
 
             try
             {
@@ -889,16 +889,16 @@ namespace HREngine.Bots
             {
                 Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + KeepConcede + " lose:" + (totallose - KeepConcede) + " real winrate: infinity!!!! (division by zero :D)");
             }
-            /*
+            
             if (totalwin >= this.stopAfterWins)
             {
                 if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.ARENA) return null;
                 Helpfunctions.Instance.ErrorLog("we have done our " + totalwin + " wins! lets finish this!");
                 disableRelogger();
                 Helpfunctions.Instance.ErrorLog("relogger is disabled");
-                HREngine.API.HRGame.OpenScene(HRGameMode.ARENA);
+                HRSettings.Get.State = HRSettings.BotState.Stopped;
                 return null;
-            }*/
+            }
             return null;
         }
 
@@ -1008,7 +1008,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "113";
+        public string versionnumber = "113.1";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;

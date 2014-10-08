@@ -7,6 +7,8 @@
 <Label>uses Silver.exe for calculations, make sure you started it manually.</Label>
 <Setting name="uai.passivewait" default="true" type="boolean" description="Hearthstone doesnt freez while waiting for silver.exe" />
 <Label>while waiting for the result of the external calculation, Hearthstone will not freeze.</Label>
+<Label></Label>
+<Setting name="uai.stopwin" default="0" type="text" description="stop after this amount of wins (0 = disabled)" />
 <Setting name="uai.autoconcede" type="boolean" description="autoconcede" />
 <Setting name="uai.concedelvl" default="20" type="text" description="concede till rank: (is ignored if autoconcede isnt checked)" />
 <Label></Label>
