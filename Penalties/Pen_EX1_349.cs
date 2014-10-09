@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_349.
+    ///     The pen_ e x 1_349.
     /// </summary>
-    class Pen_EX1_349 : PenTemplate
-	{
-	    // divinefavor
+    internal class Pen_EX1_349 : PenTemplate
+    {
+        // divinefavor
 
-// zieht so viele karten, bis ihr genauso viele karten auf eurer hand habt wie euer gegner.
+        // zieht so viele karten, bis ihr genauso viele karten auf eurer hand habt wie euer gegner.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_027.
+    ///     The sim_ c s 2_027.
     /// </summary>
-    class Sim_CS2_027 : SimTemplate
+    internal class Sim_CS2_027 : SimTemplate
     {
         // mirrorimage
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_mirror);
 
+        #endregion
+
         // ruft zwei diener (0/2) mit spott/ herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -42,5 +48,7 @@ namespace HREngine.Bots
             p.callKid(this.kid, posi, ownplay);
             p.callKid(this.kid, posi, ownplay);
         }
+
+        #endregion
     }
 }

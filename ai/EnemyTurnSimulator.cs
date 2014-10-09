@@ -6,42 +6,52 @@
 //   The enemy turn simulator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The enemy turn simulator.
+    ///     The enemy turn simulator.
     /// </summary>
     public class EnemyTurnSimulator
     {
+        #region Fields
+
         /// <summary>
-        /// The thread.
+        ///     The thread.
         /// </summary>
         public int thread = 0;
 
         /// <summary>
-        /// The posmoves.
+        ///     The flame.
         /// </summary>
-        private List<Playfield> posmoves = new List<Playfield>(7000);
+        private CardDB.Card flame = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_614t);
+
+        /// <summary>
+        ///     The maxwide.
+        /// </summary>
+        private int maxwide = 20;
 
         // public int maxwide = 20;
         /// <summary>
-        /// The movegen.
+        ///     The movegen.
         /// </summary>
         private Movegenerator movegen = Movegenerator.Instance;
 
         /// <summary>
-        /// The read settings.
+        ///     The posmoves.
+        /// </summary>
+        private List<Playfield> posmoves = new List<Playfield>(7000);
+
+        /// <summary>
+        ///     The read settings.
         /// </summary>
         private bool readSettings = true;
 
-        /// <summary>
-        /// The maxwide.
-        /// </summary>
-        private int maxwide = 20;
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The simulate enemys turn.
@@ -208,8 +218,8 @@ namespace HREngine.Bots
                     }
 
                     List<Action> actions = this.movegen.getEnemyMoveList(p, false, true, true, 1);
-                        
-                        // 1 for not using ability moves
+
+                    // 1 for not using ability moves
                     foreach (Action a in actions)
                     {
                         havedonesomething = true;
@@ -292,10 +302,9 @@ namespace HREngine.Bots
             }
         }
 
-        /// <summary>
-        /// The flame.
-        /// </summary>
-        private CardDB.Card flame = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_614t);
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// The do some basic enemy ai.
@@ -473,5 +482,7 @@ namespace HREngine.Bots
                 }
             }
         }
+
+        #endregion
     }
 }

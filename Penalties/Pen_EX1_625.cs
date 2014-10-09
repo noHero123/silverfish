@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_625.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_625.
+    ///     The pen_ e x 1_625.
     /// </summary>
-    class Pen_EX1_625 : PenTemplate
-	{
-	    // shadowform
+    internal class Pen_EX1_625 : PenTemplate
+    {
+        // shadowform
 
-// eure heldenfähigkeit wird zu „verursacht 2 schaden“. wenn euer held bereits schattengestalt angenommen hat: 3 schaden.
+        // eure heldenfähigkeit wird zu „verursacht 2 schaden“. wenn euer held bereits schattengestalt angenommen hat: 3 schaden.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

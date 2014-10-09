@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_004.
+    ///     The sim_ c s 2_004.
     /// </summary>
-    class Sim_CS2_004 : SimTemplate
-	{
-	    // powerwordshield
+    internal class Sim_CS2_004 : SimTemplate
+    {
+        // powerwordshield
 
-// verleiht einem diener +2 leben.\nzieht eine karte.
+        // verleiht einem diener +2 leben.\nzieht eine karte.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetBuffed(target, 0, 2);
             p.drawACard(CardDB.cardName.unknown, ownplay);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

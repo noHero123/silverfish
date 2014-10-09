@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_FP1_005.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ f p 1_005.
+    ///     The pen_ f p 1_005.
     /// </summary>
-    class Pen_FP1_005 : PenTemplate
-	{
-	    // shadeofnaxxramas
+    internal class Pen_FP1_005 : PenTemplate
+    {
+        // shadeofnaxxramas
 
-// verstohlenheit/. erhält zu beginn eures zuges +1/+1.
+        // verstohlenheit/. erhält zu beginn eures zuges +1/+1.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

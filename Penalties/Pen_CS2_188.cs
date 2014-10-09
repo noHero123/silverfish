@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_188.
+    ///     The pen_ c s 2_188.
     /// </summary>
-    class Pen_CS2_188 : PenTemplate
-	{
-	    // abusivesergeant
+    internal class Pen_CS2_188 : PenTemplate
+    {
+        // abusivesergeant
 
-// kampfschrei:/ verleiht einem diener +2 angriff in diesem zug.
+        // kampfschrei:/ verleiht einem diener +2 angriff in diesem zug.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,7 +40,7 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
+        {
             if (target.own)
             {
                 if (!m.Ready)
@@ -66,7 +68,8 @@ namespace HREngine.Bots
             }
 
             return 0;
-		}
+        }
 
-	}
+        #endregion
+    }
 }

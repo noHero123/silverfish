@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ mekka 2.
+    ///     The pen_ mekka 2.
     /// </summary>
-    class Pen_Mekka2 : PenTemplate
-	{
-	    // repairbot
+    internal class Pen_Mekka2 : PenTemplate
+    {
+        // repairbot
 
-// stellt am ende eures zuges bei einem verletzten charakter 6 leben wieder her.
+        // stellt am ende eures zuges bei einem verletzten charakter 6 leben wieder her.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

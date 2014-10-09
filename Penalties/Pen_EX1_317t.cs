@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_317t.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_317 t.
+    ///     The pen_ e x 1_317 t.
     /// </summary>
-    class Pen_EX1_317t : PenTemplate
-	{
-	    // worthlessimp
+    internal class Pen_EX1_317t : PenTemplate
+    {
+        // worthlessimp
 
-// i&gt;euch sind die dämonen ausgegangen! aber zum glück gibt es ja noch wichtel .../i&gt;
+        // i&gt;euch sind die dämonen ausgegangen! aber zum glück gibt es ja noch wichtel .../i&gt;
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

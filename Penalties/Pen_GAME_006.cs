@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_GAME_006.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ gam e_006.
+    ///     The pen_ gam e_006.
     /// </summary>
-    class Pen_GAME_006 : PenTemplate
-	{
-	    // noooooooooooo
+    internal class Pen_GAME_006 : PenTemplate
+    {
+        // noooooooooooo
 
-// leider wurde die karte, die ihr einst besaßt, entfernt. aber nehmt doch diese hier!
+        // leider wurde die karte, die ihr einst besaßt, entfernt. aber nehmt doch diese hier!
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

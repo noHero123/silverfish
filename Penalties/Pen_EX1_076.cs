@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_076.
+    ///     The pen_ e x 1_076.
     /// </summary>
-    class Pen_EX1_076 : PenTemplate
-	{
-	    // pintsizedsummoner
+    internal class Pen_EX1_076 : PenTemplate
+    {
+        // pintsizedsummoner
 
-// der erste diener, den ihr in einem zug ausspielt, kostet (1) weniger.
+        // der erste diener, den ihr in einem zug ausspielt, kostet (1) weniger.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

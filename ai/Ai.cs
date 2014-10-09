@@ -6,172 +6,164 @@
 //   The ai.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The ai.
+    ///     The ai.
     /// </summary>
     public class Ai
     {
-        /// <summary>
-        /// The maxdeep.
-        /// </summary>
-        private int maxdeep = 12;
+        #region Static Fields
 
         /// <summary>
-        /// The maxwide.
+        ///     The instance.
         /// </summary>
-        public int maxwide = 3000;
+        private static Ai instance;
 
-        // public int playaroundprob = 40;
-        /// <summary>
-        /// The playaroundprob 2.
-        /// </summary>
-        public int playaroundprob2 = 80;
+        #endregion
+
+        #region Fields
 
         /// <summary>
-        /// The use penality manager.
-        /// </summary>
-        private bool usePenalityManager = true;
-
-        /// <summary>
-        /// The use cuting targets.
-        /// </summary>
-        private bool useCutingTargets = true;
-
-        /// <summary>
-        /// The dont recalc.
-        /// </summary>
-        private bool dontRecalc = true;
-
-        /// <summary>
-        /// The use lethal check.
-        /// </summary>
-        private bool useLethalCheck = true;
-
-        /// <summary>
-        /// The use comparison.
-        /// </summary>
-        private bool useComparison = true;
-
-        /// <summary>
-        /// The lethal missing.
-        /// </summary>
-        public int lethalMissing = 30; // RR
-
-        /// <summary>
-        /// The main turn simulator.
-        /// </summary>
-        public MiniSimulator mainTurnSimulator;
-
-        /// <summary>
-        /// The enemy turn sim.
-        /// </summary>
-        public List<EnemyTurnSimulator> enemyTurnSim = new List<EnemyTurnSimulator>();
-
-        /// <summary>
-        /// The next turn simulator.
-        /// </summary>
-        public List<MiniSimulatorNextTurn> nextTurnSimulator = new List<MiniSimulatorNextTurn>();
-
-        /// <summary>
-        /// The enemy second turn sim.
-        /// </summary>
-        public List<EnemyTurnSimulator> enemySecondTurnSim = new List<EnemyTurnSimulator>();
-
-        /// <summary>
-        /// The current calculated board.
-        /// </summary>
-        public string currentCalculatedBoard = "1";
-
-        /// <summary>
-        /// The penman.
-        /// </summary>
-        private PenalityManager penman = PenalityManager.Instance;
-
-        /// <summary>
-        /// The posmoves.
-        /// </summary>
-        private List<Playfield> posmoves = new List<Playfield>(7000);
-
-        /// <summary>
-        /// The hp.
-        /// </summary>
-        private Hrtprozis hp = Hrtprozis.Instance;
-
-        /// <summary>
-        /// The hm.
-        /// </summary>
-        private Handmanager hm = Handmanager.Instance;
-
-        /// <summary>
-        /// The help.
-        /// </summary>
-        private Helpfunctions help = Helpfunctions.Instance;
-
-        /// <summary>
-        /// The bestmove.
-        /// </summary>
-        public Action bestmove = null;
-
-        /// <summary>
-        /// The bestmove value.
-        /// </summary>
-        public float bestmoveValue = 0;
-
-        /// <summary>
-        /// The next move guess.
-        /// </summary>
-        public Playfield nextMoveGuess = new Playfield();
-
-        /// <summary>
-        /// The bot base.
-        /// </summary>
-        public Behavior botBase = null;
-
-        /// <summary>
-        /// The best actions.
+        ///     The best actions.
         /// </summary>
         public List<Action> bestActions = new List<Action>();
 
         /// <summary>
-        /// The secondturnsim.
+        ///     The bestmove.
         /// </summary>
-        public bool secondturnsim = false;
+        public Action bestmove = null;
 
-        // public int secondTurnAmount = 256;
         /// <summary>
-        /// The playaround.
+        ///     The bestmove value.
+        /// </summary>
+        public float bestmoveValue = 0;
+
+        /// <summary>
+        ///     The bot base.
+        /// </summary>
+        public Behavior botBase = null;
+
+        /// <summary>
+        ///     The current calculated board.
+        /// </summary>
+        public string currentCalculatedBoard = "1";
+
+        /// <summary>
+        ///     The enemy second turn sim.
+        /// </summary>
+        public List<EnemyTurnSimulator> enemySecondTurnSim = new List<EnemyTurnSimulator>();
+
+        /// <summary>
+        ///     The enemy turn sim.
+        /// </summary>
+        public List<EnemyTurnSimulator> enemyTurnSim = new List<EnemyTurnSimulator>();
+
+        /// <summary>
+        ///     The lethal missing.
+        /// </summary>
+        public int lethalMissing = 30; // RR
+
+        /// <summary>
+        ///     The main turn simulator.
+        /// </summary>
+        public MiniSimulator mainTurnSimulator;
+
+        /// <summary>
+        ///     The maxwide.
+        /// </summary>
+        public int maxwide = 3000;
+
+        /// <summary>
+        ///     The next move guess.
+        /// </summary>
+        public Playfield nextMoveGuess = new Playfield();
+
+        /// <summary>
+        ///     The next turn simulator.
+        /// </summary>
+        public List<MiniSimulatorNextTurn> nextTurnSimulator = new List<MiniSimulatorNextTurn>();
+
+        /// <summary>
+        ///     The playaround.
         /// </summary>
         public bool playaround = false;
 
         /// <summary>
-        /// The instance.
+        ///     The playaroundprob 2.
         /// </summary>
-        private static Ai instance;
+        public int playaroundprob2 = 80;
 
         /// <summary>
-        /// Gets the instance.
+        ///     The secondturnsim.
         /// </summary>
-        public static Ai Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new Ai();
-                }
-
-                return instance;
-            }
-        }
+        public bool secondturnsim = false;
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="Ai"/> class from being created.
+        ///     The dont recalc.
+        /// </summary>
+        private bool dontRecalc = true;
+
+        /// <summary>
+        ///     The help.
+        /// </summary>
+        private Helpfunctions help = Helpfunctions.Instance;
+
+        /// <summary>
+        ///     The hm.
+        /// </summary>
+        private Handmanager hm = Handmanager.Instance;
+
+        /// <summary>
+        ///     The hp.
+        /// </summary>
+        private Hrtprozis hp = Hrtprozis.Instance;
+
+        /// <summary>
+        ///     The maxdeep.
+        /// </summary>
+        private int maxdeep = 12;
+
+        /// <summary>
+        ///     The penman.
+        /// </summary>
+        private PenalityManager penman = PenalityManager.Instance;
+
+        /// <summary>
+        ///     The posmoves.
+        /// </summary>
+        private List<Playfield> posmoves = new List<Playfield>(7000);
+
+        /// <summary>
+        ///     The use comparison.
+        /// </summary>
+        private bool useComparison = true;
+
+        /// <summary>
+        ///     The use cuting targets.
+        /// </summary>
+        private bool useCutingTargets = true;
+
+        /// <summary>
+        ///     The use lethal check.
+        /// </summary>
+        private bool useLethalCheck = true;
+
+        /// <summary>
+        ///     The use penality manager.
+        /// </summary>
+        private bool usePenalityManager = true;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Verhindert, dass eine Standardinstanz der <see cref="Ai"/> Klasse erstellt wird. 
+        ///     Prevents a default instance of the <see cref="Ai"/> class from being created.
         /// </summary>
         private Ai()
         {
@@ -196,181 +188,104 @@ namespace HREngine.Bots
             }
         }
 
-        /// <summary>
-        /// The set max wide.
-        /// </summary>
-        /// <param name="mw">
-        /// The mw.
-        /// </param>
-        public void setMaxWide(int mw)
-        {
-            this.maxwide = mw;
-            if (this.maxwide <= 100)
-            {
-                this.maxwide = 100;
-            }
+        #endregion
 
-            this.mainTurnSimulator.updateParams(this.maxdeep, this.maxwide, 0);
-        }
+        #region Public Properties
 
         /// <summary>
-        /// The set two turn simulation.
+        ///     Gets the instance.
         /// </summary>
-        /// <param name="stts">
-        /// The stts.
-        /// </param>
-        /// <param name="amount">
-        /// The amount.
-        /// </param>
-        public void setTwoTurnSimulation(bool stts, int amount)
+        public static Ai Instance
         {
-            this.mainTurnSimulator.setSecondTurnSimu(stts, amount);
-            this.secondturnsim = stts;
-            Settings.Instance.secondTurnAmount = amount;
-        }
-
-        /// <summary>
-        /// The update two turn sim.
-        /// </summary>
-        public void updateTwoTurnSim()
-        {
-            this.mainTurnSimulator.setSecondTurnSimu(
-                Settings.Instance.simulateEnemysTurn, 
-                Settings.Instance.secondTurnAmount);
-        }
-
-        /// <summary>
-        /// The set play around.
-        /// </summary>
-        public void setPlayAround()
-        {
-            this.mainTurnSimulator.setPlayAround(
-                Settings.Instance.playarround, 
-                Settings.Instance.playaroundprob, 
-                Settings.Instance.playaroundprob2);
-        }
-
-        /// <summary>
-        /// The doallmoves.
-        /// </summary>
-        /// <param name="test">
-        /// The test.
-        /// </param>
-        /// <param name="isLethalCheck">
-        /// The is lethal check.
-        /// </param>
-        private void doallmoves(bool test, bool isLethalCheck)
-        {
-            this.mainTurnSimulator.doallmoves(this.posmoves[0], isLethalCheck);
-
-            Playfield bestplay = this.mainTurnSimulator.bestboard;
-            float bestval = this.mainTurnSimulator.bestmoveValue;
-
-            this.help.loggonoff(true);
-            this.help.logg("-------------------------------------");
-            this.help.logg("value of best board " + bestval);
-
-            if (isLethalCheck)
+            get
             {
-                this.lethalMissing = bestplay.enemyHero.armor + bestplay.enemyHero.Hp; // RR
-                this.help.logg("missing dmg to lethal " + this.lethalMissing);
-            }
-            else
-            {
-                this.lethalMissing = 130;
-            }
-
-            this.bestActions.Clear();
-            this.bestmove = null;
-            foreach (Action a in bestplay.playactions)
-            {
-                this.bestActions.Add(new Action(a));
-                a.print();
-            }
-
-            // this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
-            if (this.bestActions.Count >= 1)
-            {
-                this.bestmove = this.bestActions[0];
-                this.bestActions.RemoveAt(0);
-            }
-
-            this.bestmoveValue = bestval;
-
-            if (this.bestmove != null && this.bestmove.actionType != actionEnum.endturn)
-            {
-                // save the guessed move, so we doesnt need to recalc!
-                this.nextMoveGuess = new Playfield();
-
-                this.nextMoveGuess.doAction(this.bestmove);
-            }
-            else
-            {
-                this.nextMoveGuess.mana = -100;
-            }
-        }
-
-        /// <summary>
-        /// The set best moves.
-        /// </summary>
-        /// <param name="alist">
-        /// The alist.
-        /// </param>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        public void setBestMoves(List<Action> alist, float value)
-        {
-            this.help.logg("set best action-----------------------------------");
-            this.bestActions.Clear();
-            this.bestmove = null;
-
-            foreach (Action a in alist)
-            {
-                this.help.logg("-a-");
-                this.bestActions.Add(new Action(a));
-                this.bestActions[this.bestActions.Count - 1].print();
-            }
-
-            // this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
-            if (this.bestActions.Count >= 1)
-            {
-                this.bestmove = this.bestActions[0];
-                this.bestActions.RemoveAt(0);
-            }
-
-            this.nextMoveGuess = new Playfield();
-
-            // only debug:
-            // this.nextMoveGuess.printBoardDebug();
-            if (this.bestmove != null && this.bestmove.actionType != actionEnum.endturn)
-            {
-                // save the guessed move, so we doesnt need to recalc!
-                Helpfunctions.Instance.logg("nmgsim-");
-                try
+                if (instance == null)
                 {
-                    this.nextMoveGuess.doAction(this.bestmove);
-                    this.bestmove = this.nextMoveGuess.playactions[this.nextMoveGuess.playactions.Count - 1];
-                }
-                catch (Exception ex)
-                {
-                    Helpfunctions.Instance.logg("Message ---");
-                    Helpfunctions.Instance.logg("Message ---" + ex.Message);
-                    Helpfunctions.Instance.logg("Source ---" + ex.Source);
-                    Helpfunctions.Instance.logg("StackTrace ---" + ex.StackTrace);
-                    Helpfunctions.Instance.logg("TargetSite ---\n{0}" + ex.TargetSite);
+                    instance = new Ai();
                 }
 
-                Helpfunctions.Instance.logg("nmgsime-");
+                return instance;
             }
-            else
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The auto tester.
+        /// </summary>
+        /// <param name="printstuff">
+        /// The printstuff.
+        /// </param>
+        /// <param name="data">
+        /// The data.
+        /// </param>
+        public void autoTester(bool printstuff, string data = "")
+        {
+            this.help.logg("simulating board ");
+
+            BoardTester bt = new BoardTester(data);
+            if (!bt.datareaded)
             {
-                this.nextMoveGuess.mana = -100;
+                return;
+            }
+
+            this.hp.printHero();
+            this.hp.printOwnMinions();
+            this.hp.printEnemyMinions();
+            this.hm.printcards();
+
+            // calculate the stuff
+            this.posmoves.Clear();
+            this.posmoves.Add(new Playfield());
+            this.posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
+            foreach (Playfield p in this.posmoves)
+            {
+                p.printBoard();
+            }
+
+            this.help.logg("ownminionscount " + this.posmoves[0].ownMinions.Count);
+            this.help.logg("owncardscount " + this.posmoves[0].owncards.Count);
+
+            foreach (Handmanager.Handcard item in this.posmoves[0].owncards)
+            {
+                this.help.logg(
+                    "card " + item.card.name + " is playable :" + item.canplayCard(this.posmoves[0]) + " cost/mana: "
+                    + item.manacost + "/" + this.posmoves[0].mana);
+            }
+
+            this.help.logg(
+                "ability " + this.posmoves[0].ownHeroAblility.card.name + " is playable :"
+                + this.posmoves[0].ownHeroAblility.card.canplayCard(this.posmoves[0], 2) + " cost/mana: "
+                + this.posmoves[0].ownHeroAblility.card.getManaCost(this.posmoves[0], 2) + "/" + this.posmoves[0].mana);
+
+            // lethalcheck + normal
+            DateTime strt = DateTime.Now;
+            this.doallmoves(false, true);
+            this.help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
+            double timeneeded = 0;
+            if (this.bestmoveValue < 10000)
+            {
+                this.posmoves.Clear();
+                this.posmoves.Add(new Playfield());
+                this.posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
+                strt = DateTime.Now;
+                this.doallmoves(false, false);
+                timeneeded = (DateTime.Now - strt).TotalSeconds;
+                this.help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
+            }
+
+            if (printstuff)
+            {
+                this.mainTurnSimulator.printPosmoves();
+                this.simmulateWholeTurn();
+                this.help.logg("calculated " + timeneeded);
             }
         }
 
         /// <summary>
-        /// The do next calced move.
+        ///     The do next calced move.
         /// </summary>
         public void doNextCalcedMove()
         {
@@ -479,79 +394,110 @@ namespace HREngine.Bots
         }
 
         /// <summary>
-        /// The auto tester.
+        /// The set best moves.
         /// </summary>
-        /// <param name="printstuff">
-        /// The printstuff.
+        /// <param name="alist">
+        /// The alist.
         /// </param>
-        /// <param name="data">
-        /// The data.
+        /// <param name="value">
+        /// The value.
         /// </param>
-        public void autoTester(bool printstuff, string data = "")
+        public void setBestMoves(List<Action> alist, float value)
         {
-            this.help.logg("simulating board ");
+            this.help.logg("set best action-----------------------------------");
+            this.bestActions.Clear();
+            this.bestmove = null;
 
-            BoardTester bt = new BoardTester(data);
-            if (!bt.datareaded)
+            foreach (Action a in alist)
             {
-                return;
+                this.help.logg("-a-");
+                this.bestActions.Add(new Action(a));
+                this.bestActions[this.bestActions.Count - 1].print();
             }
 
-            this.hp.printHero();
-            this.hp.printOwnMinions();
-            this.hp.printEnemyMinions();
-            this.hm.printcards();
-
-            // calculate the stuff
-            this.posmoves.Clear();
-            this.posmoves.Add(new Playfield());
-            this.posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
-            foreach (Playfield p in this.posmoves)
+            // this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
+            if (this.bestActions.Count >= 1)
             {
-                p.printBoard();
+                this.bestmove = this.bestActions[0];
+                this.bestActions.RemoveAt(0);
             }
 
-            this.help.logg("ownminionscount " + this.posmoves[0].ownMinions.Count);
-            this.help.logg("owncardscount " + this.posmoves[0].owncards.Count);
+            this.nextMoveGuess = new Playfield();
 
-            foreach (var item in this.posmoves[0].owncards)
+            // only debug:
+            // this.nextMoveGuess.printBoardDebug();
+            if (this.bestmove != null && this.bestmove.actionType != actionEnum.endturn)
             {
-                this.help.logg(
-                    "card " + item.card.name + " is playable :" + item.canplayCard(this.posmoves[0]) + " cost/mana: "
-                    + item.manacost + "/" + this.posmoves[0].mana);
+                // save the guessed move, so we doesnt need to recalc!
+                Helpfunctions.Instance.logg("nmgsim-");
+                try
+                {
+                    this.nextMoveGuess.doAction(this.bestmove);
+                    this.bestmove = this.nextMoveGuess.playactions[this.nextMoveGuess.playactions.Count - 1];
+                }
+                catch (Exception ex)
+                {
+                    Helpfunctions.Instance.logg("Message ---");
+                    Helpfunctions.Instance.logg("Message ---" + ex.Message);
+                    Helpfunctions.Instance.logg("Source ---" + ex.Source);
+                    Helpfunctions.Instance.logg("StackTrace ---" + ex.StackTrace);
+                    Helpfunctions.Instance.logg("TargetSite ---\n{0}" + ex.TargetSite);
+                }
+
+                Helpfunctions.Instance.logg("nmgsime-");
             }
-
-            this.help.logg(
-                "ability " + this.posmoves[0].ownHeroAblility.card.name + " is playable :"
-                + this.posmoves[0].ownHeroAblility.card.canplayCard(this.posmoves[0], 2) + " cost/mana: "
-                + this.posmoves[0].ownHeroAblility.card.getManaCost(this.posmoves[0], 2) + "/" + this.posmoves[0].mana);
-
-            // lethalcheck + normal
-            DateTime strt = DateTime.Now;
-            this.doallmoves(false, true);
-            this.help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
-            double timeneeded = 0;
-            if (this.bestmoveValue < 10000)
+            else
             {
-                this.posmoves.Clear();
-                this.posmoves.Add(new Playfield());
-                this.posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
-                strt = DateTime.Now;
-                this.doallmoves(false, false);
-                timeneeded = (DateTime.Now - strt).TotalSeconds;
-                this.help.logg("calculated " + (DateTime.Now - strt).TotalSeconds);
-            }
-
-            if (printstuff)
-            {
-                this.mainTurnSimulator.printPosmoves();
-                this.simmulateWholeTurn();
-                this.help.logg("calculated " + timeneeded);
+                this.nextMoveGuess.mana = -100;
             }
         }
 
         /// <summary>
-        /// The simmulate whole turn.
+        /// The set max wide.
+        /// </summary>
+        /// <param name="mw">
+        /// The mw.
+        /// </param>
+        public void setMaxWide(int mw)
+        {
+            this.maxwide = mw;
+            if (this.maxwide <= 100)
+            {
+                this.maxwide = 100;
+            }
+
+            this.mainTurnSimulator.updateParams(this.maxdeep, this.maxwide, 0);
+        }
+
+        /// <summary>
+        ///     The set play around.
+        /// </summary>
+        public void setPlayAround()
+        {
+            this.mainTurnSimulator.setPlayAround(
+                Settings.Instance.playarround, 
+                Settings.Instance.playaroundprob, 
+                Settings.Instance.playaroundprob2);
+        }
+
+        /// <summary>
+        /// The set two turn simulation.
+        /// </summary>
+        /// <param name="stts">
+        /// The stts.
+        /// </param>
+        /// <param name="amount">
+        /// The amount.
+        /// </param>
+        public void setTwoTurnSimulation(bool stts, int amount)
+        {
+            this.mainTurnSimulator.setSecondTurnSimu(stts, amount);
+            this.secondturnsim = stts;
+            Settings.Instance.secondTurnAmount = amount;
+        }
+
+        /// <summary>
+        ///     The simmulate whole turn.
         /// </summary>
         public void simmulateWholeTurn()
         {
@@ -622,7 +568,7 @@ namespace HREngine.Bots
         }
 
         /// <summary>
-        /// The simmulate whole turnand print.
+        ///     The simmulate whole turnand print.
         /// </summary>
         public void simmulateWholeTurnandPrint()
         {
@@ -720,5 +666,81 @@ namespace HREngine.Bots
                 }
             }
         }
+
+        /// <summary>
+        ///     The update two turn sim.
+        /// </summary>
+        public void updateTwoTurnSim()
+        {
+            this.mainTurnSimulator.setSecondTurnSimu(
+                Settings.Instance.simulateEnemysTurn, 
+                Settings.Instance.secondTurnAmount);
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The doallmoves.
+        /// </summary>
+        /// <param name="test">
+        /// The test.
+        /// </param>
+        /// <param name="isLethalCheck">
+        /// The is lethal check.
+        /// </param>
+        private void doallmoves(bool test, bool isLethalCheck)
+        {
+            this.mainTurnSimulator.doallmoves(this.posmoves[0], isLethalCheck);
+
+            Playfield bestplay = this.mainTurnSimulator.bestboard;
+            float bestval = this.mainTurnSimulator.bestmoveValue;
+
+            this.help.loggonoff(true);
+            this.help.logg("-------------------------------------");
+            this.help.logg("value of best board " + bestval);
+
+            if (isLethalCheck)
+            {
+                this.lethalMissing = bestplay.enemyHero.armor + bestplay.enemyHero.Hp; // RR
+                this.help.logg("missing dmg to lethal " + this.lethalMissing);
+            }
+            else
+            {
+                this.lethalMissing = 130;
+            }
+
+            this.bestActions.Clear();
+            this.bestmove = null;
+            foreach (Action a in bestplay.playactions)
+            {
+                this.bestActions.Add(new Action(a));
+                a.print();
+            }
+
+            // this.bestActions.Add(new Action(actionEnum.endturn, null, null, 0, null, 0, 0));
+            if (this.bestActions.Count >= 1)
+            {
+                this.bestmove = this.bestActions[0];
+                this.bestActions.RemoveAt(0);
+            }
+
+            this.bestmoveValue = bestval;
+
+            if (this.bestmove != null && this.bestmove.actionType != actionEnum.endturn)
+            {
+                // save the guessed move, so we doesnt need to recalc!
+                this.nextMoveGuess = new Playfield();
+
+                this.nextMoveGuess.doAction(this.bestmove);
+            }
+            else
+            {
+                this.nextMoveGuess.mana = -100;
+            }
+        }
+
+        #endregion
     }
 }

@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_014 t.
+    ///     The pen_ e x 1_014 t.
     /// </summary>
-    class Pen_EX1_014t : PenTemplate
-	{
-	    // bananas
+    internal class Pen_EX1_014t : PenTemplate
+    {
+        // bananas
 
-// verleiht einem diener +1/+1.
+        // verleiht einem diener +1/+1.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -55,14 +57,18 @@ namespace HREngine.Bots
             {
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.name == CardDB.cardName.biggamehunter || hc.card.name == CardDB.cardName.shadowworddeath) return 0;
+                    if (hc.card.name == CardDB.cardName.biggamehunter || hc.card.name == CardDB.cardName.shadowworddeath)
+                    {
+                        return 0;
+                    }
                 }
 
-               return 500;
+                return 500;
             }
 
             return 0;
         }
 
-	}
+        #endregion
+    }
 }

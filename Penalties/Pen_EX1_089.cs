@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_089.
+    ///     The pen_ e x 1_089.
     /// </summary>
-    class Pen_EX1_089 : PenTemplate
-	{
-	    // arcanegolem
+    internal class Pen_EX1_089 : PenTemplate
+    {
+        // arcanegolem
 
-// ansturm/. kampfschrei:/ gebt eurem gegner 1 manakristall.
+        // ansturm/. kampfschrei:/ gebt eurem gegner 1 manakristall.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

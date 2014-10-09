@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_160.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_160.
+    ///     The pen_ e x 1_160.
     /// </summary>
-    class Pen_EX1_160 : PenTemplate
-	{
-	    // powerofthewild
+    internal class Pen_EX1_160 : PenTemplate
+    {
+        // powerofthewild
 
-// wählt aus:/ verleiht euren dienern +1/+1; oder ruft einen panther (3/2) herbei.
+        // wählt aus:/ verleiht euren dienern +1/+1; oder ruft einen panther (3/2) herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ mekka 1.
+    ///     The pen_ mekka 1.
     /// </summary>
-    class Pen_Mekka1 : PenTemplate
-	{
-	    // homingchicken
+    internal class Pen_Mekka1 : PenTemplate
+    {
+        // homingchicken
 
-// vernichtet zu beginn eures zuges diesen diener und zieht 3 karten.
+        // vernichtet zu beginn eures zuges diesen diener und zieht 3 karten.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

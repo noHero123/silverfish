@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_017.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_017.
+    ///     The sim_ c s 2_017.
     /// </summary>
-    class Sim_CS2_017 : SimTemplate
-	{
-	    // shapeshift
+    internal class Sim_CS2_017 : SimTemplate
+    {
+        // shapeshift
 
-// heldenfähigkeit/\n+1 angriff in diesem zug.\n+1 rüstung.
+        // heldenfähigkeit/\n+1 angriff in diesem zug.\n+1 rüstung.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -46,5 +47,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

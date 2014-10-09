@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_549.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_549.
+    ///     The pen_ e x 1_549.
     /// </summary>
-    class Pen_EX1_549 : PenTemplate
-	{
-	    // bestialwrath
+    internal class Pen_EX1_549 : PenTemplate
+    {
+        // bestialwrath
 
-// verleiht einem wildtier +2 angriff und immunität/ in diesem zug.
+        // verleiht einem wildtier +2 angriff und immunität/ in diesem zug.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,7 +40,7 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
+        {
             {
                 if (target.own)
                 {
@@ -59,7 +61,8 @@ namespace HREngine.Bots
 
                 return 0;
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

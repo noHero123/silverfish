@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_hexfrog.
+    ///     The pen_hexfrog.
     /// </summary>
-    class Pen_hexfrog : PenTemplate
-	{
-	    // frog
+    internal class Pen_hexfrog : PenTemplate
+    {
+        // frog
 
-// spott/
+        // spott/
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

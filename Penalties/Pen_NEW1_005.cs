@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_NEW1_005.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ ne w 1_005.
+    ///     The pen_ ne w 1_005.
     /// </summary>
-    class Pen_NEW1_005 : PenTemplate
-	{
-	    // kidnapper
+    internal class Pen_NEW1_005 : PenTemplate
+    {
+        // kidnapper
 
-// combo:/ lasst einen diener auf die hand seines besitzers zurückkehren.
+        // combo:/ lasst einen diener auf die hand seines besitzers zurückkehren.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

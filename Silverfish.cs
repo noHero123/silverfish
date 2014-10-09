@@ -6,231 +6,239 @@
 //   The silverfish.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading;
 
     /// <summary>
-    /// The silverfish.
+    ///     The silverfish.
     /// </summary>
     public class Silverfish
     {
+        #region Fields
+
         /// <summary>
-        /// The versionnumber.
+        ///     The versionnumber.
         /// </summary>
         public string versionnumber = "113";
 
         /// <summary>
-        /// The single log.
-        /// </summary>
-        private bool singleLog = false;
-
-        /// <summary>
-        /// The botbehave.
-        /// </summary>
-        private string botbehave = "rush";
-
-        /// <summary>
-        /// The waiting for silver.
+        ///     The waiting for silver.
         /// </summary>
         public bool waitingForSilver = false;
 
         /// <summary>
-        /// The lastpf.
+        ///     The anzcards.
         /// </summary>
-        Playfield lastpf;
+        private int anzcards;
 
         /// <summary>
-        /// The sttngs.
+        ///     The botbehave.
         /// </summary>
-        Settings sttngs = Settings.Instance;
+        private string botbehave = "rush";
 
         /// <summary>
-        /// The own minions.
+        ///     The cards played this turn.
         /// </summary>
-        List<Minion> ownMinions = new List<Minion>();
+        private int cardsPlayedThisTurn;
 
         /// <summary>
-        /// The enemy minions.
+        ///     The current mana.
         /// </summary>
-        List<Minion> enemyMinions = new List<Minion>();
+        private int currentMana;
 
         /// <summary>
-        /// The hand cards.
+        ///     The enemy ability.
         /// </summary>
-        List<Handmanager.Handcard> handCards = new List<Handmanager.Handcard>();
+        private CardDB.Card enemyAbility = new CardDB.Card();
 
         /// <summary>
-        /// The own player controller.
+        ///     The enemy anz cards.
         /// </summary>
-        int ownPlayerController = 0;
+        private int enemyAnzCards;
 
         /// <summary>
-        /// The own secret list.
+        ///     The enemy decksize.
         /// </summary>
-        List<string> ownSecretList = new List<string>();
+        private int enemyDecksize;
 
         /// <summary>
-        /// The enemy secret count.
+        ///     The enemy hero.
         /// </summary>
-        int enemySecretCount = 0;
+        private Minion enemyHero;
 
         /// <summary>
-        /// The enemy secret list.
+        ///     The enemy hero fatigue.
         /// </summary>
-        List<int> enemySecretList = new List<int>();
+        private int enemyHeroFatigue;
 
         /// <summary>
-        /// The current mana.
+        ///     The enemy hero weapon.
         /// </summary>
-        int currentMana = 0;
+        private string enemyHeroWeapon = string.Empty;
 
         /// <summary>
-        /// The own max mana.
+        ///     The enemy heroname.
         /// </summary>
-        int ownMaxMana = 0;
+        private string enemyHeroname = string.Empty;
 
         /// <summary>
-        /// The num option played this turn.
+        ///     The enemy max mana.
         /// </summary>
-        int numOptionPlayedThisTurn = 0;
+        private int enemyMaxMana;
 
         /// <summary>
-        /// The num minions played this turn.
+        ///     The enemy minions.
         /// </summary>
-        int numMinionsPlayedThisTurn = 0;
+        private List<Minion> enemyMinions = new List<Minion>();
 
         /// <summary>
-        /// The cards played this turn.
+        ///     The enemy secret count.
         /// </summary>
-        int cardsPlayedThisTurn = 0;
+        private int enemySecretCount;
 
         /// <summary>
-        /// The ueberladung.
+        ///     The enemy secret list.
         /// </summary>
-        int ueberladung = 0;
+        private List<int> enemySecretList = new List<int>();
 
         /// <summary>
-        /// The enemy max mana.
+        ///     The enemy weapon attack.
         /// </summary>
-        int enemyMaxMana = 0;
+        private int enemyWeaponAttack;
 
         /// <summary>
-        /// The own hero weapon.
+        ///     The enemy weapon durability.
         /// </summary>
-        string ownHeroWeapon = string.Empty;
+        private int enemyWeaponDurability;
 
         /// <summary>
-        /// The hero weapon attack.
+        ///     The hand cards.
         /// </summary>
-        int heroWeaponAttack = 0;
+        private List<Handmanager.Handcard> handCards = new List<Handmanager.Handcard>();
 
         /// <summary>
-        /// The hero weapon durability.
+        ///     The hero ability.
         /// </summary>
-        int heroWeaponDurability = 0;
+        private CardDB.Card heroAbility = new CardDB.Card();
 
         /// <summary>
-        /// The enemy hero weapon.
+        ///     The hero weapon attack.
         /// </summary>
-        string enemyHeroWeapon = string.Empty;
+        private int heroWeaponAttack;
 
         /// <summary>
-        /// The enemy weapon attack.
+        ///     The hero weapon durability.
         /// </summary>
-        int enemyWeaponAttack = 0;
+        private int heroWeaponDurability;
 
         /// <summary>
-        /// The enemy weapon durability.
+        ///     The heroname.
         /// </summary>
-        int enemyWeaponDurability = 0;
+        private string heroname = string.Empty;
 
         /// <summary>
-        /// The heroname.
+        ///     The lastpf.
         /// </summary>
-        string heroname = string.Empty;
+        private Playfield lastpf;
 
         /// <summary>
-        /// The enemy heroname.
+        ///     The num minions played this turn.
         /// </summary>
-        string enemyHeroname = string.Empty;
+        private int numMinionsPlayedThisTurn;
 
         /// <summary>
-        /// The hero ability.
+        ///     The num option played this turn.
         /// </summary>
-        CardDB.Card heroAbility = new CardDB.Card();
+        private int numOptionPlayedThisTurn;
 
         /// <summary>
-        /// The own abilityis ready.
+        ///     The own abilityis ready.
         /// </summary>
-        bool ownAbilityisReady = false;
+        private bool ownAbilityisReady;
 
         /// <summary>
-        /// The enemy ability.
+        ///     The own decksize.
         /// </summary>
-        CardDB.Card enemyAbility = new CardDB.Card();
+        private int ownDecksize;
 
         /// <summary>
-        /// The anzcards.
+        ///     The own hero.
         /// </summary>
-        int anzcards = 0;
+        private Minion ownHero;
 
         /// <summary>
-        /// The enemy anz cards.
+        ///     The own hero fatigue.
         /// </summary>
-        int enemyAnzCards = 0;
+        private int ownHeroFatigue;
 
         /// <summary>
-        /// The own hero fatigue.
+        ///     The own hero weapon.
         /// </summary>
-        int ownHeroFatigue = 0;
+        private string ownHeroWeapon = string.Empty;
 
         /// <summary>
-        /// The enemy hero fatigue.
+        ///     The own max mana.
         /// </summary>
-        int enemyHeroFatigue = 0;
+        private int ownMaxMana;
 
         /// <summary>
-        /// The own decksize.
+        ///     The own minions.
         /// </summary>
-        int ownDecksize = 0;
+        private List<Minion> ownMinions = new List<Minion>();
 
         /// <summary>
-        /// The enemy decksize.
+        ///     The own player controller.
         /// </summary>
-        int enemyDecksize = 0;
+        private int ownPlayerController;
 
         /// <summary>
-        /// The own hero.
+        ///     The own secret list.
         /// </summary>
-        Minion ownHero;
+        private List<string> ownSecretList = new List<string>();
 
         /// <summary>
-        /// The enemy hero.
+        ///     The single log.
         /// </summary>
-        Minion enemyHero;
+        private bool singleLog;
 
         /// <summary>
+        ///     The sttngs.
+        /// </summary>
+        private Settings sttngs = Settings.Instance;
+
+        /// <summary>
+        ///     The ueberladung.
+        /// </summary>
+        private int ueberladung;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initialisiert eine neue Instanz der <see cref="Silverfish"/> Klasse. 
         /// Initializes a new instance of the <see cref="Silverfish"/> class.
         /// </summary>
         /// <param name="snglLg">
         /// The sngl lg.
         /// </param>
-        public Silverfish( bool snglLg)
+        public Silverfish(bool snglLg)
         {
             this.singleLog = snglLg;
             Helpfunctions.Instance.ErrorLog("init Silverfish");
-            string path = HRSettings.Get.Session.Paths.Hearthcrawler + Path.DirectorySeparatorChar + "UltimateLogs" + Path.DirectorySeparatorChar;
+            string path = HRSettings.Get.Session.Paths.Hearthcrawler + Path.DirectorySeparatorChar + "UltimateLogs"
+                          + Path.DirectorySeparatorChar;
             Directory.CreateDirectory(path);
-            this.sttngs.setFilePath(HRSettings.Get.Session.Paths.Hearthcrawler + Path.DirectorySeparatorChar + "Bots" + Path.DirectorySeparatorChar + "silver" + Path.DirectorySeparatorChar);
-            
+            this.sttngs.setFilePath(
+                HRSettings.Get.Session.Paths.Hearthcrawler + Path.DirectorySeparatorChar + "Bots"
+                + Path.DirectorySeparatorChar + "silver" + Path.DirectorySeparatorChar);
+
             Helpfunctions.Instance.ErrorLog(path);
-            
+
             if (!this.singleLog)
             {
                 this.sttngs.setLoggPath(path);
@@ -246,8 +254,147 @@ namespace HREngine.Bots
             Mulligan m = Mulligan.Instance; // read the mulligan list
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// The setnew logg file.
+        /// The get card target.
+        /// </summary>
+        /// <param name="entityid">
+        /// The entityid.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public static int getCardTarget(int entityid)
+        {
+            Dictionary<int, HREntity> allEntitys = HRGame.GetEntityMap();
+
+            foreach (HREntity ent in allEntitys.Values)
+            {
+                if (ent.GetTag(HRGameTag.ENTITY_ID) == entityid)
+                {
+                    return ent.GetTag(HRGameTag.CARD_TARGET);
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// The get last affected.
+        /// </summary>
+        /// <param name="entityid">
+        /// The entityid.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public static int getLastAffected(int entityid)
+        {
+            Dictionary<int, HREntity> allEntitys = HRGame.GetEntityMap();
+
+            foreach (HREntity ent in allEntitys.Values)
+            {
+                if (ent.GetTag(HRGameTag.LAST_AFFECTED_BY) == entityid)
+                {
+                    return ent.GetTag(HRGameTag.ENTITY_ID);
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// The read action file.
+        /// </summary>
+        /// <param name="passiveWaiting">
+        /// The passive waiting.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        public bool readActionFile(bool passiveWaiting = false)
+        {
+            bool readed = true;
+            List<string> alist = new List<string>();
+            float value = 0f;
+            string boardnumm = "-1";
+            this.waitingForSilver = true;
+            while (readed)
+            {
+                try
+                {
+                    string data = File.ReadAllText(Settings.Instance.path + "actionstodo.txt");
+                    if (data != string.Empty && data != "<EoF>" && data.EndsWith("<EoF>"))
+                    {
+                        data = data.Replace("<EoF>", string.Empty);
+
+                        // Helpfunctions.Instance.ErrorLog(data);
+                        Helpfunctions.Instance.resetBuffer();
+                        Helpfunctions.Instance.writeBufferToActionFile();
+                        alist.AddRange(data.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));
+                        string board = alist[0];
+                        if (board.StartsWith("board "))
+                        {
+                            boardnumm = board.Split(' ')[1].Split(' ')[0];
+                            alist.RemoveAt(0);
+                            if (boardnumm != Ai.Instance.currentCalculatedBoard)
+                            {
+                                if (passiveWaiting)
+                                {
+                                    Thread.Sleep(10);
+                                    return false;
+                                }
+
+                                continue;
+                            }
+                        }
+
+                        string first = alist[0];
+                        if (first.StartsWith("value "))
+                        {
+                            value = float.Parse(first.Split(' ')[1].Split(' ')[0]);
+                            alist.RemoveAt(0);
+                        }
+
+                        readed = false;
+                    }
+                    else
+                    {
+                        Thread.Sleep(10);
+                        if (passiveWaiting)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                catch
+                {
+                    Thread.Sleep(10);
+                }
+            }
+
+            this.waitingForSilver = false;
+            Helpfunctions.Instance.logg("received " + boardnumm + " actions to do:");
+            Ai.Instance.currentCalculatedBoard = "0";
+            Playfield p = new Playfield();
+            List<Action> aclist = new List<Action>();
+
+            foreach (string a in alist)
+            {
+                aclist.Add(new Action(a, p));
+                Helpfunctions.Instance.logg(a);
+            }
+
+            Ai.Instance.setBestMoves(aclist, value);
+
+            return true;
+        }
+
+        /// <summary>
+        ///     The setnew logg file.
         /// </summary>
         public void setnewLoggFile()
         {
@@ -263,6 +410,19 @@ namespace HREngine.Bots
             {
                 this.sttngs.setLoggFile("UILogg.txt");
             }
+        }
+
+        /// <summary>
+        ///     The test external.
+        /// </summary>
+        public void testExternal()
+        {
+            BoardTester bt = new BoardTester(string.Empty);
+            this.currentMana = Hrtprozis.Instance.currentMana;
+            this.ownMaxMana = Hrtprozis.Instance.ownMaxMana;
+            this.enemyMaxMana = Hrtprozis.Instance.enemyMaxMana;
+            this.printstuff(true);
+            this.readActionFile();
         }
 
         /// <summary>
@@ -404,8 +564,133 @@ namespace HREngine.Bots
             return true;
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// The get herostuff.
+        ///     The get decks.
+        /// </summary>
+        private void getDecks()
+        {
+            Dictionary<int, HREntity> allEntitys = HRGame.GetEntityMap();
+
+            int owncontroler = HRPlayer.GetLocalPlayer().GetControllerId();
+            int enemycontroler = HRPlayer.GetEnemyPlayer().GetControllerId();
+            List<CardDB.cardIDEnum> ownCards = new List<CardDB.cardIDEnum>();
+            List<CardDB.cardIDEnum> enemyCards = new List<CardDB.cardIDEnum>();
+            List<GraveYardItem> graveYard = new List<GraveYardItem>();
+
+            foreach (HREntity ent in allEntitys.Values)
+            {
+                if (ent.GetZone() == HRCardZone.SECRET && ent.GetControllerId() == enemycontroler)
+                {
+                    continue; // cant know enemy secrets :D
+                }
+
+                if (ent.GetZone() == HRCardZone.DECK)
+                {
+                    continue;
+                }
+
+                if (ent.GetCardType() == HRCardType.MINION || ent.GetCardType() == HRCardType.WEAPON
+                    || ent.GetCardType() == HRCardType.ABILITY)
+                {
+                    CardDB.cardIDEnum cardid = CardDB.Instance.cardIdstringToEnum(ent.GetCardId());
+
+                    // string owner = "own";
+                    // if (ent.GetControllerId() == enemycontroler) owner = "enemy";
+                    // if (ent.GetControllerId() == enemycontroler && ent.GetZone() == HRCardZone.HAND) Helpfunctions.Instance.logg("enemy card in hand: " + "cardindeck: " + cardid + " " + ent.GetName());
+                    // if (cardid != CardDB.cardIDEnum.None) Helpfunctions.Instance.logg("cardindeck: " + cardid + " " + ent.GetName() + " " + ent.GetZone() + " " + owner + " " + ent.GetCardType());
+                    if (cardid != CardDB.cardIDEnum.None)
+                    {
+                        if (ent.GetZone() == HRCardZone.GRAVEYARD)
+                        {
+                            GraveYardItem gyi = new GraveYardItem(
+                                cardid, 
+                                ent.GetEntityId(), 
+                                ent.GetControllerId() == owncontroler);
+                            graveYard.Add(gyi);
+                        }
+
+                        int creator = ent.GetTag(HRGameTag.CREATOR);
+                        if (creator != 0 && creator != owncontroler && creator != enemycontroler)
+                        {
+                            continue; // if creator is someone else, it was not played
+                        }
+
+                        if (ent.GetControllerId() == owncontroler)
+                        {
+                            // or controler?
+                            ownCards.Add(cardid);
+                        }
+                        else
+                        {
+                            enemyCards.Add(cardid);
+                        }
+                    }
+                }
+            }
+
+            Probabilitymaker.Instance.setOwnCards(ownCards);
+            Probabilitymaker.Instance.setEnemyCards(enemyCards);
+            bool isTurnStart = false;
+            if (Ai.Instance.nextMoveGuess.mana == -100)
+            {
+                isTurnStart = true;
+                Ai.Instance.updateTwoTurnSim();
+            }
+
+            Probabilitymaker.Instance.setGraveYard(graveYard, isTurnStart);
+        }
+
+        /// <summary>
+        ///     The get handcards.
+        /// </summary>
+        private void getHandcards()
+        {
+            this.handCards.Clear();
+            this.anzcards = 0;
+            this.enemyAnzCards = 0;
+            List<HRCard> list = HRCard.GetCards(HRPlayer.GetLocalPlayer(), HRCardZone.HAND);
+
+            foreach (HRCard item in list)
+            {
+                HREntity entitiy = item.GetEntity();
+
+                if (entitiy.GetControllerId() == this.ownPlayerController && entitiy.GetZonePosition() >= 1)
+                {
+                    // own handcard
+                    CardDB.Card c =
+                        CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(entitiy.GetCardId()));
+
+                    // c.cost = entitiy.GetCost();
+                    // c.entityID = entitiy.GetEntityId();
+                    Handmanager.Handcard hc = new Handmanager.Handcard();
+                    hc.card = c;
+                    hc.position = entitiy.GetZonePosition();
+                    hc.entity = entitiy.GetEntityId();
+                    hc.manacost = entitiy.GetCost();
+                    this.handCards.Add(hc);
+                    this.anzcards++;
+                }
+            }
+
+            Dictionary<int, HREntity> allEntitys = HRGame.GetEntityMap();
+
+            foreach (HREntity ent in allEntitys.Values)
+            {
+                if (ent.GetControllerId() != this.ownPlayerController && ent.GetZonePosition() >= 1
+                    && ent.GetZone() == HRCardZone.HAND)
+                {
+                    // enemy handcard
+                    this.enemyAnzCards++;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     The get herostuff.
         /// </summary>
         private void getHerostuff()
         {
@@ -491,8 +776,8 @@ namespace HREngine.Bots
                         .name.ToString();
                 this.heroWeaponAttack = weapon.GetATK();
                 this.heroWeaponDurability = weapon.GetTag(HRGameTag.DURABILITY) - weapon.GetTag(HRGameTag.DAMAGE);
-                    
-                    // weapon.GetDurability();
+
+                // weapon.GetDurability();
                 heroImmuneToDamageWhileAttacking = false;
                 if (this.ownHeroWeapon == "gladiatorslongbow")
                 {
@@ -610,7 +895,7 @@ namespace HREngine.Bots
         }
 
         /// <summary>
-        /// The get minions.
+        ///     The get minions.
         /// </summary>
         private void getMinions()
         {
@@ -625,7 +910,6 @@ namespace HREngine.Bots
             list.AddRange(HRCard.GetCards(enemyPlayer, HRCardZone.PLAY));
 
             List<HREntity> enchantments = new List<HREntity>();
-
 
             foreach (HRCard item in list)
             {
@@ -771,6 +1055,66 @@ namespace HREngine.Bots
         }
 
         /// <summary>
+        /// The printstuff.
+        /// </summary>
+        /// <param name="runEx">
+        /// The run ex.
+        /// </param>
+        private void printstuff(bool runEx)
+        {
+            HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
+            int ownsecretcount = ownPlayer.GetSecretDefinitions().Count;
+            string dtimes = DateTime.Now.ToString("HH:mm:ss:ffff");
+            string enemysecretIds = string.Empty;
+            enemysecretIds = Probabilitymaker.Instance.getEnemySecretData();
+            Helpfunctions.Instance.logg("#######################################################################");
+            Helpfunctions.Instance.logg("#######################################################################");
+            Helpfunctions.Instance.logg(
+                "start calculations, current time: " + dtimes + " V" + this.versionnumber + " " + this.botbehave);
+            Helpfunctions.Instance.logg("#######################################################################");
+            Helpfunctions.Instance.logg("mana " + this.currentMana + "/" + this.ownMaxMana);
+            Helpfunctions.Instance.logg("emana " + this.enemyMaxMana);
+            Helpfunctions.Instance.logg("own secretsCount: " + ownsecretcount);
+
+            Helpfunctions.Instance.logg("enemy secretsCount: " + this.enemySecretCount + " ;" + enemysecretIds);
+
+            Ai.Instance.currentCalculatedBoard = dtimes;
+
+            if (runEx)
+            {
+                Helpfunctions.Instance.resetBuffer();
+                Helpfunctions.Instance.writeBufferToActionFile();
+                Helpfunctions.Instance.resetBuffer();
+
+                Helpfunctions.Instance.writeToBuffer(
+                    "#######################################################################");
+                Helpfunctions.Instance.writeToBuffer(
+                    "#######################################################################");
+                Helpfunctions.Instance.writeToBuffer(
+                    "start calculations, current time: " + dtimes + " V" + this.versionnumber + " " + this.botbehave);
+                Helpfunctions.Instance.writeToBuffer(
+                    "#######################################################################");
+                Helpfunctions.Instance.writeToBuffer("mana " + this.currentMana + "/" + this.ownMaxMana);
+                Helpfunctions.Instance.writeToBuffer("emana " + this.enemyMaxMana);
+                Helpfunctions.Instance.writeToBuffer("own secretsCount: " + ownsecretcount);
+                Helpfunctions.Instance.writeToBuffer(
+                    "enemy secretsCount: " + this.enemySecretCount + " ;" + enemysecretIds);
+            }
+
+            Hrtprozis.Instance.printHero(runEx);
+            Hrtprozis.Instance.printOwnMinions(runEx);
+            Hrtprozis.Instance.printEnemyMinions(runEx);
+            Handmanager.Instance.printcards(runEx);
+            Probabilitymaker.Instance.printTurnGraveYard(runEx);
+            Probabilitymaker.Instance.printGraveyards(runEx);
+
+            if (runEx)
+            {
+                Helpfunctions.Instance.writeBufferToFile();
+            }
+        }
+
+        /// <summary>
         /// The set enchantments.
         /// </summary>
         /// <param name="enchantments">
@@ -812,120 +1156,6 @@ namespace HREngine.Bots
         }
 
         /// <summary>
-        /// The get handcards.
-        /// </summary>
-        private void getHandcards()
-        {
-            this.handCards.Clear();
-            this.anzcards = 0;
-            this.enemyAnzCards = 0;
-            List<HRCard> list = HRCard.GetCards(HRPlayer.GetLocalPlayer(), HRCardZone.HAND);
-
-            foreach (HRCard item in list)
-            {
-
-                HREntity entitiy = item.GetEntity();
-
-                if (entitiy.GetControllerId() == this.ownPlayerController && entitiy.GetZonePosition() >= 1)
-                {
-                    // own handcard
-                    CardDB.Card c =
-                        CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(entitiy.GetCardId()));
-
-                    // c.cost = entitiy.GetCost();
-                    // c.entityID = entitiy.GetEntityId();
-                    Handmanager.Handcard hc = new Handmanager.Handcard();
-                    hc.card = c;
-                    hc.position = entitiy.GetZonePosition();
-                    hc.entity = entitiy.GetEntityId();
-                    hc.manacost = entitiy.GetCost();
-                    this.handCards.Add(hc);
-                    this.anzcards++;
-                }
-            }
-
-            Dictionary<int, HREntity> allEntitys = HRGame.GetEntityMap();
-
-            foreach (HREntity ent in allEntitys.Values)
-            {
-                if (ent.GetControllerId() != this.ownPlayerController && ent.GetZonePosition() >= 1 && ent.GetZone() == HRCardZone.HAND)
-                {
-                    // enemy handcard
-                    this.enemyAnzCards++;
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// The get decks.
-        /// </summary>
-        private void getDecks()
-        {
-            Dictionary<int, HREntity> allEntitys = HRGame.GetEntityMap();
-
-            int owncontroler = HRPlayer.GetLocalPlayer().GetControllerId();
-            int enemycontroler = HRPlayer.GetEnemyPlayer().GetControllerId();
-            List<CardDB.cardIDEnum> ownCards = new List<CardDB.cardIDEnum>();
-            List<CardDB.cardIDEnum> enemyCards = new List<CardDB.cardIDEnum>();
-            List<GraveYardItem> graveYard = new List<GraveYardItem>();
-
-            foreach (HREntity ent in allEntitys.Values)
-            {
-                if (ent.GetZone() == HRCardZone.SECRET && ent.GetControllerId() == enemycontroler) continue; // cant know enemy secrets :D
-                if (ent.GetZone() == HRCardZone.DECK) continue;
-                if (ent.GetCardType() == HRCardType.MINION || ent.GetCardType() == HRCardType.WEAPON || ent.GetCardType() == HRCardType.ABILITY)
-                {
-                    CardDB.cardIDEnum cardid = CardDB.Instance.cardIdstringToEnum(ent.GetCardId());
-
-                    // string owner = "own";
-                    // if (ent.GetControllerId() == enemycontroler) owner = "enemy";
-                    // if (ent.GetControllerId() == enemycontroler && ent.GetZone() == HRCardZone.HAND) Helpfunctions.Instance.logg("enemy card in hand: " + "cardindeck: " + cardid + " " + ent.GetName());
-                    // if (cardid != CardDB.cardIDEnum.None) Helpfunctions.Instance.logg("cardindeck: " + cardid + " " + ent.GetName() + " " + ent.GetZone() + " " + owner + " " + ent.GetCardType());
-                    if (cardid != CardDB.cardIDEnum.None)
-                    {
-                        if (ent.GetZone() == HRCardZone.GRAVEYARD)
-                        {
-                            GraveYardItem gyi = new GraveYardItem(
-                                cardid, 
-                                ent.GetEntityId(), 
-                                ent.GetControllerId() == owncontroler);
-                            graveYard.Add(gyi);
-                        }
-
-                        int creator = ent.GetTag(HRGameTag.CREATOR);
-                        if (creator != 0 && creator != owncontroler && creator != enemycontroler)
-                        {
-                            continue; // if creator is someone else, it was not played
-                        }
-
-                        if (ent.GetControllerId() == owncontroler)
-                        {
-                            // or controler?
-                            ownCards.Add(cardid);
-                        }
-                        else
-                        {
-                            enemyCards.Add(cardid);
-                        }
-                    }
-                }
-            }
-
-            Probabilitymaker.Instance.setOwnCards(ownCards);
-            Probabilitymaker.Instance.setEnemyCards(enemyCards);
-            bool isTurnStart = false;
-            if (Ai.Instance.nextMoveGuess.mana == -100)
-            {
-                isTurnStart = true;
-                Ai.Instance.updateTwoTurnSim();
-            }
-
-            Probabilitymaker.Instance.setGraveYard(graveYard, isTurnStart);
-
-        }
-
-        /// <summary>
         /// The update behave string.
         /// </summary>
         /// <param name="botbase">
@@ -934,8 +1164,16 @@ namespace HREngine.Bots
         private void updateBehaveString(Behavior botbase)
         {
             this.botbehave = "rush";
-            if (botbase is BehaviorControl) this.botbehave = "control";
-            if (botbase is BehaviorMana) this.botbehave = "mana";
+            if (botbase is BehaviorControl)
+            {
+                this.botbehave = "control";
+            }
+
+            if (botbase is BehaviorMana)
+            {
+                this.botbehave = "mana";
+            }
+
             this.botbehave += " " + Ai.Instance.maxwide;
             this.botbehave += " face " + ComboBreaker.Instance.attackFaceHP;
             if (Settings.Instance.secondTurnAmount > 0)
@@ -945,7 +1183,9 @@ namespace HREngine.Bots
                     Ai.Instance.updateTwoTurnSim();
                 }
 
-                this.botbehave += " twoturnsim " + Settings.Instance.secondTurnAmount + " ntss " + Settings.Instance.nextTurnDeep + " " + Settings.Instance.nextTurnMaxWide + " " + Settings.Instance.nextTurnTotalBoards;
+                this.botbehave += " twoturnsim " + Settings.Instance.secondTurnAmount + " ntss "
+                                  + Settings.Instance.nextTurnDeep + " " + Settings.Instance.nextTurnMaxWide + " "
+                                  + Settings.Instance.nextTurnTotalBoards;
             }
 
             if (Settings.Instance.playarround)
@@ -966,212 +1206,8 @@ namespace HREngine.Bots
             {
                 this.botbehave += " secret";
             }
-
-
-            
-
         }
 
-        /// <summary>
-        /// The get last affected.
-        /// </summary>
-        /// <param name="entityid">
-        /// The entityid.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public static int getLastAffected(int entityid)
-        {
-
-            Dictionary<int, HREntity> allEntitys = HRGame.GetEntityMap();
-
-            foreach (HREntity ent in allEntitys.Values)
-            {
-                if (ent.GetTag(HRGameTag.LAST_AFFECTED_BY) == entityid) return ent.GetTag(HRGameTag.ENTITY_ID);
-            }
-
-            return 0;
-        }
-
-        /// <summary>
-        /// The get card target.
-        /// </summary>
-        /// <param name="entityid">
-        /// The entityid.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public static int getCardTarget(int entityid)
-        {
-
-            Dictionary<int, HREntity> allEntitys = HRGame.GetEntityMap();
-
-            foreach (HREntity ent in allEntitys.Values)
-            {
-                if (ent.GetTag(HRGameTag.ENTITY_ID) == entityid) return ent.GetTag(HRGameTag.CARD_TARGET);
-            }
-
-            return 0;
-        }
-
-        /// <summary>
-        /// The test external.
-        /// </summary>
-        public void testExternal()
-        {
-            BoardTester bt = new BoardTester(string.Empty);
-            this.currentMana = Hrtprozis.Instance.currentMana;
-            this.ownMaxMana = Hrtprozis.Instance.ownMaxMana;
-            this.enemyMaxMana = Hrtprozis.Instance.enemyMaxMana;
-            this.printstuff(true);
-            this.readActionFile();
-        }
-
-        /// <summary>
-        /// The printstuff.
-        /// </summary>
-        /// <param name="runEx">
-        /// The run ex.
-        /// </param>
-        private void printstuff(bool runEx)
-        {
-            HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
-            int ownsecretcount = ownPlayer.GetSecretDefinitions().Count;
-            string dtimes = DateTime.Now.ToString("HH:mm:ss:ffff");
-            string enemysecretIds = string.Empty;
-            enemysecretIds = Probabilitymaker.Instance.getEnemySecretData();
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("start calculations, current time: " + dtimes + " V" + this.versionnumber + " " + this.botbehave);
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("mana " + this.currentMana + "/" + this.ownMaxMana);
-            Helpfunctions.Instance.logg("emana " + this.enemyMaxMana);
-            Helpfunctions.Instance.logg("own secretsCount: " + ownsecretcount);
-
-            Helpfunctions.Instance.logg("enemy secretsCount: " + this.enemySecretCount + " ;" + enemysecretIds);
-
-            Ai.Instance.currentCalculatedBoard = dtimes;
-
-            if (runEx)
-            {
-                Helpfunctions.Instance.resetBuffer();
-                Helpfunctions.Instance.writeBufferToActionFile();
-                Helpfunctions.Instance.resetBuffer();
-
-                Helpfunctions.Instance.writeToBuffer("#######################################################################");
-                Helpfunctions.Instance.writeToBuffer("#######################################################################");
-                Helpfunctions.Instance.writeToBuffer("start calculations, current time: " + dtimes + " V" + this.versionnumber + " " + this.botbehave);
-                Helpfunctions.Instance.writeToBuffer("#######################################################################");
-                Helpfunctions.Instance.writeToBuffer("mana " + this.currentMana + "/" + this.ownMaxMana);
-                Helpfunctions.Instance.writeToBuffer("emana " + this.enemyMaxMana);
-                Helpfunctions.Instance.writeToBuffer("own secretsCount: " + ownsecretcount);
-                Helpfunctions.Instance.writeToBuffer("enemy secretsCount: " + this.enemySecretCount + " ;" + enemysecretIds);
-            }
-
-            Hrtprozis.Instance.printHero(runEx);
-            Hrtprozis.Instance.printOwnMinions(runEx);
-            Hrtprozis.Instance.printEnemyMinions(runEx);
-            Handmanager.Instance.printcards(runEx);
-            Probabilitymaker.Instance.printTurnGraveYard(runEx);
-            Probabilitymaker.Instance.printGraveyards(runEx);
-
-            if (runEx) Helpfunctions.Instance.writeBufferToFile();
-
-        }
-
-        /// <summary>
-        /// The read action file.
-        /// </summary>
-        /// <param name="passiveWaiting">
-        /// The passive waiting.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        public bool readActionFile(bool passiveWaiting = false)
-        {
-            bool readed = true;
-            List<string> alist = new List<string>();
-            float value = 0f;
-            string boardnumm = "-1";
-            this.waitingForSilver = true;
-            while (readed)
-            {
-                try
-                {
-                    string data = File.ReadAllText(Settings.Instance.path + "actionstodo.txt");
-                    if (data != string.Empty && data != "<EoF>" && data.EndsWith("<EoF>"))
-                    {
-                        data = data.Replace("<EoF>", string.Empty);
-
-                        // Helpfunctions.Instance.ErrorLog(data);
-                        Helpfunctions.Instance.resetBuffer();
-                        Helpfunctions.Instance.writeBufferToActionFile();
-                        alist.AddRange(data.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));
-                        string board = alist[0];
-                        if (board.StartsWith("board "))
-                        {
-                            boardnumm = board.Split(' ')[1].Split(' ')[0];
-                            alist.RemoveAt(0);
-                            if (boardnumm != Ai.Instance.currentCalculatedBoard)
-                            {
-                                if (passiveWaiting)
-                                {
-                                    Thread.Sleep(10);
-                                    return false;
-                                }
-
-                                continue;
-                            }
-                        }
-
-                        string first = alist[0];
-                        if (first.StartsWith("value "))
-                        {
-                            value = float.Parse(first.Split(' ')[1].Split(' ')[0]);
-                            alist.RemoveAt(0);
-                        }
-
-                        readed = false;
-                    }
-                    else
-                    {
-                        Thread.Sleep(10);
-                        if (passiveWaiting)
-                        {
-                            return false;
-                        }
-                    }
-
-                }
-                catch
-                {
-                    Thread.Sleep(10);
-                }
-               
-            }
-
-            this.waitingForSilver = false;
-            Helpfunctions.Instance.logg("received " + boardnumm + " actions to do:");
-            Ai.Instance.currentCalculatedBoard = "0";
-            Playfield p = new Playfield();
-            List<Action> aclist = new List<Action>();
-            
-            foreach (string a in alist)
-            {
-                aclist.Add(new Action(a, p));
-                Helpfunctions.Instance.logg(a);
-            }
-            
-            Ai.Instance.setBestMoves(aclist, value);
-
-            return true;
-        }
-
-
+        #endregion
     }
-
 }
-

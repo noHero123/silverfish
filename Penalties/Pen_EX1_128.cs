@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_128.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_128.
+    ///     The pen_ e x 1_128.
     /// </summary>
-    class Pen_EX1_128 : PenTemplate
-	{
-	    // conceal
+    internal class Pen_EX1_128 : PenTemplate
+    {
+        // conceal
 
-// verleiht euren dienern bis zu eurem nächsten zug verstohlenheit/.
+        // verleiht euren dienern bis zu eurem nächsten zug verstohlenheit/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_117.
+    ///     The pen_ c s 2_117.
     /// </summary>
-    class Pen_CS2_117 : PenTemplate
-	{
-	    // earthenringfarseer
+    internal class Pen_CS2_117 : PenTemplate
+    {
+        // earthenringfarseer
 
-// kampfschrei:/ stellt 3 leben wieder her.
+        // kampfschrei:/ stellt 3 leben wieder her.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

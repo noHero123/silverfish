@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_607.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_607.
+    ///     The pen_ e x 1_607.
     /// </summary>
-    class Pen_EX1_607 : PenTemplate
-	{
-	    // innerrage
+    internal class Pen_EX1_607 : PenTemplate
+    {
+        // innerrage
 
-// fügt einem diener $1 schaden zu. der diener erhält +2 angriff.
+        // fügt einem diener $1 schaden zu. der diener erhält +2 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,7 +40,7 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
+        {
             if (target.own)
             {
                 if (m.Hp == 1)
@@ -83,7 +85,8 @@ namespace HREngine.Bots
             }
 
             return 0;
-		}
+        }
 
-	}
+        #endregion
+    }
 }

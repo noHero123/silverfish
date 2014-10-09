@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_587.
+    ///     The pen_ e x 1_587.
     /// </summary>
-    class Pen_EX1_587 : PenTemplate
-	{
-	    // windspeaker
+    internal class Pen_EX1_587 : PenTemplate
+    {
+        // windspeaker
 
-// kampfschrei:/ verleiht einem befreundeten diener windzorn/.
+        // kampfschrei:/ verleiht einem befreundeten diener windzorn/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

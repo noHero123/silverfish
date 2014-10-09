@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ ne w 1_009.
+    ///     The pen_ ne w 1_009.
     /// </summary>
-    class Pen_NEW1_009 : PenTemplate
-	{
-	    // healingtotem
+    internal class Pen_NEW1_009 : PenTemplate
+    {
+        // healingtotem
 
-// stellt am ende eures zuges bei allen befreundeten dienern 1 leben wieder her.
+        // stellt am ende eures zuges bei allen befreundeten dienern 1 leben wieder her.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

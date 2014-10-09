@@ -9,12 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_033.
+    ///     The sim_ c s 2_033.
     /// </summary>
-    class Sim_CS2_033 : SimTemplate
-	{
-	    // waterelemental
+    internal class Sim_CS2_033 : SimTemplate
+    {
+        // waterelemental
 
-// friert/ jeden charakter ein, der von diesem diener verletzt wurde.
-	}
+        // friert/ jeden charakter ein, der von diesem diener verletzt wurde.
+    }
 }

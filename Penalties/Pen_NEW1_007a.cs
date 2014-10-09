@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_NEW1_007a.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ ne w 1_007 a.
+    ///     The pen_ ne w 1_007 a.
     /// </summary>
-    class Pen_NEW1_007a : PenTemplate
-	{
-	    // starfall
+    internal class Pen_NEW1_007a : PenTemplate
+    {
+        // starfall
 
-// fügt allen feindlichen dienern $2 schaden zu.
+        // fügt allen feindlichen dienern $2 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

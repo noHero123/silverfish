@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_409 t.
+    ///     The pen_ e x 1_409 t.
     /// </summary>
-    class Pen_EX1_409t : PenTemplate
-	{
-	    // heavyaxe
+    internal class Pen_EX1_409t : PenTemplate
+    {
+        // heavyaxe
+        #region Public Methods and Operators
 
         /// <summary>
         /// The get play penalty.
@@ -37,9 +38,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

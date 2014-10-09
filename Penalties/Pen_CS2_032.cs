@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_CS2_032.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_032.
+    ///     The pen_ c s 2_032.
     /// </summary>
-    class Pen_CS2_032 : PenTemplate
-	{
-	    // flamestrike
+    internal class Pen_CS2_032 : PenTemplate
+    {
+        // flamestrike
 
-// fügt allen feindlichen dienern $4 schaden zu.
+        // fügt allen feindlichen dienern $4 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

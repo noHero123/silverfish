@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_565.
+    ///     The pen_ e x 1_565.
     /// </summary>
-    class Pen_EX1_565 : PenTemplate
-	{
-	    // flametonguetotem
+    internal class Pen_EX1_565 : PenTemplate
+    {
+        // flametonguetotem
 
-// benachbarte diener haben +2 angriff.
+        // benachbarte diener haben +2 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

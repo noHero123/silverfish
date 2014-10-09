@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_FP1_030.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ f p 1_030.
+    ///     The pen_ f p 1_030.
     /// </summary>
-    class Pen_FP1_030 : PenTemplate
-	{
-	    // loatheb
+    internal class Pen_FP1_030 : PenTemplate
+    {
+        // loatheb
 
-// kampfschrei:/ im nächsten zug kosten zauber für euren gegner (5) mehr.
+        // kampfschrei:/ im nächsten zug kosten zauber für euren gegner (5) mehr.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

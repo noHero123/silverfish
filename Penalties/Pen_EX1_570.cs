@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_570.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_570.
+    ///     The pen_ e x 1_570.
     /// </summary>
-    class Pen_EX1_570 : PenTemplate
-	{
-	    // bite
+    internal class Pen_EX1_570 : PenTemplate
+    {
+        // bite
 
-// verleiht eurem helden +4 angriff in diesem zug und 4 rüstung.
+        // verleiht eurem helden +4 angriff in diesem zug und 4 rüstung.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

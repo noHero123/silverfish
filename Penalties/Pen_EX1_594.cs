@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_594.
+    ///     The pen_ e x 1_594.
     /// </summary>
-    class Pen_EX1_594 : PenTemplate
-	{
-	    // vaporize
+    internal class Pen_EX1_594 : PenTemplate
+    {
+        // vaporize
 
-// geheimnis:/ wenn ein diener euren helden angreift, wird er vernichtet.
+        // geheimnis:/ wenn ein diener euren helden angreift, wird er vernichtet.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

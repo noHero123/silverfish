@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ds 1_whelptoken.
+    ///     The pen_ds 1_whelptoken.
     /// </summary>
-    class Pen_ds1_whelptoken : PenTemplate
-	{
-	    // whelp
+    internal class Pen_ds1_whelptoken : PenTemplate
+    {
+        // whelp
+        #region Public Methods and Operators
 
         /// <summary>
         /// The get play penalty.
@@ -37,9 +38,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

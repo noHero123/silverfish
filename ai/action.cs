@@ -7,9 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
-
-//TODO:
+ //TODO:
 
 //cardids of duplicate + avenge
 //nozdormu (for computing time :D)
@@ -18,84 +16,92 @@ using System;
 //scharmuetzel kills all :D
 //todo deathlord-guessing
 //todo kelthuzad dont know which minion died this turn in rl
-
-
 namespace HREngine.Bots
 {
+    using System;
+
     /// <summary>
-    /// The action enum.
+    ///     The action enum.
     /// </summary>
     public enum actionEnum
     {
         /// <summary>
-        /// The endturn.
+        ///     The endturn.
         /// </summary>
         endturn = 0, 
 
         /// <summary>
-        /// The playcard.
+        ///     The playcard.
         /// </summary>
         playcard, 
 
         /// <summary>
-        /// The attack with hero.
+        ///     The attack with hero.
         /// </summary>
         attackWithHero, 
 
         /// <summary>
-        /// The use hero power.
+        ///     The use hero power.
         /// </summary>
         useHeroPower, 
 
         /// <summary>
-        /// The attack with minion.
+        ///     The attack with minion.
         /// </summary>
         attackWithMinion
     }
 
     // todo make to struct
     /// <summary>
-    /// The action.
+    ///     The action.
     /// </summary>
     public class Action
     {
+        #region Fields
+
         /// <summary>
-        /// The action type.
+        ///     The action type.
         /// </summary>
         public actionEnum actionType;
 
         /// <summary>
-        /// The card.
+        ///     The card.
         /// </summary>
         public Handmanager.Handcard card;
 
         // public int cardEntitiy;
-        /// <summary>
-        /// The place.
-        /// </summary>
-        public int place; // = target where card/minion is placed
 
         /// <summary>
-        /// The own.
-        /// </summary>
-        public Minion own;
-
-        /// <summary>
-        /// The target.
-        /// </summary>
-        public Minion target;
-
-        /// <summary>
-        /// The druidchoice.
+        ///     The druidchoice.
         /// </summary>
         public int druidchoice; // 1 left card, 2 right card
 
         /// <summary>
-        /// The penalty.
+        ///     The own.
+        /// </summary>
+        public Minion own;
+
+        /// <summary>
+        ///     The penalty.
         /// </summary>
         public int penalty;
 
         /// <summary>
+        ///     The place.
+        /// </summary>
+        public int place; // = target where card/minion is placed
+
+        /// <summary>
+        ///     The target.
+        /// </summary>
+        public Minion target;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initialisiert eine neue Instanz der <see cref="Action"/> Klasse. 
         /// Initializes a new instance of the <see cref="Action"/> class.
         /// </summary>
         /// <param name="type">
@@ -138,6 +144,7 @@ namespace HREngine.Bots
         }
 
         /// <summary>
+        /// Initialisiert eine neue Instanz der <see cref="Action"/> Klasse. 
         /// Initializes a new instance of the <see cref="Action"/> class.
         /// </summary>
         /// <param name="s">
@@ -267,6 +274,7 @@ namespace HREngine.Bots
         }
 
         /// <summary>
+        /// Initialisiert eine neue Instanz der <see cref="Action"/> Klasse. 
         /// Initializes a new instance of the <see cref="Action"/> class.
         /// </summary>
         /// <param name="a">
@@ -282,6 +290,10 @@ namespace HREngine.Bots
             this.druidchoice = a.druidchoice;
             this.penalty = a.penalty;
         }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The print.
@@ -386,5 +398,7 @@ namespace HREngine.Bots
 
             help.logg(string.Empty);
         }
+
+        #endregion
     }
 }

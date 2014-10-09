@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_039.
+    ///     The sim_ c s 2_039.
     /// </summary>
-    class Sim_CS2_039 : SimTemplate
-	{
-	    // windfury
+    internal class Sim_CS2_039 : SimTemplate
+    {
+        // windfury
 
-// verleiht einem diener windzorn/.
+        // verleiht einem diener windzorn/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetWindfurry(target);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

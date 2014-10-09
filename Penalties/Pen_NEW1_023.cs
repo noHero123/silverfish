@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_NEW1_023.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ ne w 1_023.
+    ///     The pen_ ne w 1_023.
     /// </summary>
-    class Pen_NEW1_023 : PenTemplate
-	{
-	    // faeriedragon
+    internal class Pen_NEW1_023 : PenTemplate
+    {
+        // faeriedragon
 
-// kann nicht als ziel von zaubern oder heldenfähigkeiten gewählt werden.
+        // kann nicht als ziel von zaubern oder heldenfähigkeiten gewählt werden.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_041.
+    ///     The sim_ c s 2_041.
     /// </summary>
-    class Sim_CS2_041 : SimTemplate
-	{
-	    // ancestralhealing
+    internal class Sim_CS2_041 : SimTemplate
+    {
+        // ancestralhealing
 
-// stellt das volle leben eines dieners wieder her und verleiht ihm spott/.
+        // stellt das volle leben eines dieners wieder her und verleiht ihm spott/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,11 +34,14 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             target.taunt = true;
-            int heal = ownplay? p.getSpellHeal(target.maxHp - target.Hp) : p.getEnemySpellHeal(target.maxHp - target.Hp);
+            int heal = ownplay
+                           ? p.getSpellHeal(target.maxHp - target.Hp)
+                           : p.getEnemySpellHeal(target.maxHp - target.Hp);
             p.minionGetDamageOrHeal(target, heal);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

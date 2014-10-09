@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS1_113.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 1_113.
+    ///     The sim_ c s 1_113.
     /// </summary>
-    class Sim_CS1_113 : SimTemplate
-	{
-	    // mindcontrol
+    internal class Sim_CS1_113 : SimTemplate
+    {
+        // mindcontrol
 
-// übernehmt die kontrolle über einen feindlichen diener.
+        // übernehmt die kontrolle über einen feindlichen diener.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetControlled(target, ownplay, false);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

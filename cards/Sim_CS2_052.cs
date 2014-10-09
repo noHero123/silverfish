@@ -9,33 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_052.
+    ///     The sim_ c s 2_052.
     /// </summary>
-    class Sim_CS2_052 : SimTemplate
-	{
-	    // wrathofairtotem
+    internal class Sim_CS2_052 : SimTemplate
+    {
+        // wrathofairtotem
 
-// zauberschaden +1/
-        /// <summary>
-        /// The on aura starts.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        public override void  onAuraStarts(Playfield p, Minion m)
-        {
-            if (m.own)
-            {
-                p.spellpower++;
-            }
-            else
-            {
-                p.enemyspellpower++;
-            }
-        }
+        // zauberschaden +1/
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on aura ends.
@@ -58,5 +39,27 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        /// <summary>
+        /// The on aura starts.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
+        public override void onAuraStarts(Playfield p, Minion m)
+        {
+            if (m.own)
+            {
+                p.spellpower++;
+            }
+            else
+            {
+                p.enemyspellpower++;
+            }
+        }
+
+        #endregion
+    }
 }

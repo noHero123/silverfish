@@ -9,16 +9,21 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_022.
+    ///     The sim_ c s 2_022.
     /// </summary>
-    class Sim_CS2_022 : SimTemplate
+    internal class Sim_CS2_022 : SimTemplate
     {
         // Polymorph
+        #region Fields
 
         /// <summary>
-        /// The sheep.
+        ///     The sheep.
         /// </summary>
         private CardDB.Card sheep = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_tk1);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -40,5 +45,6 @@ namespace HREngine.Bots
             p.minionTransform(target, this.sheep);
         }
 
+        #endregion
     }
 }

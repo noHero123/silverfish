@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_CS2_063.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_063.
+    ///     The pen_ c s 2_063.
     /// </summary>
-    class Pen_CS2_063 : PenTemplate
-	{
-	    // corruption
+    internal class Pen_CS2_063 : PenTemplate
+    {
+        // corruption
 
-// wählt einen feindlichen diener aus. vernichtet ihn zu beginn eures zuges.
+        // wählt einen feindlichen diener aus. vernichtet ihn zu beginn eures zuges.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

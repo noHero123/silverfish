@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_023.
+    ///     The sim_ c s 2_023.
     /// </summary>
-    class Sim_CS2_023 : SimTemplate
-	{
-	    // arcaneintellect
+    internal class Sim_CS2_023 : SimTemplate
+    {
+        // arcaneintellect
 
-// zieht 2 karten.
+        // zieht 2 karten.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.drawACard(CardDB.cardName.unknown, ownplay);
             p.drawACard(CardDB.cardName.unknown, ownplay);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

@@ -6,311 +6,316 @@
 //   The board tester.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System;
+    using System.Collections.Generic;
     using System.IO;
 
     // reads the board and simulates it
     /// <summary>
-    /// The board tester.
+    ///     The board tester.
     /// </summary>
     public class BoardTester
     {
-        /// <summary>
-        /// The eval function.
-        /// </summary>
-        public string evalFunction = "control";
+        #region Fields
 
         /// <summary>
-        /// The maxwide.
-        /// </summary>
-        int maxwide = 3000;
-
-        /// <summary>
-        /// The twoturnsim.
-        /// </summary>
-        int twoturnsim = 256;
-
-        /// <summary>
-        /// The sim enemy 2 turn.
-        /// </summary>
-        bool simEnemy2Turn = false;
-
-        /// <summary>
-        /// The pprob 1.
-        /// </summary>
-        int pprob1 = 50;
-
-        /// <summary>
-        /// The pprob 2.
-        /// </summary>
-        int pprob2 = 80;
-
-        /// <summary>
-        /// The playarround.
-        /// </summary>
-        bool playarround = false;
-
-        /// <summary>
-        /// The own player.
-        /// </summary>
-        int ownPlayer = 1;
-
-        /// <summary>
-        /// The enemmaxman.
-        /// </summary>
-        int enemmaxman = 0;
-
-        /// <summary>
-        /// The own hero.
-        /// </summary>
-        Minion ownHero;
-
-        /// <summary>
-        /// The enemy hero.
-        /// </summary>
-        Minion enemyHero;
-
-        /// <summary>
-        /// The own h entity.
-        /// </summary>
-        int ownHEntity = 0;
-
-        /// <summary>
-        /// The enemy h entity.
-        /// </summary>
-        int enemyHEntity = 1;
-
-        /// <summary>
-        /// The mana.
-        /// </summary>
-        int mana = 0;
-
-        /// <summary>
-        /// The maxmana.
-        /// </summary>
-        int maxmana = 0;
-
-        /// <summary>
-        /// The ownheroname.
-        /// </summary>
-        string ownheroname = string.Empty;
-
-        /// <summary>
-        /// The ownherohp.
-        /// </summary>
-        int ownherohp = 0;
-
-        /// <summary>
-        /// The ownheromaxhp.
-        /// </summary>
-        int ownheromaxhp = 30;
-
-        /// <summary>
-        /// The enemyheromaxhp.
-        /// </summary>
-        int enemyheromaxhp = 30;
-
-        /// <summary>
-        /// The ownherodefence.
-        /// </summary>
-        int ownherodefence = 0;
-
-        /// <summary>
-        /// The ownheroready.
-        /// </summary>
-        bool ownheroready = false;
-
-        /// <summary>
-        /// The own heroimmunewhileattacking.
-        /// </summary>
-        bool ownHeroimmunewhileattacking = false;
-
-        /// <summary>
-        /// The ownheroattacks this round.
-        /// </summary>
-        int ownheroattacksThisRound = 0;
-
-        /// <summary>
-        /// The own hero attack.
-        /// </summary>
-        int ownHeroAttack = 0;
-
-        /// <summary>
-        /// The own hero temp attack.
-        /// </summary>
-        int ownHeroTempAttack = 0;
-
-        /// <summary>
-        /// The own hero weapon.
-        /// </summary>
-        string ownHeroWeapon = string.Empty;
-
-        /// <summary>
-        /// The own hero weapon attack.
-        /// </summary>
-        int ownHeroWeaponAttack = 0;
-
-        /// <summary>
-        /// The own hero weapon durability.
-        /// </summary>
-        int ownHeroWeaponDurability = 0;
-
-        /// <summary>
-        /// The num option played this turn.
-        /// </summary>
-        int numOptionPlayedThisTurn = 0;
-
-        /// <summary>
-        /// The num minions played this turn.
-        /// </summary>
-        int numMinionsPlayedThisTurn = 0;
-
-        /// <summary>
-        /// The cards played this turn.
-        /// </summary>
-        int cardsPlayedThisTurn = 0;
-
-        /// <summary>
-        /// The overdrive.
-        /// </summary>
-        int overdrive = 0;
-
-        /// <summary>
-        /// The own decksize.
-        /// </summary>
-        int ownDecksize = 30;
-
-        /// <summary>
-        /// The enemy decksize.
-        /// </summary>
-        int enemyDecksize = 30;
-
-        /// <summary>
-        /// The own fatigue.
-        /// </summary>
-        int ownFatigue = 0;
-
-        /// <summary>
-        /// The enemy fatigue.
-        /// </summary>
-        int enemyFatigue = 0;
-
-        /// <summary>
-        /// The hero immune.
-        /// </summary>
-        bool heroImmune = false;
-
-        /// <summary>
-        /// The enemy hero immune.
-        /// </summary>
-        bool enemyHeroImmune = false;
-
-        /// <summary>
-        /// The enemy secret amount.
-        /// </summary>
-        int enemySecretAmount = 0;
-
-        /// <summary>
-        /// The enemy secrets.
-        /// </summary>
-        List<SecretItem> enemySecrets = new List<SecretItem>();
-
-        /// <summary>
-        /// The own hero frozen.
-        /// </summary>
-        bool ownHeroFrozen = false;
-
-        /// <summary>
-        /// The ownsecretlist.
-        /// </summary>
-        List<string> ownsecretlist = new List<string>();
-
-        /// <summary>
-        /// The enemyheroname.
-        /// </summary>
-        string enemyheroname = string.Empty;
-
-        /// <summary>
-        /// The enemyherohp.
-        /// </summary>
-        int enemyherohp = 0;
-
-        /// <summary>
-        /// The enemyherodefence.
-        /// </summary>
-        int enemyherodefence = 0;
-
-        /// <summary>
-        /// The enemy frozen.
-        /// </summary>
-        bool enemyFrozen = false;
-
-        /// <summary>
-        /// The enemy weapon attack.
-        /// </summary>
-        int enemyWeaponAttack = 0;
-
-        /// <summary>
-        /// The enemy weapon dur.
-        /// </summary>
-        int enemyWeaponDur = 0;
-
-        /// <summary>
-        /// The enemy weapon.
-        /// </summary>
-        string enemyWeapon = string.Empty;
-
-        /// <summary>
-        /// The enemy number hand.
-        /// </summary>
-        int enemyNumberHand = 5;
-
-        /// <summary>
-        /// The ownminions.
-        /// </summary>
-        List<Minion> ownminions = new List<Minion>();
-
-        /// <summary>
-        /// The enemyminions.
-        /// </summary>
-        List<Minion> enemyminions = new List<Minion>();
-
-        /// <summary>
-        /// The handcards.
-        /// </summary>
-        List<Handmanager.Handcard> handcards = new List<Handmanager.Handcard>();
-
-        /// <summary>
-        /// The enemycards.
-        /// </summary>
-        List<CardDB.cardIDEnum> enemycards = new List<CardDB.cardIDEnum>();
-
-        /// <summary>
-        /// The turn grave yard.
-        /// </summary>
-        List<GraveYardItem> turnGraveYard = new List<GraveYardItem>();
-
-        /// <summary>
-        /// The feugendead.
-        /// </summary>
-        bool feugendead = false;
-
-        /// <summary>
-        /// The stalaggdead.
-        /// </summary>
-        bool stalaggdead = false;
-
-        /// <summary>
-        /// The datareaded.
+        ///     The datareaded.
         /// </summary>
         public bool datareaded = false;
 
         /// <summary>
+        ///     The eval function.
+        /// </summary>
+        public string evalFunction = "control";
+
+        /// <summary>
+        ///     The cards played this turn.
+        /// </summary>
+        private int cardsPlayedThisTurn;
+
+        /// <summary>
+        ///     The enemmaxman.
+        /// </summary>
+        private int enemmaxman;
+
+        /// <summary>
+        ///     The enemy decksize.
+        /// </summary>
+        private int enemyDecksize = 30;
+
+        /// <summary>
+        ///     The enemy fatigue.
+        /// </summary>
+        private int enemyFatigue;
+
+        /// <summary>
+        ///     The enemy frozen.
+        /// </summary>
+        private bool enemyFrozen;
+
+        /// <summary>
+        ///     The enemy h entity.
+        /// </summary>
+        private int enemyHEntity = 1;
+
+        /// <summary>
+        ///     The enemy hero.
+        /// </summary>
+        private Minion enemyHero;
+
+        /// <summary>
+        ///     The enemy hero immune.
+        /// </summary>
+        private bool enemyHeroImmune;
+
+        /// <summary>
+        ///     The enemy number hand.
+        /// </summary>
+        private int enemyNumberHand = 5;
+
+        /// <summary>
+        ///     The enemy secret amount.
+        /// </summary>
+        private int enemySecretAmount;
+
+        /// <summary>
+        ///     The enemy secrets.
+        /// </summary>
+        private List<SecretItem> enemySecrets = new List<SecretItem>();
+
+        /// <summary>
+        ///     The enemy weapon.
+        /// </summary>
+        private string enemyWeapon = string.Empty;
+
+        /// <summary>
+        ///     The enemy weapon attack.
+        /// </summary>
+        private int enemyWeaponAttack;
+
+        /// <summary>
+        ///     The enemy weapon dur.
+        /// </summary>
+        private int enemyWeaponDur;
+
+        /// <summary>
+        ///     The enemycards.
+        /// </summary>
+        private List<CardDB.cardIDEnum> enemycards = new List<CardDB.cardIDEnum>();
+
+        /// <summary>
+        ///     The enemyherodefence.
+        /// </summary>
+        private int enemyherodefence;
+
+        /// <summary>
+        ///     The enemyherohp.
+        /// </summary>
+        private int enemyherohp;
+
+        /// <summary>
+        ///     The enemyheromaxhp.
+        /// </summary>
+        private int enemyheromaxhp = 30;
+
+        /// <summary>
+        ///     The enemyheroname.
+        /// </summary>
+        private string enemyheroname = string.Empty;
+
+        /// <summary>
+        ///     The enemyminions.
+        /// </summary>
+        private List<Minion> enemyminions = new List<Minion>();
+
+        /// <summary>
+        ///     The feugendead.
+        /// </summary>
+        private bool feugendead;
+
+        /// <summary>
+        ///     The handcards.
+        /// </summary>
+        private List<Handmanager.Handcard> handcards = new List<Handmanager.Handcard>();
+
+        /// <summary>
+        ///     The hero immune.
+        /// </summary>
+        private bool heroImmune;
+
+        /// <summary>
+        ///     The mana.
+        /// </summary>
+        private int mana;
+
+        /// <summary>
+        ///     The maxmana.
+        /// </summary>
+        private int maxmana;
+
+        /// <summary>
+        ///     The maxwide.
+        /// </summary>
+        private int maxwide = 3000;
+
+        /// <summary>
+        ///     The num minions played this turn.
+        /// </summary>
+        private int numMinionsPlayedThisTurn;
+
+        /// <summary>
+        ///     The num option played this turn.
+        /// </summary>
+        private int numOptionPlayedThisTurn;
+
+        /// <summary>
+        ///     The overdrive.
+        /// </summary>
+        private int overdrive;
+
+        /// <summary>
+        ///     The own decksize.
+        /// </summary>
+        private int ownDecksize = 30;
+
+        /// <summary>
+        ///     The own fatigue.
+        /// </summary>
+        private int ownFatigue;
+
+        /// <summary>
+        ///     The own h entity.
+        /// </summary>
+        private int ownHEntity;
+
+        /// <summary>
+        ///     The own hero.
+        /// </summary>
+        private Minion ownHero;
+
+        /// <summary>
+        ///     The own hero attack.
+        /// </summary>
+        private int ownHeroAttack;
+
+        /// <summary>
+        ///     The own hero frozen.
+        /// </summary>
+        private bool ownHeroFrozen;
+
+        /// <summary>
+        ///     The own hero temp attack.
+        /// </summary>
+        private int ownHeroTempAttack;
+
+        /// <summary>
+        ///     The own hero weapon.
+        /// </summary>
+        private string ownHeroWeapon = string.Empty;
+
+        /// <summary>
+        ///     The own hero weapon attack.
+        /// </summary>
+        private int ownHeroWeaponAttack;
+
+        /// <summary>
+        ///     The own hero weapon durability.
+        /// </summary>
+        private int ownHeroWeaponDurability;
+
+        /// <summary>
+        ///     The own heroimmunewhileattacking.
+        /// </summary>
+        private bool ownHeroimmunewhileattacking;
+
+        /// <summary>
+        ///     The own player.
+        /// </summary>
+        private int ownPlayer = 1;
+
+        /// <summary>
+        ///     The ownheroattacks this round.
+        /// </summary>
+        private int ownheroattacksThisRound;
+
+        /// <summary>
+        ///     The ownherodefence.
+        /// </summary>
+        private int ownherodefence;
+
+        /// <summary>
+        ///     The ownherohp.
+        /// </summary>
+        private int ownherohp;
+
+        /// <summary>
+        ///     The ownheromaxhp.
+        /// </summary>
+        private int ownheromaxhp = 30;
+
+        /// <summary>
+        ///     The ownheroname.
+        /// </summary>
+        private string ownheroname = string.Empty;
+
+        /// <summary>
+        ///     The ownheroready.
+        /// </summary>
+        private bool ownheroready;
+
+        /// <summary>
+        ///     The ownminions.
+        /// </summary>
+        private List<Minion> ownminions = new List<Minion>();
+
+        /// <summary>
+        ///     The ownsecretlist.
+        /// </summary>
+        private List<string> ownsecretlist = new List<string>();
+
+        /// <summary>
+        ///     The playarround.
+        /// </summary>
+        private bool playarround;
+
+        /// <summary>
+        ///     The pprob 1.
+        /// </summary>
+        private int pprob1 = 50;
+
+        /// <summary>
+        ///     The pprob 2.
+        /// </summary>
+        private int pprob2 = 80;
+
+        /// <summary>
+        ///     The sim enemy 2 turn.
+        /// </summary>
+        private bool simEnemy2Turn;
+
+        /// <summary>
+        ///     The stalaggdead.
+        /// </summary>
+        private bool stalaggdead;
+
+        /// <summary>
+        ///     The turn grave yard.
+        /// </summary>
+        private List<GraveYardItem> turnGraveYard = new List<GraveYardItem>();
+
+        /// <summary>
+        ///     The twoturnsim.
+        /// </summary>
+        private int twoturnsim = 256;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initialisiert eine neue Instanz der <see cref="BoardTester"/> Klasse. 
         /// Initializes a new instance of the <see cref="BoardTester"/> class.
         /// </summary>
         /// <param name="data">
@@ -652,14 +657,7 @@ namespace HREngine.Bots
                     // own hero weapon
                     this.ownHeroWeaponAttack = Convert.ToInt32(s.Split(' ')[1]);
                     this.ownHeroWeaponDurability = Convert.ToInt32(s.Split(' ')[2]);
-                    if (this.ownHeroWeaponAttack == 0)
-                    {
-                        this.ownHeroWeapon = string.Empty; // :D
-                    }
-                    else
-                    {
-                        this.ownHeroWeapon = s.Split(' ')[3];
-                    }
+                    this.ownHeroWeapon = this.ownHeroWeaponAttack == 0 ? string.Empty : s.Split(' ')[3];
                 }
 
                 if (readstate == 1 && counter == 3)
@@ -1369,6 +1367,10 @@ namespace HREngine.Bots
             Settings.Instance.useSecretsPlayArround = dosecrets;
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
         /// The create new minion.
         /// </summary>
@@ -1416,9 +1418,6 @@ namespace HREngine.Bots
             return m;
         }
 
-
-
-
+        #endregion
     }
-
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS1h_001.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 1 h_001.
+    ///     The sim_ c s 1 h_001.
     /// </summary>
-    class Sim_CS1h_001 : SimTemplate
-	{
-	    // lesserheal
+    internal class Sim_CS1h_001 : SimTemplate
+    {
+        // lesserheal
 
-// heldenfähigkeit/\nstellt 2 leben wieder her.
+        // heldenfähigkeit/\nstellt 2 leben wieder her.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,23 +34,36 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int heal = 2;
             if (ownplay)
             {
-                if (p.anzOwnAuchenaiSoulpriest >= 1) heal = -heal;
-                if (p.doublepriest >= 1) heal *= 2 * p.doublepriest;
+                if (p.anzOwnAuchenaiSoulpriest >= 1)
+                {
+                    heal = -heal;
+                }
+
+                if (p.doublepriest >= 1)
+                {
+                    heal *= 2 * p.doublepriest;
+                }
             }
             else
             {
-                if (p.anzEnemyAuchenaiSoulpriest >= 1) heal = -heal;
-                if (p.enemydoublepriest >= 1) heal *= 2 * p.enemydoublepriest;
+                if (p.anzEnemyAuchenaiSoulpriest >= 1)
+                {
+                    heal = -heal;
+                }
+
+                if (p.enemydoublepriest >= 1)
+                {
+                    heal *= 2 * p.enemydoublepriest;
+                }
             }
 
             p.minionGetDamageOrHeal(target, -heal);
-            
-            
-		}
+        }
 
-	}
+        #endregion
+    }
 }

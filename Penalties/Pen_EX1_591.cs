@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_591.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_591.
+    ///     The pen_ e x 1_591.
     /// </summary>
-    class Pen_EX1_591 : PenTemplate
-	{
-	    // auchenaisoulpriest
+    internal class Pen_EX1_591 : PenTemplate
+    {
+        // auchenaisoulpriest
 
-// eure karten und fähigkeiten, die leben wiederherstellen, verursachen stattdessen nun schaden.
+        // eure karten und fähigkeiten, die leben wiederherstellen, verursachen stattdessen nun schaden.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

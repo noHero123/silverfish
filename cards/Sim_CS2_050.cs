@@ -9,14 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_050.
+    ///     The sim_ c s 2_050.
     /// </summary>
-    class Sim_CS2_050 : SimTemplate
-	{
-	    // searingtotem
+    internal class Sim_CS2_050 : SimTemplate
+    {
+        // searingtotem
 
-// fire totem of shaman ability
-		
-
-	}
+        // fire totem of shaman ability
+    }
 }

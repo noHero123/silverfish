@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_573 b.
+    ///     The pen_ e x 1_573 b.
     /// </summary>
-    class Pen_EX1_573b : PenTemplate
-	{
-	    // shandoslesson
+    internal class Pen_EX1_573b : PenTemplate
+    {
+        // shandoslesson
 
-// ruft zwei treants (2/2) mit spott/ herbei.
+        // ruft zwei treants (2/2) mit spott/ herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

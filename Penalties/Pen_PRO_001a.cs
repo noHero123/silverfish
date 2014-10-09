@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_PRO_001a.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ pr o_001 a.
+    ///     The pen_ pr o_001 a.
     /// </summary>
-    class Pen_PRO_001a : PenTemplate
-	{
-	    // iammurloc
+    internal class Pen_PRO_001a : PenTemplate
+    {
+        // iammurloc
 
-// ruft drei, vier oder fünf murlocs herbei (1/1).
+        // ruft drei, vier oder fünf murlocs herbei (1/1).
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

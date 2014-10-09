@@ -6,33 +6,39 @@
 //   The mini ench.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The mini ench.
+    ///     The mini ench.
     /// </summary>
     public class miniEnch
     {
+        #region Fields
+
         /// <summary>
-        /// The cardid.
+        ///     The cardid.
         /// </summary>
         public CardDB.cardIDEnum CARDID = CardDB.cardIDEnum.None;
 
         /// <summary>
-        /// The creator.
-        /// </summary>
-        public int creator = 0; // the minion
-
-        /// <summary>
-        /// The controller of creator.
+        ///     The controller of creator.
         /// </summary>
         public int controllerOfCreator = 0; // own or enemys buff?
 
         /// <summary>
+        ///     The creator.
+        /// </summary>
+        public int creator = 0; // the minion
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initialisiert eine neue Instanz der <see cref="miniEnch"/> Klasse. 
         /// Initializes a new instance of the <see cref="miniEnch"/> class.
         /// </summary>
         /// <param name="id">
@@ -51,218 +57,225 @@ namespace HREngine.Bots
             this.controllerOfCreator = controler;
         }
 
+        #endregion
     }
 
     /// <summary>
-    /// The minion.
+    ///     The minion.
     /// </summary>
     public class Minion
     {
         // dont silence----------------------------
-        /// <summary>
-        /// The anz got dmg.
-        /// </summary>
-        public int anzGotDmg = 0;
+        #region Fields
 
         /// <summary>
-        /// The is hero.
-        /// </summary>
-        public bool isHero = false;
-
-        /// <summary>
-        /// The own.
-        /// </summary>
-        public bool own;
-
-        /// <summary>
-        /// The name.
-        /// </summary>
-        public CardDB.cardName name = CardDB.cardName.unknown;
-
-        /// <summary>
-        /// The handcard.
-        /// </summary>
-        public Handmanager.Handcard handcard;
-
-        /// <summary>
-        /// The entitiy id.
-        /// </summary>
-        public int entitiyID = -1;
-
-        // public int id = -1;//delete this
-        /// <summary>
-        /// The zonepos.
-        /// </summary>
-        public int zonepos = 0;
-
-        /// <summary>
-        /// The played this turn.
-        /// </summary>
-        public bool playedThisTurn = false;
-
-        /// <summary>
-        /// The num attacks this turn.
-        /// </summary>
-        public int numAttacksThisTurn = 0;
-
-        /// <summary>
-        /// The immune while attacking.
-        /// </summary>
-        public bool immuneWhileAttacking = false;
-
-        // ---------------------------------------
-        /// <summary>
-        /// The shadowmadnessed.
-        /// </summary>
-        public bool shadowmadnessed = false; // ´can be silenced :D
-
-        /// <summary>
-        /// The ancestralspirit.
-        /// </summary>
-        public int ancestralspirit = 0;
-
-        /// <summary>
-        /// The destroy on own turn start.
-        /// </summary>
-        public bool destroyOnOwnTurnStart = false; // depends on own!
-
-        /// <summary>
-        /// The destroy on enemy turn start.
-        /// </summary>
-        public bool destroyOnEnemyTurnStart = false; // depends on own!
-
-        /// <summary>
-        /// The destroy on own turn end.
-        /// </summary>
-        public bool destroyOnOwnTurnEnd = false; // depends on own!
-
-        /// <summary>
-        /// The destroy on enemy turn end.
-        /// </summary>
-        public bool destroyOnEnemyTurnEnd = false; // depends on own!
-
-        /// <summary>
-        /// The concedal.
-        /// </summary>
-        public bool concedal = false;
-
-        /// <summary>
-        /// The souloftheforest.
-        /// </summary>
-        public int souloftheforest = 0;
-
-        /// <summary>
-        /// The own blessing of wisdom.
-        /// </summary>
-        public int ownBlessingOfWisdom = 0;
-
-        /// <summary>
-        /// The enemy blessing of wisdom.
-        /// </summary>
-        public int enemyBlessingOfWisdom = 0;
-
-        /// <summary>
-        /// The spellpower.
-        /// </summary>
-        public int spellpower = 0;
-
-        /// <summary>
-        /// The hp.
-        /// </summary>
-        public int Hp = 0;
-
-        /// <summary>
-        /// The max hp.
-        /// </summary>
-        public int maxHp = 0;
-
-        /// <summary>
-        /// The armor.
-        /// </summary>
-        public int armor = 0;
-
-        /// <summary>
-        /// The angr.
-        /// </summary>
-        public int Angr = 0;
-
-        /// <summary>
-        /// The adjacent angr.
+        ///     The adjacent angr.
         /// </summary>
         public int AdjacentAngr = 0;
 
         /// <summary>
-        /// The temp attack.
+        ///     The angr.
         /// </summary>
-        public int tempAttack = 0;
+        public int Angr = 0;
 
         /// <summary>
-        /// The ready.
+        ///     The hp.
+        /// </summary>
+        public int Hp = 0;
+
+        /// <summary>
+        ///     The ready.
         /// </summary>
         public bool Ready = false;
 
         /// <summary>
-        /// The taunt.
+        ///     The ancestralspirit.
         /// </summary>
-        public bool taunt = false;
+        public int ancestralspirit = 0;
 
         /// <summary>
-        /// The wounded.
+        ///     The anz got dmg.
         /// </summary>
-        public bool wounded = false; // hp red?
+        public int anzGotDmg = 0;
 
         /// <summary>
-        /// The divineshild.
+        ///     The armor.
         /// </summary>
-        public bool divineshild = false;
+        public int armor = 0;
 
         /// <summary>
-        /// The windfury.
-        /// </summary>
-        public bool windfury = false;
-
-        /// <summary>
-        /// The frozen.
-        /// </summary>
-        public bool frozen = false;
-
-        /// <summary>
-        /// The stealth.
-        /// </summary>
-        public bool stealth = false;
-
-        /// <summary>
-        /// The immune.
-        /// </summary>
-        public bool immune = false;
-
-        /// <summary>
-        /// The exhausted.
-        /// </summary>
-        public bool exhausted = false;
-
-        /// <summary>
-        /// The charge.
-        /// </summary>
-        public int charge = 0;
-
-        /// <summary>
-        /// The poisonous.
-        /// </summary>
-        public bool poisonous = false;
-
-        /// <summary>
-        /// The cant lower h pbelow one.
+        ///     The cant lower h pbelow one.
         /// </summary>
         public bool cantLowerHPbelowONE = false;
 
         /// <summary>
-        /// The silenced.
+        ///     The charge.
+        /// </summary>
+        public int charge = 0;
+
+        /// <summary>
+        ///     The concedal.
+        /// </summary>
+        public bool concedal = false;
+
+        /// <summary>
+        ///     The destroy on enemy turn end.
+        /// </summary>
+        public bool destroyOnEnemyTurnEnd = false; // depends on own!
+
+        /// <summary>
+        ///     The destroy on enemy turn start.
+        /// </summary>
+        public bool destroyOnEnemyTurnStart = false; // depends on own!
+
+        /// <summary>
+        ///     The destroy on own turn end.
+        /// </summary>
+        public bool destroyOnOwnTurnEnd = false; // depends on own!
+
+        /// <summary>
+        ///     The destroy on own turn start.
+        /// </summary>
+        public bool destroyOnOwnTurnStart = false; // depends on own!
+
+        /// <summary>
+        ///     The divineshild.
+        /// </summary>
+        public bool divineshild = false;
+
+        /// <summary>
+        ///     The enemy blessing of wisdom.
+        /// </summary>
+        public int enemyBlessingOfWisdom = 0;
+
+        /// <summary>
+        ///     The entitiy id.
+        /// </summary>
+        public int entitiyID = -1;
+
+        /// <summary>
+        ///     The exhausted.
+        /// </summary>
+        public bool exhausted = false;
+
+        /// <summary>
+        ///     The frozen.
+        /// </summary>
+        public bool frozen = false;
+
+        /// <summary>
+        ///     The handcard.
+        /// </summary>
+        public Handmanager.Handcard handcard;
+
+        /// <summary>
+        ///     The immune.
+        /// </summary>
+        public bool immune = false;
+
+        /// <summary>
+        ///     The immune while attacking.
+        /// </summary>
+        public bool immuneWhileAttacking = false;
+
+        /// <summary>
+        ///     The is hero.
+        /// </summary>
+        public bool isHero = false;
+
+        /// <summary>
+        ///     The max hp.
+        /// </summary>
+        public int maxHp = 0;
+
+        /// <summary>
+        ///     The name.
+        /// </summary>
+        public CardDB.cardName name = CardDB.cardName.unknown;
+
+        /// <summary>
+        ///     The num attacks this turn.
+        /// </summary>
+        public int numAttacksThisTurn = 0;
+
+        /// <summary>
+        ///     The own.
+        /// </summary>
+        public bool own;
+
+        /// <summary>
+        ///     The own blessing of wisdom.
+        /// </summary>
+        public int ownBlessingOfWisdom = 0;
+
+        /// <summary>
+        ///     The played this turn.
+        /// </summary>
+        public bool playedThisTurn = false;
+
+        /// <summary>
+        ///     The poisonous.
+        /// </summary>
+        public bool poisonous = false;
+
+        // ---------------------------------------
+        /// <summary>
+        ///     The shadowmadnessed.
+        /// </summary>
+        public bool shadowmadnessed = false; // ´can be silenced :D
+
+        /// <summary>
+        ///     The silenced.
         /// </summary>
         public bool silenced = false;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Minion"/> class.
+        ///     The souloftheforest.
+        /// </summary>
+        public int souloftheforest = 0;
+
+        /// <summary>
+        ///     The spellpower.
+        /// </summary>
+        public int spellpower = 0;
+
+        /// <summary>
+        ///     The stealth.
+        /// </summary>
+        public bool stealth = false;
+
+        /// <summary>
+        ///     The taunt.
+        /// </summary>
+        public bool taunt = false;
+
+        /// <summary>
+        ///     The temp attack.
+        /// </summary>
+        public int tempAttack = 0;
+
+        /// <summary>
+        ///     The windfury.
+        /// </summary>
+        public bool windfury = false;
+
+        /// <summary>
+        ///     The wounded.
+        /// </summary>
+        public bool wounded = false; // hp red?
+
+        /// <summary>
+        ///     The zonepos.
+        /// </summary>
+        public int zonepos = 0;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initialisiert eine neue Instanz der <see cref="Minion"/> Klasse. 
+        ///     Initializes a new instance of the <see cref="Minion"/> class.
         /// </summary>
         public Minion()
         {
@@ -270,6 +283,7 @@ namespace HREngine.Bots
         }
 
         /// <summary>
+        /// Initialisiert eine neue Instanz der <see cref="Minion"/> Klasse. 
         /// Initializes a new instance of the <see cref="Minion"/> class.
         /// </summary>
         /// <param name="m">
@@ -334,80 +348,98 @@ namespace HREngine.Bots
             this.silenced = m.silenced;
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// The set minion tominion.
+        /// The become silence.
         /// </summary>
-        /// <param name="m">
-        /// The m.
+        /// <param name="p">
+        /// The p.
         /// </param>
-        public void setMinionTominion(Minion m)
+        public void becomeSilence(Playfield p)
         {
-            // dont silence----------------------------
-            this.anzGotDmg = m.anzGotDmg;
-            this.isHero = m.isHero;
-            this.own = m.own;
+            p.minionGetOrEraseAllAreaBuffs(this, false);
 
-            this.name = m.name;
-            this.handcard = m.handcard; // new?
-            this.entitiyID = m.entitiyID;
-            this.zonepos = m.zonepos;
+            // buffs
+            this.ancestralspirit = 0;
+            this.destroyOnOwnTurnStart = false;
+            this.destroyOnEnemyTurnStart = false;
+            this.destroyOnOwnTurnEnd = false;
+            this.destroyOnEnemyTurnEnd = false;
+            this.concedal = false;
+            this.souloftheforest = 0;
+            this.ownBlessingOfWisdom = 0;
+            this.enemyBlessingOfWisdom = 0;
 
-            this.playedThisTurn = m.playedThisTurn;
-            this.numAttacksThisTurn = m.numAttacksThisTurn;
-            this.immuneWhileAttacking = m.immuneWhileAttacking;
+            this.charge = 0;
+            this.taunt = false;
+            this.divineshild = false;
+            this.windfury = false;
+            this.frozen = false;
+            this.stealth = false;
+            this.immune = false;
+            this.poisonous = false;
+            this.cantLowerHPbelowONE = false;
 
-            // ---------------------------------------
-            this.shadowmadnessed = m.shadowmadnessed;
+            if (this.own)
+            {
+                p.spellpower -= this.spellpower;
+            }
+            else
+            {
+                p.enemyspellpower -= this.spellpower;
+            }
 
-            this.ancestralspirit = m.ancestralspirit;
-            this.destroyOnOwnTurnStart = m.destroyOnOwnTurnStart; // depends on own!
-            this.destroyOnEnemyTurnStart = m.destroyOnEnemyTurnStart; // depends on own!
-            this.destroyOnOwnTurnEnd = m.destroyOnOwnTurnEnd; // depends on own!
-            this.destroyOnEnemyTurnEnd = m.destroyOnEnemyTurnEnd; // depends on own!
+            this.spellpower = 0;
 
-            this.concedal = m.concedal;
-            this.souloftheforest = m.souloftheforest;
+            // delete enrage (if minion is silenced the first time)
+            if (this.wounded && this.handcard.card.Enrage && !this.silenced)
+            {
+                this.handcard.card.sim_card.onEnrageStop(p, this);
+            }
 
-            this.ownBlessingOfWisdom = m.ownBlessingOfWisdom;
-            this.enemyBlessingOfWisdom = m.enemyBlessingOfWisdom;
-            this.spellpower = m.spellpower;
+            // reset attack
+            this.Angr = this.handcard.card.Attack;
+            this.tempAttack = 0; // we dont toutch the adjacent buffs!
 
-            this.Hp = m.Hp;
-            this.maxHp = m.maxHp;
-            this.armor = m.armor;
+            // reset hp and heal it
+            if (this.maxHp < this.handcard.card.Health)
+            {
+                // minion has lower maxHp as his card -> heal his hp
+                this.Hp += this.handcard.card.Health - this.maxHp; // heal minion
+            }
 
-            this.Angr = m.Angr;
-            this.AdjacentAngr = m.AdjacentAngr;
-            this.tempAttack = m.tempAttack;
+            this.maxHp = this.handcard.card.Health;
+            if (this.Hp > this.maxHp)
+            {
+                this.Hp = this.maxHp;
+            }
 
-            this.Ready = m.Ready;
+            if (!this.silenced)
+            {
+                // minion WAS not silenced, deactivate his aura
+                this.handcard.card.sim_card.onAuraEnds(p, this);
+            }
 
-            this.taunt = m.taunt;
-            this.wounded = m.wounded;
+            this.silenced = true;
+            this.updateReadyness();
+            p.minionGetOrEraseAllAreaBuffs(this, true);
+            if (this.own)
+            {
+                p.tempTrigger.ownMinionsChanged = true;
+            }
+            else
+            {
+                p.tempTrigger.enemyMininsChanged = true;
+            }
 
-            this.divineshild = m.divineshild;
-            this.windfury = m.windfury;
-            this.frozen = m.frozen;
-            this.stealth = m.stealth;
-            this.immune = m.immune;
-            this.exhausted = m.exhausted;
-
-            this.charge = m.charge;
-            this.poisonous = m.poisonous;
-            this.cantLowerHPbelowONE = m.cantLowerHPbelowONE;
-
-            this.silenced = m.silenced;
-        }
-
-        /// <summary>
-        /// The get real attack.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public int getRealAttack()
-        {
-            return this.Angr;
+            if (this.shadowmadnessed)
+            {
+                this.shadowmadnessed = false;
+                p.minionGetControlled(this, !this.own, false);
+            }
         }
 
         /// <summary>
@@ -569,14 +601,7 @@ namespace HREngine.Bots
                 this.anzGotDmg++;
             }
 
-            if (this.maxHp == this.Hp)
-            {
-                this.wounded = false;
-            }
-            else
-            {
-                this.wounded = true;
-            }
+            this.wounded = this.maxHp != this.Hp;
 
             if (this.name == CardDB.cardName.lightspawn && !this.silenced)
             {
@@ -600,175 +625,14 @@ namespace HREngine.Bots
         }
 
         /// <summary>
-        /// The minion died.
+        ///     The get real attack.
         /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        public void minionDied(Playfield p)
+        /// <returns>
+        ///     The <see cref="int" />.
+        /// </returns>
+        public int getRealAttack()
         {
-            if (this.name == CardDB.cardName.stalagg)
-            {
-                p.stalaggDead = true;
-            }
-            else
-            {
-                if (this.name == CardDB.cardName.feugen)
-                {
-                    p.feugenDead = true;
-                }
-            }
-
-            if (this.handcard.card.race == 14)
-            {
-                p.tempTrigger.murlocDied++;
-            }
-
-            if (this.own)
-            {
-                p.tempTrigger.ownMinionsDied++;
-                if (this.handcard.card.race == 20)
-                {
-                    p.tempTrigger.ownBeastDied++;
-                }
-            }
-            else
-            {
-                p.tempTrigger.enemyMinionsDied++;
-                if (this.handcard.card.race == 20)
-                {
-                    p.tempTrigger.enemyBeastDied++;
-                }
-            }
-
-            if (p.diedMinions != null)
-            {
-                GraveYardItem gyi = new GraveYardItem(this.handcard.card.cardIDenum, this.entitiyID, this.own);
-                p.diedMinions.Add(gyi);
-            }
-        }
-
-        /// <summary>
-        /// The update readyness.
-        /// </summary>
-        public void updateReadyness()
-        {
-            this.Ready = false;
-
-            // default test (minion must be unfrozen!)
-            if (this.isHero)
-            {
-                if (!this.frozen && ((this.charge >= 1 && this.playedThisTurn) || !this.playedThisTurn)
-                    && (this.numAttacksThisTurn == 0 || (this.numAttacksThisTurn == 1 && this.windfury)))
-                {
-                    this.Ready = true;
-                }
-
-                return;
-            }
-
-            if (!this.silenced
-                && (this.name == CardDB.cardName.ragnarosthefirelord || this.name == CardDB.cardName.ancientwatcher))
-            {
-                return;
-            }
-
-            if (!this.frozen
-                && ((this.charge >= 1 && this.playedThisTurn) || !this.playedThisTurn || this.shadowmadnessed)
-                && (this.numAttacksThisTurn == 0 || (this.numAttacksThisTurn == 1 && this.windfury)))
-            {
-                this.Ready = true;
-            }
-        }
-
-        /// <summary>
-        /// The become silence.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        public void becomeSilence(Playfield p)
-        {
-            p.minionGetOrEraseAllAreaBuffs(this, false);
-
-            // buffs
-            this.ancestralspirit = 0;
-            this.destroyOnOwnTurnStart = false;
-            this.destroyOnEnemyTurnStart = false;
-            this.destroyOnOwnTurnEnd = false;
-            this.destroyOnEnemyTurnEnd = false;
-            this.concedal = false;
-            this.souloftheforest = 0;
-            this.ownBlessingOfWisdom = 0;
-            this.enemyBlessingOfWisdom = 0;
-
-            this.charge = 0;
-            this.taunt = false;
-            this.divineshild = false;
-            this.windfury = false;
-            this.frozen = false;
-            this.stealth = false;
-            this.immune = false;
-            this.poisonous = false;
-            this.cantLowerHPbelowONE = false;
-
-            if (this.own)
-            {
-                p.spellpower -= this.spellpower;
-            }
-            else
-            {
-                p.enemyspellpower -= this.spellpower;
-            }
-
-            this.spellpower = 0;
-
-            // delete enrage (if minion is silenced the first time)
-            if (this.wounded && this.handcard.card.Enrage && !this.silenced)
-            {
-                this.handcard.card.sim_card.onEnrageStop(p, this);
-            }
-
-            // reset attack
-            this.Angr = this.handcard.card.Attack;
-            this.tempAttack = 0; // we dont toutch the adjacent buffs!
-
-            // reset hp and heal it
-            if (this.maxHp < this.handcard.card.Health)
-            {
-                // minion has lower maxHp as his card -> heal his hp
-                this.Hp += this.handcard.card.Health - this.maxHp; // heal minion
-            }
-
-            this.maxHp = this.handcard.card.Health;
-            if (this.Hp > this.maxHp)
-            {
-                this.Hp = this.maxHp;
-            }
-
-            if (!this.silenced)
-            {
-                // minion WAS not silenced, deactivate his aura
-                this.handcard.card.sim_card.onAuraEnds(p, this);
-            }
-
-            this.silenced = true;
-            this.updateReadyness();
-            p.minionGetOrEraseAllAreaBuffs(this, true);
-            if (this.own)
-            {
-                p.tempTrigger.ownMinionsChanged = true;
-            }
-            else
-            {
-                p.tempTrigger.enemyMininsChanged = true;
-            }
-
-            if (this.shadowmadnessed)
-            {
-                this.shadowmadnessed = false;
-                p.minionGetControlled(this, !this.own, false);
-            }
+            return this.Angr;
         }
 
         /// <summary>
@@ -1003,5 +867,154 @@ namespace HREngine.Bots
                 }
             }
         }
+
+        /// <summary>
+        /// The minion died.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        public void minionDied(Playfield p)
+        {
+            if (this.name == CardDB.cardName.stalagg)
+            {
+                p.stalaggDead = true;
+            }
+            else
+            {
+                if (this.name == CardDB.cardName.feugen)
+                {
+                    p.feugenDead = true;
+                }
+            }
+
+            if (this.handcard.card.race == 14)
+            {
+                p.tempTrigger.murlocDied++;
+            }
+
+            if (this.own)
+            {
+                p.tempTrigger.ownMinionsDied++;
+                if (this.handcard.card.race == 20)
+                {
+                    p.tempTrigger.ownBeastDied++;
+                }
+            }
+            else
+            {
+                p.tempTrigger.enemyMinionsDied++;
+                if (this.handcard.card.race == 20)
+                {
+                    p.tempTrigger.enemyBeastDied++;
+                }
+            }
+
+            if (p.diedMinions != null)
+            {
+                GraveYardItem gyi = new GraveYardItem(this.handcard.card.cardIDenum, this.entitiyID, this.own);
+                p.diedMinions.Add(gyi);
+            }
+        }
+
+        /// <summary>
+        /// The set minion tominion.
+        /// </summary>
+        /// <param name="m">
+        /// The m.
+        /// </param>
+        public void setMinionTominion(Minion m)
+        {
+            // dont silence----------------------------
+            this.anzGotDmg = m.anzGotDmg;
+            this.isHero = m.isHero;
+            this.own = m.own;
+
+            this.name = m.name;
+            this.handcard = m.handcard; // new?
+            this.entitiyID = m.entitiyID;
+            this.zonepos = m.zonepos;
+
+            this.playedThisTurn = m.playedThisTurn;
+            this.numAttacksThisTurn = m.numAttacksThisTurn;
+            this.immuneWhileAttacking = m.immuneWhileAttacking;
+
+            // ---------------------------------------
+            this.shadowmadnessed = m.shadowmadnessed;
+
+            this.ancestralspirit = m.ancestralspirit;
+            this.destroyOnOwnTurnStart = m.destroyOnOwnTurnStart; // depends on own!
+            this.destroyOnEnemyTurnStart = m.destroyOnEnemyTurnStart; // depends on own!
+            this.destroyOnOwnTurnEnd = m.destroyOnOwnTurnEnd; // depends on own!
+            this.destroyOnEnemyTurnEnd = m.destroyOnEnemyTurnEnd; // depends on own!
+
+            this.concedal = m.concedal;
+            this.souloftheforest = m.souloftheforest;
+
+            this.ownBlessingOfWisdom = m.ownBlessingOfWisdom;
+            this.enemyBlessingOfWisdom = m.enemyBlessingOfWisdom;
+            this.spellpower = m.spellpower;
+
+            this.Hp = m.Hp;
+            this.maxHp = m.maxHp;
+            this.armor = m.armor;
+
+            this.Angr = m.Angr;
+            this.AdjacentAngr = m.AdjacentAngr;
+            this.tempAttack = m.tempAttack;
+
+            this.Ready = m.Ready;
+
+            this.taunt = m.taunt;
+            this.wounded = m.wounded;
+
+            this.divineshild = m.divineshild;
+            this.windfury = m.windfury;
+            this.frozen = m.frozen;
+            this.stealth = m.stealth;
+            this.immune = m.immune;
+            this.exhausted = m.exhausted;
+
+            this.charge = m.charge;
+            this.poisonous = m.poisonous;
+            this.cantLowerHPbelowONE = m.cantLowerHPbelowONE;
+
+            this.silenced = m.silenced;
+        }
+
+        /// <summary>
+        ///     The update readyness.
+        /// </summary>
+        public void updateReadyness()
+        {
+            this.Ready = false;
+
+            // default test (minion must be unfrozen!)
+            if (this.isHero)
+            {
+                if (!this.frozen && ((this.charge >= 1 && this.playedThisTurn) || !this.playedThisTurn)
+                    && (this.numAttacksThisTurn == 0 || (this.numAttacksThisTurn == 1 && this.windfury)))
+                {
+                    this.Ready = true;
+                }
+
+                return;
+            }
+
+            if (!this.silenced
+                && (this.name == CardDB.cardName.ragnarosthefirelord || this.name == CardDB.cardName.ancientwatcher))
+            {
+                return;
+            }
+
+            if (!this.frozen
+                && ((this.charge >= 1 && this.playedThisTurn) || !this.playedThisTurn || this.shadowmadnessed)
+                && (this.numAttacksThisTurn == 0 || (this.numAttacksThisTurn == 1 && this.windfury)))
+            {
+                this.Ready = true;
+            }
+        }
+
+        #endregion
     }
 }

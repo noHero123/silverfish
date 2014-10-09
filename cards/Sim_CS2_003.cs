@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_003.
+    ///     The sim_ c s 2_003.
     /// </summary>
-    class Sim_CS2_003 : SimTemplate
+    internal class Sim_CS2_003 : SimTemplate
     {
         // Mind Vision
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -39,5 +40,6 @@ namespace HREngine.Bots
             }
         }
 
+        #endregion
     }
 }

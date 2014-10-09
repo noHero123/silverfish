@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_CS2_003.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_003.
+    ///     The pen_ c s 2_003.
     /// </summary>
-    class Pen_CS2_003 : PenTemplate
-	{
-	    // mindvision
+    internal class Pen_CS2_003 : PenTemplate
+    {
+        // mindvision
 
-// kopiert eine zufällige karte aus der hand eures gegners und fügt sie eurer hand hinzu.
+        // kopiert eine zufällige karte aus der hand eures gegners und fügt sie eurer hand hinzu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

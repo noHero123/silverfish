@@ -9,14 +9,101 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The behavior control.
+    ///     The behavior control.
     /// </summary>
     public class BehaviorControl : Behavior
     {
+        #region Fields
+
         /// <summary>
-        /// The penman.
+        ///     The penman.
         /// </summary>
-        PenalityManager penman = PenalityManager.Instance;
+        private PenalityManager penman = PenalityManager.Instance;
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The get enemy minion value.
+        /// </summary>
+        /// <param name="m">
+        /// The m.
+        /// </param>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public override int getEnemyMinionValue(Minion m, Playfield p)
+        {
+            int retval = 5;
+            retval += m.Hp * 2;
+            if (!m.frozen
+                && !((m.name == CardDB.cardName.ancientwatcher || m.name == CardDB.cardName.ragnarosthefirelord)
+                     && !m.silenced))
+            {
+                retval += m.Angr * 2;
+                if (m.windfury)
+                {
+                    retval += m.Angr * 2;
+                }
+
+                if (m.Angr >= 4)
+                {
+                    retval += 10;
+                }
+
+                if (m.Angr >= 7)
+                {
+                    retval += 50;
+                }
+            }
+
+            if (m.Angr == 0)
+            {
+                retval -= 7;
+            }
+
+            retval += m.handcard.card.rarity;
+            if (m.taunt)
+            {
+                retval += 5;
+            }
+
+            if (m.divineshild)
+            {
+                retval += m.Angr;
+            }
+
+            if (m.divineshild && m.taunt)
+            {
+                retval += 5;
+            }
+
+            if (m.stealth)
+            {
+                retval += 1;
+            }
+
+            if (m.poisonous)
+            {
+                retval += 4;
+            }
+
+            if (m.handcard.card.targetPriority >= 1 && !m.silenced)
+            {
+                retval += m.handcard.card.targetPriority;
+            }
+
+            if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 3 && !m.taunt)
+            {
+                retval = 0;
+            }
+
+            return retval;
+        }
 
         /// <summary>
         /// The get playfield value.
@@ -349,49 +436,6 @@ namespace HREngine.Bots
             return retval;
         }
 
-        /// <summary>
-        /// The get enemy minion value.
-        /// </summary>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public override int getEnemyMinionValue(Minion m, Playfield p)
-        {
-            int retval = 5;
-            retval += m.Hp * 2;
-            if (!m.frozen && !((m.name == CardDB.cardName.ancientwatcher || m.name == CardDB.cardName.ragnarosthefirelord) && !m.silenced))
-            {
-                retval += m.Angr * 2;
-                if (m.windfury) retval += m.Angr * 2;
-                if (m.Angr >= 4) retval += 10;
-                if (m.Angr >= 7) retval += 50;
-            }
-
-            if (m.Angr == 0) retval -= 7;
-
-            retval += m.handcard.card.rarity;
-            if (m.taunt) retval += 5;
-            if (m.divineshild) retval += m.Angr;
-            if (m.divineshild && m.taunt) retval += 5;
-            if (m.stealth) retval += 1;
-
-            if (m.poisonous) retval += 4;
-
-            if (m.handcard.card.targetPriority >=1 && !m.silenced)
-            {
-                retval += m.handcard.card.targetPriority;
-            }
-
-            if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 3 && !m.taunt) retval = 0;
-            return retval;
-        }
-
+        #endregion
     }
-
 }

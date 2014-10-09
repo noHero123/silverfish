@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_062.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_062.
+    ///     The sim_ c s 2_062.
     /// </summary>
-    class Sim_CS2_062 : SimTemplate
-	{
-	    // hellfire
+    internal class Sim_CS2_062 : SimTemplate
+    {
+        // hellfire
 
-// fügt allen charakteren $3 schaden zu.
+        // fügt allen charakteren $3 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
             p.allCharsGetDamage(dmg);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

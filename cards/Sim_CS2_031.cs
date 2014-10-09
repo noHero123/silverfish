@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_031.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_031.
+    ///     The sim_ c s 2_031.
     /// </summary>
-    class Sim_CS2_031 : SimTemplate
-	{
-	    // icelance
+    internal class Sim_CS2_031 : SimTemplate
+    {
+        // icelance
 
-// friert/ einen charakter ein. wenn er bereits eingefroren/ ist, werden ihm stattdessen $4 schaden zugefügt.
+        // friert/ einen charakter ein. wenn er bereits eingefroren/ ist, werden ihm stattdessen $4 schaden zugefügt.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -35,7 +37,6 @@ namespace HREngine.Bots
         {
             int dmg = ownplay ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);
 
-            
             if (target.frozen)
             {
                 p.minionGetDamageOrHeal(target, dmg);
@@ -44,9 +45,8 @@ namespace HREngine.Bots
             {
                 target.frozen = true;
             }
+        }
 
-            
-		}
-
-	}
+        #endregion
+    }
 }

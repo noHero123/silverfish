@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_313.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_313.
+    ///     The pen_ e x 1_313.
     /// </summary>
-    class Pen_EX1_313 : PenTemplate
-	{
-	    // pitlord
+    internal class Pen_EX1_313 : PenTemplate
+    {
+        // pitlord
 
-// kampfschrei:/ fügt eurem helden 5 schaden zu.
+        // kampfschrei:/ fügt eurem helden 5 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_064.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_064.
+    ///     The sim_ c s 2_064.
     /// </summary>
-    class Sim_CS2_064 : SimTemplate
-	{
-	    // dreadinfernal
+    internal class Sim_CS2_064 : SimTemplate
+    {
+        // dreadinfernal
 
-// kampfschrei:/ fügt allen anderen charakteren 1 schaden zu.
+        // kampfschrei:/ fügt allen anderen charakteren 1 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,9 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             int dmg = 1;
             p.allCharsGetDamage(dmg); // dreadinfernal is not on board yet!
-		}
-	}
+        }
+
+        #endregion
+    }
 }

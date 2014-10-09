@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_603.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_603.
+    ///     The pen_ e x 1_603.
     /// </summary>
-    class Pen_EX1_603 : PenTemplate
-	{
-	    // crueltaskmaster
+    internal class Pen_EX1_603 : PenTemplate
+    {
+        // crueltaskmaster
 
-// kampfschrei:/ fügt einem diener 1 schaden zu und verleiht ihm +2 angriff.
+        // kampfschrei:/ fügt einem diener 1 schaden zu und verleiht ihm +2 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,10 +40,14 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
+        {
             if (target.own)
             {
-                if (m.Hp == 1) return 50;
+                if (m.Hp == 1)
+                {
+                    return 50;
+                }
+
                 if (!m.Ready)
                 {
                     return 50;
@@ -83,7 +89,8 @@ namespace HREngine.Bots
             }
 
             return 0;
-		}
+        }
 
-	}
+        #endregion
+    }
 }

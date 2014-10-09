@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_339.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_339.
+    ///     The pen_ e x 1_339.
     /// </summary>
-    class Pen_EX1_339 : PenTemplate
-	{
-	    // thoughtsteal
+    internal class Pen_EX1_339 : PenTemplate
+    {
+        // thoughtsteal
 
-// kopiert 2 karten aus dem deck eures gegners und fügt sie eurer hand hinzu.
+        // kopiert 2 karten aus dem deck eures gegners und fügt sie eurer hand hinzu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

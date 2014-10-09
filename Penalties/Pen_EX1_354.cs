@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_354.
+    ///     The pen_ e x 1_354.
     /// </summary>
-    class Pen_EX1_354 : PenTemplate
-	{
-	    // layonhands
+    internal class Pen_EX1_354 : PenTemplate
+    {
+        // layonhands
 
-// stellt #8 leben wieder her. zieht 3 karten.
+        // stellt #8 leben wieder her. zieht 3 karten.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

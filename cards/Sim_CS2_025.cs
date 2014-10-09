@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_025.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_025.
+    ///     The sim_ c s 2_025.
     /// </summary>
-    class Sim_CS2_025 : SimTemplate
-	{
-	    // arcaneexplosion
+    internal class Sim_CS2_025 : SimTemplate
+    {
+        // arcaneexplosion
 
-// fügt allen feindlichen dienern $1 schaden zu.
+        // fügt allen feindlichen dienern $1 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
             p.allMinionOfASideGetDamage(!ownplay, dmg);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

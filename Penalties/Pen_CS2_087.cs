@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_087.
+    ///     The pen_ c s 2_087.
     /// </summary>
-    class Pen_CS2_087 : PenTemplate
-	{
-	    // blessingofmight
+    internal class Pen_CS2_087 : PenTemplate
+    {
+        // blessingofmight
 
-// verleiht einem diener +3 angriff.
+        // verleiht einem diener +3 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,10 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
+        {
             if (target.own)
             {
-                if (!m.Ready )
+                if (!m.Ready)
                 {
                     return 50;
                 }
@@ -55,14 +57,18 @@ namespace HREngine.Bots
             {
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.name == CardDB.cardName.biggamehunter || hc.card.name == CardDB.cardName.shadowworddeath) return 0;
+                    if (hc.card.name == CardDB.cardName.biggamehunter || hc.card.name == CardDB.cardName.shadowworddeath)
+                    {
+                        return 0;
+                    }
                 }
 
                 return 500;
             }
 
             return 0;
-		}
+        }
 
-	}
+        #endregion
+    }
 }

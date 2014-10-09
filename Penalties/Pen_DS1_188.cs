@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_DS1_188.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ d s 1_188.
+    ///     The pen_ d s 1_188.
     /// </summary>
-    class Pen_DS1_188 : PenTemplate
-	{
-	    // gladiatorslongbow
+    internal class Pen_DS1_188 : PenTemplate
+    {
+        // gladiatorslongbow
 
-// euer held ist immun/, während er angreift.
+        // euer held ist immun/, während er angreift.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

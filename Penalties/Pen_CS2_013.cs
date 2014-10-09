@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_013.
+    ///     The pen_ c s 2_013.
     /// </summary>
-    class Pen_CS2_013 : PenTemplate
-	{
-	    // wildgrowth
+    internal class Pen_CS2_013 : PenTemplate
+    {
+        // wildgrowth
 
-// erhaltet einen leeren manakristall.
+        // erhaltet einen leeren manakristall.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

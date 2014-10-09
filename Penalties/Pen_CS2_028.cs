@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_CS2_028.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_028.
+    ///     The pen_ c s 2_028.
     /// </summary>
-    class Pen_CS2_028 : PenTemplate
-	{
-	    // blizzard
+    internal class Pen_CS2_028 : PenTemplate
+    {
+        // blizzard
 
-// fügt allen feindlichen dienern $2 schaden zu und friert/ sie ein.
+        // fügt allen feindlichen dienern $2 schaden zu und friert/ sie ein.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

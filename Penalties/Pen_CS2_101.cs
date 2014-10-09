@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_CS2_101.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_101.
+    ///     The pen_ c s 2_101.
     /// </summary>
-    class Pen_CS2_101 : PenTemplate
-	{
-	    // reinforce
+    internal class Pen_CS2_101 : PenTemplate
+    {
+        // reinforce
 
-// heldenfähigkeit/\nruft einen rekruten der silbernen hand (1/1) herbei.
+        // heldenfähigkeit/\nruft einen rekruten der silbernen hand (1/1) herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_009.
+    ///     The sim_ c s 2_009.
     /// </summary>
-    class Sim_CS2_009 : SimTemplate
+    internal class Sim_CS2_009 : SimTemplate
     {
         // Mark of the Wild
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -36,5 +37,6 @@ namespace HREngine.Bots
             p.minionGetBuffed(target, 2, 2);
         }
 
+        #endregion
     }
 }

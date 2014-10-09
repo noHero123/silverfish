@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_038.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_038.
+    ///     The sim_ c s 2_038.
     /// </summary>
-    class Sim_CS2_038 : SimTemplate
-	{
-	    // ancestralspirit
+    internal class Sim_CS2_038 : SimTemplate
+    {
+        // ancestralspirit
 
-// verleiht einem diener „todesröcheln:/ ruft diesen diener erneut herbei.“
+        // verleiht einem diener „todesröcheln:/ ruft diesen diener erneut herbei.“
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             target.ancestralspirit++;
-		}
+        }
 
-	}
+        #endregion
+    }
 }

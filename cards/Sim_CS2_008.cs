@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_008.
+    ///     The sim_ c s 2_008.
     /// </summary>
-    class Sim_CS2_008 : SimTemplate
+    internal class Sim_CS2_008 : SimTemplate
     {
         // moonfire
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -34,8 +35,8 @@ namespace HREngine.Bots
         {
             int dmg = ownplay ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
             p.minionGetDamageOrHeal(target, dmg);
-            
         }
 
+        #endregion
     }
 }

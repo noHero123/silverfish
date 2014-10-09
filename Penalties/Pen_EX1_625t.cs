@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_625t.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_625 t.
+    ///     The pen_ e x 1_625 t.
     /// </summary>
-    class Pen_EX1_625t : PenTemplate
-	{
-	    // mindspike
+    internal class Pen_EX1_625t : PenTemplate
+    {
+        // mindspike
 
-// heldenfähigkeit/\nverursacht 2 schaden.
+        // heldenfähigkeit/\nverursacht 2 schaden.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

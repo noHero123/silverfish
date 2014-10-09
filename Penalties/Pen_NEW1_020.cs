@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_NEW1_020.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ ne w 1_020.
+    ///     The pen_ ne w 1_020.
     /// </summary>
-    class Pen_NEW1_020 : PenTemplate
-	{
-	    // wildpyromancer
+    internal class Pen_NEW1_020 : PenTemplate
+    {
+        // wildpyromancer
 
-// fügt allen dienern 1 schaden zu, nachdem ihr einen zauber gewirkt habt.
+        // fügt allen dienern 1 schaden zu, nachdem ihr einen zauber gewirkt habt.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

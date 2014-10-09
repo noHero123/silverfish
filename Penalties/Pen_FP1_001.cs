@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_FP1_001.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ f p 1_001.
+    ///     The pen_ f p 1_001.
     /// </summary>
-    class Pen_FP1_001 : PenTemplate
-	{
-	    // zombiechow
+    internal class Pen_FP1_001 : PenTemplate
+    {
+        // zombiechow
 
-// todesröcheln:/ stellt beim feindlichen helden 5 leben wieder her.
+        // todesröcheln:/ stellt beim feindlichen helden 5 leben wieder her.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

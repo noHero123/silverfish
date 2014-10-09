@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_316.
+    ///     The pen_ e x 1_316.
     /// </summary>
-    class Pen_EX1_316 : PenTemplate
-	{
-	    // poweroverwhelming
+    internal class Pen_EX1_316 : PenTemplate
+    {
+        // poweroverwhelming
 
-// verleiht einem befreundeten diener bis zum ende des zuges +4/+4. dann stirbt er. auf schreckliche art und weise.
+        // verleiht einem befreundeten diener bis zum ende des zuges +4/+4. dann stirbt er. auf schreckliche art und weise.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,10 +40,15 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-            if (!m.Ready) return 500;
-		return 0;
-		}
+        {
+            if (!m.Ready)
+            {
+                return 500;
+            }
 
-	}
+            return 0;
+        }
+
+        #endregion
+    }
 }

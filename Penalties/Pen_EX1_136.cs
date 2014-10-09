@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_136.
+    ///     The pen_ e x 1_136.
     /// </summary>
-    class Pen_EX1_136 : PenTemplate
-	{
-	    // redemption
+    internal class Pen_EX1_136 : PenTemplate
+    {
+        // redemption
 
-// geheimnis:/ wenn einer eurer diener stirbt, wird er mit 1 leben wiederbelebt.
+        // geheimnis:/ wenn einer eurer diener stirbt, wird er mit 1 leben wiederbelebt.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

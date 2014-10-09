@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_042.
+    ///     The sim_ c s 2_042.
     /// </summary>
-    class Sim_CS2_042 : SimTemplate
-	{
-	    // fireelemental
+    internal class Sim_CS2_042 : SimTemplate
+    {
+        // fireelemental
 
-// kampfschrei:/ verursacht 3 schaden.
+        // kampfschrei:/ verursacht 3 schaden.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,11 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             int dmg = 3;
             p.minionGetDamageOrHeal(target, dmg);
-           
-		}
+        }
 
-	}
+        #endregion
+    }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_FP1_002.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ f p 1_002.
+    ///     The pen_ f p 1_002.
     /// </summary>
-    class Pen_FP1_002 : PenTemplate
-	{
-	    // hauntedcreeper
+    internal class Pen_FP1_002 : PenTemplate
+    {
+        // hauntedcreeper
 
-// todesröcheln:/ ruft zwei spektrale spinnen (1/1) herbei.
+        // todesröcheln:/ ruft zwei spektrale spinnen (1/1) herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

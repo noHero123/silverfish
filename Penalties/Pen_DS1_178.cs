@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ d s 1_178.
+    ///     The pen_ d s 1_178.
     /// </summary>
-    class Pen_DS1_178 : PenTemplate
-	{
-	    // tundrarhino
+    internal class Pen_DS1_178 : PenTemplate
+    {
+        // tundrarhino
 
-// eure wildtiere haben ansturm/.
+        // eure wildtiere haben ansturm/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

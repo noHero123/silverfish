@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ f p 1_016.
+    ///     The pen_ f p 1_016.
     /// </summary>
-    class Pen_FP1_016 : PenTemplate
-	{
-	    // wailingsoul
+    internal class Pen_FP1_016 : PenTemplate
+    {
+        // wailingsoul
 
-// kampfschrei:/ bringt eure anderen diener zum schweigen/.
+        // kampfschrei:/ bringt eure anderen diener zum schweigen/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

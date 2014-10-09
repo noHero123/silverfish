@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_155.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_155.
+    ///     The pen_ e x 1_155.
     /// </summary>
-    class Pen_EX1_155 : PenTemplate
-	{
-	    // markofnature
+    internal class Pen_EX1_155 : PenTemplate
+    {
+        // markofnature
 
-// wählt aus:/ verleiht einem diener +4 angriff; oder +4 leben und spott/.
+        // wählt aus:/ verleiht einem diener +4 angriff; oder +4 leben und spott/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,7 +40,7 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
+        {
             if (choice == 1)
             {
                 if (target.own)
@@ -57,7 +59,11 @@ namespace HREngine.Bots
                 {
                     foreach (Handmanager.Handcard hc in p.owncards)
                     {
-                        if (hc.card.name == CardDB.cardName.biggamehunter || hc.card.name == CardDB.cardName.shadowworddeath) return 0;
+                        if (hc.card.name == CardDB.cardName.biggamehunter
+                            || hc.card.name == CardDB.cardName.shadowworddeath)
+                        {
+                            return 0;
+                        }
                     }
 
                     return 500;
@@ -69,7 +75,10 @@ namespace HREngine.Bots
                 bool enemyHasTaunts = false;
                 foreach (Minion e in p.enemyMinions)
                 {
-                    if (e.taunt) enemyHasTaunts = true;
+                    if (e.taunt)
+                    {
+                        enemyHasTaunts = true;
+                    }
                 }
 
                 if (!target.taunt && !target.silenced && target.handcard.card.targetPriority >= 1 && enemyHasTaunts)
@@ -81,7 +90,8 @@ namespace HREngine.Bots
             }
 
             return 0;
-		}
+        }
 
-	}
+        #endregion
+    }
 }

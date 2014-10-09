@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_009.
+    ///     The pen_ c s 2_009.
     /// </summary>
-    class Pen_CS2_009 : PenTemplate
-	{
-	    // markofthewild
+    internal class Pen_CS2_009 : PenTemplate
+    {
+        // markofthewild
 
-// verleiht einem diener spott/ und +2/+2.i&gt; (+2 angriff/+2 leben)/i&gt;
+        // verleiht einem diener spott/ und +2/+2.i&gt; (+2 angriff/+2 leben)/i&gt;
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,7 +40,7 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
+        {
             if (target.own)
             {
                 if (!m.Ready)
@@ -55,13 +57,19 @@ namespace HREngine.Bots
             {
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.name == CardDB.cardName.biggamehunter || hc.card.name == CardDB.cardName.shadowworddeath) return 0;
+                    if (hc.card.name == CardDB.cardName.biggamehunter || hc.card.name == CardDB.cardName.shadowworddeath)
+                    {
+                        return 0;
+                    }
                 }
 
                 bool enemyHasTaunts = false;
                 foreach (Minion e in p.enemyMinions)
                 {
-                    if (e.taunt) enemyHasTaunts = true;
+                    if (e.taunt)
+                    {
+                        enemyHasTaunts = true;
+                    }
                 }
 
                 if (!target.taunt && !target.silenced && target.handcard.card.targetPriority >= 1 && enemyHasTaunts)
@@ -73,8 +81,8 @@ namespace HREngine.Bots
             }
 
             return 0;
-		}
+        }
 
-	}
-
+        #endregion
+    }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_277.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_277.
+    ///     The pen_ e x 1_277.
     /// </summary>
-    class Pen_EX1_277 : PenTemplate
-	{
-	    // arcanemissiles
+    internal class Pen_EX1_277 : PenTemplate
+    {
+        // arcanemissiles
 
-// verursacht $3 schaden, der zufällig auf feindliche charaktere verteilt wird.
+        // verursacht $3 schaden, der zufällig auf feindliche charaktere verteilt wird.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

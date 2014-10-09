@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_093.
+    ///     The pen_ e x 1_093.
     /// </summary>
-    class Pen_EX1_093 : PenTemplate
-	{
-	    // defenderofargus
+    internal class Pen_EX1_093 : PenTemplate
+    {
+        // defenderofargus
 
-// kampfschrei:/ verleiht benachbarten dienern +1/+1 und spott/.
+        // kampfschrei:/ verleiht benachbarten dienern +1/+1 und spott/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_103.
+    ///     The pen_ e x 1_103.
     /// </summary>
-    class Pen_EX1_103 : PenTemplate
-	{
-	    // coldlightseer
+    internal class Pen_EX1_103 : PenTemplate
+    {
+        // coldlightseer
 
-// kampfschrei:/ verleiht allen anderen murlocs +2 leben.
+        // kampfschrei:/ verleiht allen anderen murlocs +2 leben.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

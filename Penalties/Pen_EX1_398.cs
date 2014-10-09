@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_398.
+    ///     The pen_ e x 1_398.
     /// </summary>
-    class Pen_EX1_398 : PenTemplate
-	{
-	    // arathiweaponsmith
+    internal class Pen_EX1_398 : PenTemplate
+    {
+        // arathiweaponsmith
 
-// kampfschrei:/ legt eine waffe (2/2) an.
+        // kampfschrei:/ legt eine waffe (2/2) an.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

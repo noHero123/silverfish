@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_CS2_083b.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_083 b.
+    ///     The pen_ c s 2_083 b.
     /// </summary>
-    class Pen_CS2_083b : PenTemplate
-	{
-	    // daggermastery
+    internal class Pen_CS2_083b : PenTemplate
+    {
+        // daggermastery
 
-// heldenfähigkeit/\nlegt einen dolch (1/2) an.
+        // heldenfähigkeit/\nlegt einen dolch (1/2) an.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

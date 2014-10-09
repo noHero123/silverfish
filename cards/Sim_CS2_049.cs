@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_049.cs" company="">
 //   
 // </copyright>
@@ -9,15 +9,17 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_049.
+    ///     The sim_ c s 2_049.
     /// </summary>
-    class Sim_CS2_049 : SimTemplate
-	{
-	    // totemiccall
+    internal class Sim_CS2_049 : SimTemplate
+    {
+        // totemiccall
 
-// heldenfähigkeit/\nbeschwört ein zufälliges totem.
+        // heldenfähigkeit/\nbeschwört ein zufälliges totem.
 
         // heldenfähigkeit/\nruft einen rekruten der silbernen hand (1/1) herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -39,5 +41,6 @@ namespace HREngine.Bots
             p.callKid(this.kid, posi, ownplay);
         }
 
-	}
+        #endregion
+    }
 }

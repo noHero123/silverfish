@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_tt_010 a.
+    ///     The pen_tt_010 a.
     /// </summary>
-    class Pen_tt_010a : PenTemplate
-	{
-	    // spellbender
+    internal class Pen_tt_010a : PenTemplate
+    {
+        // spellbender
 
-// zauberformerin
+        // zauberformerin
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

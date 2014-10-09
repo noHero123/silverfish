@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_NEW1_041.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ ne w 1_041.
+    ///     The pen_ ne w 1_041.
     /// </summary>
-    class Pen_NEW1_041 : PenTemplate
-	{
-	    // stampedingkodo
+    internal class Pen_NEW1_041 : PenTemplate
+    {
+        // stampedingkodo
 
-// kampfschrei:/ vernichtet einen zufälligen feindlichen diener mit max. 2 angriff.
+        // kampfschrei:/ vernichtet einen zufälligen feindlichen diener mit max. 2 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

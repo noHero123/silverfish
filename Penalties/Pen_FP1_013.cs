@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ f p 1_013.
+    ///     The pen_ f p 1_013.
     /// </summary>
-    class Pen_FP1_013 : PenTemplate
-	{
-	    // kelthuzad
+    internal class Pen_FP1_013 : PenTemplate
+    {
+        // kelthuzad
 
-// ruft am ende jedes zuges alle befreundeten diener herbei, die in diesem zug gestorben sind.
+        // ruft am ende jedes zuges alle befreundeten diener herbei, die in diesem zug gestorben sind.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

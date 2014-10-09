@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_NEW1_029.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ ne w 1_029.
+    ///     The pen_ ne w 1_029.
     /// </summary>
-    class Pen_NEW1_029 : PenTemplate
-	{
-	    // millhousemanastorm
+    internal class Pen_NEW1_029 : PenTemplate
+    {
+        // millhousemanastorm
 
-// kampfschrei:/ im nächsten zug kosten zauber für euren gegner (0) mana.
+        // kampfschrei:/ im nächsten zug kosten zauber für euren gegner (0) mana.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

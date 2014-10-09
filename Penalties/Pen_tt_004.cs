@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_tt_004.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_tt_004.
+    ///     The pen_tt_004.
     /// </summary>
-    class Pen_tt_004 : PenTemplate
-	{
-	    // flesheatingghoul
+    internal class Pen_tt_004 : PenTemplate
+    {
+        // flesheatingghoul
 
-// erhält jedes mal +1 angriff, wenn ein diener stirbt.
+        // erhält jedes mal +1 angriff, wenn ein diener stirbt.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

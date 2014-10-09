@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_DREAM_04.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ drea m_04.
+    ///     The pen_ drea m_04.
     /// </summary>
-    class Pen_DREAM_04 : PenTemplate
-	{
-	    // dream
+    internal class Pen_DREAM_04 : PenTemplate
+    {
+        // dream
 
-// lasst einen diener auf die hand seines besitzers zurückkehren.
+        // lasst einen diener auf die hand seines besitzers zurückkehren.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

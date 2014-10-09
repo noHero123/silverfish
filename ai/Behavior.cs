@@ -9,23 +9,11 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The behavior.
+    ///     The behavior.
     /// </summary>
     public abstract class Behavior
     {
-        /// <summary>
-        /// The get playfield value.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <returns>
-        /// The <see cref="float"/>.
-        /// </returns>
-        public virtual float getPlayfieldValue(Playfield p)
-        {
-            return 0;
-        }
+        #region Public Methods and Operators
 
         /// <summary>
         /// The get enemy minion value.
@@ -44,5 +32,20 @@ namespace HREngine.Bots
             return 0;
         }
 
+        /// <summary>
+        /// The get playfield value.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <returns>
+        /// The <see cref="float"/>.
+        /// </returns>
+        public virtual float getPlayfieldValue(Playfield p)
+        {
+            return 0;
+        }
+
+        #endregion
     }
 }

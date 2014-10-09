@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_012.cs" company="">
 //   
 // </copyright>
@@ -6,19 +6,20 @@
 //   The sim_ c s 2_012.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ c s 2_012.
-    /// </summary>
-    class Sim_CS2_012 : SimTemplate
-	{
-	    // swipe
+    using System.Collections.Generic;
 
-// fügt einem feind $4 schaden und allen anderen feinden $1 schaden zu.
+    /// <summary>
+    ///     The sim_ c s 2_012.
+    /// </summary>
+    internal class Sim_CS2_012 : SimTemplate
+    {
+        // swipe
+
+        // fügt einem feind $4 schaden und allen anderen feinden $1 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -35,8 +36,8 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-            int dmg = ownplay? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
+        {
+            int dmg = ownplay ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
             int dmg1 = ownplay ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);
 
             List<Minion> temp = ownplay ? p.enemyMinions : p.ownMinions;
@@ -62,9 +63,9 @@ namespace HREngine.Bots
                 {
                     p.minionGetDamageOrHeal(p.ownHero, dmg);
                 }
-                
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

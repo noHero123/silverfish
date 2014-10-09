@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_CS2_017.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_017.
+    ///     The pen_ c s 2_017.
     /// </summary>
-    class Pen_CS2_017 : PenTemplate
-	{
-	    // shapeshift
+    internal class Pen_CS2_017 : PenTemplate
+    {
+        // shapeshift
 
-// heldenfähigkeit/\n+1 angriff in diesem zug.\n+1 rüstung.
+        // heldenfähigkeit/\n+1 angriff in diesem zug.\n+1 rüstung.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

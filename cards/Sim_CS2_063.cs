@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_063.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_063.
+    ///     The sim_ c s 2_063.
     /// </summary>
-    class Sim_CS2_063 : SimTemplate
-	{
-	    // corruption
+    internal class Sim_CS2_063 : SimTemplate
+    {
+        // corruption
 
-// wählt einen feindlichen diener aus. vernichtet ihn zu beginn eures zuges.
+        // wählt einen feindlichen diener aus. vernichtet ihn zu beginn eures zuges.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,12 +34,12 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             // if ownplay == true -> destroyOnOwnturnstart =true   else  destroyonenemyturnstart
             target.destroyOnOwnTurnStart = target.destroyOnOwnTurnStart || ownplay;
             target.destroyOnEnemyTurnStart = target.destroyOnEnemyTurnStart || !ownplay;
-            
-		}
+        }
 
-	}
+        #endregion
+    }
 }

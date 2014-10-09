@@ -9,24 +9,50 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen template.
+    ///     The pen template.
     /// </summary>
-    class PenTemplate
+    internal class PenTemplate
     {
-        /// <summary>
-        /// The enemy minion base value.
-        /// </summary>
-        int enemyMinionBaseValue = 10;
+        #region Fields
 
         /// <summary>
-        /// The enemy minion attack factor.
+        ///     The enemy minion attack factor.
         /// </summary>
-        int enemyMinionAttackFactor = 2;
+        private int enemyMinionAttackFactor = 2;
 
         /// <summary>
-        /// The enemy minion hp factor.
+        ///     The enemy minion base value.
         /// </summary>
-        int enemyMinionHPFactor = 2;
+        private int enemyMinionBaseValue = 10;
+
+        /// <summary>
+        ///     The enemy minion hp factor.
+        /// </summary>
+        private int enemyMinionHPFactor = 2;
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The get attack penalty.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="isLethal">
+        /// The is lethal.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public virtual int getAttackPenalty(Playfield p, Minion target, bool isLethal)
+        {
+            return 0;
+        }
 
         /// <summary>
         /// The get play penalty.
@@ -55,26 +81,6 @@ namespace HREngine.Bots
         }
 
         /// <summary>
-        /// The get attack penalty.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="isLethal">
-        /// The is lethal.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public virtual int getAttackPenalty(Playfield p, Minion target, bool isLethal)
-        {
-            return 0;
-        }
-
-        /// <summary>
         /// The get value of minion.
         /// </summary>
         /// <param name="Angr">
@@ -93,5 +99,7 @@ namespace HREngine.Bots
         {
             return this.enemyMinionBaseValue + this.enemyMinionAttackFactor * Angr + this.enemyMinionHPFactor * HP;
         }
+
+        #endregion
     }
 }

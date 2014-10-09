@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_CS2_012.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_012.
+    ///     The pen_ c s 2_012.
     /// </summary>
-    class Pen_CS2_012 : PenTemplate
-	{
-	    // swipe
+    internal class Pen_CS2_012 : PenTemplate
+    {
+        // swipe
 
-// fügt einem feind $4 schaden und allen anderen feinden $1 schaden zu.
+        // fügt einem feind $4 schaden und allen anderen feinden $1 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

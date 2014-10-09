@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_341.
+    ///     The pen_ e x 1_341.
     /// </summary>
-    class Pen_EX1_341 : PenTemplate
-	{
-	    // lightwell
+    internal class Pen_EX1_341 : PenTemplate
+    {
+        // lightwell
 
-// stellt zu beginn eures zuges bei einem verletzten befreundeten charakter 3 leben wieder her.
+        // stellt zu beginn eures zuges bei einem verletzten befreundeten charakter 3 leben wieder her.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

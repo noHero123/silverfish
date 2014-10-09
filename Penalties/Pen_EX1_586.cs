@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_586.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_586.
+    ///     The pen_ e x 1_586.
     /// </summary>
-    class Pen_EX1_586 : PenTemplate
-	{
-	    // seagiant
+    internal class Pen_EX1_586 : PenTemplate
+    {
+        // seagiant
 
-// kostet (1) weniger für jeden anderen diener auf dem schlachtfeld.
+        // kostet (1) weniger für jeden anderen diener auf dem schlachtfeld.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

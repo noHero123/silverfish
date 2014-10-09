@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ ne w 1_025.
+    ///     The pen_ ne w 1_025.
     /// </summary>
-    class Pen_NEW1_025 : PenTemplate
-	{
-	    // bloodsailcorsair
+    internal class Pen_NEW1_025 : PenTemplate
+    {
+        // bloodsailcorsair
 
-// kampfschrei:/ zieht 1 haltbarkeit von der waffe eures gegners ab.
+        // kampfschrei:/ zieht 1 haltbarkeit von der waffe eures gegners ab.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

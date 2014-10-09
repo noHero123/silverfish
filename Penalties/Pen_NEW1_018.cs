@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_NEW1_018.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ ne w 1_018.
+    ///     The pen_ ne w 1_018.
     /// </summary>
-    class Pen_NEW1_018 : PenTemplate
-	{
-	    // bloodsailraider
+    internal class Pen_NEW1_018 : PenTemplate
+    {
+        // bloodsailraider
 
-// kampfschrei:/ erhält angriff entsprechend dem angriff eurer waffe.
+        // kampfschrei:/ erhält angriff entsprechend dem angriff eurer waffe.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

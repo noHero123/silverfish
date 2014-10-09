@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_027.
+    ///     The pen_ c s 2_027.
     /// </summary>
-    class Pen_CS2_027 : PenTemplate
-	{
-	    // mirrorimage
+    internal class Pen_CS2_027 : PenTemplate
+    {
+        // mirrorimage
 
-// ruft zwei diener (0/2) mit spott/ herbei.
+        // ruft zwei diener (0/2) mit spott/ herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

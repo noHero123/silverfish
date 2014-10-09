@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_046.
+    ///     The pen_ c s 2_046.
     /// </summary>
-    class Pen_CS2_046 : PenTemplate
-	{
-	    // bloodlust
+    internal class Pen_CS2_046 : PenTemplate
+    {
+        // bloodlust
 
-// verleiht euren dienern +3 angriff in diesem zug.
+        // verleiht euren dienern +3 angriff in diesem zug.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,13 +40,16 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
+        {
             if (!isLethal)
             {
                 int targets = 0;
                 foreach (Minion mnn in p.ownMinions)
                 {
-                    if (mnn.Ready) targets++;
+                    if (mnn.Ready)
+                    {
+                        targets++;
+                    }
                 }
 
                 if (targets <= 1)
@@ -59,7 +64,8 @@ namespace HREngine.Bots
             }
 
             return 0;
-		}
+        }
 
-	}
+        #endregion
+    }
 }

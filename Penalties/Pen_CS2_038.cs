@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_CS2_038.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_038.
+    ///     The pen_ c s 2_038.
     /// </summary>
-    class Pen_CS2_038 : PenTemplate
-	{
-	    // ancestralspirit
+    internal class Pen_CS2_038 : PenTemplate
+    {
+        // ancestralspirit
 
-// verleiht einem diener „todesröcheln:/ ruft diesen diener erneut herbei.“
+        // verleiht einem diener „todesröcheln:/ ruft diesen diener erneut herbei.“
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

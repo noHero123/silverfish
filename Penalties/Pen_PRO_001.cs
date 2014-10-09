@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ pr o_001.
+    ///     The pen_ pr o_001.
     /// </summary>
-    class Pen_PRO_001 : PenTemplate
-	{
-	    // elitetaurenchieftain
+    internal class Pen_PRO_001 : PenTemplate
+    {
+        // elitetaurenchieftain
 
-// kampfschrei:/ verleiht beiden spielern die macht des rock! (durch eine powerakkordkarte)
+        // kampfschrei:/ verleiht beiden spielern die macht des rock! (durch eine powerakkordkarte)
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

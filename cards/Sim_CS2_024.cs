@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_024.
+    ///     The sim_ c s 2_024.
     /// </summary>
-    class Sim_CS2_024 : SimTemplate
+    internal class Sim_CS2_024 : SimTemplate
     {
         // Frostbolt
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -35,8 +36,8 @@ namespace HREngine.Bots
             int dmg = ownplay ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
             target.frozen = true;
             p.minionGetDamageOrHeal(target, dmg);
-
         }
 
+        #endregion
     }
 }

@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_061.
+    ///     The sim_ c s 2_061.
     /// </summary>
-    class Sim_CS2_061 : SimTemplate
-	{
-	    // drainlife
+    internal class Sim_CS2_061 : SimTemplate
+    {
+        // drainlife
 
-// verursacht $2 schaden. stellt bei eurem helden #2 leben wieder her.
+        // verursacht $2 schaden. stellt bei eurem helden #2 leben wieder her.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
             int heal = ownplay ? p.getSpellHeal(2) : p.getEnemySpellHeal(2);
             p.minionGetDamageOrHeal(target, dmg);
@@ -45,7 +46,8 @@ namespace HREngine.Bots
             {
                 p.minionGetDamageOrHeal(p.enemyHero, -heal);
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

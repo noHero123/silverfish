@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ d s 1_184.
+    ///     The pen_ d s 1_184.
     /// </summary>
-    class Pen_DS1_184 : PenTemplate
-	{
-	    // tracking
+    internal class Pen_DS1_184 : PenTemplate
+    {
+        // tracking
 
-// schaut euch die drei obersten karten eures decks an. zieht eine davon und werft die anderen beiden ab.
+        // schaut euch die drei obersten karten eures decks an. zieht eine davon und werft die anderen beiden ab.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

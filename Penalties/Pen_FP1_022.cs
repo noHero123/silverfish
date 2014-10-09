@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_FP1_022.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ f p 1_022.
+    ///     The pen_ f p 1_022.
     /// </summary>
-    class Pen_FP1_022 : PenTemplate
-	{
-	    // voidcaller
+    internal class Pen_FP1_022 : PenTemplate
+    {
+        // voidcaller
 
-// todesröcheln:/ legt einen zufälligen dämon aus eurer hand auf das schlachtfeld.
+        // todesröcheln:/ legt einen zufälligen dämon aus eurer hand auf das schlachtfeld.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

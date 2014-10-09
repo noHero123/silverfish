@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_084.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_084.
+    ///     The pen_ e x 1_084.
     /// </summary>
-    class Pen_EX1_084 : PenTemplate
-	{
-	    // warsongcommander
+    internal class Pen_EX1_084 : PenTemplate
+    {
+        // warsongcommander
 
-// jedes mal, wenn ihr einen diener mit max. 3 angriff herbeiruft, erhält dieser ansturm/.
+        // jedes mal, wenn ihr einen diener mit max. 3 angriff herbeiruft, erhält dieser ansturm/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_029.
+    ///     The sim_ c s 2_029.
     /// </summary>
-    class Sim_CS2_029 : SimTemplate
-	{
-	    // fireball
+    internal class Sim_CS2_029 : SimTemplate
+    {
+        // fireball
 
-// verursacht $6 schaden.
+        // verursacht $6 schaden.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(6) : p.getEnemySpellDamageDamage(6);
             p.minionGetDamageOrHeal(target, dmg);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ pr o_001 at.
+    ///     The pen_ pr o_001 at.
     /// </summary>
-    class Pen_PRO_001at : PenTemplate
-	{
-	    // murloc
+    internal class Pen_PRO_001at : PenTemplate
+    {
+        // murloc
+        #region Public Methods and Operators
 
         /// <summary>
         /// The get play penalty.
@@ -37,9 +38,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

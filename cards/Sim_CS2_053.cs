@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_053.
+    ///     The sim_ c s 2_053.
     /// </summary>
-    class Sim_CS2_053 : SimTemplate
+    internal class Sim_CS2_053 : SimTemplate
     {
         // far sight
 
         // todo: bonus for it?
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -36,5 +38,6 @@ namespace HREngine.Bots
             p.drawACard(CardDB.cardName.unknown, ownplay);
         }
 
+        #endregion
     }
 }

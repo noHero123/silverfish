@@ -9,12 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_065.
+    ///     The sim_ c s 2_065.
     /// </summary>
-    class Sim_CS2_065 : SimTemplate
-	{
-	    // voidwalker
+    internal class Sim_CS2_065 : SimTemplate
+    {
+        // voidwalker
 
-// spott/
-	}
+        // spott/
+    }
 }

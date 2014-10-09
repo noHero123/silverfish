@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_013.
+    ///     The sim_ c s 2_013.
     /// </summary>
-    class Sim_CS2_013 : SimTemplate
-	{
-	    // wildgrowth
+    internal class Sim_CS2_013 : SimTemplate
+    {
+        // wildgrowth
 
-// erhaltet einen leeren manakristall.
+        // erhaltet einen leeren manakristall.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (ownplay)
             {
                 if (p.ownMaxMana < 10)
@@ -43,7 +45,6 @@ namespace HREngine.Bots
                 {
                     p.drawACard(CardDB.cardName.excessmana, true, true);
                 }
-
             }
             else
             {
@@ -56,7 +57,8 @@ namespace HREngine.Bots
                     p.drawACard(CardDB.cardName.excessmana, false, true);
                 }
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

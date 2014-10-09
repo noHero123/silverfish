@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_046.
+    ///     The pen_ e x 1_046.
     /// </summary>
-    class Pen_EX1_046 : PenTemplate
-	{
-	    // darkirondwarf
+    internal class Pen_EX1_046 : PenTemplate
+    {
+        // darkirondwarf
 
-// kampfschrei:/ verleiht einem diener +2 angriff in diesem zug.
+        // kampfschrei:/ verleiht einem diener +2 angriff in diesem zug.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,7 +40,7 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
+        {
             if (target.own)
             {
                 if (!m.Ready)
@@ -66,7 +68,8 @@ namespace HREngine.Bots
             }
 
             return 0;
-		}
+        }
 
-	}
+        #endregion
+    }
 }

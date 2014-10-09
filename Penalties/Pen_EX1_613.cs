@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_613.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_613.
+    ///     The pen_ e x 1_613.
     /// </summary>
-    class Pen_EX1_613 : PenTemplate
-	{
-	    // edwinvancleef
+    internal class Pen_EX1_613 : PenTemplate
+    {
+        // edwinvancleef
 
-// combo:/ erhält für jede in diesem zug bereits ausgespielte karte +2/+2.
+        // combo:/ erhält für jede in diesem zug bereits ausgespielte karte +2/+2.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

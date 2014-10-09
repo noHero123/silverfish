@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_DS1_183.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ d s 1_183.
+    ///     The pen_ d s 1_183.
     /// </summary>
-    class Pen_DS1_183 : PenTemplate
-	{
-	    // multishot
+    internal class Pen_DS1_183 : PenTemplate
+    {
+        // multishot
 
-// fügt zwei zufälligen feindlichen dienern $3 schaden zu.
+        // fügt zwei zufälligen feindlichen dienern $3 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

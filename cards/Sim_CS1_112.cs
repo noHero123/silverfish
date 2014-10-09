@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 1_112.
+    ///     The sim_ c s 1_112.
     /// </summary>
-    class Sim_CS1_112 : SimTemplate
+    internal class Sim_CS1_112 : SimTemplate
     {
         // holy nova
         // todo make it better :D
         // FÃ¼gt allen Feinden $2 Schaden zu. Stellt bei allen befreundeten Charakteren #2 Leben wieder her.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -33,8 +35,8 @@ namespace HREngine.Bots
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            int dmg = ownplay? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
-            int heal = ownplay ? p.getSpellHeal(2) : p.getEnemySpellHeal(2) ;
+            int dmg = ownplay ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
+            int heal = ownplay ? p.getSpellHeal(2) : p.getEnemySpellHeal(2);
             if (ownplay)
             {
                 p.minionGetDamageOrHeal(p.ownHero, -heal);
@@ -49,7 +51,7 @@ namespace HREngine.Bots
                     p.minionGetDamageOrHeal(m, dmg);
                 }
             }
-            else 
+            else
             {
                 p.minionGetDamageOrHeal(p.enemyHero, -heal);
                 p.minionGetDamageOrHeal(p.ownHero, dmg);
@@ -65,5 +67,6 @@ namespace HREngine.Bots
             }
         }
 
+        #endregion
     }
 }

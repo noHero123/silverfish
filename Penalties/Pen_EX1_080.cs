@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Pen_EX1_080.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ e x 1_080.
+    ///     The pen_ e x 1_080.
     /// </summary>
-    class Pen_EX1_080 : PenTemplate
-	{
-	    // secretkeeper
+    internal class Pen_EX1_080 : PenTemplate
+    {
+        // secretkeeper
 
-// erhält jedes mal +1/+1, wenn ein geheimnis/ ausgespielt wird.
+        // erhält jedes mal +1/+1, wenn ein geheimnis/ ausgespielt wird.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,9 +40,10 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        {
+            return 0;
+        }
 
-	}
+        #endregion
+    }
 }

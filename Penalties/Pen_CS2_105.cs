@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The pen_ c s 2_105.
+    ///     The pen_ c s 2_105.
     /// </summary>
-    class Pen_CS2_105 : PenTemplate
-	{
-	    // heroicstrike
+    internal class Pen_CS2_105 : PenTemplate
+    {
+        // heroicstrike
 
-// verleiht eurem helden +4 angriff in diesem zug.
+        // verleiht eurem helden +4 angriff in diesem zug.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get play penalty.
         /// </summary>
@@ -38,15 +40,15 @@ namespace HREngine.Bots
         /// The <see cref="int"/>.
         /// </returns>
         public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
+        {
             if (!p.ownHero.Ready)
             {
                 return 100;
             }
 
             return 0;
+        }
 
-		}
-
-	}
+        #endregion
+    }
 }

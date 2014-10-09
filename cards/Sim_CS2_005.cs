@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_005.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_005.
+    ///     The sim_ c s 2_005.
     /// </summary>
-    class Sim_CS2_005 : SimTemplate
-	{
-	    // claw
+    internal class Sim_CS2_005 : SimTemplate
+    {
+        // claw
 
-// verleiht eurem helden +2 angriff in diesem zug und 2 rüstung.
+        // verleiht eurem helden +2 angriff in diesem zug und 2 rüstung.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (ownplay)
             {
                 p.ownHero.armor += 2;
@@ -43,7 +45,8 @@ namespace HREngine.Bots
                 p.enemyHero.armor += 2;
                 p.minionGetTempBuff(p.enemyHero, 2, 0);
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }
