@@ -36,14 +36,7 @@ namespace HREngine.Bots
         /// </param>
         public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
         {
-            if (ownplay)
-            {
-                p.minionReturnToHand(target, false, 2);
-            }
-            else
-            {
-                p.minionReturnToHand(target, true, 2);
-            }
+            p.minionReturnToHand(target, !ownplay, 2);
 
             target.Hp = -100;
         }

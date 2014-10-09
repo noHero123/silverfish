@@ -35,14 +35,7 @@ namespace HREngine.Bots
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (own.own)
-            {
-                p.minionGetDamageOrHeal(p.ownHero, 5);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, 5);
-            }
+            p.minionGetDamageOrHeal(own.own ? p.ownHero : p.enemyHero, 5);
         }
 
         #endregion

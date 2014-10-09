@@ -54,12 +54,7 @@ namespace HREngine.Bots
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Movegenerator();
-                }
-
-                return instance;
+                return instance ?? (instance = new Movegenerator());
             }
         }
 

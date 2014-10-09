@@ -65,15 +65,7 @@ namespace HREngine.Bots
             }
             else
             {
-                if (p.enemyHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001)
-                {
-                    // lesser heal becomes mind spike
-                    p.enemyHeroAblility.card = this.mindspike;
-                }
-                else
-                {
-                    p.enemyHeroAblility.card = this.shatter; // mindspike becomes mind shatter
-                }
+                p.enemyHeroAblility.card = p.enemyHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001 ? this.mindspike : this.shatter;
             }
         }
 

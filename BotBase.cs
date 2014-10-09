@@ -135,10 +135,8 @@ namespace HREngine.Bots
 
             try
             {
-                concede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.autoconcede") == "true") ? true : false;
-                writeToSingleFile = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.singleLog") == "true")
-                                        ? true
-                                        : false;
+                concede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.autoconcede") == "true");
+                writeToSingleFile = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.singleLog") == "true");
             }
             catch
             {
@@ -157,7 +155,7 @@ namespace HREngine.Bots
 
             try
             {
-                this.learnmode = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.wwuaid") == "true") ? true : false;
+                this.learnmode = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.wwuaid") == "true");
                 if (this.learnmode)
                 {
                     Helpfunctions.Instance.ErrorLog("Learn mode is ON");
@@ -170,17 +168,8 @@ namespace HREngine.Bots
 
             try
             {
-                this.passiveWaiting = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.passivewait") == "true")
-                                          ? true
-                                          : false;
-                if (this.passiveWaiting)
-                {
-                    Helpfunctions.Instance.ErrorLog("Passive Waiting is ON");
-                }
-                else
-                {
-                    Helpfunctions.Instance.ErrorLog("Passive Waiting is OFF");
-                }
+                this.passiveWaiting = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.passivewait") == "true");
+                Helpfunctions.Instance.ErrorLog(this.passiveWaiting ? "Passive Waiting is ON" : "Passive Waiting is OFF");
             }
             catch
             {
@@ -217,9 +206,7 @@ namespace HREngine.Bots
            }*/
             try
             {
-                this.enemyConcede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.enemyconcede") == "true")
-                                        ? true
-                                        : false;
+                this.enemyConcede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.enemyconcede") == "true");
                 if (this.enemyConcede)
                 {
                     Helpfunctions.Instance.ErrorLog("concede whether enemy has lethal");
@@ -232,7 +219,7 @@ namespace HREngine.Bots
 
             try
             {
-                bool secrets = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.secrets") == "true") ? true : false;
+                bool secrets = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.secrets") == "true");
                 Settings.Instance.useSecretsPlayArround = secrets;
                 Helpfunctions.Instance.ErrorLog("playing arround secrets is " + secrets);
             }
@@ -269,7 +256,7 @@ namespace HREngine.Bots
             int twotsamount = 0;
             try
             {
-                // bool twots = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurns") == "true") ? true : false;
+                // bool twots = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurns") == "true");
                 twotsamount = Convert.ToInt32(
                     HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurnCounter"));
                 if (twotsamount < 0)
@@ -291,9 +278,7 @@ namespace HREngine.Bots
                 {
                     bool enemySecondTurnSim = (HRSettings.Get.ReadSetting(
                         "silverfish.xml", 
-                        "uai.simulateEnemyOnSecondTurn") == "true")
-                                                  ? true
-                                                  : false;
+                        "uai.simulateEnemyOnSecondTurn") == "true");
                     Settings.Instance.simEnemySecondTurn = enemySecondTurnSim;
 
                     // Ai.Instance.nextTurnSimulator.setEnemyTurnsim(enemySecondTurnSim);
@@ -310,9 +295,7 @@ namespace HREngine.Bots
 
             try
             {
-                bool playaround = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAround") == "true")
-                                      ? true
-                                      : false;
+                bool playaround = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAround") == "true");
                 int playaroundprob = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAroundProb"));
                 if (playaroundprob > 100)
                 {
@@ -361,10 +344,8 @@ namespace HREngine.Bots
             bool printstuff = false;
             try
             {
-                printstuff = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.longteststuff") == "true")
-                                 ? true
-                                 : false;
-                teststuff = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.teststuff") == "true") ? true : false;
+                printstuff = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.longteststuff") == "true");
+                teststuff = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.teststuff") == "true");
             }
             catch
             {
@@ -408,9 +389,7 @@ namespace HREngine.Bots
 
             try
             {
-                this.useExternalProcess = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.extern") == "true")
-                                              ? true
-                                              : false;
+                this.useExternalProcess = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.extern") == "true");
             }
             catch
             {
@@ -1131,9 +1110,9 @@ namespace HREngine.Bots
             }
 
             List<string> newlines = new List<string>();
-            for (int i = 0; i < lines.Length; i++)
+            foreach (string t in lines)
             {
-                string s = lines[i];
+                string s = t;
 
                 if (s.Contains("client.relogger"))
                 {
@@ -1250,7 +1229,7 @@ namespace HREngine.Bots
         private void writeSettings()
         {
             string version = this.sf.versionnumber;
-            string[] lines = new string[0] { };
+            string[] lines = { };
             try
             {
                 string path = HRSettings.Get.Session.Paths.Hearthcrawler + Path.DirectorySeparatorChar + "Common"
@@ -1263,9 +1242,9 @@ namespace HREngine.Bots
             }
 
             List<string> newlines = new List<string>();
-            for (int i = 0; i < lines.Length; i++)
+            foreach (string t in lines)
             {
-                string s = lines[i];
+                string s = t;
 
                 if (s.Contains("uai.version"))
                 {

@@ -127,12 +127,7 @@ namespace HREngine.Bots
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Settings();
-                }
-
-                return instance;
+                return instance ?? (instance = new Settings());
             }
         }
 

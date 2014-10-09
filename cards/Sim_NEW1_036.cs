@@ -36,9 +36,9 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             List<Minion> temp = ownplay ? p.ownMinions : p.enemyMinions;
-            for (int i = 0; i < temp.Count; i++)
+            foreach (Minion t in temp)
             {
-                temp[i].cantLowerHPbelowONE = true;
+                t.cantLowerHPbelowONE = true;
             }
 
             p.drawACard(CardDB.cardName.unknown, ownplay);

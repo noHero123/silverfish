@@ -61,14 +61,7 @@ namespace HREngine.Bots
                 }
                 else
                 {
-                    if (p.ownHero.Hp < 30)
-                    {
-                        p.minionGetDamageOrHeal(p.ownHero, -hl);
-                    }
-                    else
-                    {
-                        p.minionGetDamageOrHeal(p.enemyHero, -hl);
-                    }
+                    p.minionGetDamageOrHeal(p.ownHero.Hp < 30 ? p.ownHero : p.enemyHero, -hl);
                 }
             }
         }

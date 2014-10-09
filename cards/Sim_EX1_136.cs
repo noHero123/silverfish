@@ -32,25 +32,9 @@ namespace HREngine.Bots
         /// </param>
         public override void onSecretPlay(Playfield p, bool ownplay, int number)
         {
-            int posi = 0;
-            if (ownplay)
-            {
-                posi = p.ownMinions.Count;
-            }
-            else
-            {
-                posi = p.enemyMinions.Count;
-            }
+            int posi = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
 
-            CardDB.Card kid = null;
-            if (ownplay)
-            {
-                kid = CardDB.Instance.getCardDataFromID(p.revivingOwnMinion);
-            }
-            else
-            {
-                kid = CardDB.Instance.getCardDataFromID(p.revivingEnemyMinion);
-            }
+            CardDB.Card kid = CardDB.Instance.getCardDataFromID(ownplay ? p.revivingOwnMinion : p.revivingEnemyMinion);
 
             p.callKid(kid, posi, ownplay);
             if (ownplay)

@@ -663,7 +663,7 @@ namespace HREngine.Bots
                 if (readstate == 1 && counter == 3)
                 {
                     // ability + abilityready
-                    abilityReady = (s.Split(' ')[1] == "True") ? true : false;
+                    abilityReady = (s.Split(' ')[1] == "True");
                     heroability = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(s.Split(' ')[2]));
                 }
 
@@ -740,9 +740,7 @@ namespace HREngine.Bots
                             Convert.ToInt32(
                                 s.Split(new[] { " mH:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
                         bool ready = s.Split(new[] { " rdy:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]
-                                     == "True"
-                                         ? true
-                                         : false;
+                                     == "True";
                         int natt = 0;
                         if (s.Contains(" natt:"))
                         {

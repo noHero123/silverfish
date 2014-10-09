@@ -51,14 +51,7 @@ namespace HREngine.Bots
                 }
                 else
                 {
-                    if (turnEndOfOwner)
-                    {
-                        p.minionGetDamageOrHeal(p.enemyHero, 8);
-                    }
-                    else
-                    {
-                        p.minionGetDamageOrHeal(p.ownHero, 8);
-                    }
+                    p.minionGetDamageOrHeal(turnEndOfOwner ? p.enemyHero : p.ownHero, 8);
                 }
 
                 triggerEffectMinion.stealth = false;

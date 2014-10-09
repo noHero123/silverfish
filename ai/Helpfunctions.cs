@@ -69,12 +69,7 @@ namespace HREngine.Bots
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Helpfunctions();
-                }
-
-                return instance;
+                return instance ?? (instance = new Helpfunctions());
             }
         }
 

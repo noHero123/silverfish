@@ -666,11 +666,13 @@ namespace HREngine.Bots
 
                     // c.cost = entitiy.GetCost();
                     // c.entityID = entitiy.GetEntityId();
-                    Handmanager.Handcard hc = new Handmanager.Handcard();
-                    hc.card = c;
-                    hc.position = entitiy.GetZonePosition();
-                    hc.entity = entitiy.GetEntityId();
-                    hc.manacost = entitiy.GetCost();
+                    Handmanager.Handcard hc = new Handmanager.Handcard
+                                                  {
+                                                      card = c,
+                                                      position = entitiy.GetZonePosition(),
+                                                      entity = entitiy.GetEntityId(),
+                                                      manacost = entitiy.GetCost()
+                                                  };
                     this.handCards.Add(hc);
                     this.anzcards++;
                 }
@@ -765,7 +767,7 @@ namespace HREngine.Bots
             bool herofrozen = ownhero.IsFrozen();
             int heroNumAttacksThisTurn = ownhero.GetNumAttacksThisTurn();
             bool heroHasWindfury = ownhero.HasWindfury();
-            bool heroImmune = (ownhero.GetTag(HRGameTag.CANT_BE_DAMAGED) == 1) ? true : false;
+            bool heroImmune = (ownhero.GetTag(HRGameTag.CANT_BE_DAMAGED) == 1);
 
             // Helpfunctions.Instance.ErrorLog(ownhero.GetName() + " ready params ex: " + exausted + " " + heroAtk + " " + numberofattacks + " " + herofrozen);
             if (ownPlayer.HasWeapon())
@@ -799,7 +801,7 @@ namespace HREngine.Bots
             int enemyHp = enemyhero.GetHealth() - enemyhero.GetDamage();
             int enemyDefence = enemyhero.GetArmor();
             bool enemyfrozen = enemyhero.IsFrozen();
-            bool enemyHeroImmune = (enemyhero.GetTag(HRGameTag.CANT_BE_DAMAGED) == 1) ? true : false;
+            bool enemyHeroImmune = (enemyhero.GetTag(HRGameTag.CANT_BE_DAMAGED) == 1);
 
             this.enemyHeroWeapon = string.Empty;
             this.enemyWeaponAttack = 0;
@@ -921,11 +923,13 @@ namespace HREngine.Bots
                     // Helpfunctions.Instance.ErrorLog("zonepos " + zp);
                     CardDB.Card c =
                         CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(entitiy.GetCardId()));
-                    Minion m = new Minion();
-                    m.name = c.name;
-                    m.handcard.card = c;
-                    m.Angr = entitiy.GetATK();
-                    m.maxHp = entitiy.GetHealth();
+                    Minion m = new Minion
+                                   {
+                                       name = c.name,
+                                       handcard = { card = c },
+                                       Angr = entitiy.GetATK(),
+                                       maxHp = entitiy.GetHealth()
+                                   };
                     m.Hp = m.maxHp - entitiy.GetDamage();
                     if (m.Hp <= 0)
                     {
@@ -940,26 +944,26 @@ namespace HREngine.Bots
 
                     m.exhausted = entitiy.IsExhausted();
 
-                    m.taunt = entitiy.HasTaunt() ? true : false;
+                    m.taunt = entitiy.HasTaunt();
 
                     m.numAttacksThisTurn = entitiy.GetNumAttacksThisTurn();
 
                     int temp = entitiy.GetNumTurnsInPlay();
-                    m.playedThisTurn = (temp == 0) ? true : false;
+                    m.playedThisTurn = (temp == 0);
 
-                    m.windfury = entitiy.HasWindfury() ? true : false;
+                    m.windfury = entitiy.HasWindfury();
 
-                    m.frozen = entitiy.IsFrozen() ? true : false;
+                    m.frozen = entitiy.IsFrozen();
 
-                    m.divineshild = entitiy.HasDivineShield() ? true : false;
+                    m.divineshild = entitiy.HasDivineShield();
 
-                    m.stealth = entitiy.IsStealthed() ? true : false;
+                    m.stealth = entitiy.IsStealthed();
 
-                    m.poisonous = entitiy.IsPoisonous() ? true : false;
+                    m.poisonous = entitiy.IsPoisonous();
 
-                    m.immune = entitiy.IsImmune() ? true : false;
+                    m.immune = entitiy.IsImmune();
 
-                    m.silenced = (entitiy.GetTag(HRGameTag.SILENCED) >= 1) ? true : false;
+                    m.silenced = (entitiy.GetTag(HRGameTag.SILENCED) >= 1);
 
                     m.charge = 0;
 

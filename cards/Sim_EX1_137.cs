@@ -36,14 +36,7 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             int dmg = ownplay ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
-            if (ownplay)
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, dmg);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.ownHero, dmg);
-            }
+            p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, dmg);
 
             if (p.cardsPlayedThisTurn >= 1)
             {

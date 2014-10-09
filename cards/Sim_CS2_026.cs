@@ -38,9 +38,9 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             List<Minion> temp = ownplay ? p.enemyMinions : p.ownMinions;
-            for (int i = 0; i < temp.Count; i++)
+            foreach (Minion t in temp)
             {
-                temp[i].frozen = true;
+                t.frozen = true;
             }
         }
 

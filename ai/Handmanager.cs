@@ -80,12 +80,7 @@ namespace HREngine.Bots
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Handmanager();
-                }
-
-                return instance;
+                return instance ?? (instance = new Handmanager());
             }
         }
 

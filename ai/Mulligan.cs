@@ -72,12 +72,7 @@ namespace HREngine.Bots
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Mulligan();
-                }
-
-                return instance;
+                return instance ?? (instance = new Mulligan());
             }
         }
 
@@ -332,8 +327,7 @@ namespace HREngine.Bots
                     try
                     {
                         string ownh = line.Split(':')[1];
-                        concedeItem ci = new concedeItem();
-                        ci.urhero = Hrtprozis.Instance.heroNametoEnum(ownh);
+                        concedeItem ci = new concedeItem { urhero = Hrtprozis.Instance.heroNametoEnum(ownh) };
                         string enemlist = line.Split(':')[2];
                         foreach (string s in enemlist.Split(','))
                         {

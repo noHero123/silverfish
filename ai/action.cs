@@ -187,13 +187,11 @@ namespace HREngine.Bots
 
                 this.own = null;
 
-                this.card = new Handmanager.Handcard();
-                this.card.entity = cardEnt;
+                this.card = new Handmanager.Handcard { entity = cardEnt };
 
                 if (targetEnt >= 0)
                 {
-                    Minion m = new Minion();
-                    m.entitiyID = targetEnt;
+                    Minion m = new Minion { entitiyID = targetEnt };
                     this.target = m;
                 }
                 else
@@ -217,12 +215,10 @@ namespace HREngine.Bots
 
                 this.card = null;
 
-                Minion m = new Minion();
-                m.entitiyID = targetEnt;
+                Minion m = new Minion { entitiyID = targetEnt };
                 this.target = m;
 
-                Minion o = new Minion();
-                o.entitiyID = ownEnt;
+                Minion o = new Minion { entitiyID = ownEnt };
                 this.own = o;
             }
 
@@ -237,8 +233,7 @@ namespace HREngine.Bots
 
                 this.card = null;
 
-                Minion m = new Minion();
-                m.entitiyID = targetEnt;
+                Minion m = new Minion { entitiyID = targetEnt };
                 this.target = m;
 
                 this.own = p.ownHero;
@@ -255,8 +250,7 @@ namespace HREngine.Bots
 
                 this.card = null;
 
-                Minion m = new Minion();
-                m.entitiyID = targetEnt;
+                Minion m = new Minion { entitiyID = targetEnt };
                 this.target = m;
 
                 this.own = null;

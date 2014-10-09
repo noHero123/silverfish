@@ -9,7 +9,6 @@
 namespace HREngine.Bots
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
 
@@ -154,9 +153,7 @@ namespace HREngine.Bots
             int de = 0;
 
             // placeholdercard
-            Card plchldr = new Card();
-            plchldr.name = cardName.unknown;
-            plchldr.cost = 1000;
+            Card plchldr = new Card { name = cardName.unknown, cost = 1000 };
             this.namelist.Add("unknown");
             this.cardlist.Add(plchldr);
             this.unknownCard = this.cardlist[0];

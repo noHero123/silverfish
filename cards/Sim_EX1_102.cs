@@ -47,14 +47,7 @@ namespace HREngine.Bots
 
                 if (!dmgdone)
                 {
-                    if (turnStartOfOwner)
-                    {
-                        p.minionGetDamageOrHeal(p.enemyHero, 2);
-                    }
-                    else
-                    {
-                        p.minionGetDamageOrHeal(p.ownHero, 2);
-                    }
+                    p.minionGetDamageOrHeal(turnStartOfOwner ? p.enemyHero : p.ownHero, 2);
                 }
 
                 ;

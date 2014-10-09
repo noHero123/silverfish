@@ -37,14 +37,7 @@ namespace HREngine.Bots
         {
             int heal = own.own ? p.getMinionHeal(6) : p.getEnemyMinionHeal(6);
 
-            if (own.own)
-            {
-                p.minionGetDamageOrHeal(p.ownHero, -heal);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, -heal);
-            }
+            p.minionGetDamageOrHeal(own.own ? p.ownHero : p.enemyHero, -heal);
         }
 
         #endregion

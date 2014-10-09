@@ -1629,14 +1629,7 @@ namespace HREngine.Bots
                 this.minionGetDamageOrHeal(m, damages, true);
             }
 
-            if (own)
-            {
-                this.minionGetDamageOrHeal(this.ownHero, damages);
-            }
-            else
-            {
-                this.minionGetDamageOrHeal(this.enemyHero, damages);
-            }
+            this.minionGetDamageOrHeal(own ? this.ownHero : this.enemyHero, damages);
         }
 
         /// <summary>
@@ -1888,8 +1881,7 @@ namespace HREngine.Bots
             int mobplace = zonepos + 1; // todo check this?
 
             // create minion (+triggers)
-            Handmanager.Handcard hc = new Handmanager.Handcard(c);
-            hc.entity = this.nextEntity;
+            Handmanager.Handcard hc = new Handmanager.Handcard(c) { entity = this.nextEntity };
             this.nextEntity++;
             Minion m = this.createNewMinion(hc, mobplace, own);
 
@@ -2071,14 +2063,7 @@ namespace HREngine.Bots
 
                 if (aa.actionType == actionEnum.useHeroPower)
                 {
-                    if (this.isOwnTurn)
-                    {
-                        ha = this.ownHeroAblility;
-                    }
-                    else
-                    {
-                        ha = this.enemyHeroAblility;
-                    }
+                    ha = this.isOwnTurn ? this.ownHeroAblility : this.enemyHeroAblility;
                 }
             }
 
@@ -2379,24 +2364,27 @@ namespace HREngine.Bots
 
             if (s == CardDB.cardName.unknown)
             {
-                CardDB.Card plchldr = new CardDB.Card();
-                plchldr.name = CardDB.cardName.unknown;
-                Handmanager.Handcard hc = new Handmanager.Handcard();
-                hc.card = plchldr;
-                hc.position = this.owncards.Count + 1;
-                hc.manacost = 1000;
-                hc.entity = this.nextEntity;
+                CardDB.Card plchldr = new CardDB.Card { name = CardDB.cardName.unknown };
+                Handmanager.Handcard hc = new Handmanager.Handcard
+                                              {
+                                                  card = plchldr,
+                                                  position = this.owncards.Count + 1,
+                                                  manacost = 1000,
+                                                  entity = this.nextEntity
+                                              };
                 this.nextEntity++;
                 this.owncards.Add(hc);
             }
             else
             {
                 CardDB.Card c = CardDB.Instance.getCardData(s);
-                Handmanager.Handcard hc = new Handmanager.Handcard();
-                hc.card = c;
-                hc.position = this.owncards.Count + 1;
-                hc.manacost = c.calculateManaCost(this);
-                hc.entity = this.nextEntity;
+                Handmanager.Handcard hc = new Handmanager.Handcard
+                                              {
+                                                  card = c,
+                                                  position = this.owncards.Count + 1,
+                                                  manacost = c.calculateManaCost(this),
+                                                  entity = this.nextEntity
+                                              };
                 this.nextEntity++;
                 this.owncards.Add(hc);
             }
@@ -2492,24 +2480,27 @@ namespace HREngine.Bots
 
             if (s == CardDB.cardIDEnum.None)
             {
-                CardDB.Card plchldr = new CardDB.Card();
-                plchldr.name = CardDB.cardName.unknown;
-                Handmanager.Handcard hc = new Handmanager.Handcard();
-                hc.card = plchldr;
-                hc.position = this.owncards.Count + 1;
-                hc.manacost = 1000;
-                hc.entity = this.nextEntity;
+                CardDB.Card plchldr = new CardDB.Card { name = CardDB.cardName.unknown };
+                Handmanager.Handcard hc = new Handmanager.Handcard
+                                              {
+                                                  card = plchldr,
+                                                  position = this.owncards.Count + 1,
+                                                  manacost = 1000,
+                                                  entity = this.nextEntity
+                                              };
                 this.nextEntity++;
                 this.owncards.Add(hc);
             }
             else
             {
                 CardDB.Card c = CardDB.Instance.getCardDataFromID(s);
-                Handmanager.Handcard hc = new Handmanager.Handcard();
-                hc.card = c;
-                hc.position = this.owncards.Count + 1;
-                hc.manacost = c.calculateManaCost(this);
-                hc.entity = this.nextEntity;
+                Handmanager.Handcard hc = new Handmanager.Handcard
+                                              {
+                                                  card = c,
+                                                  position = this.owncards.Count + 1,
+                                                  manacost = c.calculateManaCost(this),
+                                                  entity = this.nextEntity
+                                              };
                 this.nextEntity++;
                 this.owncards.Add(hc);
             }
@@ -2841,25 +2832,11 @@ namespace HREngine.Bots
 
             hero.Angr += c.Attack;
 
-            if (c.name == CardDB.cardName.doomhammer)
-            {
-                hero.windfury = true;
-            }
-            else
-            {
-                hero.windfury = false;
-            }
+            hero.windfury = c.name == CardDB.cardName.doomhammer;
 
             hero.updateReadyness();
 
-            if (c.name == CardDB.cardName.gladiatorslongbow)
-            {
-                hero.immuneWhileAttacking = true;
-            }
-            else
-            {
-                hero.immuneWhileAttacking = false;
-            }
+            hero.immuneWhileAttacking = c.name == CardDB.cardName.gladiatorslongbow;
 
             List<Minion> temp = own ? this.ownMinions : this.enemyMinions;
             foreach (Minion m in temp)
@@ -4621,14 +4598,7 @@ namespace HREngine.Bots
                 }
             }
 
-            if (m.maxHp == m.Hp)
-            {
-                m.wounded = false;
-            }
-            else
-            {
-                m.wounded = true;
-            }
+            m.wounded = m.maxHp != m.Hp;
 
             if (m.name == CardDB.cardName.lightspawn && !m.silenced)
             {
@@ -4930,11 +4900,13 @@ namespace HREngine.Bots
             if (own)
             {
                 CardDB.Card c = m.handcard.card;
-                Handmanager.Handcard hc = new Handmanager.Handcard();
-                hc.card = c;
-                hc.position = this.owncards.Count + 1;
-                hc.entity = m.entitiyID;
-                hc.manacost = c.calculateManaCost(this) + manachange;
+                Handmanager.Handcard hc = new Handmanager.Handcard
+                                              {
+                                                  card = c,
+                                                  position = this.owncards.Count + 1,
+                                                  entity = m.entitiyID,
+                                                  manacost = c.calculateManaCost(this) + manachange
+                                              };
                 if (this.owncards.Count < 10)
                 {
                     this.owncards.Add(hc);
@@ -5052,8 +5024,7 @@ namespace HREngine.Bots
         {
             m.handcard.card.sim_card.onAuraEnds(this, m); // end aura of the minion
 
-            Handmanager.Handcard hc = new Handmanager.Handcard(c);
-            hc.entity = m.entitiyID;
+            Handmanager.Handcard hc = new Handmanager.Handcard(c) { entity = m.entitiyID };
             int ancestral = m.ancestralspirit;
             if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof
                 || m.handcard.card.name == CardDB.cardName.harvestgolem || ancestral >= 1)

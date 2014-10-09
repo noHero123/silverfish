@@ -29,14 +29,7 @@ namespace HREngine.Bots
         /// </param>
         public override void onDeathrattle(Playfield p, Minion m)
         {
-            if (m.own)
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, 2);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.ownHero, 2);
-            }
+            p.minionGetDamageOrHeal(m.own ? p.enemyHero : p.ownHero, 2);
         }
 
         #endregion

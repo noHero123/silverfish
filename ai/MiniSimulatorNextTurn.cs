@@ -246,9 +246,9 @@ namespace HREngine.Bots
                     bool found = false;
 
                     // foreach (Playfield pp in temp)
-                    for (int j = 0; j < temp.Count; j++)
+                    foreach (Playfield t in temp)
                     {
-                        pp = temp[j];
+                        pp = t;
                         if (pp.hashcode == p.hashcode)
                         {
                             if (pp.isEqualf(p))

@@ -38,14 +38,7 @@ namespace HREngine.Bots
             int dmg = ownplay ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
             int heal = ownplay ? p.getSpellHeal(2) : p.getEnemySpellHeal(2);
             p.minionGetDamageOrHeal(target, dmg);
-            if (ownplay)
-            {
-                p.minionGetDamageOrHeal(p.ownHero, -heal);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, -heal);
-            }
+            p.minionGetDamageOrHeal(ownplay ? p.ownHero : p.enemyHero, -heal);
         }
 
         #endregion

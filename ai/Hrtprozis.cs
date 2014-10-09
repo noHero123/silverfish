@@ -363,12 +363,7 @@ namespace HREngine.Bots
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Hrtprozis();
-                }
-
-                return instance;
+                return instance ?? (instance = new Hrtprozis());
             }
         }
 
@@ -1236,16 +1231,18 @@ namespace HREngine.Bots
         /// </returns>
         private Minion createNewMinion(Handmanager.Handcard hc, int id)
         {
-            Minion m = new Minion();
-            m.handcard = new Handmanager.Handcard(hc);
-            m.zonepos = id + 1;
-            m.entitiyID = hc.entity;
-            m.Angr = hc.card.Attack;
-            m.Hp = hc.card.Health;
-            m.maxHp = hc.card.Health;
-            m.name = hc.card.name;
-            m.playedThisTurn = true;
-            m.numAttacksThisTurn = 0;
+            Minion m = new Minion
+                           {
+                               handcard = new Handmanager.Handcard(hc),
+                               zonepos = id + 1,
+                               entitiyID = hc.entity,
+                               Angr = hc.card.Attack,
+                               Hp = hc.card.Health,
+                               maxHp = hc.card.Health,
+                               name = hc.card.name,
+                               playedThisTurn = true,
+                               numAttacksThisTurn = 0
+                           };
 
             if (hc.card.windfury)
             {

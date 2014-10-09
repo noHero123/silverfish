@@ -76,26 +76,12 @@ namespace HREngine.Bots
                     }
                     else
                     {
-                        if (triggerEffectMinion.own)
-                        {
-                            p.minionGetDamageOrHeal(p.enemyHero, 1);
-                        }
-                        else
-                        {
-                            p.minionGetDamageOrHeal(p.ownHero, 1);
-                        }
+                        p.minionGetDamageOrHeal(triggerEffectMinion.own ? p.enemyHero : p.ownHero, 1);
                     }
                 }
                 else
                 {
-                    if (triggerEffectMinion.own)
-                    {
-                        p.minionGetDamageOrHeal(p.enemyHero, 1);
-                    }
-                    else
-                    {
-                        p.minionGetDamageOrHeal(p.ownHero, 1);
-                    }
+                    p.minionGetDamageOrHeal(triggerEffectMinion.own ? p.enemyHero : p.ownHero, 1);
                 }
 
                 triggerEffectMinion.stealth = false;

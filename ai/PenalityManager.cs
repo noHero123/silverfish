@@ -220,12 +220,7 @@ namespace HREngine.Bots
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new PenalityManager();
-                }
-
-                return instance;
+                return instance ?? (instance = new PenalityManager());
             }
         }
 
@@ -1093,14 +1088,7 @@ namespace HREngine.Bots
 
                     // no pen if we have battlerage for example
                     int dmg = 0;
-                    if (this.DamageTargetDatabase.ContainsKey(name))
-                    {
-                        dmg = this.DamageTargetDatabase[name];
-                    }
-                    else
-                    {
-                        dmg = this.HealTargetDatabase[name];
-                    }
+                    dmg = this.DamageTargetDatabase.ContainsKey(name) ? this.DamageTargetDatabase[name] : this.HealTargetDatabase[name];
 
                     if (m.name == CardDB.cardName.madscientist && p.ownHeroName == HeroEnum.hunter)
                     {
@@ -1720,12 +1708,14 @@ namespace HREngine.Bots
             {
                 if (c.type == CardDB.cardtype.MOB)
                 {
-                    Minion m = new Minion();
-                    m.Hp = c.Health;
-                    m.maxHp = c.Health;
-                    m.Angr = c.Attack;
-                    m.taunt = c.tank;
-                    m.name = c.name;
+                    Minion m = new Minion
+                                   {
+                                       Hp = c.Health,
+                                       maxHp = c.Health,
+                                       Angr = c.Attack,
+                                       taunt = c.tank,
+                                       name = c.name
+                                   };
 
                     // play first the small minion:
                     if ((!this.isOwnLowestInHand(m, p) && p.mobsplayedThisTurn == 0)
@@ -1745,12 +1735,14 @@ namespace HREngine.Bots
             {
                 if (c.type == CardDB.cardtype.MOB)
                 {
-                    Minion m = new Minion();
-                    m.Hp = c.Health;
-                    m.maxHp = c.Health;
-                    m.Angr = c.Attack;
-                    m.taunt = c.tank;
-                    m.name = c.name;
+                    Minion m = new Minion
+                                   {
+                                       Hp = c.Health,
+                                       maxHp = c.Health,
+                                       Angr = c.Attack,
+                                       taunt = c.tank,
+                                       name = c.name
+                                   };
                     if ((!this.isOwnLowestInHand(m, p) && p.mobsplayedThisTurn == 0) || attackedbefore == 0)
                     {
                         pen += 10;
@@ -1811,14 +1803,7 @@ namespace HREngine.Bots
             }
 
             int cards = 0;
-            if (this.randomEffects.ContainsKey(card.name))
-            {
-                cards = this.randomEffects[card.name];
-            }
-            else
-            {
-                cards = this.cardDrawBattleCryDatabase[card.name];
-            }
+            cards = this.randomEffects.ContainsKey(card.name) ? this.randomEffects[card.name] : this.cardDrawBattleCryDatabase[card.name];
 
             bool first = true;
             bool hasgadget = false;

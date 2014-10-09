@@ -241,25 +241,25 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("cant read secret " + secdata + " " + canbe.Length);
             }
 
-            this.canBe_snaketrap = (canbe[0] == '1') ? true : false;
-            this.canBe_snipe = (canbe[1] == '1') ? true : false;
-            this.canBe_explosive = (canbe[2] == '1') ? true : false;
-            this.canBe_freezing = (canbe[3] == '1') ? true : false;
-            this.canBe_missdirection = (canbe[4] == '1') ? true : false;
+            this.canBe_snaketrap = (canbe[0] == '1');
+            this.canBe_snipe = (canbe[1] == '1');
+            this.canBe_explosive = (canbe[2] == '1');
+            this.canBe_freezing = (canbe[3] == '1');
+            this.canBe_missdirection = (canbe[4] == '1');
 
-            this.canBe_counterspell = (canbe[5] == '1') ? true : false;
-            this.canBe_icebarrier = (canbe[6] == '1') ? true : false;
-            this.canBe_iceblock = (canbe[7] == '1') ? true : false;
-            this.canBe_mirrorentity = (canbe[8] == '1') ? true : false;
-            this.canBe_spellbender = (canbe[9] == '1') ? true : false;
-            this.canBe_vaporize = (canbe[10] == '1') ? true : false;
-            this.canBe_duplicate = (canbe[11] == '1') ? true : false;
+            this.canBe_counterspell = (canbe[5] == '1');
+            this.canBe_icebarrier = (canbe[6] == '1');
+            this.canBe_iceblock = (canbe[7] == '1');
+            this.canBe_mirrorentity = (canbe[8] == '1');
+            this.canBe_spellbender = (canbe[9] == '1');
+            this.canBe_vaporize = (canbe[10] == '1');
+            this.canBe_duplicate = (canbe[11] == '1');
 
-            this.canBe_eyeforaneye = (canbe[12] == '1') ? true : false;
-            this.canBe_noblesacrifice = (canbe[13] == '1') ? true : false;
-            this.canBe_redemption = (canbe[14] == '1') ? true : false;
-            this.canBe_repentance = (canbe[15] == '1') ? true : false;
-            this.canBe_avenge = (canbe[16] == '1') ? true : false;
+            this.canBe_eyeforaneye = (canbe[12] == '1');
+            this.canBe_noblesacrifice = (canbe[13] == '1');
+            this.canBe_redemption = (canbe[14] == '1');
+            this.canBe_repentance = (canbe[15] == '1');
+            this.canBe_avenge = (canbe[16] == '1');
 
             this.updateCanBeTriggered();
         }
@@ -533,12 +533,7 @@ namespace HREngine.Bots
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Probabilitymaker();
-                }
-
-                return instance;
+                return instance ?? (instance = new Probabilitymaker());
             }
         }
 
@@ -666,8 +661,7 @@ namespace HREngine.Bots
                 }
             }
 
-            SecretItem sec = new SecretItem();
-            sec.entityId = entityid;
+            SecretItem sec = new SecretItem { entityId = entityid };
             if (enemyHeroName == HeroEnum.hunter)
             {
                 sec.canBe_counterspell = false;
@@ -1220,14 +1214,7 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (add)
-                {
-                    temp.Add(new SecretItem(seit));
-                }
-                else
-                {
-                    temp.Add(new SecretItem(si));
-                }
+                temp.Add(add ? new SecretItem(seit) : new SecretItem(si));
             }
 
             this.enemySecrets.Clear();

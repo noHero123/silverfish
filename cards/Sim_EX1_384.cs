@@ -85,26 +85,12 @@ namespace HREngine.Bots
                         }
                         else
                         {
-                            if (ownplay)
-                            {
-                                p.minionGetDamageOrHeal(p.enemyHero, 1);
-                            }
-                            else
-                            {
-                                p.minionGetDamageOrHeal(p.ownHero, 1);
-                            }
+                            p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, 1);
                         }
                     }
                     else
                     {
-                        if (ownplay)
-                        {
-                            p.minionGetDamageOrHeal(p.enemyHero, 1);
-                        }
-                        else
-                        {
-                            p.minionGetDamageOrHeal(p.ownHero, 1);
-                        }
+                        p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, 1);
                     }
 
                     i++;

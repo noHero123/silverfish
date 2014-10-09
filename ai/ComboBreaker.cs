@@ -106,12 +106,7 @@ namespace HREngine.Bots
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new ComboBreaker();
-                }
-
-                return instance;
+                return instance ?? (instance = new ComboBreaker());
             }
         }
 

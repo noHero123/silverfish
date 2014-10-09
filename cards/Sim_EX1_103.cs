@@ -37,11 +37,11 @@ namespace HREngine.Bots
         {
             List<Minion> temp = own.own ? p.ownMinions : p.enemyMinions;
 
-            for (int i = 0; i < temp.Count; i++)
+            foreach (Minion t in temp)
             {
-                if ((TAG_RACE)temp[i].handcard.card.race == TAG_RACE.MURLOC)
+                if ((TAG_RACE)t.handcard.card.race == TAG_RACE.MURLOC)
                 {
-                    p.minionGetBuffed(temp[i], 0, 2);
+                    p.minionGetBuffed(t, 0, 2);
                 }
             }
         }

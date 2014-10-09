@@ -35,14 +35,7 @@ namespace HREngine.Bots
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            if (ownplay)
-            {
-                p.minionGetTempBuff(p.ownHero, 4, 0);
-            }
-            else
-            {
-                p.minionGetTempBuff(p.enemyHero, 4, 0);
-            }
+            p.minionGetTempBuff(ownplay ? p.ownHero : p.enemyHero, 4, 0);
         }
 
         #endregion

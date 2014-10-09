@@ -167,8 +167,7 @@ namespace HREngine.Bots
         /// </summary>
         private Ai()
         {
-            this.nextMoveGuess = new Playfield();
-            this.nextMoveGuess.mana = -100;
+            this.nextMoveGuess = new Playfield { mana = -100 };
 
             this.mainTurnSimulator = new MiniSimulator(this.maxdeep, this.maxwide, 0); // 0 for unlimited
             this.mainTurnSimulator.setPrintingstuff(true);
@@ -199,12 +198,7 @@ namespace HREngine.Bots
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Ai();
-                }
-
-                return instance;
+                return instance ?? (instance = new Ai());
             }
         }
 
