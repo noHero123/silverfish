@@ -1,14 +1,37 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_587.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_587.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_587 : SimTemplate //windspeaker
+    /// <summary>
+    /// The sim_ e x 1_587.
+    /// </summary>
+    class Sim_EX1_587 : SimTemplate
 	{
+	    // windspeaker
 
-//    kampfschrei:/ verleiht einem befreundeten diener windzorn/.
-		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+// kampfschrei:/ verleiht einem befreundeten diener windzorn/.
+        /// <summary>
+        /// The get battlecry effect.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
             if (target != null) p.minionGetWindfurry(target);
 		}

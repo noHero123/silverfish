@@ -1,24 +1,50 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_538.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_538.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_538 : SimTemplate //unleashthehounds
+    /// <summary>
+    /// The sim_ e x 1_538.
+    /// </summary>
+    class Sim_EX1_538 : SimTemplate
 	{
+	    // unleashthehounds
 
-//    ruft für jeden feindlichen diener einen jagdhund (1/1) mit ansturm/ herbei.
+// ruft für jeden feindlichen diener einen jagdhund (1/1) mit ansturm/ herbei.
 
-        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_538t);//hound
+        /// <summary>
+        /// The kid.
+        /// </summary>
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_538t);// hound
 
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        /// <summary>
+        /// The on card play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
             int anz = p.enemyMinions.Count;
             int posi = p.ownMinions.Count;
             
             for (int i = 0; i < anz; i++)
             {
-                p.callKid(kid, posi, ownplay);
+                p.callKid(this.kid, posi, ownplay);
             }
 		}
 

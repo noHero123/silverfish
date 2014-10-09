@@ -1,17 +1,49 @@
-﻿using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Probabilitymaker.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The grave yard item.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace HREngine.Bots
 {
-
+    /// <summary>
+    /// The grave yard item.
+    /// </summary>
     public struct GraveYardItem
     {
+        /// <summary>
+        /// The own.
+        /// </summary>
         public bool own;
+
+        /// <summary>
+        /// The entity.
+        /// </summary>
         public int entity;
+
+        /// <summary>
+        /// The cardid.
+        /// </summary>
         public CardDB.cardIDEnum cardid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GraveYardItem"/> struct.
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <param name="entity">
+        /// The entity.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
         public GraveYardItem(CardDB.cardIDEnum id, int entity, bool own)
         {
             this.own = own;
@@ -20,40 +52,134 @@ namespace HREngine.Bots
         }
     }
 
+    /// <summary>
+    /// The secret item.
+    /// </summary>
     public class SecretItem
     {
+        /// <summary>
+        /// The triggered.
+        /// </summary>
         public bool triggered = false;
 
+        /// <summary>
+        /// The canbe triggered with attacking hero.
+        /// </summary>
         public bool canbeTriggeredWithAttackingHero = true;
+
+        /// <summary>
+        /// The canbe triggered with attacking minion.
+        /// </summary>
         public bool canbeTriggeredWithAttackingMinion = true;
+
+        /// <summary>
+        /// The canbe triggered with playing minion.
+        /// </summary>
         public bool canbeTriggeredWithPlayingMinion = true;
 
+        /// <summary>
+        /// The can be_snaketrap.
+        /// </summary>
         public bool canBe_snaketrap = true;
+
+        /// <summary>
+        /// The can be_snipe.
+        /// </summary>
         public bool canBe_snipe = true;
+
+        /// <summary>
+        /// The can be_explosive.
+        /// </summary>
         public bool canBe_explosive = true;
+
+        /// <summary>
+        /// The can be_freezing.
+        /// </summary>
         public bool canBe_freezing = true;
+
+        /// <summary>
+        /// The can be_missdirection.
+        /// </summary>
         public bool canBe_missdirection = true;
 
+        /// <summary>
+        /// The can be_counterspell.
+        /// </summary>
         public bool canBe_counterspell = true;
+
+        /// <summary>
+        /// The can be_icebarrier.
+        /// </summary>
         public bool canBe_icebarrier = true;
+
+        /// <summary>
+        /// The can be_iceblock.
+        /// </summary>
         public bool canBe_iceblock = true;
+
+        /// <summary>
+        /// The can be_mirrorentity.
+        /// </summary>
         public bool canBe_mirrorentity = true;
+
+        /// <summary>
+        /// The can be_spellbender.
+        /// </summary>
         public bool canBe_spellbender = true;
+
+        /// <summary>
+        /// The can be_vaporize.
+        /// </summary>
         public bool canBe_vaporize = true;
+
+        /// <summary>
+        /// The can be_duplicate.
+        /// </summary>
         public bool canBe_duplicate = true;
 
+        /// <summary>
+        /// The can be_eyeforaneye.
+        /// </summary>
         public bool canBe_eyeforaneye = true;
+
+        /// <summary>
+        /// The can be_noblesacrifice.
+        /// </summary>
         public bool canBe_noblesacrifice = true;
+
+        /// <summary>
+        /// The can be_redemption.
+        /// </summary>
         public bool canBe_redemption = true;
+
+        /// <summary>
+        /// The can be_repentance.
+        /// </summary>
         public bool canBe_repentance = true;
+
+        /// <summary>
+        /// The can be_avenge.
+        /// </summary>
         public bool canBe_avenge = true;
 
+        /// <summary>
+        /// The entity id.
+        /// </summary>
         public int entityId = 0;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SecretItem"/> class.
+        /// </summary>
         public SecretItem()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SecretItem"/> class.
+        /// </summary>
+        /// <param name="sec">
+        /// The sec.
+        /// </param>
         public SecretItem(SecretItem sec)
         {
             this.triggered = sec.triggered;
@@ -83,6 +209,12 @@ namespace HREngine.Bots
 
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SecretItem"/> class.
+        /// </summary>
+        /// <param name="secdata">
+        /// The secdata.
+        /// </param>
         public SecretItem(string secdata)
         {
             this.entityId = Convert.ToInt32(secdata.Split('.')[0]);
@@ -112,6 +244,9 @@ namespace HREngine.Bots
             this.updateCanBeTriggered();
         }
 
+        /// <summary>
+        /// The update can be triggered.
+        /// </summary>
         public void updateCanBeTriggered()
         {
             this.canbeTriggeredWithAttackingHero = false;
@@ -126,6 +261,15 @@ namespace HREngine.Bots
 
         }
 
+        /// <summary>
+        /// The used trigger_ char is attacked.
+        /// </summary>
+        /// <param name="DefenderIsHero">
+        /// The defender is hero.
+        /// </param>
+        /// <param name="AttackerIsHero">
+        /// The attacker is hero.
+        /// </param>
         public void usedTrigger_CharIsAttacked(bool DefenderIsHero, bool AttackerIsHero)
         {
             if (DefenderIsHero)
@@ -141,69 +285,104 @@ namespace HREngine.Bots
             {
                 this.canBe_snaketrap = false;
             }
+
             if (!AttackerIsHero)
             {
                 this.canBe_freezing = false;
             }
+
             this.canBe_noblesacrifice = false;
-            updateCanBeTriggered();
+            this.updateCanBeTriggered();
         }
 
+        /// <summary>
+        /// The used trigger_ minion is played.
+        /// </summary>
         public void usedTrigger_MinionIsPlayed()
         {
             this.canBe_snipe = false;
             this.canBe_mirrorentity = false;
             this.canBe_repentance = false;
-            updateCanBeTriggered();
+            this.updateCanBeTriggered();
         }
 
+        /// <summary>
+        /// The used trigger_ spell is played.
+        /// </summary>
+        /// <param name="minionIsTarget">
+        /// The minion is target.
+        /// </param>
         public void usedTrigger_SpellIsPlayed(bool minionIsTarget)
         {
             this.canBe_counterspell = false;
             if (minionIsTarget) this.canBe_spellbender = false;
-            updateCanBeTriggered();
+            this.updateCanBeTriggered();
         }
 
+        /// <summary>
+        /// The used trigger_ minion died.
+        /// </summary>
         public void usedTrigger_MinionDied()
         {
             this.canBe_avenge = false;
             this.canBe_redemption = false;
             this.canBe_duplicate = false;
-            updateCanBeTriggered();
+            this.updateCanBeTriggered();
         }
 
+        /// <summary>
+        /// The used trigger_ hero got dmg.
+        /// </summary>
+        /// <param name="deadly">
+        /// The deadly.
+        /// </param>
         public void usedTrigger_HeroGotDmg(bool deadly = false)
         {
             this.canBe_eyeforaneye = false;
             if (deadly) this.canBe_iceblock = false;
-            updateCanBeTriggered();
+            this.updateCanBeTriggered();
         }
 
+        /// <summary>
+        /// The return a string.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public string returnAString()
         {
-            string retval = "" + this.entityId + ".";
-            retval += "" + ((canBe_snaketrap) ? "1" : "0");
-            retval += "" + ((canBe_snipe) ? "1" : "0");
-            retval += "" + ((canBe_explosive) ? "1" : "0");
-            retval += "" + ((canBe_freezing) ? "1" : "0");
-            retval += "" + ((canBe_missdirection) ? "1" : "0");
+            string retval = string.Empty + this.entityId + ".";
+            retval += string.Empty + (this.canBe_snaketrap ? "1" : "0");
+            retval += string.Empty + (this.canBe_snipe ? "1" : "0");
+            retval += string.Empty + (this.canBe_explosive ? "1" : "0");
+            retval += string.Empty + (this.canBe_freezing ? "1" : "0");
+            retval += string.Empty + (this.canBe_missdirection ? "1" : "0");
 
-            retval += "" + ((canBe_counterspell) ? "1" : "0");
-            retval += "" + ((canBe_icebarrier) ? "1" : "0");
-            retval += "" + ((canBe_iceblock) ? "1" : "0");
-            retval += "" + ((canBe_mirrorentity) ? "1" : "0");
-            retval += "" + ((canBe_spellbender) ? "1" : "0");
-            retval += "" + ((canBe_vaporize) ? "1" : "0");
-            retval += "" + ((canBe_duplicate) ? "1" : "0");
+            retval += string.Empty + (this.canBe_counterspell ? "1" : "0");
+            retval += string.Empty + (this.canBe_icebarrier ? "1" : "0");
+            retval += string.Empty + (this.canBe_iceblock ? "1" : "0");
+            retval += string.Empty + (this.canBe_mirrorentity ? "1" : "0");
+            retval += string.Empty + (this.canBe_spellbender ? "1" : "0");
+            retval += string.Empty + (this.canBe_vaporize ? "1" : "0");
+            retval += string.Empty + (this.canBe_duplicate ? "1" : "0");
 
-            retval += "" + ((canBe_eyeforaneye) ? "1" : "0");
-            retval += "" + ((canBe_noblesacrifice) ? "1" : "0");
-            retval += "" + ((canBe_redemption) ? "1" : "0");
-            retval += "" + ((canBe_repentance) ? "1" : "0");
-            retval += "" + ((canBe_avenge) ? "1" : "0");
+            retval += string.Empty + (this.canBe_eyeforaneye ? "1" : "0");
+            retval += string.Empty + (this.canBe_noblesacrifice ? "1" : "0");
+            retval += string.Empty + (this.canBe_redemption ? "1" : "0");
+            retval += string.Empty + (this.canBe_repentance ? "1" : "0");
+            retval += string.Empty + (this.canBe_avenge ? "1" : "0");
             return retval + ",";
         }
 
+        /// <summary>
+        /// The is equal.
+        /// </summary>
+        /// <param name="s">
+        /// The s.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
         public bool isEqual(SecretItem s)
         {
             bool result = this.entityId == s.entityId;
@@ -217,22 +396,69 @@ namespace HREngine.Bots
 
     }
 
+    /// <summary>
+    /// The probabilitymaker.
+    /// </summary>
     public class Probabilitymaker
     {
+        /// <summary>
+        /// The own cards played.
+        /// </summary>
         public Dictionary<CardDB.cardIDEnum, int> ownCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
+
+        /// <summary>
+        /// The enemy cards played.
+        /// </summary>
         public Dictionary<CardDB.cardIDEnum, int> enemyCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
+
+        /// <summary>
+        /// The own deck guessed.
+        /// </summary>
         List<CardDB.Card> ownDeckGuessed = new List<CardDB.Card>();
+
+        /// <summary>
+        /// The enemy deck guessed.
+        /// </summary>
         List<CardDB.Card> enemyDeckGuessed = new List<CardDB.Card>();
+
+        /// <summary>
+        /// The graveyard.
+        /// </summary>
         List<GraveYardItem> graveyard = new List<GraveYardItem>();
-        public List<GraveYardItem> turngraveyard = new List<GraveYardItem>();//MOBS only
+
+        /// <summary>
+        /// The turngraveyard.
+        /// </summary>
+        public List<GraveYardItem> turngraveyard = new List<GraveYardItem>();// MOBS only
+
+        /// <summary>
+        /// The graveyart till turn start.
+        /// </summary>
         List<GraveYardItem> graveyartTillTurnStart = new List<GraveYardItem>();
 
+        /// <summary>
+        /// The enemy secrets.
+        /// </summary>
         public List<SecretItem> enemySecrets = new List<SecretItem>();
 
+        /// <summary>
+        /// The feugen dead.
+        /// </summary>
         public bool feugenDead = false;
+
+        /// <summary>
+        /// The stalagg dead.
+        /// </summary>
         public bool stalaggDead = false;
 
+        /// <summary>
+        /// The instance.
+        /// </summary>
         private static Probabilitymaker instance;
+
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
         public static Probabilitymaker Instance
         {
             get
@@ -241,25 +467,47 @@ namespace HREngine.Bots
                 {
                     instance = new Probabilitymaker();
                 }
+
                 return instance;
             }
         }
 
+        /// <summary>
+        /// Prevents a default instance of the <see cref="Probabilitymaker"/> class from being created.
+        /// </summary>
         private Probabilitymaker()
         {
  
         }
 
+        /// <summary>
+        /// The set own cards.
+        /// </summary>
+        /// <param name="list">
+        /// The list.
+        /// </param>
         public void setOwnCards(List<CardDB.cardIDEnum> list)
         {
-            setupDeck(list, ownDeckGuessed, ownCardsPlayed);
+            this.setupDeck(list, this.ownDeckGuessed, this.ownCardsPlayed);
         }
 
+        /// <summary>
+        /// The set enemy cards.
+        /// </summary>
+        /// <param name="list">
+        /// The list.
+        /// </param>
         public void setEnemyCards(List<CardDB.cardIDEnum> list)
         {
-            setupDeck(list, enemyDeckGuessed, enemyCardsPlayed);
+            this.setupDeck(list, this.enemyDeckGuessed, this.enemyCardsPlayed);
         }
 
+        /// <summary>
+        /// The print turn grave yard.
+        /// </summary>
+        /// <param name="writetobuffer">
+        /// The writetobuffer.
+        /// </param>
         public void printTurnGraveYard(bool writetobuffer=false)
         {
             /*string g = "";
@@ -267,12 +515,12 @@ namespace HREngine.Bots
             if (Probabilitymaker.Instance.stalaggDead) g += " stlgg";
             Helpfunctions.Instance.logg("GraveYard:" + g);
             if (writetobuffer) Helpfunctions.Instance.writeToBuffer("GraveYard:" + g);*/
-
             string s = "ownDiedMinions: ";
             foreach (GraveYardItem gyi in this.turngraveyard)
             {
                 if (gyi.own) s += gyi.cardid + "," + gyi.entity + ";";
             }
+
             Helpfunctions.Instance.logg(s);
             if (writetobuffer) Helpfunctions.Instance.writeToBuffer(s);
 
@@ -281,29 +529,39 @@ namespace HREngine.Bots
             {
                 if (!gyi.own) s += gyi.cardid + "," + gyi.entity + ";";
             }
+
             Helpfunctions.Instance.logg(s);
             if (writetobuffer) Helpfunctions.Instance.writeToBuffer(s);
         }
 
+        /// <summary>
+        /// The read turn grave yard.
+        /// </summary>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        /// <param name="enemy">
+        /// The enemy.
+        /// </param>
         public void readTurnGraveYard(string own, string enemy)
         {
             this.turngraveyard.Clear();
-            string temp ="";
-            temp = own.Replace("ownDiedMinions: ","");
+            string temp =string.Empty;
+            temp = own.Replace("ownDiedMinions: ", string.Empty);
 
             foreach (string s in temp.Split(';'))
             {
-                if (s == "" || s==" ") continue;
+                if (s == string.Empty || s==" ") continue;
                 string id = s.Split(',')[0];
                 string ent = s.Split(',')[1];
                 GraveYardItem gyi = new GraveYardItem(CardDB.Instance.cardIdstringToEnum(id), Convert.ToInt32(ent), true);
             }
 
-            temp = enemy.Replace("enemyDiedMinions: ", "");
+            temp = enemy.Replace("enemyDiedMinions: ", string.Empty);
 
             foreach (string s in temp.Split(';'))
             {
-                if (s == "" || s == " ") continue;
+                if (s == string.Empty || s == " ") continue;
                 string id = s.Split(',')[0];
                 string ent = s.Split(',')[1];
                 GraveYardItem gyi = new GraveYardItem(CardDB.Instance.cardIdstringToEnum(id), Convert.ToInt32(ent), false);
@@ -311,10 +569,19 @@ namespace HREngine.Bots
 
         }
 
+        /// <summary>
+        /// The set grave yard.
+        /// </summary>
+        /// <param name="list">
+        /// The list.
+        /// </param>
+        /// <param name="turnStart">
+        /// The turn start.
+        /// </param>
         public void setGraveYard(List<GraveYardItem> list, bool turnStart)
         {
-            graveyard.Clear();
-            graveyard.AddRange(list);
+            this.graveyard.Clear();
+            this.graveyard.AddRange(list);
             if (turnStart)
             {
                 this.graveyartTillTurnStart.Clear();
@@ -353,19 +620,37 @@ namespace HREngine.Bots
           
         }
 
+        /// <summary>
+        /// The set turn grave yard.
+        /// </summary>
+        /// <param name="list">
+        /// The list.
+        /// </param>
         public void setTurnGraveYard(List<GraveYardItem> list)
         {
             this.turngraveyard.Clear();
             this.turngraveyard.AddRange(list);
         }
 
+        /// <summary>
+        /// The setup deck.
+        /// </summary>
+        /// <param name="cardsPlayed">
+        /// The cards played.
+        /// </param>
+        /// <param name="deckGuessed">
+        /// The deck guessed.
+        /// </param>
+        /// <param name="knownCards">
+        /// The known cards.
+        /// </param>
         private void setupDeck(List<CardDB.cardIDEnum> cardsPlayed, List<CardDB.Card> deckGuessed, Dictionary<CardDB.cardIDEnum, int> knownCards)
         {
             deckGuessed.Clear();
             knownCards.Clear();
             foreach (CardDB.cardIDEnum crdidnm in cardsPlayed)
             {
-                if (crdidnm == CardDB.cardIDEnum.GAME_005) continue; //(im sure, he has no coins in his deck :D)
+                if (crdidnm == CardDB.cardIDEnum.GAME_005) continue; // (im sure, he has no coins in his deck :D)
                 if (knownCards.ContainsKey(crdidnm))
                 {
                     knownCards[crdidnm]++;
@@ -374,10 +659,11 @@ namespace HREngine.Bots
                 {
                     if (CardDB.Instance.getCardDataFromID(crdidnm).rarity == 5)
                     {
-                        //you cant own rare ones more than once!
+                        // you cant own rare ones more than once!
                         knownCards.Add(crdidnm, 2);
                         continue;
                     }
+
                     knownCards.Add(crdidnm, 1);
                 }
             }
@@ -388,6 +674,15 @@ namespace HREngine.Bots
             }
         }
 
+        /// <summary>
+        /// The has enemy this card in deck.
+        /// </summary>
+        /// <param name="cardid">
+        /// The cardid.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
         public bool hasEnemyThisCardInDeck(CardDB.cardIDEnum cardid)
         {
             if (this.enemyCardsPlayed.ContainsKey(cardid))
@@ -397,16 +692,27 @@ namespace HREngine.Bots
 
                     return true;
                 }
+
                 return false;
             }
+
             return true;
         }
 
+        /// <summary>
+        /// The anz cards in deck.
+        /// </summary>
+        /// <param name="cardid">
+        /// The cardid.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
         public int anzCardsInDeck(CardDB.cardIDEnum cardid)
         {
             int ret = 2;
             CardDB.Card c = CardDB.Instance.getCardDataFromID(cardid);
-            if (c.rarity == 5) ret = 1;//you can have only one rare;
+            if (c.rarity == 5) ret = 1;// you can have only one rare;
 
             if (this.enemyCardsPlayed.ContainsKey(cardid))
             {
@@ -415,24 +721,34 @@ namespace HREngine.Bots
 
                     return 1;
                 }
+
                 return 0;
             }
+
             return ret;
 
         }
 
+        /// <summary>
+        /// The print graveyards.
+        /// </summary>
+        /// <param name="writetobuffer">
+        /// The writetobuffer.
+        /// </param>
         public void printGraveyards(bool writetobuffer = false)
         {
             string og = "og: ";
-            foreach (KeyValuePair< CardDB.cardIDEnum, int> e in this.ownCardsPlayed)
+            foreach (KeyValuePair<CardDB.cardIDEnum, int> e in this.ownCardsPlayed)
             {
                 og += (int)e.Key + "," + e.Value+";";
             }
+
             string eg = "eg: ";
             foreach (KeyValuePair<CardDB.cardIDEnum, int> e in this.enemyCardsPlayed)
             {
                 eg += (int)e.Key + "," + e.Value + ";";
             }
+
             Helpfunctions.Instance.logg(og);
             Helpfunctions.Instance.logg(eg);
             if (writetobuffer)
@@ -442,16 +758,25 @@ namespace HREngine.Bots
             }
         }
 
+        /// <summary>
+        /// The read graveyards.
+        /// </summary>
+        /// <param name="owngrave">
+        /// The owngrave.
+        /// </param>
+        /// <param name="enemygrave">
+        /// The enemygrave.
+        /// </param>
         public void readGraveyards(string owngrave, string enemygrave)
         {
             this.ownCardsPlayed.Clear();
             this.enemyCardsPlayed.Clear();
-            string temp = owngrave.Replace("og: ","");
+            string temp = owngrave.Replace("og: ", string.Empty);
             this.stalaggDead = false;
             this.feugenDead = false;
             foreach (string s in temp.Split(';'))
             {
-                if (s == "" || s == " ") continue;
+                if (s == string.Empty || s == " ") continue;
                 string id = s.Split(',')[0];
                 string anz = s.Split(',')[1];
                 CardDB.cardIDEnum cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
@@ -459,10 +784,11 @@ namespace HREngine.Bots
                 if (cdbe == CardDB.cardIDEnum.FP1_015) this.feugenDead = true;
                 if (cdbe == CardDB.cardIDEnum.FP1_014) this.stalaggDead = true;
             }
-            temp = enemygrave.Replace("eg: ", "");
+
+            temp = enemygrave.Replace("eg: ", string.Empty);
             foreach (string s in temp.Split(';'))
             {
-                if (s == "" || s == " ") continue;
+                if (s == string.Empty || s == " ") continue;
                 string id = s.Split(',')[0];
                 string anz = s.Split(',')[1];
                 CardDB.cardIDEnum cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
@@ -473,39 +799,77 @@ namespace HREngine.Bots
 
         }
 
+        /// <summary>
+        /// The get prob of enemy having card in hand.
+        /// </summary>
+        /// <param name="cardid">
+        /// The cardid.
+        /// </param>
+        /// <param name="handsize">
+        /// The handsize.
+        /// </param>
+        /// <param name="decksize">
+        /// The decksize.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
         public int getProbOfEnemyHavingCardInHand(CardDB.cardIDEnum cardid, int handsize, int decksize)
         {
-            //calculates probability \in [0,...,100]
-
-            
+            // calculates probability \in [0,...,100]
             int cardsremaining = this.anzCardsInDeck(cardid);
-            if (cardsremaining == 0) return 0;
-            double retval = 0.0;
-            //http://de.wikipedia.org/wiki/Hypergeometrische_Verteilung (we calculte 1-p(x=0))
+            if (cardsremaining == 0)
+            {
+                return 0;
+            }
 
+            double retval = 0.0;
+
+            // http://de.wikipedia.org/wiki/Hypergeometrische_Verteilung (we calculte 1-p(x=0))
             if (cardsremaining == 1)
             {
-                retval = 1.0 - ((double)(decksize)) / ((double)(decksize + handsize));
+                retval = 1.0 - decksize / ((double)(decksize + handsize));
             }
             else
             {
-                retval = 1.0 - ((double)(decksize * (decksize - 1))) / ((double)((decksize + handsize) * (decksize + handsize - 1)));
+                retval = 1.0
+                         - decksize * (decksize - 1)
+                         / ((double)((decksize + handsize) * (decksize + handsize - 1)));
             }
 
             retval = Math.Min(retval, 1.0);
 
-            return (int) (100.0 * retval);
+            return (int)(100.0 * retval);
         }
 
+        /// <summary>
+        /// The has cardin graveyard.
+        /// </summary>
+        /// <param name="cardid">
+        /// The cardid.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
         public bool hasCardinGraveyard(CardDB.cardIDEnum cardid)
         {
             foreach (GraveYardItem gyi in this.graveyard)
             {
                 if (gyi.cardid == cardid) return true;
             }
+
             return false;
         }
 
+        /// <summary>
+        /// The get enemy secret guesses.
+        /// </summary>
+        /// <param name="enemySecretIds">
+        /// The enemy secret ids.
+        /// </param>
+        /// <param name="enemyHeroName">
+        /// The enemy hero name.
+        /// </param>
         public void getEnemySecretGuesses(List<int> enemySecretIds, HeroEnum enemyHeroName)
         {
             List<SecretItem> newlist = new List<SecretItem>();
@@ -514,7 +878,7 @@ namespace HREngine.Bots
             {
                 if (i >= 1000) continue;
                 Helpfunctions.Instance.logg("detect secret with id" + i);
-                SecretItem sec = getNewSecretGuessedItem(i, enemyHeroName);
+                SecretItem sec = this.getNewSecretGuessedItem(i, enemyHeroName);
 
                 newlist.Add(new SecretItem(sec));
             }
@@ -523,6 +887,18 @@ namespace HREngine.Bots
             this.enemySecrets.AddRange(newlist);
         }
 
+        /// <summary>
+        /// The get new secret guessed item.
+        /// </summary>
+        /// <param name="entityid">
+        /// The entityid.
+        /// </param>
+        /// <param name="enemyHeroName">
+        /// The enemy hero name.
+        /// </param>
+        /// <returns>
+        /// The <see cref="SecretItem"/>.
+        /// </returns>
         public SecretItem getNewSecretGuessedItem(int entityid, HeroEnum enemyHeroName)
         {
             foreach (SecretItem si in this.enemySecrets)
@@ -549,27 +925,27 @@ namespace HREngine.Bots
                 sec.canBe_repentance = false;
                 sec.canBe_avenge = false;
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_554) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_554] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_554) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_554] >= 2)
                 {
                     sec.canBe_snaketrap = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_609) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_609] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_609) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_609] >= 2)
                 {
                     sec.canBe_snipe = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_610) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_610] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_610) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_610] >= 2)
                 {
                     sec.canBe_explosive = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_611) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_611] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_611) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_611] >= 2)
                 {
                     sec.canBe_freezing = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_533) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_533] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_533) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_533] >= 2)
                 {
                     sec.canBe_missdirection = false;
                 }
@@ -589,37 +965,37 @@ namespace HREngine.Bots
                 sec.canBe_repentance = false;
                 sec.canBe_avenge = false;
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_287) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_287] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_287) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_287] >= 2)
                 {
                     sec.canBe_counterspell = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_289) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_289] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_289) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_289] >= 2)
                 {
                     sec.canBe_icebarrier = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_295) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_295] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_295) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_295] >= 2)
                 {
                     sec.canBe_iceblock = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_294) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_294] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_294) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_294] >= 2)
                 {
                     sec.canBe_mirrorentity = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.tt_010) && enemyCardsPlayed[CardDB.cardIDEnum.tt_010] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.tt_010) && this.enemyCardsPlayed[CardDB.cardIDEnum.tt_010] >= 2)
                 {
                     sec.canBe_spellbender = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_594) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_594] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_594) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_594] >= 2)
                 {
                     sec.canBe_vaporize = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.FP1_018) && enemyCardsPlayed[CardDB.cardIDEnum.FP1_018] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.FP1_018) && this.enemyCardsPlayed[CardDB.cardIDEnum.FP1_018] >= 2)
                 {
                     sec.canBe_duplicate = false;
                 }
@@ -642,27 +1018,27 @@ namespace HREngine.Bots
                 sec.canBe_vaporize = false;
                 sec.canBe_duplicate = false;
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_132) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_132] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_132) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_132] >= 2)
                 {
                     sec.canBe_eyeforaneye = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_130) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_130] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_130) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_130] >= 2)
                 {
                     sec.canBe_noblesacrifice = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_136) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_136] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_136) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_136] >= 2)
                 {
                     sec.canBe_redemption = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_379) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_379] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_379) && this.enemyCardsPlayed[CardDB.cardIDEnum.EX1_379] >= 2)
                 {
                     sec.canBe_repentance = false;
                 }
 
-                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.FP1_020) && enemyCardsPlayed[CardDB.cardIDEnum.FP1_020] >= 2)
+                if (this.enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.FP1_020) && this.enemyCardsPlayed[CardDB.cardIDEnum.FP1_020] >= 2)
                 {
                     sec.canBe_avenge = false;
                 }
@@ -672,9 +1048,15 @@ namespace HREngine.Bots
             return sec;
         }
 
+        /// <summary>
+        /// The get enemy secret data.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public string getEnemySecretData()
         {
-            string retval = "";
+            string retval = string.Empty;
             foreach(SecretItem si in this.enemySecrets)
             {
 
@@ -684,9 +1066,18 @@ namespace HREngine.Bots
             return retval;
         }
 
+        /// <summary>
+        /// The get enemy secret data.
+        /// </summary>
+        /// <param name="list">
+        /// The list.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public string getEnemySecretData(List<SecretItem> list)
         {
-            string retval = "";
+            string retval = string.Empty;
             foreach (SecretItem si in list)
             {
 
@@ -696,7 +1087,12 @@ namespace HREngine.Bots
             return retval;
         }
 
-
+        /// <summary>
+        /// The set enemy secret data.
+        /// </summary>
+        /// <param name="enemySecretl">
+        /// The enemy secretl.
+        /// </param>
         public void setEnemySecretData(List<SecretItem> enemySecretl)
         {
             this.enemySecrets.Clear();
@@ -706,6 +1102,12 @@ namespace HREngine.Bots
             }
         }
 
+        /// <summary>
+        /// The update secret list.
+        /// </summary>
+        /// <param name="enemySecretl">
+        /// The enemy secretl.
+        /// </param>
         public void updateSecretList(List<SecretItem> enemySecretl)
         {
             List<SecretItem> temp = new List<SecretItem>();
@@ -713,8 +1115,9 @@ namespace HREngine.Bots
             {
                 bool add =false;
                 SecretItem seit = null;
-                foreach (SecretItem sit in enemySecretl) // enemySecrets have to be updated to latest entitys
+                foreach (SecretItem sit in enemySecretl)
                 {
+                    // enemySecrets have to be updated to latest entitys
                     if(si.entityId == sit.entityId)
                     {
                         seit = sit;
@@ -737,12 +1140,21 @@ namespace HREngine.Bots
 
         }
 
+        /// <summary>
+        /// The update secret list.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="old">
+        /// The old.
+        /// </param>
         public void updateSecretList(Playfield p, Playfield old)
         {
             if (p.enemySecretCount == 0) return;
 
             bool usedspell = false;
-            int lastEffectedIsMinion = 0; //2 = minion, 1 = hero
+            int lastEffectedIsMinion = 0; // 2 = minion, 1 = hero
             bool playedMob = false;
             bool enemyMinionDied = false;
             bool attackedWithMob = false;
@@ -797,6 +1209,7 @@ namespace HREngine.Bots
             {
                 playedMob = true;
             }
+
             if (p.diedMinions != null && old.diedMinions != null)
             {
                 int pcount = 0;
@@ -805,22 +1218,24 @@ namespace HREngine.Bots
                 {
                     if (!gyi.own) pcount++;
                 }
+
                 foreach (GraveYardItem gyi in old.diedMinions)
                 {
                     if (!gyi.own) ocount++;
                 }
+
                 if (pcount > ocount) enemyMinionDied = true;
             }
 
 
-            //attacked with mob?
-
+            // attacked with mob?
             int newAttackers = 0;
             int oldAttackers = 0;
             foreach (Minion m in p.ownMinions)
             {
                 newAttackers += m.numAttacksThisTurn;
             }
+
             foreach (Minion m in old.ownMinions)
             {
                 oldAttackers += m.numAttacksThisTurn;
@@ -834,7 +1249,7 @@ namespace HREngine.Bots
 
             if (attackedWithHero || attackedWithMob)
             {
-                //check hero first, so we can exclude deathrattles!
+                // check hero first, so we can exclude deathrattles!
                 if (p.enemyHero.Hp < old.enemyHero.Hp) attackTargetIsMinion = 1;
 
                 int newDefenders = 0; int oldDefenders = 0;
@@ -843,6 +1258,7 @@ namespace HREngine.Bots
                 {
                     newDefenders += m.Hp;
                 }
+
                 foreach (Minion m in old.ownMinions)
                 {
                     oldDefenders += m.Hp;

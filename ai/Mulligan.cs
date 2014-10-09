@@ -1,16 +1,48 @@
-﻿using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Mulligan.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The mulligan.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace HREngine.Bots
 {
+    using System.IO;
 
+    /// <summary>
+    /// The mulligan.
+    /// </summary>
     public class Mulligan
     {
+        /// <summary>
+        /// The card id entity.
+        /// </summary>
         public class CardIDEntity
         {
-            public string id = "";
+            /// <summary>
+            /// The id.
+            /// </summary>
+            public string id = string.Empty;
+
+            /// <summary>
+            /// The entitiy.
+            /// </summary>
             public int entitiy = 0;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CardIDEntity"/> class.
+            /// </summary>
+            /// <param name="id">
+            /// The id.
+            /// </param>
+            /// <param name="entt">
+            /// The entt.
+            /// </param>
             public CardIDEntity(string id, int entt)
             {
                 this.id = id;
@@ -18,15 +50,62 @@ namespace HREngine.Bots
             }
         }
 
+        /// <summary>
+        /// The mulliitem.
+        /// </summary>
         class mulliitem
         {
-            public string cardid = "";
-            public string enemyclass = "";
-            public string ownclass = "";
+            /// <summary>
+            /// The cardid.
+            /// </summary>
+            public string cardid = string.Empty;
+
+            /// <summary>
+            /// The enemyclass.
+            /// </summary>
+            public string enemyclass = string.Empty;
+
+            /// <summary>
+            /// The ownclass.
+            /// </summary>
+            public string ownclass = string.Empty;
+
+            /// <summary>
+            /// The howmuch.
+            /// </summary>
             public int howmuch = 2;
+
+            /// <summary>
+            /// The requires card.
+            /// </summary>
             public string[] requiresCard = null;
+
+            /// <summary>
+            /// The manarule.
+            /// </summary>
             public int manarule = -1;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="mulliitem"/> class.
+            /// </summary>
+            /// <param name="id">
+            /// The id.
+            /// </param>
+            /// <param name="own">
+            /// The own.
+            /// </param>
+            /// <param name="enemy">
+            /// The enemy.
+            /// </param>
+            /// <param name="number">
+            /// The number.
+            /// </param>
+            /// <param name="req">
+            /// The req.
+            /// </param>
+            /// <param name="mrule">
+            /// The mrule.
+            /// </param>
             public mulliitem(string id, string own, string enemy, int number, string[] req = null, int mrule = -1)
             {
                 this.cardid = id;
@@ -38,19 +117,50 @@ namespace HREngine.Bots
             }
         }
 
+        /// <summary>
+        /// The concede item.
+        /// </summary>
         class concedeItem
         {
+            /// <summary>
+            /// The urhero.
+            /// </summary>
             public HeroEnum urhero = HeroEnum.None;
+
+            /// <summary>
+            /// The enemhero.
+            /// </summary>
             public List<HeroEnum> enemhero = new List<HeroEnum>();
         }
 
+        /// <summary>
+        /// The holdlist.
+        /// </summary>
         List<mulliitem> holdlist = new List<mulliitem>();
+
+        /// <summary>
+        /// The deletelist.
+        /// </summary>
         List<mulliitem> deletelist = new List<mulliitem>();
+
+        /// <summary>
+        /// The concedelist.
+        /// </summary>
         List<concedeItem> concedelist = new List<concedeItem>();
+
+        /// <summary>
+        /// The loser loser loser.
+        /// </summary>
         public bool loserLoserLoser = false;
 
+        /// <summary>
+        /// The instance.
+        /// </summary>
         private static Mulligan instance;
 
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
         public static Mulligan Instance
         {
             get
@@ -59,24 +169,31 @@ namespace HREngine.Bots
                 {
                     instance = new Mulligan();
                 }
+
                 return instance;
             }
         }
 
+        /// <summary>
+        /// Prevents a default instance of the <see cref="Mulligan"/> class from being created.
+        /// </summary>
         private Mulligan()
         {
-            readCombos();
+            this.readCombos();
         }
 
+        /// <summary>
+        /// The read combos.
+        /// </summary>
         private void readCombos()
         {
-            string[] lines = new string[0] { };
+            string[] lines = { };
             this.holdlist.Clear();
             this.deletelist.Clear();
             try
             {
                 string path = Settings.Instance.path;
-                lines = System.IO.File.ReadAllLines(path + "_mulligan.txt");
+                lines = File.ReadAllLines(path + "_mulligan.txt");
             }
             catch
             {
@@ -84,6 +201,7 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("cant find _mulligan.txt (if you dont created your own mulliganfile, ignore this message)");
                 return;
             }
+
             Helpfunctions.Instance.logg("read _mulligan.txt...");
             Helpfunctions.Instance.ErrorLog("read _mulligan.txt...");
             foreach (string line in lines)
@@ -106,13 +224,15 @@ namespace HREngine.Bots
                         {
                             ci.enemhero.Add(Hrtprozis.Instance.heroNametoEnum(s));
                         }
-                        concedelist.Add(ci);
+
+                        this.concedelist.Add(ci);
                     }
                     catch
                     {
                         Helpfunctions.Instance.logg("mullimaker cant read: " + line);
                         Helpfunctions.Instance.ErrorLog("mullimaker cant read: " + line);
                     }
+
                     continue;
                 }
 
@@ -127,26 +247,26 @@ namespace HREngine.Bots
                         {
                             if (crd.Contains(":"))
                             {
-                                if ((crd.Split(':')).Length == 3)
+                                if (crd.Split(':').Length == 3)
                                 {
-                                    this.holdlist.Add(new mulliitem(crd.Split(':')[0],ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1]), crd.Split(':')[2].Split('/')));
+                                    this.holdlist.Add(new mulliitem(crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1]), crd.Split(':')[2].Split('/')));
                                 }
                                 else
                                 {
-                                    this.holdlist.Add(new mulliitem(crd.Split(':')[0],ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1])));
+                                    this.holdlist.Add(new mulliitem(crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1])));
                                 }
 
                             }
                             else
                             {
-                                this.holdlist.Add(new mulliitem(crd,ownclass, enemyclass, 2));
+                                this.holdlist.Add(new mulliitem(crd, ownclass, enemyclass, 2));
                             }
                         }
 
                         if (line.Split(';').Length == 5)
                         {
                             int manarule = Convert.ToInt32(line.Split(';')[4]);
-                            this.holdlist.Add(new mulliitem("#MANARULE",ownclass, enemyclass, 2, null, manarule));
+                            this.holdlist.Add(new mulliitem("#MANARULE", ownclass, enemyclass, 2, null, manarule));
                         }
 
                     }
@@ -167,7 +287,7 @@ namespace HREngine.Bots
                             string cardlist = line.Split(';')[3];
                             foreach (string crd in cardlist.Split(','))
                             {
-                                if (crd == null || crd == "") continue;
+                                if (crd == null || crd == string.Empty) continue;
                                 this.deletelist.Add(new mulliitem(crd, ownclass, enemyclass, 2));
                             }
 
@@ -194,12 +314,33 @@ namespace HREngine.Bots
 
         }
 
+        /// <summary>
+        /// The hasmulliganrules.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
         public bool hasmulliganrules()
         {
             if (this.holdlist.Count == 0 && this.deletelist.Count == 0) return false;
             return true;
         }
 
+        /// <summary>
+        /// The what should i mulligan.
+        /// </summary>
+        /// <param name="cards">
+        /// The cards.
+        /// </param>
+        /// <param name="ownclass">
+        /// The ownclass.
+        /// </param>
+        /// <param name="enemclass">
+        /// The enemclass.
+        /// </param>
+        /// <returns>
+        /// The <see cref="List"/>.
+        /// </returns>
         public List<int> whatShouldIMulligan(List<CardIDEntity> cards, string ownclass, string enemclass)
         {
             List<int> discarditems = new List<int>();
@@ -215,6 +356,7 @@ namespace HREngine.Bots
                             if (discarditems.Contains(c.entitiy)) continue;
                             discarditems.Add(c.entitiy);
                         }
+
                         continue;
                     }
 
@@ -226,7 +368,7 @@ namespace HREngine.Bots
                 }
             }
 
-            if (holdlist.Count == 0) return discarditems;
+            if (this.holdlist.Count == 0) return discarditems;
 
             Dictionary<string, int> holddic = new Dictionary<string, int>();
             foreach (CardIDEntity c in cards)
@@ -241,6 +383,7 @@ namespace HREngine.Bots
                         {
                             delete = false;
                         }
+
                         continue;
                     }
 
@@ -250,8 +393,9 @@ namespace HREngine.Bots
                         if (mi.requiresCard == null)
                         {
 
-                            if (holddic.ContainsKey(c.id)) // we are holding one of the cards
+                            if (holddic.ContainsKey(c.id))
                             {
+                                // we are holding one of the cards
                                 if (mi.howmuch == 2)
                                 {
                                     delete = false;
@@ -276,10 +420,12 @@ namespace HREngine.Bots
                                     }
                                 }
                             }
+
                             if (hasRequirements)
                             {
-                                if (holddic.ContainsKey(c.id)) // we are holding one of the cards
+                                if (holddic.ContainsKey(c.id))
                                 {
+                                    // we are holding one of the cards
                                     if (mi.howmuch == 2)
                                     {
                                         delete = false;
@@ -320,15 +466,33 @@ namespace HREngine.Bots
 
         }
 
+        /// <summary>
+        /// The set auto concede.
+        /// </summary>
+        /// <param name="mode">
+        /// The mode.
+        /// </param>
         public void setAutoConcede(bool mode)
         {
             this.loserLoserLoser = mode;
         }
 
+        /// <summary>
+        /// The should concede.
+        /// </summary>
+        /// <param name="ownhero">
+        /// The ownhero.
+        /// </param>
+        /// <param name="enemHero">
+        /// The enem hero.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
         public bool shouldConcede(HeroEnum ownhero, HeroEnum enemHero)
         {
 
-            foreach (concedeItem ci in concedelist)
+            foreach (concedeItem ci in this.concedelist)
             {
                 if (ci.urhero == ownhero && ci.enemhero.Contains(enemHero)) return true;
             }

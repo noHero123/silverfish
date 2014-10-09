@@ -1,16 +1,39 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_DS1_055.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ d s 1_055.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_DS1_055 : SimTemplate //darkscalehealer
+    /// <summary>
+    /// The sim_ d s 1_055.
+    /// </summary>
+    class Sim_DS1_055 : SimTemplate
 	{
+	    // darkscalehealer
 
-//    kampfschrei:/ stellt bei allen befreundeten charakteren 2 leben wieder her.
-		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+// kampfschrei:/ stellt bei allen befreundeten charakteren 2 leben wieder her.
+        /// <summary>
+        /// The get battlecry effect.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            int heal = (own.own) ? p.getMinionHeal(2) : p.getEnemyMinionHeal(2);
+            int heal = own.own ? p.getMinionHeal(2) : p.getEnemyMinionHeal(2);
             p.allCharsOfASideGetDamage(own.own, -heal);
 		}
 

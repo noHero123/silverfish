@@ -1,14 +1,37 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_CS2_005.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ c s 2_005.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_CS2_005 : SimTemplate //claw
+    /// <summary>
+    /// The sim_ c s 2_005.
+    /// </summary>
+    class Sim_CS2_005 : SimTemplate
 	{
+	    // claw
 
-//    verleiht eurem helden +2 angriff in diesem zug und 2 rüstung.
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+// verleiht eurem helden +2 angriff in diesem zug und 2 rüstung.
+        /// <summary>
+        /// The on card play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
             if (ownplay)
             {

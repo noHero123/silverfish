@@ -1,14 +1,37 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_100.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_100.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_100 : SimTemplate //lorewalkercho
+    /// <summary>
+    /// The sim_ e x 1_100.
+    /// </summary>
+    class Sim_EX1_100 : SimTemplate
 	{
+	    // lorewalkercho
 
-//    wenn ein spieler einen zauber wirkt, erhält der andere spieler eine kopie desselben auf seine hand.
+// wenn ein spieler einen zauber wirkt, erhält der andere spieler eine kopie desselben auf seine hand.
 
+        /// <summary>
+        /// The on card is going to be played.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="c">
+        /// The c.
+        /// </param>
+        /// <param name="wasOwnCard">
+        /// The was own card.
+        /// </param>
+        /// <param name="triggerEffectMinion">
+        /// The trigger effect minion.
+        /// </param>
         public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
         {
             if (c.type == CardDB.cardtype.SPELL)

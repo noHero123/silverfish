@@ -1,22 +1,51 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_614.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_614.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_614 : SimTemplate //illidanstormrage
-	{
-        CardDB.Card d = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_614t);//flameofazzinoth
-//    beschwört jedes mal eine flamme von azzinoth (2/1), wenn ihr eine karte ausspielt.
+    /// <summary>
+    /// The sim_ e x 1_614.
+    /// </summary>
+    class Sim_EX1_614 : SimTemplate
+    {
+        // illidanstormrage
+        /// <summary>
+        /// The d.
+        /// </summary>
+        private CardDB.Card d = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_614t); // flameofazzinoth
 
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        // beschwört jedes mal eine flamme von azzinoth (2/1), wenn ihr eine karte ausspielt.
+
+        /// <summary>
+        /// The on card is going to be played.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="c">
+        /// The c.
+        /// </param>
+        /// <param name="wasOwnCard">
+        /// The was own card.
+        /// </param>
+        /// <param name="triggerEffectMinion">
+        /// The trigger effect minion.
+        /// </param>
+        public override void onCardIsGoingToBePlayed(
+            Playfield p, 
+            CardDB.Card c, 
+            bool wasOwnCard, 
+            Minion triggerEffectMinion)
         {
             if (wasOwnCard == triggerEffectMinion.own)
             {
-                    p.callKid(d, triggerEffectMinion.zonepos, triggerEffectMinion.own);
-
+                p.callKid(this.d, triggerEffectMinion.zonepos, triggerEffectMinion.own);
             }
         }
-
-	}
+    }
 }

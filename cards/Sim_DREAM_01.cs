@@ -1,13 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_DREAM_01.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ drea m_01.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_DREAM_01 : SimTemplate //laughingsister
+    /// <summary>
+    /// The sim_ drea m_01.
+    /// </summary>
+    class Sim_DREAM_01 : SimTemplate
 	{
+	    // laughingsister
 
-//    kann nicht als ziel von zaubern oder heldenfähigkeiten gewählt werden.
-
+// kann nicht als ziel von zaubern oder heldenfähigkeiten gewählt werden.
 	}
 }

@@ -1,13 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_575.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_575.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_575 : SimTemplate //manatidetotem
+    /// <summary>
+    /// The sim_ e x 1_575.
+    /// </summary>
+    class Sim_EX1_575 : SimTemplate
 	{
+	    // manatidetotem
 
-//    zieht am ende eures zuges eine karte.
+// zieht am ende eures zuges eine karte.
+        /// <summary>
+        /// The on turn ends trigger.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="triggerEffectMinion">
+        /// The trigger effect minion.
+        /// </param>
+        /// <param name="turnEndOfOwner">
+        /// The turn end of owner.
+        /// </param>
         public override void onTurnEndsTrigger(Playfield p, Minion triggerEffectMinion, bool turnEndOfOwner)
         {
             if (turnEndOfOwner == triggerEffectMinion.own)

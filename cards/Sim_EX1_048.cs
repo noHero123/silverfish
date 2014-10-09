@@ -1,14 +1,37 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_048.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_048.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_048 : SimTemplate //spellbreaker
+    /// <summary>
+    /// The sim_ e x 1_048.
+    /// </summary>
+    class Sim_EX1_048 : SimTemplate
 	{
+	    // spellbreaker
 
-//    kampfschrei:/ bringt einen diener zum schweigen/.
-		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+// kampfschrei:/ bringt einen diener zum schweigen/.
+        /// <summary>
+        /// The get battlecry effect.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
             if (target != null) p.minionGetSilenced(target);
 		}

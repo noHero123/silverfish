@@ -1,13 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_162.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_162.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_162 : SimTemplate //direwolfalpha
+    /// <summary>
+    /// The sim_ e x 1_162.
+    /// </summary>
+    class Sim_EX1_162 : SimTemplate
 	{
+	    // direwolfalpha
 
-//    benachbarte diener haben +1 angriff.
+// benachbarte diener haben +1 angriff.
         // note buff and debuff is handled by playfield (faster)
         /*
         public override void onAuraStarts(Playfield p, Minion own)
@@ -59,6 +67,5 @@ namespace HREngine.Bots
                 }
             }
         }*/
-
 	}
 }

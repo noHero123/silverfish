@@ -1,14 +1,43 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Pen_NEW1_024.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The pen_ ne w 1_024.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Pen_NEW1_024 : PenTemplate //captaingreenskin
+    /// <summary>
+    /// The pen_ ne w 1_024.
+    /// </summary>
+    class Pen_NEW1_024 : PenTemplate
 	{
+	    // captaingreenskin
 
-//    kampfschrei:/ verleiht eurer waffe +1/+1.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+// kampfschrei:/ verleiht eurer waffe +1/+1.
+        /// <summary>
+        /// The get play penalty.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        /// <param name="isLethal">
+        /// The is lethal.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
 		{
 		return 0;
 		}

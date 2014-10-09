@@ -1,13 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_CS2_mirror.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ c s 2_mirror.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_CS2_mirror : SimTemplate //mirrorimage
+    /// <summary>
+    /// The sim_ c s 2_mirror.
+    /// </summary>
+    class Sim_CS2_mirror : SimTemplate
 	{
+	    // mirrorimage
 
-//    spott/
+// spott/
 		
 
 	}

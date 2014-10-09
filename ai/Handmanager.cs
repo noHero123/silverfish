@@ -1,26 +1,60 @@
-﻿using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Handmanager.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The handmanager.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 
 namespace HREngine.Bots
 {
-
+    /// <summary>
+    /// The handmanager.
+    /// </summary>
     public class Handmanager
     {
-
+        /// <summary>
+        /// The handcard.
+        /// </summary>
         public class Handcard
         {
+            /// <summary>
+            /// The position.
+            /// </summary>
             public int position = 0;
+
+            /// <summary>
+            /// The entity.
+            /// </summary>
             public int entity = -1;
+
+            /// <summary>
+            /// The manacost.
+            /// </summary>
             public int manacost = 1000;
+
+            /// <summary>
+            /// The card.
+            /// </summary>
             public CardDB.Card card ;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Handcard"/> class.
+            /// </summary>
             public Handcard()
             {
-                card = CardDB.Instance.unknownCard;
+                this.card = CardDB.Instance.unknownCard;
             }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Handcard"/> class.
+            /// </summary>
+            /// <param name="hc">
+            /// The hc.
+            /// </param>
             public Handcard(Handcard hc)
             {
                 this.position = hc.position;
@@ -28,35 +62,87 @@ namespace HREngine.Bots
                 this.manacost = hc.manacost;
                 this.card = hc.card;
             }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Handcard"/> class.
+            /// </summary>
+            /// <param name="c">
+            /// The c.
+            /// </param>
             public Handcard(CardDB.Card c )
             {
                 this.position = 0;
                 this.entity = -1;
                 this.card = c;
             }
+
+            /// <summary>
+            /// The get mana cost.
+            /// </summary>
+            /// <param name="p">
+            /// The p.
+            /// </param>
+            /// <returns>
+            /// The <see cref="int"/>.
+            /// </returns>
             public int getManaCost(Playfield p)
             {
                 return this.card.getManaCost(p, this.manacost);
             }
+
+            /// <summary>
+            /// The canplay card.
+            /// </summary>
+            /// <param name="p">
+            /// The p.
+            /// </param>
+            /// <returns>
+            /// The <see cref="bool"/>.
+            /// </returns>
             public bool canplayCard(Playfield p)
             {
                 return this.card.canplayCard(p, this.manacost);
             }
         }
 
+        /// <summary>
+        /// The hand cards.
+        /// </summary>
         public List<Handcard> handCards = new List<Handcard>();
 
+        /// <summary>
+        /// The anzcards.
+        /// </summary>
         public int anzcards = 0;
 
+        /// <summary>
+        /// The enemy anz cards.
+        /// </summary>
         public int enemyAnzCards = 0;
 
+        /// <summary>
+        /// The own player controller.
+        /// </summary>
         private int ownPlayerController = 0;
 
+        /// <summary>
+        /// The help.
+        /// </summary>
         Helpfunctions help;
+
+        /// <summary>
+        /// The cdb.
+        /// </summary>
         CardDB cdb = CardDB.Instance;
 
+        /// <summary>
+        /// The instance.
+        /// </summary>
         private static Handmanager instance;
 
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
         public static Handmanager Instance
         {
             get
@@ -65,17 +151,23 @@ namespace HREngine.Bots
                 {
                     instance = new Handmanager();
                 }
+
                 return instance;
             }
         }
 
-
+        /// <summary>
+        /// Prevents a default instance of the <see cref="Handmanager"/> class from being created.
+        /// </summary>
         private Handmanager()
         {
             this.help = Helpfunctions.Instance;
 
         }
 
+        /// <summary>
+        /// The clear all.
+        /// </summary>
         public void clearAll()
         {
             this.handCards.Clear();
@@ -84,14 +176,29 @@ namespace HREngine.Bots
             this.ownPlayerController = 0;
         }
 
+        /// <summary>
+        /// The set own player.
+        /// </summary>
+        /// <param name="player">
+        /// The player.
+        /// </param>
         public void setOwnPlayer(int player)
         {
             this.ownPlayerController = player;
         }
 
-
-
-
+        /// <summary>
+        /// The set handcards.
+        /// </summary>
+        /// <param name="hc">
+        /// The hc.
+        /// </param>
+        /// <param name="anzown">
+        /// The anzown.
+        /// </param>
+        /// <param name="anzenemy">
+        /// The anzenemy.
+        /// </param>
         public void setHandcards(List<Handcard> hc, int anzown, int anzenemy)
         {
             this.handCards.Clear();
@@ -99,23 +206,30 @@ namespace HREngine.Bots
             {
                 this.handCards.Add(new Handcard(h));
             }
-            //this.handCards.AddRange(hc);
+
+            // this.handCards.AddRange(hc);
             this.handCards.Sort((a, b) => a.position.CompareTo(b.position));
             this.anzcards = anzown;
             this.enemyAnzCards = anzenemy;
         }
 
-
+        /// <summary>
+        /// The printcards.
+        /// </summary>
+        /// <param name="writeTobuffer">
+        /// The write tobuffer.
+        /// </param>
         public void printcards(bool writeTobuffer = false)
         {
-            help.logg("Own Handcards: ");
-            foreach (Handmanager.Handcard c in this.handCards)
+            this.help.logg("Own Handcards: ");
+            foreach (Handcard c in this.handCards)
             {
-                help.logg("pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum);
+                this.help.logg("pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum);
             }
-            help.logg("Enemy cards: " + this.enemyAnzCards);
+
+            this.help.logg("Enemy cards: " + this.enemyAnzCards);
             
-            //todo print died minions this turn!
+            // todo print died minions this turn!
             
             /*if(Ai.Instance.playaround)
             {
@@ -154,17 +268,17 @@ namespace HREngine.Bots
                     help.logg("probs: "  + Probabilitymaker.Instance.anzCardsInDeck(CardDB.cardIDEnum.CS2_012));
                 }
             }*/
-
             if (writeTobuffer)
             {
-                help.writeToBuffer("Own Handcards: ");
-                foreach (Handmanager.Handcard c in this.handCards)
+                this.help.writeToBuffer("Own Handcards: ");
+                foreach (Handcard c in this.handCards)
                 {
-                    help.writeToBuffer("pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum);
+                    this.help.writeToBuffer("pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum);
                 }
-                help.writeToBuffer("Enemy cards: " + this.enemyAnzCards);
 
-                //todo print died minions this turn!
+                this.help.writeToBuffer("Enemy cards: " + this.enemyAnzCards);
+
+                // todo print died minions this turn!
 
                 /*if (Ai.Instance.playaround)
                 {

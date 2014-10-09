@@ -1,20 +1,44 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_014.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_014.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_014 : SimTemplate //kingmukla
+    /// <summary>
+    /// The sim_ e x 1_014.
+    /// </summary>
+    class Sim_EX1_014 : SimTemplate
 	{
+	    // kingmukla
 
-//    kampfschrei:/ gebt eurem gegner 2 bananen.
-		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+// kampfschrei:/ gebt eurem gegner 2 bananen.
+        /// <summary>
+        /// The get battlecry effect.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
             p.drawACard(CardDB.cardName.bananas, !own.own, true);
             if (own.own)
             {
                 p.enemycarddraw -= 1;
             }
+
             p.drawACard(CardDB.cardName.bananas, !own.own, true);
             if (own.own)
             {

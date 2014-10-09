@@ -1,19 +1,45 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_412.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_412.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_412 : SimTemplate //ragingworgen
+    /// <summary>
+    /// The sim_ e x 1_412.
+    /// </summary>
+    class Sim_EX1_412 : SimTemplate
 	{
+	    // ragingworgen
 
-//    wutanfall:/ windzorn/ und +1 angriff
+// wutanfall:/ windzorn/ und +1 angriff
+        /// <summary>
+        /// The on enrage start.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
         public override void onEnrageStart(Playfield p, Minion m)
         {
             m.Angr++;
             p.minionGetWindfurry(m);
         }
 
+        /// <summary>
+        /// The on enrage stop.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
         public override void onEnrageStop(Playfield p, Minion m)
         {
             m.Angr--;

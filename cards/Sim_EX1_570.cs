@@ -1,15 +1,38 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_570.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_570.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_570 : SimTemplate //bite
+    /// <summary>
+    /// The sim_ e x 1_570.
+    /// </summary>
+    class Sim_EX1_570 : SimTemplate
 	{
+	    // bite
 
-//    verleiht eurem helden +4 angriff in diesem zug und 4 rüstung.
+// verleiht eurem helden +4 angriff in diesem zug und 4 rüstung.
 
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        /// <summary>
+        /// The on card play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
             if (ownplay)
             {

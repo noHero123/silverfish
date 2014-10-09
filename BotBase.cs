@@ -1,108 +1,192 @@
-﻿using HREngine.API;
-using HREngine.API.Utilities;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BotBase.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The bot.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 
 namespace HREngine.Bots
 {
+    using System.IO;
 
-   public class Bot : API.IBot
+    using HREngine.API;
+    using HREngine.API.Actions;
+    using HREngine.API.Utilities;
+
+    /// <summary>
+    /// The bot.
+    /// </summary>
+    public class Bot : IBot
    {
-       //private int stopAfterWins = 30;
-       private int concedeLvl = 5; // the rank, till you want to concede
-       private int dirtytarget = -1;
-       private int dirtychoice = -1;
-       private string choiceCardId = "";
-       DateTime starttime = DateTime.Now;
-       Silverfish sf;
-       bool enemyConcede = false;
+       // private int stopAfterWins = 30;
+        /// <summary>
+        /// The concede lvl.
+        /// </summary>
+        private int concedeLvl = 5; // the rank, till you want to concede
 
-       public bool learnmode = true;
-       public bool printlearnmode = true;
+        /// <summary>
+        /// The dirtytarget.
+        /// </summary>
+        private int dirtytarget = -1;
 
-       bool useExternalProcess = true;
-       public bool passiveWaiting = false;
+        /// <summary>
+        /// The dirtychoice.
+        /// </summary>
+        private int dirtychoice = -1;
 
-       Behavior behave = new BehaviorControl();
+        /// <summary>
+        /// The choice card id.
+        /// </summary>
+        private string choiceCardId = string.Empty;
 
+        /// <summary>
+        /// The starttime.
+        /// </summary>
+        DateTime starttime = DateTime.Now;
 
-       //crawlerstuff
-       bool isgoingtoconcede = false;
-       int wins = 0;
-       int loses = 0;
+        /// <summary>
+        /// The sf.
+        /// </summary>
+        Silverfish sf;
 
-       public Bot()
-       {
-           OnVictory = HandleWining;
-           OnLost = HandleLosing;
-           OnBattleStateUpdate = HandleOnBattleStateUpdate;
-           OnMulliganStateUpdate = HandleBattleMulliganPhase;
-           starttime = DateTime.Now;
-           bool concede = false;
-           bool writeToSingleFile = false;
+        /// <summary>
+        /// The enemy concede.
+        /// </summary>
+        bool enemyConcede = false;
 
-           try
-           {
-               concede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.autoconcede") == "true") ? true : false;
-               writeToSingleFile = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.singleLog") == "true") ? true : false;
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("a wild error occurrs! cant read the settings...");
-           }
+        /// <summary>
+        /// The learnmode.
+        /// </summary>
+        public bool learnmode = true;
 
-           this.sf = new Silverfish(writeToSingleFile);
-           CardDB cdb = CardDB.Instance;
-           if (cdb.installedWrong) return;
-           Mulligan.Instance.setAutoConcede(concede);
-           sf.setnewLoggFile();
+        /// <summary>
+        /// The printlearnmode.
+        /// </summary>
+        public bool printlearnmode = true;
 
+        /// <summary>
+        /// The use external process.
+        /// </summary>
+        bool useExternalProcess = true;
 
-           try
-           {
-               this.learnmode = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.wwuaid") == "true") ? true : false;
-               if (this.learnmode)
-               {
-                   Helpfunctions.Instance.ErrorLog("Learn mode is ON");
-               }
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("a wild error occurrs! cant read the settings...");
-           }
+        /// <summary>
+        /// The passive waiting.
+        /// </summary>
+        public bool passiveWaiting = false;
 
-           try
-           {
-               this.passiveWaiting = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.passivewait") == "true") ? true : false;
-               if (this.passiveWaiting)
-               {
-                   Helpfunctions.Instance.ErrorLog("Passive Waiting is ON");
-               }
-               else
-               {
-                   Helpfunctions.Instance.ErrorLog("Passive Waiting is OFF");
-               }
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("cant read passive waiting...");
-           }
+        /// <summary>
+        /// The behave.
+        /// </summary>
+        Behavior behave = new BehaviorControl();
 
 
-           try
-           {
-               this.concedeLvl = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.concedelvl")));
-               if (this.concedeLvl >= 20) this.concedeLvl = 20;
-               if (concede)
-               {
-                   Helpfunctions.Instance.ErrorLog("concede till rank " + concedeLvl);
-               }
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("cant read your concede-Lvl");
-           }
-           /*try
+       // crawlerstuff
+        /// <summary>
+        /// The isgoingtoconcede.
+        /// </summary>
+        bool isgoingtoconcede = false;
+
+        /// <summary>
+        /// The wins.
+        /// </summary>
+        int wins = 0;
+
+        /// <summary>
+        /// The loses.
+        /// </summary>
+        int loses = 0;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bot"/> class.
+        /// </summary>
+        public Bot()
+        {
+            this.OnVictory = this.HandleWining;
+            this.OnLost = this.HandleLosing;
+            this.OnBattleStateUpdate = this.HandleOnBattleStateUpdate;
+            this.OnMulliganStateUpdate = this.HandleBattleMulliganPhase;
+            this.starttime = DateTime.Now;
+            bool concede = false;
+            bool writeToSingleFile = false;
+
+            try
+            {
+                concede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.autoconcede") == "true") ? true : false;
+                writeToSingleFile = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.singleLog") == "true")
+                                        ? true
+                                        : false;
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("a wild error occurrs! cant read the settings...");
+            }
+
+            this.sf = new Silverfish(writeToSingleFile);
+            CardDB cdb = CardDB.Instance;
+            if (cdb.installedWrong)
+            {
+                return;
+            }
+
+            Mulligan.Instance.setAutoConcede(concede);
+            this.sf.setnewLoggFile();
+
+            try
+            {
+                this.learnmode = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.wwuaid") == "true") ? true : false;
+                if (this.learnmode)
+                {
+                    Helpfunctions.Instance.ErrorLog("Learn mode is ON");
+                }
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("a wild error occurrs! cant read the settings...");
+            }
+
+            try
+            {
+                this.passiveWaiting = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.passivewait") == "true")
+                                          ? true
+                                          : false;
+                if (this.passiveWaiting)
+                {
+                    Helpfunctions.Instance.ErrorLog("Passive Waiting is ON");
+                }
+                else
+                {
+                    Helpfunctions.Instance.ErrorLog("Passive Waiting is OFF");
+                }
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("cant read passive waiting...");
+            }
+
+            try
+            {
+                this.concedeLvl = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.concedelvl"));
+                if (this.concedeLvl >= 20)
+                {
+                    this.concedeLvl = 20;
+                }
+
+                if (concede)
+                {
+                    Helpfunctions.Instance.ErrorLog("concede till rank " + this.concedeLvl);
+                }
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("cant read your concede-Lvl");
+            }
+
+            /*try
            {
                this.stopAfterWins = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.stopwin")));
                if (this.stopAfterWins <= 0) this.stopAfterWins = 10000;
@@ -112,198 +196,266 @@ namespace HREngine.Bots
            {
                Helpfunctions.Instance.ErrorLog("cant read stop after # of wins");
            }*/
+            try
+            {
+                this.enemyConcede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.enemyconcede") == "true")
+                                        ? true
+                                        : false;
+                if (this.enemyConcede)
+                {
+                    Helpfunctions.Instance.ErrorLog("concede whether enemy has lethal");
+                }
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("cant read enemy concede");
+            }
 
-           try
-           {
-               this.enemyConcede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.enemyconcede") == "true") ? true : false;
-               if (this.enemyConcede) Helpfunctions.Instance.ErrorLog("concede whether enemy has lethal");
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("cant read enemy concede");
-           }
+            try
+            {
+                bool secrets = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.secrets") == "true") ? true : false;
+                Settings.Instance.useSecretsPlayArround = secrets;
+                Helpfunctions.Instance.ErrorLog("playing arround secrets is " + secrets);
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("cant read secrets");
+            }
 
+            try
+            {
+                int enfacehp = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.enemyfacehp"));
+                Helpfunctions.Instance.ErrorLog("set enemy-face-hp to: " + enfacehp);
+                ComboBreaker.Instance.attackFaceHP = enfacehp;
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("error in reading enemy-face-hp");
+            }
 
+            try
+            {
+                int mxwde = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxwide"));
+                if (mxwde != 3000)
+                {
+                    Ai.Instance.setMaxWide(mxwde);
+                    Helpfunctions.Instance.ErrorLog("set maxwide to: " + mxwde);
+                }
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("error in reading Maxwide from settings, please recheck the entry");
+            }
 
-           try
-           {
-               bool secrets = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.secrets") == "true") ? true : false;
-               Settings.Instance.useSecretsPlayArround = secrets;
-               Helpfunctions.Instance.ErrorLog("playing arround secrets is " + secrets);
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("cant read secrets");
-           }
+            int twotsamount = 0;
+            try
+            {
+                // bool twots = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurns") == "true") ? true : false;
+                twotsamount = Convert.ToInt32(
+                    HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurnCounter"));
+                if (twotsamount < 0)
+                {
+                    twotsamount = 0;
+                }
 
-           try
-           {
-               int enfacehp = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.enemyfacehp")));
-               Helpfunctions.Instance.ErrorLog("set enemy-face-hp to: " + enfacehp);
-               ComboBreaker.Instance.attackFaceHP = enfacehp;
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("error in reading enemy-face-hp");
-           }
+                Ai.Instance.setTwoTurnSimulation(false, twotsamount);
+                Helpfunctions.Instance.ErrorLog("calculate the second turn of the " + twotsamount + " best boards");
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("error in reading two-turn-simulation from settings");
+            }
 
-           try
-           {
-               int mxwde = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxwide")));
-               if (mxwde != 3000)
-               {
-                   Ai.Instance.setMaxWide(mxwde);
-                   Helpfunctions.Instance.ErrorLog("set maxwide to: " + mxwde);
-               }
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("error in reading Maxwide from settings, please recheck the entry");
-           }
+            if (twotsamount >= 1)
+            {
+                try
+                {
+                    bool enemySecondTurnSim = (HRSettings.Get.ReadSetting(
+                        "silverfish.xml", 
+                        "uai.simulateEnemyOnSecondTurn") == "true")
+                                                  ? true
+                                                  : false;
+                    Settings.Instance.simEnemySecondTurn = enemySecondTurnSim;
 
-           int twotsamount = 0;
-           try
-           {
-               //bool twots = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurns") == "true") ? true : false;
-               twotsamount = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurnCounter")));
-               if (twotsamount < 0) twotsamount = 0;
-               Ai.Instance.setTwoTurnSimulation(false, twotsamount);
-               Helpfunctions.Instance.ErrorLog("calculate the second turn of the " + twotsamount + " best boards");
+                    // Ai.Instance.nextTurnSimulator.setEnemyTurnsim(enemySecondTurnSim);
+                    if (enemySecondTurnSim)
+                    {
+                        Helpfunctions.Instance.ErrorLog("simulates the enemy turn on your second turn");
+                    }
+                }
+                catch
+                {
+                    Helpfunctions.Instance.ErrorLog("error in reading enemys-two-turn-simulation from settings");
+                }
+            }
 
+            try
+            {
+                bool playaround = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAround") == "true")
+                                      ? true
+                                      : false;
+                int playaroundprob = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAroundProb"));
+                if (playaroundprob > 100)
+                {
+                    playaroundprob = 100;
+                }
 
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("error in reading two-turn-simulation from settings");
-           }
+                if (playaroundprob < 0)
+                {
+                    playaroundprob = 0;
+                }
 
-           if (twotsamount >= 1)
-           {
-               try
-               {
-                   bool enemySecondTurnSim = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateEnemyOnSecondTurn") == "true") ? true : false;
-                   Settings.Instance.simEnemySecondTurn = enemySecondTurnSim;
-                   //Ai.Instance.nextTurnSimulator.setEnemyTurnsim(enemySecondTurnSim);
-                   if (enemySecondTurnSim) Helpfunctions.Instance.ErrorLog("simulates the enemy turn on your second turn");
+                int playaroundprob2 =
+                    Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAroundProb2"));
+                if (playaroundprob2 < playaroundprob)
+                {
+                    playaroundprob2 = playaroundprob;
+                }
 
+                if (playaroundprob2 > 100)
+                {
+                    playaroundprob2 = 100;
+                }
 
-               }
-               catch
-               {
-                   Helpfunctions.Instance.ErrorLog("error in reading enemys-two-turn-simulation from settings");
-               }
-           }
+                if (playaroundprob2 < 0)
+                {
+                    playaroundprob2 = 0;
+                }
 
-           try
-           {
-               bool playaround = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAround") == "true") ? true : false;
-               int playaroundprob = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAroundProb"));
-               if (playaroundprob > 100) playaroundprob = 100;
-               if (playaroundprob < 0) playaroundprob = 0;
+                if (playaround)
+                {
+                    Settings.Instance.playarround = playaround;
+                    Settings.Instance.playaroundprob = playaroundprob;
+                    Settings.Instance.playaroundprob2 = playaroundprob2;
+                    Ai.Instance.setPlayAround();
+                    Helpfunctions.Instance.ErrorLog("activated playaround");
+                }
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("error in reading play around settings");
+            }
 
-               int playaroundprob2 = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAroundProb2"));
-               if (playaroundprob2 < playaroundprob) playaroundprob2 = playaroundprob;
-               if (playaroundprob2 > 100) playaroundprob2 = 100;
-               if (playaroundprob2 < 0) playaroundprob2 = 0;
-               if (playaround)
-               {
+            Helpfunctions.Instance.ErrorLog("write to single log file is: " + writeToSingleFile);
 
-                   Settings.Instance.playarround = playaround;
-                   Settings.Instance.playaroundprob = playaroundprob;
-                   Settings.Instance.playaroundprob2 = playaroundprob2;
-                   Ai.Instance.setPlayAround();
-                   Helpfunctions.Instance.ErrorLog("activated playaround");
-               }
+            bool teststuff = false;
+            bool printstuff = false;
+            try
+            {
+                printstuff = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.longteststuff") == "true")
+                                 ? true
+                                 : false;
+                teststuff = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.teststuff") == "true") ? true : false;
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("something went wrong with simulating stuff!");
+            }
 
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("error in reading play around settings");
-           }
+            int amountBoardsInEnemyTurnSim = 20;
+            int amountBoardsInEnemySecondTurnSim = 20;
 
-           Helpfunctions.Instance.ErrorLog("write to single log file is: " + writeToSingleFile);
+            int nextturnsimDeep = 6;
+            int nextturnsimMaxWidth = 10;
+            int nexttunsimMaxBoards = 50;
 
-           bool teststuff = false;
-           bool printstuff = false;
-           try
-           {
+            try
+            {
+                amountBoardsInEnemyTurnSim =
+                    Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysTurn"));
+                amountBoardsInEnemySecondTurnSim =
+                    Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysSecondTurn"));
+                nextturnsimDeep = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimDeep"));
+                nextturnsimMaxWidth =
+                    Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimWide"));
+                nexttunsimMaxBoards =
+                    Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimBoards"));
 
-               printstuff = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.longteststuff") == "true") ? true : false;
-               teststuff = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.teststuff") == "true") ? true : false;
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("something went wrong with simulating stuff!");
-           }
+                Settings.Instance.enemyTurnMaxWide = amountBoardsInEnemyTurnSim;
+                Settings.Instance.enemySecondTurnMaxWide = amountBoardsInEnemySecondTurnSim;
 
-           int amountBoardsInEnemyTurnSim = 20;
-           int amountBoardsInEnemySecondTurnSim = 20;
+                Settings.Instance.nextTurnDeep = nextturnsimDeep;
+                Settings.Instance.nextTurnMaxWide = nextturnsimMaxWidth;
+                Settings.Instance.nextTurnTotalBoards = nexttunsimMaxBoards;
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("something went wrong with reading simulation settings");
+            }
 
-           int nextturnsimDeep = 6;
-           int nextturnsimMaxWidth = 10;
-           int nexttunsimMaxBoards = 50;
+            Helpfunctions.Instance.ErrorLog("----------------------------");
+            Helpfunctions.Instance.ErrorLog("you are running uai V" + this.sf.versionnumber);
+            Helpfunctions.Instance.ErrorLog("----------------------------");
 
-           try
-           {
+            try
+            {
+                this.useExternalProcess = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.extern") == "true")
+                                              ? true
+                                              : false;
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("rand read the external-process setting!");
+            }
 
-               amountBoardsInEnemyTurnSim = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysTurn"));
-               amountBoardsInEnemySecondTurnSim = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysSecondTurn"));
-               nextturnsimDeep = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimDeep"));
-               nextturnsimMaxWidth = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimWide"));
-               nexttunsimMaxBoards = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimBoards"));
+            if (this.useExternalProcess)
+            {
+                Helpfunctions.Instance.ErrorLog("YOU USE SILVER.EXE FOR CALCULATION, MAKE SURE YOU STARTED IT!");
+            }
 
-               Settings.Instance.enemyTurnMaxWide = amountBoardsInEnemyTurnSim;
-               Settings.Instance.enemySecondTurnMaxWide = amountBoardsInEnemySecondTurnSim;
+            if (this.useExternalProcess)
+            {
+                Helpfunctions.Instance.ErrorLog("SILVER.EXE IS LOCATED IN: " + Settings.Instance.path);
+            }
 
-               Settings.Instance.nextTurnDeep = nextturnsimDeep;
-               Settings.Instance.nextTurnMaxWide = nextturnsimMaxWidth;
-               Settings.Instance.nextTurnTotalBoards = nexttunsimMaxBoards;
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("something went wrong with reading simulation settings");
-           }
+            if (teststuff)
+            {
+                Ai.Instance.autoTester(printstuff);
+            }
 
+            this.writeSettings();
+        }
 
-           Helpfunctions.Instance.ErrorLog("----------------------------");
-           Helpfunctions.Instance.ErrorLog("you are running uai V" + sf.versionnumber);
-           Helpfunctions.Instance.ErrorLog("----------------------------");
-
-           try
-           {
-               this.useExternalProcess = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.extern") == "true") ? true : false;
-           }
-           catch
-           {
-               Helpfunctions.Instance.ErrorLog("rand read the external-process setting!");
-           }
-
-           if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("YOU USE SILVER.EXE FOR CALCULATION, MAKE SURE YOU STARTED IT!");
-           if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("SILVER.EXE IS LOCATED IN: " + Settings.Instance.path);
-
-           if (teststuff)
-           {
-               Ai.Instance.autoTester(printstuff);
-           }
-           writeSettings();
-       }
-
+        /// <summary>
+        /// The lossedtodo.
+        /// </summary>
         int lossedtodo = 0;
+
+        /// <summary>
+        /// The keep concede.
+        /// </summary>
         int KeepConcede = 0;
+
+        /// <summary>
+        /// The oldwin.
+        /// </summary>
         int oldwin = 0;
+
+        /// <summary>
+        /// The autoconcede.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
         private bool autoconcede()
         {
-            if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.ARENA) return false;
-            if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode != HRGameMode.RANKED_PLAY) return false;
+            if (HRSettings.Get.SelectedGameMode == HRGameMode.ARENA)
+            {
+                return false;
+            }
+
+            if (HRSettings.Get.SelectedGameMode != HRGameMode.RANKED_PLAY)
+            {
+                return false;
+            }
+
             int totalwin = this.wins;
             int totallose = this.loses;
+
             /*if ((totalwin + totallose - KeepConcede) != 0)
             {
                 Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + KeepConcede + " lose:" + (totallose - KeepConcede) + " real winrate:" + (totalwin * 100 / (totalwin + totallose - KeepConcede)));
             }*/
-
-
-            
             int curlvl = HRPlayer.GetLocalPlayer().GetRank();
 
             if (curlvl > this.concedeLvl)
@@ -319,6 +471,7 @@ namespace HREngine.Bots
                 {
                     this.lossedtodo--;
                 }
+
                 Helpfunctions.Instance.ErrorLog("not today!! (you won a game)");
                 this.isgoingtoconcede = true;
                 return true;
@@ -335,44 +488,65 @@ namespace HREngine.Bots
             if (curlvl < this.concedeLvl)
             {
                 this.lossedtodo = 3;
-                Helpfunctions.Instance.ErrorLog("your rank is " + curlvl + " targeted rank is " + this.concedeLvl + " -> concede!");
+                Helpfunctions.Instance.ErrorLog(
+                    "your rank is " + curlvl + " targeted rank is " + this.concedeLvl + " -> concede!");
                 Helpfunctions.Instance.ErrorLog("not today!!!");
                 this.isgoingtoconcede = true;
                 return true;
             }
+
             return false;
         }
 
+        /// <summary>
+        /// The concede v senemy.
+        /// </summary>
+        /// <param name="ownh">
+        /// The ownh.
+        /// </param>
+        /// <param name="enemyh">
+        /// The enemyh.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
         private bool concedeVSenemy(string ownh, string enemyh)
         {
-            if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.ARENA) return false;
-            if (!(HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.RANKED_PLAY || HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.UNRANKED_PLAY)) return false;
+            if (HRSettings.Get.SelectedGameMode == HRGameMode.ARENA) return false;
+            if (!(HRSettings.Get.SelectedGameMode == HRGameMode.RANKED_PLAY || HRSettings.Get.SelectedGameMode == HRGameMode.UNRANKED_PLAY)) return false;
             if (Mulligan.Instance.shouldConcede(Hrtprozis.Instance.heroNametoEnum(ownh), Hrtprozis.Instance.heroNametoEnum(enemyh)))
             {
                 Helpfunctions.Instance.ErrorLog("not today!!!!");
-                writeSettings();
+                this.writeSettings();
                 this.isgoingtoconcede = true;
                 return true;
             }
+
             return false;
         }
 
+        /// <summary>
+        /// The disable relogger.
+        /// </summary>
         private void disableRelogger()
         {
-            string version = sf.versionnumber;
+            string version = this.sf.versionnumber;
             int totalwin = 0;
             int totallose = 0;
-            string[] lines = new string[0] { };
+            string[] lines = { };
             try
             {
-                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "Common" + System.IO.Path.DirectorySeparatorChar;
-                //string path = (HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "Common" + System.IO.Path.DirectorySeparatorChar;
-                lines = System.IO.File.ReadAllLines(path + "Settings.ini");
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + Path.DirectorySeparatorChar + "Common"
+                              + Path.DirectorySeparatorChar;
+
+                // string path = (HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "Common" + System.IO.Path.DirectorySeparatorChar;
+                lines = File.ReadAllLines(path + "Settings.ini");
             }
             catch
             {
                 Helpfunctions.Instance.logg("cant find Settings.ini");
             }
+
             List<string> newlines = new List<string>();
             for (int i = 0; i < lines.Length; i++)
             {
@@ -382,16 +556,15 @@ namespace HREngine.Bots
                 {
                     s = "client.relogger=false";
                 }
-                //Helpfunctions.Instance.ErrorLog("add " + s);
+
+                // Helpfunctions.Instance.ErrorLog("add " + s);
                 newlines.Add(s);
-
             }
-
 
             try
             {
-                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "Common" + System.IO.Path.DirectorySeparatorChar;
-                System.IO.File.WriteAllLines(path + "Settings.ini", newlines.ToArray());
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + Path.DirectorySeparatorChar + "Common" + Path.DirectorySeparatorChar;
+                File.WriteAllLines(path + "Settings.ini", newlines.ToArray());
             }
             catch
             {
@@ -399,19 +572,23 @@ namespace HREngine.Bots
             }
         }
 
+        /// <summary>
+        /// The write settings.
+        /// </summary>
         private void writeSettings()
         {
-            string version = sf.versionnumber;
+            string version = this.sf.versionnumber;
             string[] lines = new string[0] { };
             try
             {
-                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "Common" + System.IO.Path.DirectorySeparatorChar;
-                lines = System.IO.File.ReadAllLines(path + "Settings.ini");
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + Path.DirectorySeparatorChar + "Common" + Path.DirectorySeparatorChar;
+                lines = File.ReadAllLines(path + "Settings.ini");
             }
             catch
             {
                 Helpfunctions.Instance.logg("cant find Settings.ini");
             }
+
             List<string> newlines = new List<string>();
             for (int i = 0; i < lines.Length; i++)
             {
@@ -424,50 +601,49 @@ namespace HREngine.Bots
 
                 if (s.Contains("uai.concedes"))
                 {
-                    s = "uai.concedes=" + KeepConcede;
+                    s = "uai.concedes=" + this.KeepConcede;
                 }
 
                 if (s.Contains("uai.wins"))
                 {
                     s = "uai.wins=" + this.wins;
                 }
+
                 if (s.Contains("uai.loses"))
                 {
                     s = "uai.loses=" + this.loses;
                 }
+
                 if (s.Contains("uai.winrate"))
                 {
                     s = "uai.winrate=" + 0;
                     double winr = 0;
-                    if ((this.wins + this.loses - KeepConcede) != 0)
+                    if ((this.wins + this.loses - this.KeepConcede) != 0)
                     {
-                        winr = ((double)(this.wins * 100) / (double)(this.wins + this.loses - KeepConcede));
+                        winr = this.wins * 100 / (double)(this.wins + this.loses - this.KeepConcede);
                         s = "uai.winrate=" + Math.Round(winr, 2);
                     }
-
                 }
+
                 if (s.Contains("uai.winph"))
                 {
                     s = "uai.winph=" + 0;
                     double winh = 0;
-                    if ((DateTime.Now - starttime).TotalHours >= 0.001)
+                    if ((DateTime.Now - this.starttime).TotalHours >= 0.001)
                     {
-
-                        winh = (double)this.wins / (DateTime.Now - starttime).TotalHours;
+                        winh = this.wins / (DateTime.Now - this.starttime).TotalHours;
                         s = "uai.winph=" + Math.Round(winh, 2);
                     }
-
                 }
-                //Helpfunctions.Instance.ErrorLog("add " + s);
+
+                // Helpfunctions.Instance.ErrorLog("add " + s);
                 newlines.Add(s);
-
             }
-
 
             try
             {
-                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "Common" + System.IO.Path.DirectorySeparatorChar;
-                System.IO.File.WriteAllLines(path + "Settings.ini", newlines.ToArray());
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + Path.DirectorySeparatorChar + "Common" + Path.DirectorySeparatorChar;
+                File.WriteAllLines(path + "Settings.ini", newlines.ToArray());
             }
             catch
             {
@@ -475,17 +651,23 @@ namespace HREngine.Bots
             }
         }
 
-        private HREngine.API.Actions.ActionBase HandleBattleMulliganPhase()
+        /// <summary>
+        /// The handle battle mulligan phase.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="ActionBase"/>.
+        /// </returns>
+        private ActionBase HandleBattleMulliganPhase()
         {
             if (this.learnmode)
             {
-                return new HREngine.API.Actions.MakeNothingAction();
+                return new MakeNothingAction();
             }
-            //Helpfunctions.Instance.ErrorLog("handle mulligan");
 
+            // Helpfunctions.Instance.ErrorLog("handle mulligan");
             if ((TAG_MULLIGAN)HRPlayer.GetLocalPlayer().GetTag(HRGameTag.MULLIGAN_STATE) != TAG_MULLIGAN.INPUT)
             {
-                //Helpfunctions.Instance.ErrorLog("but we have to wait :D");
+                // Helpfunctions.Instance.ErrorLog("but we have to wait :D");
                 return null;
             }
 
@@ -501,22 +683,24 @@ namespace HREngine.Bots
                     List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
                     foreach (var item in list)
                     {
-                        if (item.GetEntity().GetCardId() != "GAME_005")// dont mulligan coin
+                        if (item.GetEntity().GetCardId() != "GAME_005")
                         {
-                            celist.Add(new Mulligan.CardIDEntity(item.GetEntity().GetCardId(), item.GetEntity().GetEntityId()));
+                            // dont mulligan coin
+                            celist.Add(
+                                new Mulligan.CardIDEntity(item.GetEntity().GetCardId(), item.GetEntity().GetEntityId()));
                         }
                     }
+
                     List<int> mullientitys = Mulligan.Instance.whatShouldIMulligan(celist, ownName, enemName);
                     foreach (var item in list)
                     {
                         if (mullientitys.Contains(item.GetEntity().GetEntityId()))
                         {
-                            Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + item.GetEntity().GetName() + " because of your rules");
+                            Helpfunctions.Instance.ErrorLog(
+                                "Rejecting Mulligan Card " + item.GetEntity().GetName() + " because of your rules");
                             HRMulligan.ToggleCard(item);
                         }
                     }
-
-
                 }
                 else
                 {
@@ -524,88 +708,94 @@ namespace HREngine.Bots
                     {
                         if (item.GetEntity().GetCost() >= 4)
                         {
-                            Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + item.GetEntity().GetName() + " because it cost is >= 4.");
+                            Helpfunctions.Instance.ErrorLog(
+                                "Rejecting Mulligan Card " + item.GetEntity().GetName() + " because it cost is >= 4.");
                             HRMulligan.ToggleCard(item);
                         }
-                        if (item.GetEntity().GetCardId() == "EX1_308" || item.GetEntity().GetCardId() == "EX1_622" || item.GetEntity().GetCardId() == "EX1_005")
+
+                        if (item.GetEntity().GetCardId() == "EX1_308" || item.GetEntity().GetCardId() == "EX1_622"
+                            || item.GetEntity().GetCardId() == "EX1_005")
                         {
-                            Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + item.GetEntity().GetName() + " because it is soulfire or shadow word: death");
+                            Helpfunctions.Instance.ErrorLog(
+                                "Rejecting Mulligan Card " + item.GetEntity().GetName()
+                                + " because it is soulfire or shadow word: death");
                             HRMulligan.ToggleCard(item);
                         }
                     }
                 }
 
+                this.sf.setnewLoggFile();
 
-                sf.setnewLoggFile();
-
-                //writeSettings();
-
+                // writeSettings();
                 if (Mulligan.Instance.loserLoserLoser)
                 {
                     HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
                     HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
                     string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
                     string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.GetHeroCard().GetEntity().GetCardId());
-                    if (!autoconcede())
+                    if (!this.autoconcede())
                     {
-                        concedeVSenemy(ownName, enemName);
+                        this.concedeVSenemy(ownName, enemName);
                     }
-                    
                 }
 
                 return null;
-                //HRMulligan.EndMulligan();
+
+                // HRMulligan.EndMulligan();
             }
+
             return null;
         }
 
         /// <summary>
         /// [EN]
         /// This handler is executed when the local player turn is active.
-        ///
+        /// 
         /// [DE]
         /// Dieses Event wird ausgelöst wenn der Spieler am Zug ist.
         /// </summary>
-        private HREngine.API.Actions.ActionBase HandleOnBattleStateUpdate()
+        /// <returns>
+        /// The <see cref="ActionBase"/>.
+        /// </returns>
+        private ActionBase HandleOnBattleStateUpdate()
         {
-
             try
             {
-
                 if (this.isgoingtoconcede)
                 {
-                    if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode == HRGameMode.ARENA)
+                    if (HRSettings.Get.SelectedGameMode == HRGameMode.ARENA)
                     {
                         this.isgoingtoconcede = false;
                     }
                     else
                     {
-                        return new HREngine.API.Actions.ConcedeAction();
+                        return new ConcedeAction();
                     }
                 }
 
-                if (this.passiveWaiting && sf.waitingForSilver)
+                if (this.passiveWaiting && this.sf.waitingForSilver)
                 {
                     if (!this.sf.readActionFile(true))
                     {
-                        return new HREngine.API.Actions.MakeNothingAction();
+                        return new MakeNothingAction();
                     }
                 }
 
                 if (this.learnmode && (HRBattle.IsInTargetMode() || HRChoice.IsChoiceActive()))
                 {
-                    return new HREngine.API.Actions.MakeNothingAction();
+                    return new MakeNothingAction();
                 }
 
-                if (HRBattle.IsInTargetMode() && dirtytarget >= 0)
+                if (HRBattle.IsInTargetMode() && this.dirtytarget >= 0)
                 {
                     Helpfunctions.Instance.ErrorLog("dirty targeting...");
-                    HREntity target = getEntityWithNumber(dirtytarget);
+                    HREntity target = this.getEntityWithNumber(this.dirtytarget);
 
-                    dirtytarget = -1;
+                    this.dirtytarget = -1;
 
-                    return new HREngine.API.Actions.TargetAction(target);
+                    return new TargetAction(target);
                 }
+
                 if (HRChoice.IsChoiceActive())
                 {
                     if (this.dirtychoice >= 1)
@@ -614,108 +804,195 @@ namespace HREngine.Bots
                         int choice = this.dirtychoice;
                         this.dirtychoice = -1;
                         string ccId = this.choiceCardId;
-                        this.choiceCardId = "";
+                        this.choiceCardId = string.Empty;
                         HREntity target = choices[choice - 1];
                         if (ccId == "EX1_160")
                         {
                             foreach (HREntity hre in choices)
                             {
-                                if (choice == 1 && hre.GetCardId() == "EX1_160b") target = hre;
-                                if (choice == 2 && hre.GetCardId() == "EX1_160a") target = hre;
+                                if (choice == 1 && hre.GetCardId() == "EX1_160b")
+                                {
+                                    target = hre;
+                                }
+
+                                if (choice == 2 && hre.GetCardId() == "EX1_160a")
+                                {
+                                    target = hre;
+                                }
                             }
                         }
+
                         if (ccId == "NEW1_008")
                         {
                             foreach (HREntity hre in choices)
                             {
-                                if (choice == 1 && hre.GetCardId() == "NEW1_008a") target = hre;
-                                if (choice == 2 && hre.GetCardId() == "NEW1_008b") target = hre;
+                                if (choice == 1 && hre.GetCardId() == "NEW1_008a")
+                                {
+                                    target = hre;
+                                }
+
+                                if (choice == 2 && hre.GetCardId() == "NEW1_008b")
+                                {
+                                    target = hre;
+                                }
                             }
                         }
+
                         if (ccId == "EX1_178")
                         {
                             foreach (HREntity hre in choices)
                             {
-                                if (choice == 1 && hre.GetCardId() == "EX1_178a") target = hre;
-                                if (choice == 2 && hre.GetCardId() == "EX1_178b") target = hre;
+                                if (choice == 1 && hre.GetCardId() == "EX1_178a")
+                                {
+                                    target = hre;
+                                }
+
+                                if (choice == 2 && hre.GetCardId() == "EX1_178b")
+                                {
+                                    target = hre;
+                                }
                             }
                         }
+
                         if (ccId == "EX1_573")
                         {
                             foreach (HREntity hre in choices)
                             {
-                                if (choice == 1 && hre.GetCardId() == "EX1_573a") target = hre;
-                                if (choice == 2 && hre.GetCardId() == "EX1_573b") target = hre;
+                                if (choice == 1 && hre.GetCardId() == "EX1_573a")
+                                {
+                                    target = hre;
+                                }
+
+                                if (choice == 2 && hre.GetCardId() == "EX1_573b")
+                                {
+                                    target = hre;
+                                }
                             }
                         }
-                        if (ccId == "EX1_165")//druid of the claw
+
+                        if (ccId == "EX1_165")
                         {
+                            // druid of the claw
                             foreach (HREntity hre in choices)
                             {
-                                if (choice == 1 && hre.GetCardId() == "EX1_165t1") target = hre;
-                                if (choice == 2 && hre.GetCardId() == "EX1_165t2") target = hre;
+                                if (choice == 1 && hre.GetCardId() == "EX1_165t1")
+                                {
+                                    target = hre;
+                                }
+
+                                if (choice == 2 && hre.GetCardId() == "EX1_165t2")
+                                {
+                                    target = hre;
+                                }
                             }
                         }
-                        if (ccId == "EX1_166")//keeper of the grove
+
+                        if (ccId == "EX1_166")
                         {
+                            // keeper of the grove
                             foreach (HREntity hre in choices)
                             {
-                                if (choice == 1 && hre.GetCardId() == "EX1_166a") target = hre;
-                                if (choice == 2 && hre.GetCardId() == "EX1_166b") target = hre;
+                                if (choice == 1 && hre.GetCardId() == "EX1_166a")
+                                {
+                                    target = hre;
+                                }
+
+                                if (choice == 2 && hre.GetCardId() == "EX1_166b")
+                                {
+                                    target = hre;
+                                }
                             }
                         }
+
                         if (ccId == "EX1_155")
                         {
                             foreach (HREntity hre in choices)
                             {
-                                if (choice == 1 && hre.GetCardId() == "EX1_155a") target = hre;
-                                if (choice == 2 && hre.GetCardId() == "EX1_155b") target = hre;
+                                if (choice == 1 && hre.GetCardId() == "EX1_155a")
+                                {
+                                    target = hre;
+                                }
+
+                                if (choice == 2 && hre.GetCardId() == "EX1_155b")
+                                {
+                                    target = hre;
+                                }
                             }
                         }
+
                         if (ccId == "EX1_164")
                         {
                             foreach (HREntity hre in choices)
                             {
-                                if (choice == 1 && hre.GetCardId() == "EX1_164a") target = hre;
-                                if (choice == 2 && hre.GetCardId() == "EX1_164b") target = hre;
+                                if (choice == 1 && hre.GetCardId() == "EX1_164a")
+                                {
+                                    target = hre;
+                                }
+
+                                if (choice == 2 && hre.GetCardId() == "EX1_164b")
+                                {
+                                    target = hre;
+                                }
                             }
                         }
-                        if (ccId == "New1_007")//starfall
+
+                        if (ccId == "New1_007")
                         {
+                            // starfall
                             foreach (HREntity hre in choices)
                             {
-                                if (choice == 1 && hre.GetCardId() == "New1_007b") target = hre;
-                                if (choice == 2 && hre.GetCardId() == "New1_007a") target = hre;
+                                if (choice == 1 && hre.GetCardId() == "New1_007b")
+                                {
+                                    target = hre;
+                                }
+
+                                if (choice == 2 && hre.GetCardId() == "New1_007a")
+                                {
+                                    target = hre;
+                                }
                             }
                         }
-                        if (ccId == "EX1_154")//warth
+
+                        if (ccId == "EX1_154")
                         {
+                            // warth
                             foreach (HREntity hre in choices)
                             {
-                                if (choice == 1 && hre.GetCardId() == "EX1_154a") target = hre;
-                                if (choice == 2 && hre.GetCardId() == "EX1_154b") target = hre;
+                                if (choice == 1 && hre.GetCardId() == "EX1_154a")
+                                {
+                                    target = hre;
+                                }
+
+                                if (choice == 2 && hre.GetCardId() == "EX1_154b")
+                                {
+                                    target = hre;
+                                }
                             }
                         }
+
                         Helpfunctions.Instance.logg("chooses the card: " + target.GetCardId());
-                        return new HREngine.API.Actions.ChoiceAction(target);
+                        return new ChoiceAction(target);
                     }
                     else
                     {
-                        //Todo: ultimate tracking-simulation!
+                        // Todo: ultimate tracking-simulation!
                         List<HREntity> choices = HRChoice.GetChoiceCards();
                         Random r = new Random();
                         int choice = r.Next(0, choices.Count);
                         Helpfunctions.Instance.logg("chooses a random card");
-                        return new HREngine.API.Actions.ChoiceAction(choices[choice]);
+                        return new ChoiceAction(choices[choice]);
                     }
                 }
 
-                bool templearn = sf.updateEverything(behave, this.useExternalProcess, this.passiveWaiting);
-                if (templearn == true) this.printlearnmode = true;
-
-                if (this.passiveWaiting && sf.waitingForSilver)
+                bool templearn = this.sf.updateEverything(this.behave, this.useExternalProcess, this.passiveWaiting);
+                if (templearn)
                 {
-                    return new HREngine.API.Actions.MakeNothingAction();
+                    this.printlearnmode = true;
+                }
+
+                if (this.passiveWaiting && this.sf.waitingForSilver)
+                {
+                    return new MakeNothingAction();
                 }
 
                 if (this.learnmode)
@@ -724,13 +1001,15 @@ namespace HREngine.Bots
                     {
                         Ai.Instance.simmulateWholeTurnandPrint();
                     }
+
                     this.printlearnmode = false;
-                    return new HREngine.API.Actions.MakeNothingAction();
+                    return new MakeNothingAction();
                 }
 
-               
-
-                if (Ai.Instance.bestmoveValue <= -900 && enemyConcede) { return new HREngine.API.Actions.ConcedeAction(); }
+                if (Ai.Instance.bestmoveValue <= -900 && this.enemyConcede)
+                {
+                    return new ConcedeAction();
+                }
 
                 Action moveTodo = Ai.Instance.bestmove;
 
@@ -739,76 +1018,83 @@ namespace HREngine.Bots
                     Helpfunctions.Instance.ErrorLog("end turn");
                     return null;
                 }
+
                 Helpfunctions.Instance.ErrorLog("play action");
                 moveTodo.print();
                 if (moveTodo.actionType == actionEnum.playcard)
                 {
-                    HRCard cardtoplay = getCardWithNumber(moveTodo.card.entity);
+                    HRCard cardtoplay = this.getCardWithNumber(moveTodo.card.entity);
                     if (moveTodo.target != null)
                     {
-                        HREntity target = getEntityWithNumber(moveTodo.target.entitiyID);
-                        Helpfunctions.Instance.ErrorLog("play: " + cardtoplay.GetEntity().GetName() + " target: " + target.GetName());
-                        Helpfunctions.Instance.logg("play: " + cardtoplay.GetEntity().GetName() + " target: " + target.GetName() + " choice: " + moveTodo.druidchoice);
+                        HREntity target = this.getEntityWithNumber(moveTodo.target.entitiyID);
+                        Helpfunctions.Instance.ErrorLog(
+                            "play: " + cardtoplay.GetEntity().GetName() + " target: " + target.GetName());
+                        Helpfunctions.Instance.logg(
+                            "play: " + cardtoplay.GetEntity().GetName() + " target: " + target.GetName() + " choice: "
+                            + moveTodo.druidchoice);
                         if (moveTodo.druidchoice >= 1)
                         {
                             this.dirtytarget = moveTodo.target.entitiyID;
-                            this.dirtychoice = moveTodo.druidchoice; //1=leftcard, 2= rightcard
+                            this.dirtychoice = moveTodo.druidchoice; // 1=leftcard, 2= rightcard
                             this.choiceCardId = moveTodo.card.card.cardIDenum.ToString();
-
                         }
+
                         if (moveTodo.card.card.type == CardDB.cardtype.MOB)
                         {
-                            return new HREngine.API.Actions.PlayCardAction(cardtoplay, target, moveTodo.place);
+                            return new PlayCardAction(cardtoplay, target, moveTodo.place);
                         }
 
-                        return new HREngine.API.Actions.PlayCardAction(cardtoplay, target);
-
+                        return new PlayCardAction(cardtoplay, target);
                     }
                     else
                     {
                         Helpfunctions.Instance.ErrorLog("play: " + cardtoplay.GetEntity().GetName() + " target nothing");
-                        Helpfunctions.Instance.logg("play: " + cardtoplay.GetEntity().GetName() + " choice: " + moveTodo.druidchoice);
+                        Helpfunctions.Instance.logg(
+                            "play: " + cardtoplay.GetEntity().GetName() + " choice: " + moveTodo.druidchoice);
                         if (moveTodo.druidchoice >= 1)
                         {
-                            this.dirtychoice = moveTodo.druidchoice; //1=leftcard, 2= rightcard
+                            this.dirtychoice = moveTodo.druidchoice; // 1=leftcard, 2= rightcard
                             this.choiceCardId = moveTodo.card.card.cardIDenum.ToString();
-
                         }
+
                         if (moveTodo.card.card.type == CardDB.cardtype.MOB)
                         {
-                            return new HREngine.API.Actions.PlayCardAction(cardtoplay, null, moveTodo.place);
+                            return new PlayCardAction(cardtoplay, null, moveTodo.place);
                         }
-                        return new HREngine.API.Actions.PlayCardAction(cardtoplay);
-                    }
 
+                        return new PlayCardAction(cardtoplay);
+                    }
                 }
 
                 if (moveTodo.actionType == actionEnum.attackWithMinion)
                 {
-                    HREntity attacker = getEntityWithNumber(moveTodo.own.entitiyID);
-                    HREntity target = getEntityWithNumber(moveTodo.target.entitiyID);
-                    Helpfunctions.Instance.ErrorLog("minion attack: " + attacker.GetName() + " target: " + target.GetName());
+                    HREntity attacker = this.getEntityWithNumber(moveTodo.own.entitiyID);
+                    HREntity target = this.getEntityWithNumber(moveTodo.target.entitiyID);
+                    Helpfunctions.Instance.ErrorLog(
+                        "minion attack: " + attacker.GetName() + " target: " + target.GetName());
                     Helpfunctions.Instance.logg("minion attack: " + attacker.GetName() + " target: " + target.GetName());
-                    return new HREngine.API.Actions.AttackAction(attacker, target);
-
+                    return new AttackAction(attacker, target);
                 }
 
                 if (moveTodo.actionType == actionEnum.attackWithHero)
                 {
-                    HREntity attacker = getEntityWithNumber(moveTodo.own.entitiyID);
-                    HREntity target = getEntityWithNumber(moveTodo.target.entitiyID);
+                    HREntity attacker = this.getEntityWithNumber(moveTodo.own.entitiyID);
+                    HREntity target = this.getEntityWithNumber(moveTodo.target.entitiyID);
                     this.dirtytarget = moveTodo.target.entitiyID;
-                    Helpfunctions.Instance.ErrorLog("heroattack: " + attacker.GetName() + " target: " + target.GetName());
+                    Helpfunctions.Instance.ErrorLog(
+                        "heroattack: " + attacker.GetName() + " target: " + target.GetName());
                     Helpfunctions.Instance.logg("heroattack: " + attacker.GetName() + " target: " + target.GetName());
                     if (HRPlayer.GetLocalPlayer().HasWeapon())
                     {
                         Helpfunctions.Instance.ErrorLog("hero attack with weapon");
-                        return new HREngine.API.Actions.AttackAction(HRPlayer.GetLocalPlayer().GetWeaponCard().GetEntity(), target);
+                        return new AttackAction(HRPlayer.GetLocalPlayer().GetWeaponCard().GetEntity(), target);
                     }
+
                     Helpfunctions.Instance.ErrorLog("hero attack without weapon");
-                    //Helpfunctions.Instance.ErrorLog("attacker entity: " + HRPlayer.GetLocalPlayer().GetHero().GetEntityId());
-                    //return new HREngine.API.Actions.AttackAction(HRPlayer.GetLocalPlayer().GetHero(), target);
-                    return new HREngine.API.Actions.PlayCardAction(HRPlayer.GetLocalPlayer().GetHeroCard(), target);
+
+                    // Helpfunctions.Instance.ErrorLog("attacker entity: " + HRPlayer.GetLocalPlayer().GetHero().GetEntityId());
+                    // return new HREngine.API.Actions.AttackAction(HRPlayer.GetLocalPlayer().GetHero(), target);
+                    return new PlayCardAction(HRPlayer.GetLocalPlayer().GetHeroCard(), target);
                 }
 
                 if (moveTodo.actionType == actionEnum.useHeroPower)
@@ -817,20 +1103,22 @@ namespace HREngine.Bots
 
                     if (moveTodo.target != null)
                     {
-                        HREntity target = getEntityWithNumber(moveTodo.target.entitiyID);
-                        Helpfunctions.Instance.ErrorLog("use ablitiy: " + cardtoplay.GetEntity().GetName() + " target " + target.GetName());
-                        Helpfunctions.Instance.logg("use ablitiy: " + cardtoplay.GetEntity().GetName() + " target " + target.GetName());
-                        return new HREngine.API.Actions.PlayCardAction(cardtoplay, target);
-
+                        HREntity target = this.getEntityWithNumber(moveTodo.target.entitiyID);
+                        Helpfunctions.Instance.ErrorLog(
+                            "use ablitiy: " + cardtoplay.GetEntity().GetName() + " target " + target.GetName());
+                        Helpfunctions.Instance.logg(
+                            "use ablitiy: " + cardtoplay.GetEntity().GetName() + " target " + target.GetName());
+                        return new PlayCardAction(cardtoplay, target);
                     }
                     else
                     {
-                        Helpfunctions.Instance.ErrorLog("use ablitiy: " + cardtoplay.GetEntity().GetName() + " target nothing");
-                        Helpfunctions.Instance.logg("use ablitiy: " + cardtoplay.GetEntity().GetName() + " target nothing");
-                        return new HREngine.API.Actions.PlayCardAction(cardtoplay);
+                        Helpfunctions.Instance.ErrorLog(
+                            "use ablitiy: " + cardtoplay.GetEntity().GetName() + " target nothing");
+                        Helpfunctions.Instance.logg(
+                            "use ablitiy: " + cardtoplay.GetEntity().GetName() + " target nothing");
+                        return new PlayCardAction(cardtoplay);
                     }
                 }
-
             }
             catch (Exception Exception)
             {
@@ -838,32 +1126,47 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog(Environment.StackTrace);
                 if (this.learnmode)
                 {
-                    return new HREngine.API.Actions.MakeNothingAction();
+                    return new MakeNothingAction();
                 }
             }
+
             return null;
-            //HRBattle.FinishRound();
+
+            // HRBattle.FinishRound();
         }
 
-        private HREngine.API.Actions.ActionBase HandleWining()
+        /// <summary>
+        /// The handle wining.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="ActionBase"/>.
+        /// </returns>
+        private ActionBase HandleWining()
         {
             this.wins++;
             if (this.isgoingtoconcede)
             {
                 this.isgoingtoconcede = false;
             }
-            writeSettings();
-            writeTrigger(1);
+
+            this.writeSettings();
+            this.writeTrigger(1);
             int totalwin = this.wins;
             int totallose = this.loses;
-            if ((totalwin + totallose - KeepConcede) != 0)
+            if ((totalwin + totallose - this.KeepConcede) != 0)
             {
-                Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + KeepConcede + " lose:" + (totallose - KeepConcede) + " real winrate:" + (totalwin * 100 / (totalwin + totallose - KeepConcede)));
+                Helpfunctions.Instance.ErrorLog(
+                    "#info: win:" + totalwin + " concede:" + this.KeepConcede + " lose:"
+                    + (totallose - this.KeepConcede) + " real winrate:"
+                    + (totalwin * 100 / (totalwin + totallose - this.KeepConcede)));
             }
             else
             {
-                Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + KeepConcede + " lose:" + (totallose - KeepConcede) + " real winrate: infinity!!!! (division by zero :D)");
+                Helpfunctions.Instance.ErrorLog(
+                    "#info: win:" + totalwin + " concede:" + this.KeepConcede + " lose:"
+                    + (totallose - this.KeepConcede) + " real winrate: infinity!!!! (division by zero :D)");
             }
+
             /*
             if (totalwin >= this.stopAfterWins)
             {
@@ -877,42 +1180,56 @@ namespace HREngine.Bots
             return null;
         }
 
-        private HREngine.API.Actions.ActionBase HandleLosing()
+        /// <summary>
+        /// The handle losing.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="ActionBase"/>.
+        /// </returns>
+        private ActionBase HandleLosing()
         {
             this.loses++;
             if (this.isgoingtoconcede)
             {
                 this.isgoingtoconcede = false;
-                writeTrigger(0);
+                this.writeTrigger(0);
                 this.KeepConcede++;
             }
             else
             {
-                writeTrigger(2);
+                this.writeTrigger(2);
             }
-            writeSettings();
+
+            this.writeSettings();
             int totalwin = this.wins;
             int totallose = this.loses;
-            if ((totalwin + totallose - KeepConcede) != 0)
+            if ((totalwin + totallose - this.KeepConcede) != 0)
             {
-                Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + KeepConcede + " lose:" + (totallose - KeepConcede) + " real winrate:" + (totalwin * 100 / (totalwin + totallose - KeepConcede)));
+                Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + this.KeepConcede + " lose:" + (totallose - this.KeepConcede) + " real winrate:" + (totalwin * 100 / (totalwin + totallose - this.KeepConcede)));
             }
             else
             {
-                Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + KeepConcede + " lose:" + (totallose - KeepConcede) + " real winrate: infinity!!!! (division by zero :D)");
+                Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + this.KeepConcede + " lose:" + (totallose - this.KeepConcede) + " real winrate: infinity!!!! (division by zero :D)");
             }
+
             return null;
         }
 
+        /// <summary>
+        /// The write trigger.
+        /// </summary>
+        /// <param name="what">
+        /// The what.
+        /// </param>
         private void writeTrigger(int what)
         {
             try
             {
-                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "uaibattletrigger.txt";
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + Path.DirectorySeparatorChar + "uaibattletrigger.txt";
                 string w = "concede";
                 if (what == 1) w = "win";
                 if (what == 2) w = "loss";
-                System.IO.File.WriteAllText(path, w);
+                File.WriteAllText(path, w);
             }
             catch
             {
@@ -920,24 +1237,50 @@ namespace HREngine.Bots
             }
         }
 
+        /// <summary>
+        /// The get entity with number.
+        /// </summary>
+        /// <param name="number">
+        /// The number.
+        /// </param>
+        /// <returns>
+        /// The <see cref="HREntity"/>.
+        /// </returns>
         private HREntity getEntityWithNumber(int number)
         {
             foreach (HREntity e in this.getallEntitys())
             {
                 if (number == e.GetEntityId()) return e;
             }
+
             return null;
         }
 
+        /// <summary>
+        /// The get card with number.
+        /// </summary>
+        /// <param name="number">
+        /// The number.
+        /// </param>
+        /// <returns>
+        /// The <see cref="HRCard"/>.
+        /// </returns>
         private HRCard getCardWithNumber(int number)
         {
             foreach (HRCard e in this.getallHandCards())
             {
                 if (number == e.GetEntity().GetEntityId()) return e;
             }
+
             return null;
         }
 
+        /// <summary>
+        /// The getall entitys.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="List"/>.
+        /// </returns>
         private List<HREntity> getallEntitys()
         {
             List<HREntity> result = new List<HREntity>();
@@ -955,6 +1298,7 @@ namespace HREngine.Bots
             {
                 result.Add(item.GetEntity());
             }
+
             foreach (HRCard item in list3)
             {
                 result.Add(item.GetEntity());
@@ -966,6 +1310,12 @@ namespace HREngine.Bots
             return result;
         }
 
+        /// <summary>
+        /// The getall hand cards.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="List"/>.
+        /// </returns>
         private List<HRCard> getallHandCards()
         {
             List<HRCard> list = HRCard.GetCards(HRPlayer.GetLocalPlayer(), HRCardZone.HAND);
@@ -982,7 +1332,6 @@ namespace HREngine.Bots
         {
             return null;
         }*/
-
     }
 
 

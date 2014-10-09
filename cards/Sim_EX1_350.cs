@@ -1,14 +1,31 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_350.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_350.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_350 : SimTemplate //prophetvelen
+    /// <summary>
+    /// The sim_ e x 1_350.
+    /// </summary>
+    class Sim_EX1_350 : SimTemplate
 	{
+	    // prophetvelen
 
-//    verdoppelt den schaden und die heilung eurer zauber und heldenfähigkeiten.
-		public override void onAuraStarts(Playfield p, Minion own)
+// verdoppelt den schaden und die heilung eurer zauber und heldenfähigkeiten.
+        /// <summary>
+        /// The on aura starts.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        public override void onAuraStarts(Playfield p, Minion own)
 		{
             if (own.own)
             {
@@ -16,6 +33,15 @@ namespace HREngine.Bots
             }
 		}
 
+        /// <summary>
+        /// The on aura ends.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
         public override void onAuraEnds(Playfield p, Minion m)
         {
             if (m.own)

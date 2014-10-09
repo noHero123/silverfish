@@ -1,14 +1,37 @@
-using System;
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_FP1_020.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ f p 1_020.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace HREngine.Bots
 {
-    class Sim_FP1_020 : SimTemplate //avenge
+    /// <summary>
+    /// The sim_ f p 1_020.
+    /// </summary>
+    class Sim_FP1_020 : SimTemplate
     {
-        //todo secret
-        //    geheimnis:/ wenn einer eurer diener stirbt, erhält ein zufälliger befreundeter diener +3/+2.
+        // avenge
+        // todo secret
+        // geheimnis:/ wenn einer eurer diener stirbt, erhält ein zufälliger befreundeter diener +3/+2.
 
+        /// <summary>
+        /// The on secret play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="number">
+        /// The number.
+        /// </param>
         public override void onSecretPlay(Playfield p, bool ownplay, int number)
         {
             List<Minion> temp = new List<Minion>();

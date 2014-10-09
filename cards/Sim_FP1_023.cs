@@ -1,12 +1,32 @@
-﻿using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_FP1_023.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ f p 1_023.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace HREngine.Bots
 {
-    class Sim_FP1_023 : SimTemplate// dark cultist
+    /// <summary>
+    /// The sim_ f p 1_023.
+    /// </summary>
+    class Sim_FP1_023 : SimTemplate
     {
-        //todo list
+        // dark cultist
+        // todo list
+        /// <summary>
+        /// The on deathrattle.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
         public override void onDeathrattle(Playfield p, Minion m)
         {
             List<Minion> temp = new List<Minion>();

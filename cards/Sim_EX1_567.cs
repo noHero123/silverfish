@@ -1,19 +1,45 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_567.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_567.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_567 : SimTemplate //doomhammer
+    /// <summary>
+    /// The sim_ e x 1_567.
+    /// </summary>
+    class Sim_EX1_567 : SimTemplate
 	{
+	    // doomhammer
 
-//    windzorn/, überladung:/ (2)
+// windzorn/, überladung:/ (2)
+        /// <summary>
+        /// The card.
+        /// </summary>
         CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_567);
 
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        /// <summary>
+        /// The on card play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
             if (ownplay) p.ueberladung += 2;
-            p.equipWeapon(card, ownplay);
+            p.equipWeapon(this.card, ownplay);
 		}
 
 	}

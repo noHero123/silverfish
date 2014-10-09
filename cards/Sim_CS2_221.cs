@@ -1,13 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_CS2_221.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ c s 2_221.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_CS2_221 : SimTemplate //spitefulsmith
+    /// <summary>
+    /// The sim_ c s 2_221.
+    /// </summary>
+    class Sim_CS2_221 : SimTemplate
 	{
+	    // spitefulsmith
 
-//    wutanfall:/ eure waffe hat +2 angriff.
+// wutanfall:/ eure waffe hat +2 angriff.
+        /// <summary>
+        /// The on enrage start.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
         public override void onEnrageStart(Playfield p, Minion m)
         {
             if (m.own)
@@ -28,6 +45,15 @@ namespace HREngine.Bots
             }
         }
 
+        /// <summary>
+        /// The on enrage stop.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
         public override void onEnrageStop(Playfield p, Minion m)
         {
             if (m.own)

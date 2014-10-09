@@ -1,14 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_CS2_172.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ c s 2_172.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_CS2_172 : SimTemplate //bloodfenraptor
+    /// <summary>
+    /// The sim_ c s 2_172.
+    /// </summary>
+    class Sim_CS2_172 : SimTemplate
 	{
-
-//
-
+	    // bloodfenraptor
 
 	}
 }

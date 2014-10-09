@@ -1,50 +1,164 @@
-﻿using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MiniSimulator.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The mini simulator.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace HREngine.Bots
 {
+    using System.Threading;
+
+    /// <summary>
+    /// The mini simulator.
+    /// </summary>
     public class MiniSimulator
     {
-        //#####################################################################################################################
+        // #####################################################################################################################
+        /// <summary>
+        /// The maxdeep.
+        /// </summary>
         private int maxdeep = 6;
+
+        /// <summary>
+        /// The maxwide.
+        /// </summary>
         private int maxwide = 10;
+
+        /// <summary>
+        /// The totalboards.
+        /// </summary>
         private int totalboards = 50;
+
+        /// <summary>
+        /// The use penality manager.
+        /// </summary>
         private bool usePenalityManager = true;
+
+        /// <summary>
+        /// The use cuting targets.
+        /// </summary>
         private bool useCutingTargets = true;
+
+        /// <summary>
+        /// The dont recalc.
+        /// </summary>
         private bool dontRecalc = true;
+
+        /// <summary>
+        /// The use lethal check.
+        /// </summary>
         private bool useLethalCheck = true;
+
+        /// <summary>
+        /// The use comparison.
+        /// </summary>
         private bool useComparison = true;
 
-
+        /// <summary>
+        /// The print normalstuff.
+        /// </summary>
         private bool printNormalstuff = false;
 
+        /// <summary>
+        /// The posmoves.
+        /// </summary>
         List<Playfield> posmoves = new List<Playfield>(7000);
+
+        /// <summary>
+        /// The twoturnfields.
+        /// </summary>
         List<Playfield> twoturnfields = new List<Playfield>(500);
 
+        /// <summary>
+        /// The threadresults.
+        /// </summary>
         List<List<Playfield>> threadresults = new List<List<Playfield>>(64);
+
+        /// <summary>
+        /// The dirty two turn sim.
+        /// </summary>
         private int dirtyTwoTurnSim = 256;
 
+        /// <summary>
+        /// The bestmove.
+        /// </summary>
         public Action bestmove = null;
+
+        /// <summary>
+        /// The bestmove value.
+        /// </summary>
         public float bestmoveValue = 0;
+
+        /// <summary>
+        /// The bestboard.
+        /// </summary>
         public Playfield bestboard = new Playfield();
 
+        /// <summary>
+        /// The bot base.
+        /// </summary>
         public Behavior botBase = null;
+
+        /// <summary>
+        /// The calculated.
+        /// </summary>
         private int calculated = 0;
 
+        /// <summary>
+        /// The simulate second turn.
+        /// </summary>
         private bool simulateSecondTurn = false;
+
+        /// <summary>
+        /// The playaround.
+        /// </summary>
         private bool playaround = false;
+
+        /// <summary>
+        /// The playaroundprob.
+        /// </summary>
         private int playaroundprob = 50;
+
+        /// <summary>
+        /// The playaroundprob 2.
+        /// </summary>
         private int playaroundprob2 = 80;
 
+        /// <summary>
+        /// The movegen.
+        /// </summary>
         Movegenerator movegen = Movegenerator.Instance;
 
+        /// <summary>
+        /// The pen.
+        /// </summary>
         PenalityManager pen = PenalityManager.Instance;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MiniSimulator"/> class.
+        /// </summary>
         public MiniSimulator()
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MiniSimulator"/> class.
+        /// </summary>
+        /// <param name="deep">
+        /// The deep.
+        /// </param>
+        /// <param name="wide">
+        /// The wide.
+        /// </param>
+        /// <param name="ttlboards">
+        /// The ttlboards.
+        /// </param>
         public MiniSimulator(int deep, int wide, int ttlboards)
         {
             this.maxdeep = deep;
@@ -52,6 +166,18 @@ namespace HREngine.Bots
             this.totalboards = ttlboards;
         }
 
+        /// <summary>
+        /// The update params.
+        /// </summary>
+        /// <param name="deep">
+        /// The deep.
+        /// </param>
+        /// <param name="wide">
+        /// The wide.
+        /// </param>
+        /// <param name="ttlboards">
+        /// The ttlboards.
+        /// </param>
         public void updateParams(int deep, int wide, int ttlboards)
         {
             this.maxdeep = deep;
@@ -59,17 +185,44 @@ namespace HREngine.Bots
             this.totalboards = ttlboards;
         }
 
+        /// <summary>
+        /// The set printingstuff.
+        /// </summary>
+        /// <param name="sp">
+        /// The sp.
+        /// </param>
         public void setPrintingstuff(bool sp)
         {
             this.printNormalstuff = sp;
         }
 
+        /// <summary>
+        /// The set second turn simu.
+        /// </summary>
+        /// <param name="sts">
+        /// The sts.
+        /// </param>
+        /// <param name="amount">
+        /// The amount.
+        /// </param>
         public void setSecondTurnSimu(bool sts, int amount)
         {
-            //this.simulateSecondTurn = sts;
+            // this.simulateSecondTurn = sts;
             this.dirtyTwoTurnSim = amount;
         }
 
+        /// <summary>
+        /// The set play around.
+        /// </summary>
+        /// <param name="spa">
+        /// The spa.
+        /// </param>
+        /// <param name="pprob">
+        /// The pprob.
+        /// </param>
+        /// <param name="pprob2">
+        /// The pprob 2.
+        /// </param>
         public void setPlayAround(bool spa, int pprob, int pprob2)
         {
             this.playaround = spa;
@@ -77,40 +230,79 @@ namespace HREngine.Bots
             this.playaroundprob2 = pprob2;
         }
 
+        /// <summary>
+        /// The add to posmoves.
+        /// </summary>
+        /// <param name="pf">
+        /// The pf.
+        /// </param>
         private void addToPosmoves(Playfield pf)
         {
-            if (pf.ownHero.Hp <= 0) return;
+            if (pf.ownHero.Hp <= 0)
+            {
+                return;
+            }
+
             /*foreach (Playfield p in this.posmoves)
             {
                 if (pf.isEqual(p, false)) return;
             }*/
             this.posmoves.Add(pf);
 
-            //posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
-            //if (posmoves.Count > this.maxwide) posmoves.RemoveAt(this.maxwide);
+            // posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
+            // if (posmoves.Count > this.maxwide) posmoves.RemoveAt(this.maxwide);
             if (this.totalboards >= 1)
             {
                 this.calculated++;
             }
         }
 
+        /// <summary>
+        /// The start enemy turn sim.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="simulateTwoTurns">
+        /// The simulate two turns.
+        /// </param>
+        /// <param name="print">
+        /// The print.
+        /// </param>
         private void startEnemyTurnSim(Playfield p, bool simulateTwoTurns, bool print)
         {
             if (p.guessingHeroHP >= 1)
             {
-                //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+                // simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                 p.prepareNextTurn(p.isOwnTurn);
 
-                Ai.Instance.enemyTurnSim[0].simulateEnemysTurn(p, simulateTwoTurns, playaround, print, playaroundprob, playaroundprob2);
+                Ai.Instance.enemyTurnSim[0].simulateEnemysTurn(p, simulateTwoTurns, this.playaround, print, this.playaroundprob, this.playaroundprob2);
 
             }
+
             p.complete = true;
         }
 
+        /// <summary>
+        /// The doallmoves.
+        /// </summary>
+        /// <param name="playf">
+        /// The playf.
+        /// </param>
+        /// <param name="isLethalCheck">
+        /// The is lethal check.
+        /// </param>
+        /// <returns>
+        /// The <see cref="float"/>.
+        /// </returns>
         public float doallmoves(Playfield playf, bool isLethalCheck)
         {
-            //Helpfunctions.Instance.logg("NXTTRN" + playf.mana);
-            if (botBase == null) botBase = Ai.Instance.botBase;
+            // Helpfunctions.Instance.logg("NXTTRN" + playf.mana);
+            if (this.botBase == null)
+            {
+                this.botBase = Ai.Instance.botBase;
+            }
+
             bool test = false;
             this.posmoves.Clear();
             this.twoturnfields.Clear();
@@ -118,11 +310,16 @@ namespace HREngine.Bots
             bool havedonesomething = true;
             List<Playfield> temp = new List<Playfield>();
             int deep = 0;
-            //Helpfunctions.Instance.logg("NXTTRN" + playf.mana + " " + posmoves.Count);
+
+            // Helpfunctions.Instance.logg("NXTTRN" + playf.mana + " " + posmoves.Count);
             this.calculated = 0;
             while (havedonesomething)
             {
-                if (this.printNormalstuff) Helpfunctions.Instance.logg("ailoop");
+                if (this.printNormalstuff)
+                {
+                    Helpfunctions.Instance.logg("ailoop");
+                }
+
                 GC.Collect();
                 temp.Clear();
                 temp.AddRange(this.posmoves);
@@ -131,21 +328,24 @@ namespace HREngine.Bots
                 float bestoldval = -20000000;
                 foreach (Playfield p in temp)
                 {
-
                     if (p.complete || p.ownHero.Hp <= 0)
                     {
                         continue;
                     }
 
-                    //gernerate actions and play them!
-                    List<Action> actions = movegen.getMoveList(p, isLethalCheck, usePenalityManager, useCutingTargets);
+                    // gernerate actions and play them!
+                    List<Action> actions = this.movegen.getMoveList(
+                        p, 
+                        isLethalCheck, 
+                        this.usePenalityManager, 
+                        this.useCutingTargets);
                     foreach (Action a in actions)
                     {
-                        //if (deep == 0 && a.actionType == actionEnum.playcard) Helpfunctions.Instance.ErrorLog("play " + a.card.card.name);
+                        // if (deep == 0 && a.actionType == actionEnum.playcard) Helpfunctions.Instance.ErrorLog("play " + a.card.card.name);
                         havedonesomething = true;
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
-                        addToPosmoves(pf);
+                        this.addToPosmoves(pf);
                     }
 
                     // end the turn of the current board (only if its not a lethalcheck)
@@ -155,25 +355,34 @@ namespace HREngine.Bots
                     }
                     else
                     {
-                        //end turn of enemy
-                        p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
-                        //simulate the enemys response
+                        // end turn of enemy
+                        p.endTurn(
+                            this.simulateSecondTurn, 
+                            this.playaround, 
+                            false, 
+                            this.playaroundprob, 
+                            this.playaroundprob2);
+
+                        // simulate the enemys response
                         this.startEnemyTurnSim(p, this.simulateSecondTurn, false);
                     }
 
-                    //sort stupid stuff ouf
-
-                    if (botBase.getPlayfieldValue(p) > bestoldval)
+                    // sort stupid stuff ouf
+                    if (this.botBase.getPlayfieldValue(p) > bestoldval)
                     {
-                        bestoldval = botBase.getPlayfieldValue(p);
+                        bestoldval = this.botBase.getPlayfieldValue(p);
                         bestold = p;
                     }
+
                     if (!test)
                     {
-                        posmoves.Remove(p);
+                        this.posmoves.Remove(p);
                     }
 
-                    if (this.calculated > this.totalboards) break;
+                    if (this.calculated > this.totalboards)
+                    {
+                        break;
+                    }
                 }
 
                 if (!test && bestoldval >= -10000 && bestold != null)
@@ -181,35 +390,48 @@ namespace HREngine.Bots
                     this.posmoves.Add(bestold);
                 }
 
-                //Helpfunctions.Instance.loggonoff(true);
+                // Helpfunctions.Instance.loggonoff(true);
                 if (this.printNormalstuff)
                 {
                     int donec = 0;
-                    foreach (Playfield p in posmoves)
+                    foreach (Playfield p in this.posmoves)
                     {
-                        if (p.complete) donec++;
+                        if (p.complete)
+                        {
+                            donec++;
+                        }
                     }
+
                     Helpfunctions.Instance.logg("deep " + deep + " len " + this.posmoves.Count + " dones " + donec);
                 }
 
                 if (!test)
                 {
-                    cuttingposibilities();
+                    this.cuttingposibilities();
                 }
 
                 if (this.printNormalstuff)
                 {
                     Helpfunctions.Instance.logg("cut to len " + this.posmoves.Count);
                 }
-                //Helpfunctions.Instance.loggonoff(false);
+
+                // Helpfunctions.Instance.loggonoff(false);
                 deep++;
 
-                if (this.calculated > this.totalboards) break;
-                if (deep >= this.maxdeep) break;//remove this?
+                if (this.calculated > this.totalboards)
+                {
+                    break;
+                }
+
+                if (deep >= this.maxdeep)
+                {
+                    break; // remove this?
+                }
             }
 
-            foreach (Playfield p in posmoves)//temp
+            foreach (Playfield p in this.posmoves)
             {
+                // temp
                 if (!p.complete)
                 {
                     if (isLethalCheck)
@@ -218,7 +440,12 @@ namespace HREngine.Bots
                     }
                     else
                     {
-                        p.endTurn(this.simulateSecondTurn, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+                        p.endTurn(
+                            this.simulateSecondTurn, 
+                            this.playaround, 
+                            false, 
+                            this.playaroundprob, 
+                            this.playaroundprob2);
                         this.startEnemyTurnSim(p, this.simulateSecondTurn, false);
                     }
                 }
@@ -226,71 +453,97 @@ namespace HREngine.Bots
 
             // search the best play...........................................................
 
-            //do dirtytwoturnsim first :D
-            if (!isLethalCheck) doDirtyTwoTurnsim();
+            // do dirtytwoturnsim first :D
+            if (!isLethalCheck)
+            {
+                this.doDirtyTwoTurnsim();
+            }
 
-            if (!isLethalCheck) this.dirtyTwoTurnSim /= 2;
+            if (!isLethalCheck)
+            {
+                this.dirtyTwoTurnSim /= 2;
+            }
 
             // Helpfunctions.Instance.logg("find best ");
-            if (posmoves.Count >= 1)
+            if (this.posmoves.Count >= 1)
             {
                 float bestval = int.MinValue;
                 int bestanzactions = 1000;
-                Playfield bestplay = posmoves[0];//temp[0]
-                foreach (Playfield p in posmoves)//temp
+                Playfield bestplay = this.posmoves[0]; // temp[0]
+                foreach (Playfield p in this.posmoves)
                 {
-                    float val = botBase.getPlayfieldValue(p);
+                    // temp
+                    float val = this.botBase.getPlayfieldValue(p);
                     if (bestval <= val)
                     {
-                        if (bestval == val && bestanzactions < p.playactions.Count) continue;
+                        if (bestval == val && bestanzactions < p.playactions.Count)
+                        {
+                            continue;
+                        }
+
                         bestplay = p;
                         bestval = val;
                         bestanzactions = p.playactions.Count;
                     }
-
                 }
 
                 this.bestmove = bestplay.getNextAction();
                 this.bestmoveValue = bestval;
                 this.bestboard = new Playfield(bestplay);
-                //Helpfunctions.Instance.logg("return");
+
+                // Helpfunctions.Instance.logg("return");
                 return bestval;
             }
-            //Helpfunctions.Instance.logg("return");
+
+            // Helpfunctions.Instance.logg("return");
             this.bestmove = null;
             this.bestmoveValue = -100000;
             this.bestboard = playf;
             return -10000;
         }
 
+        /// <summary>
+        /// The do dirty two turnsim.
+        /// </summary>
         public void doDirtyTwoTurnsim()
         {
-            //return;
-            if (this.dirtyTwoTurnSim == 0) return;
+            // return;
+            if (this.dirtyTwoTurnSim == 0)
+            {
+                return;
+            }
+
             this.posmoves.Clear();
             int thread = 0;
-            //DateTime started = DateTime.Now;
+
+            // DateTime started = DateTime.Now;
             if (Settings.Instance.numberOfThreads == 1)
             {
                 foreach (Playfield p in this.twoturnfields)
                 {
-
                     if (p.guessingHeroHP >= 1)
                     {
                         p.value = int.MinValue;
-                        //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+
+                        // simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                         p.prepareNextTurn(p.isOwnTurn);
-                        Ai.Instance.enemyTurnSim[thread].simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
+                        Ai.Instance.enemyTurnSim[thread].simulateEnemysTurn(
+                            p, 
+                            true, 
+                            this.playaround, 
+                            false, 
+                            this.playaroundprob, 
+                            this.playaroundprob2);
                     }
-                    //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
+
+                    // Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
                     this.posmoves.Add(p);
                 }
             }
             else
             {
-                //multithreading!
-
-                List<System.Threading.Thread> tasks = new List<System.Threading.Thread>(Settings.Instance.numberOfThreads);
+                // multithreading!
+                List<Thread> tasks = new List<Thread>(Settings.Instance.numberOfThreads);
                 for (int kl = 0; kl < Settings.Instance.numberOfThreads; kl++)
                 {
                     if (this.threadresults.Count > kl)
@@ -298,88 +551,101 @@ namespace HREngine.Bots
                         this.threadresults[kl].Clear();
                         continue;
                     }
+
                     this.threadresults.Add(new List<Playfield>());
                 }
-
 
                 int k = 0;
                 for (k = 0; k < Settings.Instance.numberOfThreads; k++)
                 {
-                    //System.Threading.Thread threadl = new System.Threading.Thread(() => this.Workthread(test, botBase, isLethalCheck, playfieldsTasklist[k], threadnumbers[k]));
-                    System.Threading.Thread threadl = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(this.dirtyWorkthread));
-                    //System.Threading.Tasks.Task tsk = new System.Threading.Tasks.Task(this.Workthread, (object)new threadobject(test, botBase, isLethalCheck, playfieldsTasklist[k], threadnumbers[k]));
+                    // System.Threading.Thread threadl = new System.Threading.Thread(() => this.Workthread(test, botBase, isLethalCheck, playfieldsTasklist[k], threadnumbers[k]));
+                    Thread threadl = new Thread(new ParameterizedThreadStart(this.dirtyWorkthread));
+
+                    // System.Threading.Tasks.Task tsk = new System.Threading.Tasks.Task(this.Workthread, (object)new threadobject(test, botBase, isLethalCheck, playfieldsTasklist[k], threadnumbers[k]));
                     int i = k;
-                    threadl.Start((object)i);
+                    threadl.Start(i);
 
                     tasks.Add(threadl);
-
                 }
 
-                System.Threading.Thread.Sleep(1);
+                Thread.Sleep(1);
 
                 for (int j = 0; j < Settings.Instance.numberOfThreads; j++)
                 {
                     tasks[j].Join();
-                    posmoves.AddRange(this.threadresults[j]);
+                    this.posmoves.AddRange(this.threadresults[j]);
                 }
-
-
             }
-            //Helpfunctions.Instance.ErrorLog("time needed for parallel: " + (DateTime.Now - started).TotalSeconds);
+
+            // Helpfunctions.Instance.ErrorLog("time needed for parallel: " + (DateTime.Now - started).TotalSeconds);
         }
 
-        //workthread for dirtyTwoTurnsim
+        // workthread for dirtyTwoTurnsim
+        /// <summary>
+        /// The dirty workthread.
+        /// </summary>
+        /// <param name="to">
+        /// The to.
+        /// </param>
         private void dirtyWorkthread(object to)
         {
             int threadnumber = (int)to;
-            //Helpfunctions.Instance.ErrorLog("Hi, i'm no " + threadnumber);
+
+            // Helpfunctions.Instance.ErrorLog("Hi, i'm no " + threadnumber);
             for (int i = 0; i < this.twoturnfields.Count; i++)
             {
                 if (i % Settings.Instance.numberOfThreads == threadnumber)
                 {
-                    //if(threadnumber ==0)Helpfunctions.Instance.ErrorLog("no " + threadnumber + " calculates " + i);
+                    // if(threadnumber ==0)Helpfunctions.Instance.ErrorLog("no " + threadnumber + " calculates " + i);
                     Playfield p = this.twoturnfields[i];
                     if (p.guessingHeroHP >= 1)
                     {
                         p.value = int.MinValue;
-                        //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+
+                        // simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                         p.prepareNextTurn(p.isOwnTurn);
-                        Ai.Instance.enemyTurnSim[threadnumber].simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
+                        Ai.Instance.enemyTurnSim[threadnumber].simulateEnemysTurn(
+                            p, 
+                            true, 
+                            this.playaround, 
+                            false, 
+                            this.playaroundprob, 
+                            this.playaroundprob2);
                     }
-                    //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
 
-
+                    // Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
                     this.threadresults[threadnumber].Add(p);
-
                 }
             }
-
         }
 
-
-
+        /// <summary>
+        /// The cuttingposibilities.
+        /// </summary>
         public void cuttingposibilities()
         {
             // take the x best values
             int takenumber = this.maxwide;
             List<Playfield> temp = new List<Playfield>();
-            posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
+            this.posmoves.Sort((a, b) => -this.botBase.getPlayfieldValue(a).CompareTo(this.botBase.getPlayfieldValue(b)));// want to keep the best
 
             if (this.useComparison)
             {
                 int i = 0;
-                int max = Math.Min(posmoves.Count, this.maxwide);
+                int max = Math.Min(this.posmoves.Count, this.maxwide);
 
                 Playfield p = null;
                 Playfield pp = null;
-                //foreach (Playfield p in posmoves)
+
+                // foreach (Playfield p in posmoves)
                 for (i = 0; i < max; i++)
                 {
-                    p = posmoves[i];
+                    p = this.posmoves[i];
                     int hash = p.GetHashCode();
                     p.hashcode = hash;
                     bool found = false;
-                    //foreach (Playfield pp in temp)
+
+                    // foreach (Playfield pp in temp)
                     for (int j = 0; j < temp.Count; j++)
                     {
                         pp = temp[j];
@@ -392,27 +658,30 @@ namespace HREngine.Bots
                             }
                         }
                     }
-                    if (!found) temp.Add(p);
-                    //i++;
-                    //if (i >= this.maxwide) break;
 
+                    if (!found)
+                    {
+                        temp.Add(p);
+                    }
+
+                    // i++;
+                    // if (i >= this.maxwide) break;
                 }
-
-
             }
             else
             {
-                temp.AddRange(posmoves);
+                temp.AddRange(this.posmoves);
             }
-            posmoves.Clear();
-            posmoves.AddRange(temp.GetRange(0, Math.Min(takenumber, temp.Count)));
 
-            //twoturnfields!
+            this.posmoves.Clear();
+            this.posmoves.AddRange(temp.GetRange(0, Math.Min(takenumber, temp.Count)));
+
+            // twoturnfields!
             if (this.dirtyTwoTurnSim == 0) return;
             temp.Clear();
             temp.AddRange(this.twoturnfields);
-            temp.AddRange(posmoves.GetRange(0, Math.Min(this.dirtyTwoTurnSim, posmoves.Count)));
-            temp.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));
+            temp.AddRange(this.posmoves.GetRange(0, Math.Min(this.dirtyTwoTurnSim, this.posmoves.Count)));
+            temp.Sort((a, b) => -this.botBase.getPlayfieldValue(a).CompareTo(this.botBase.getPlayfieldValue(b)));
             this.twoturnfields.Clear();
 
             if (this.useComparison)
@@ -422,17 +691,19 @@ namespace HREngine.Bots
 
                 Playfield p = null;
                 Playfield pp = null;
-                //foreach (Playfield p in posmoves)
+
+                // foreach (Playfield p in posmoves)
                 for (i = 0; i < max; i++)
                 {
                     p = temp[i];
                     int hash = p.GetHashCode();
                     p.hashcode = hash;
                     bool found = false;
-                    //foreach (Playfield pp in temp)
-                    for (int j = 0; j < twoturnfields.Count; j++)
+
+                    // foreach (Playfield pp in temp)
+                    for (int j = 0; j < this.twoturnfields.Count; j++)
                     {
-                        pp = twoturnfields[j];
+                        pp = this.twoturnfields[j];
                         if (pp.hashcode == p.hashcode)
                         {
                             if (pp.isEqualf(p))
@@ -442,29 +713,40 @@ namespace HREngine.Bots
                             }
                         }
                     }
-                    if (!found) twoturnfields.Add(p);
-                    //i++;
-                    //if (i >= this.maxwide) break;
 
+                    if (!found)
+                    {
+                        this.twoturnfields.Add(p);
+                    }
+
+                    // i++;
+                    // if (i >= this.maxwide) break;
                 }
-
-
             }
 
+            // this.twoturnfields.AddRange(temp.GetRange(0, Math.Min(this.dirtyTwoTurnSim, temp.Count)));
 
+            // Helpfunctions.Instance.ErrorLog(this.twoturnfields.Count + "");
 
-
-
-
-            //this.twoturnfields.AddRange(temp.GetRange(0, Math.Min(this.dirtyTwoTurnSim, temp.Count)));
-
-            //Helpfunctions.Instance.ErrorLog(this.twoturnfields.Count + "");
-
-            //posmoves.Clear();
-            //posmoves.AddRange(Helpfunctions.TakeList(temp, takenumber));
-
+            // posmoves.Clear();
+            // posmoves.AddRange(Helpfunctions.TakeList(temp, takenumber));
         }
 
+        /// <summary>
+        /// The cut attack targets.
+        /// </summary>
+        /// <param name="oldlist">
+        /// The oldlist.
+        /// </param>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        /// <returns>
+        /// The <see cref="List"/>.
+        /// </returns>
         public List<targett> cutAttackTargets(List<targett> oldlist, Playfield p, bool own)
         {
             List<targett> retvalues = new List<targett>();
@@ -479,11 +761,20 @@ namespace HREngine.Bots
                     retvalues.Add(t);
                     continue;
                 }
+
                 if ((own && t.target >= 10 && t.target <= 19) || (!own && t.target >= 0 && t.target <= 9))
                 {
                     Minion m = null;
-                    if (own) m = p.enemyMinions[t.target - 10];
-                    if (!own) m = p.ownMinions[t.target];
+                    if (own)
+                    {
+                        m = p.enemyMinions[t.target - 10];
+                    }
+
+                    if (!own)
+                    {
+                        m = p.ownMinions[t.target];
+                    }
+
                     /*if (penman.priorityDatabase.ContainsKey(m.name))
                     {
                         //retvalues.Add(t);
@@ -492,57 +783,75 @@ namespace HREngine.Bots
                         //help.logg(m.name + " is added to targetlist");
                         continue;
                     }*/
-
-
                     bool goingtoadd = true;
                     List<Minion> temp = new List<Minion>(addedmins);
                     bool isSpecial = m.handcard.card.isSpecialMinion;
                     foreach (Minion mnn in temp)
                     {
                         // special minions are allowed to attack in silended and unsilenced state!
-                        //help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
-
+                        // help.logg(mnn.silenced + " " + m.silenced + " " + mnn.name + " " + m.name + " " + penman.specialMinions.ContainsKey(m.name));
                         bool otherisSpecial = mnn.handcard.card.isSpecialMinion;
 
-                        if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
+                        if ((!isSpecial || (isSpecial && m.silenced))
+                            && (!otherisSpecial || (otherisSpecial && mnn.silenced)))
                         {
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) goingtoadd = false;
+                            // both are not special, if they are the same, dont add
+                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild
+                                && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous)
+                            {
+                                goingtoadd = false;
+                            }
+
                             continue;
                         }
 
-                        if (isSpecial == otherisSpecial && !m.silenced && !mnn.silenced) // same are special
+                        if (isSpecial == otherisSpecial && !m.silenced && !mnn.silenced)
                         {
-                            if (m.name != mnn.name) // different name -> take it
+                            // same are special
+                            if (m.name != mnn.name)
                             {
+                                // different name -> take it
                                 continue;
                             }
+
                             // same name -> test whether they are equal
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild
+                                && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous)
+                            {
+                                goingtoadd = false;
+                            }
+
                             continue;
                         }
-
                     }
 
                     if (goingtoadd)
                     {
                         addedmins.Add(m);
                         retvalues.Add(t);
-                        //help.logg(m.name + " " + m.id +" is added to targetlist");
+
+                        // help.logg(m.name + " " + m.id +" is added to targetlist");
                     }
                     else
                     {
-                        //help.logg(m.name + " is not needed to attack");
+                        // help.logg(m.name + " is not needed to attack");
                         continue;
                     }
-
                 }
             }
-            //help.logg("end targetcutting");
-            if (priomins) return retvaluesPrio;
+
+            // help.logg("end targetcutting");
+            if (priomins)
+            {
+                return retvaluesPrio;
+            }
 
             return retvalues;
         }
 
+        /// <summary>
+        /// The print posmoves.
+        /// </summary>
         public void printPosmoves()
         {
             int i = 0;

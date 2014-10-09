@@ -1,14 +1,37 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_622.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_622.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_622 : SimTemplate //shadowworddeath
+    /// <summary>
+    /// The sim_ e x 1_622.
+    /// </summary>
+    class Sim_EX1_622 : SimTemplate
 	{
+	    // shadowworddeath
 
-//    vernichtet einen diener mit mind. 5 angriff.
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+// vernichtet einen diener mit mind. 5 angriff.
+        /// <summary>
+        /// The on card play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
             p.minionGetDestroyed(target);
 		}

@@ -1,15 +1,38 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_FP1_025.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ f p 1_025.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_FP1_025 : SimTemplate //reincarnate
+    /// <summary>
+    /// The sim_ f p 1_025.
+    /// </summary>
+    class Sim_FP1_025 : SimTemplate
 	{
+	    // reincarnate
 
-//    vernichtet einen diener und bringt ihn dann mit vollem leben wieder auf das schlachtfeld zurück.
+// vernichtet einen diener und bringt ihn dann mit vollem leben wieder auf das schlachtfeld zurück.
 
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        /// <summary>
+        /// The on card play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
             bool own = target.own;
             int place = target.zonepos;

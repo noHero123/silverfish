@@ -1,21 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BehaviourMana.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The behavior mana.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System;
 
 namespace HREngine.Bots
 {
+    /// <summary>
+    /// The behavior mana.
+    /// </summary>
     public class BehaviorMana : Behavior
     {
+        /// <summary>
+        /// The penman.
+        /// </summary>
         PenalityManager penman = PenalityManager.Instance;
 
+        /// <summary>
+        /// The get playfield value.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <returns>
+        /// The <see cref="float"/>.
+        /// </returns>
         public override float getPlayfieldValue(Playfield p)
         {
             if (p.value >= -2000000) return p.value;
             int retval = 0;
 
             retval += p.ownHero.Hp + p.ownHero.armor;
-            retval -= (p.enemyHero.Hp + p.enemyHero.armor);
+            retval -= p.enemyHero.Hp + p.enemyHero.armor;
 
             foreach (Minion m in p.ownMinions)
             {
@@ -35,7 +56,7 @@ namespace HREngine.Bots
             }
 
             retval -= p.enemySecretCount;
-            retval -= p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
+            retval -= p.lostDamage;// damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
             retval -= p.lostWeaponDamage;
             if (p.enemyHero.Hp <= 0) retval = 10000;
             if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
@@ -43,12 +64,25 @@ namespace HREngine.Bots
                 retval += p.owncarddraw * 500;
                 retval -= 1000;
             }
+
             if (p.ownHero.Hp <= 0) retval = -10000;
 
             p.value = retval;
             return retval;
         }
 
+        /// <summary>
+        /// The get enemy minion value.
+        /// </summary>
+        /// <param name="m">
+        /// The m.
+        /// </param>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
         public override int getEnemyMinionValue(Minion m, Playfield p)
         {
             int retval = 0;

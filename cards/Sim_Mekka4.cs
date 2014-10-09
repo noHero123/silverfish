@@ -1,15 +1,38 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_Mekka4.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ mekka 4.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_Mekka4 : SimTemplate //poultryizer
-	{
-        CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.Mekka4t);
-                                
-//    verwandelt zu beginn eures zuges einen zufälligen diener in ein huhn (1/1).
+    /// <summary>
+    /// The sim_ mekka 4.
+    /// </summary>
+    class Sim_Mekka4 : SimTemplate
+    {
+        // poultryizer
+        /// <summary>
+        /// The c.
+        /// </summary>
+        private CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.Mekka4t);
 
+        // verwandelt zu beginn eures zuges einen zufälligen diener in ein huhn (1/1).
+
+        /// <summary>
+        /// The on turn start trigger.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="triggerEffectMinion">
+        /// The trigger effect minion.
+        /// </param>
+        /// <param name="turnStartOfOwner">
+        /// The turn start of owner.
+        /// </param>
         public override void onTurnStartTrigger(Playfield p, Minion triggerEffectMinion, bool turnStartOfOwner)
         {
             if (triggerEffectMinion.own == turnStartOfOwner)
@@ -24,6 +47,7 @@ namespace HREngine.Bots
                         ges = m.Angr + m.Hp;
                     }
                 }
+
                 foreach (Minion m in p.enemyMinions)
                 {
                     if (m.Angr + m.Hp < ges)
@@ -32,14 +56,12 @@ namespace HREngine.Bots
                         ges = m.Angr + m.Hp;
                     }
                 }
+
                 if (ges <= 999)
                 {
-                    p.minionTransform(tm, c);
+                    p.minionTransform(tm, this.c);
                 }
             }
         }
-
-      
-
-	}
+    }
 }

@@ -1,58 +1,181 @@
-﻿using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ComboBreaker.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The combo breaker.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace HREngine.Bots
 {
+    using System.IO;
 
+    /// <summary>
+    /// The combo breaker.
+    /// </summary>
     public class ComboBreaker
     {
-
+        /// <summary>
+        /// The combotype.
+        /// </summary>
         enum combotype
         {
-            combo,
-            target,
+            /// <summary>
+            /// The combo.
+            /// </summary>
+            combo, 
+
+            /// <summary>
+            /// The target.
+            /// </summary>
+            target, 
+
+            /// <summary>
+            /// The weaponuse.
+            /// </summary>
             weaponuse
         }
 
+        /// <summary>
+        /// The play by value.
+        /// </summary>
         private Dictionary<CardDB.cardIDEnum, int> playByValue = new Dictionary<CardDB.cardIDEnum, int>();
 
+        /// <summary>
+        /// The combos.
+        /// </summary>
         private List<combo> combos = new List<combo>();
+
+        /// <summary>
+        /// The instance.
+        /// </summary>
         private static ComboBreaker instance;
 
+        /// <summary>
+        /// The hm.
+        /// </summary>
         Handmanager hm = Handmanager.Instance;
+
+        /// <summary>
+        /// The hp.
+        /// </summary>
         Hrtprozis hp = Hrtprozis.Instance;
 
+        /// <summary>
+        /// The attack face hp.
+        /// </summary>
         public int attackFaceHP = -1;
 
-
+        /// <summary>
+        /// The combo.
+        /// </summary>
         class combo
         {
+            /// <summary>
+            /// The type.
+            /// </summary>
             public combotype type = combotype.combo;
+
+            /// <summary>
+            /// The needed mana.
+            /// </summary>
             public int neededMana = 0;
+
+            /// <summary>
+            /// The combocards.
+            /// </summary>
             public Dictionary<CardDB.cardIDEnum, int> combocards = new Dictionary<CardDB.cardIDEnum, int>();
+
+            /// <summary>
+            /// The cardspen.
+            /// </summary>
             public Dictionary<CardDB.cardIDEnum, int> cardspen = new Dictionary<CardDB.cardIDEnum, int>();
+
+            /// <summary>
+            /// The combocards turn 0 mobs.
+            /// </summary>
             public Dictionary<CardDB.cardIDEnum, int> combocardsTurn0Mobs = new Dictionary<CardDB.cardIDEnum, int>();
+
+            /// <summary>
+            /// The combocards turn 0 all.
+            /// </summary>
             public Dictionary<CardDB.cardIDEnum, int> combocardsTurn0All = new Dictionary<CardDB.cardIDEnum, int>();
+
+            /// <summary>
+            /// The combocards turn 1.
+            /// </summary>
             public Dictionary<CardDB.cardIDEnum, int> combocardsTurn1 = new Dictionary<CardDB.cardIDEnum, int>();
+
+            /// <summary>
+            /// The penality.
+            /// </summary>
             public int penality = 0;
+
+            /// <summary>
+            /// The combolength.
+            /// </summary>
             public int combolength = 0;
+
+            /// <summary>
+            /// The combot 0 len.
+            /// </summary>
             public int combot0len = 0;
+
+            /// <summary>
+            /// The combot 1 len.
+            /// </summary>
             public int combot1len = 0;
+
+            /// <summary>
+            /// The combot 0 len all.
+            /// </summary>
             public int combot0lenAll = 0;
+
+            /// <summary>
+            /// The two turn combo.
+            /// </summary>
             public bool twoTurnCombo = false;
+
+            /// <summary>
+            /// The bonus for playing.
+            /// </summary>
             public int bonusForPlaying = 0;
+
+            /// <summary>
+            /// The bonus for playing t 0.
+            /// </summary>
             public int bonusForPlayingT0 = 0;
+
+            /// <summary>
+            /// The bonus for playing t 1.
+            /// </summary>
             public int bonusForPlayingT1 = 0;
+
+            /// <summary>
+            /// The required weapon.
+            /// </summary>
             public CardDB.cardName requiredWeapon = CardDB.cardName.unknown;
+
+            /// <summary>
+            /// The o hero.
+            /// </summary>
             public HeroEnum oHero = HeroEnum.None;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="combo"/> class.
+            /// </summary>
+            /// <param name="s">
+            /// The s.
+            /// </param>
             public combo(string s)
             {
                 int i = 0;
                 this.neededMana = 0;
-                requiredWeapon = CardDB.cardName.unknown;
+                this.requiredWeapon = CardDB.cardName.unknown;
                 this.type = combotype.combo;
                 this.twoTurnCombo = false;
                 bool fixmana = false;
@@ -76,7 +199,7 @@ namespace HREngine.Bots
                         if (m >= 1) neededMana = m;
                     }
                 */
-                if (type == combotype.combo)
+                if (this.type == combotype.combo)
                 {
                     this.combolength = 0;
                     this.combot0len = 0;
@@ -85,39 +208,46 @@ namespace HREngine.Bots
                     int manat0 = 0;
                     int manat1 = -1;
                     bool t1 = false;
-                    foreach (string crdl in s.Split(';')) //ding.Split
+                    foreach (string crdl in s.Split(';'))
                     {
-                        if (crdl == "" || crdl == string.Empty) continue;
+                        // ding.Split
+                        if (crdl == string.Empty || crdl == string.Empty) continue;
                         if (crdl == "nxttrn")
                         {
                             t1 = true;
                             continue;
                         }
+
                         if (crdl.StartsWith("mana:"))
                         {
-                            this.neededMana = Convert.ToInt32(crdl.Replace("mana:", ""));
+                            this.neededMana = Convert.ToInt32(crdl.Replace("mana:", string.Empty));
                             continue;
                         }
+
                         if (crdl.StartsWith("hero:"))
                         {
-                            this.oHero = Hrtprozis.Instance.heroNametoEnum(crdl.Replace("hero:", ""));
+                            this.oHero = Hrtprozis.Instance.heroNametoEnum(crdl.Replace("hero:", string.Empty));
                             continue;
                         }
+
                         if (crdl.StartsWith("bonus:"))
                         {
-                            this.bonusForPlaying = Convert.ToInt32(crdl.Replace("bonus:", ""));
+                            this.bonusForPlaying = Convert.ToInt32(crdl.Replace("bonus:", string.Empty));
                             continue;
                         }
+
                         if (crdl.StartsWith("bonusfirst:"))
                         {
-                            this.bonusForPlayingT0 = Convert.ToInt32(crdl.Replace("bonusfirst:", ""));
+                            this.bonusForPlayingT0 = Convert.ToInt32(crdl.Replace("bonusfirst:", string.Empty));
                             continue;
                         }
+
                         if (crdl.StartsWith("bonussecond:"))
                         {
-                            this.bonusForPlayingT1 = Convert.ToInt32(crdl.Replace("bonussecond:", ""));
+                            this.bonusForPlayingT1 = Convert.ToInt32(crdl.Replace("bonussecond:", string.Empty));
                             continue;
                         }
+
                         string crd = crdl.Split(',')[0];
                         if (t1)
                         {
@@ -127,16 +257,17 @@ namespace HREngine.Bots
                         {
                             manat0 += CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(crd)).cost;
                         }
+
                         this.combolength++;
 
-                        if (combocards.ContainsKey(CardDB.Instance.cardIdstringToEnum(crd)))
+                        if (this.combocards.ContainsKey(CardDB.Instance.cardIdstringToEnum(crd)))
                         {
-                            combocards[CardDB.Instance.cardIdstringToEnum(crd)]++;
+                            this.combocards[CardDB.Instance.cardIdstringToEnum(crd)]++;
                         }
                         else
                         {
-                            combocards.Add(CardDB.Instance.cardIdstringToEnum(crd), 1);
-                            cardspen.Add(CardDB.Instance.cardIdstringToEnum(crd), Convert.ToInt32(crdl.Split(',')[1]));
+                            this.combocards.Add(CardDB.Instance.cardIdstringToEnum(crd), 1);
+                            this.cardspen.Add(CardDB.Instance.cardIdstringToEnum(crd), Convert.ToInt32(crdl.Split(',')[1]));
                         }
 
                         if (this.twoTurnCombo)
@@ -146,12 +277,13 @@ namespace HREngine.Bots
                             {
                                 if (this.combocardsTurn1.ContainsKey(CardDB.Instance.cardIdstringToEnum(crd)))
                                 {
-                                    combocardsTurn1[CardDB.Instance.cardIdstringToEnum(crd)]++;
+                                    this.combocardsTurn1[CardDB.Instance.cardIdstringToEnum(crd)]++;
                                 }
                                 else
                                 {
-                                    combocardsTurn1.Add(CardDB.Instance.cardIdstringToEnum(crd), 1);
+                                    this.combocardsTurn1.Add(CardDB.Instance.cardIdstringToEnum(crd), 1);
                                 }
+
                                 this.combot1len++;
                             }
                             else
@@ -161,32 +293,37 @@ namespace HREngine.Bots
                                 {
                                     if (this.combocardsTurn0Mobs.ContainsKey(CardDB.Instance.cardIdstringToEnum(crd)))
                                     {
-                                        combocardsTurn0Mobs[CardDB.Instance.cardIdstringToEnum(crd)]++;
+                                        this.combocardsTurn0Mobs[CardDB.Instance.cardIdstringToEnum(crd)]++;
                                     }
                                     else
                                     {
-                                        combocardsTurn0Mobs.Add(CardDB.Instance.cardIdstringToEnum(crd), 1);
+                                        this.combocardsTurn0Mobs.Add(CardDB.Instance.cardIdstringToEnum(crd), 1);
                                     }
+
                                     this.combot0len++;
                                 }
+
                                 if (lolcrd.type == CardDB.cardtype.WEAPON)
                                 {
                                     this.requiredWeapon = lolcrd.name;
                                 }
+
                                 if (this.combocardsTurn0All.ContainsKey(CardDB.Instance.cardIdstringToEnum(crd)))
                                 {
-                                    combocardsTurn0All[CardDB.Instance.cardIdstringToEnum(crd)]++;
+                                    this.combocardsTurn0All[CardDB.Instance.cardIdstringToEnum(crd)]++;
                                 }
                                 else
                                 {
-                                    combocardsTurn0All.Add(CardDB.Instance.cardIdstringToEnum(crd), 1);
+                                    this.combocardsTurn0All.Add(CardDB.Instance.cardIdstringToEnum(crd), 1);
                                 }
+
                                 this.combot0lenAll++;
                             }
                         }
 
 
                     }
+
                     if (!fixmana)
                     {
                         this.neededMana = Math.Max(manat1, manat0);
@@ -202,11 +339,23 @@ namespace HREngine.Bots
 
                 i++;
             }*/
-                this.bonusForPlaying = Math.Max(bonusForPlaying, 1);
-                this.bonusForPlayingT0 = Math.Max(bonusForPlayingT0, 1);
-                this.bonusForPlayingT1 = Math.Max(bonusForPlayingT1, 1);
+                this.bonusForPlaying = Math.Max(this.bonusForPlaying, 1);
+                this.bonusForPlayingT0 = Math.Max(this.bonusForPlayingT0, 1);
+                this.bonusForPlayingT1 = Math.Max(this.bonusForPlayingT1, 1);
             }
 
+            /// <summary>
+            /// The is in combo.
+            /// </summary>
+            /// <param name="hand">
+            /// The hand.
+            /// </param>
+            /// <param name="omm">
+            /// The omm.
+            /// </param>
+            /// <returns>
+            /// The <see cref="int"/>.
+            /// </returns>
             public int isInCombo(List<Handmanager.Handcard> hand, int omm)
             {
                 int cardsincombo = 0;
@@ -219,15 +368,34 @@ namespace HREngine.Bots
                         combocardscopy[hc.card.cardIDenum]--;
                     }
                 }
+
                 if (cardsincombo == this.combolength && omm < this.neededMana) return 1;
                 if (cardsincombo == this.combolength) return 2;
                 if (cardsincombo >= 1) return 1;
                 return 0;
             }
 
+            /// <summary>
+            /// The is multi turn combo turn 1.
+            /// </summary>
+            /// <param name="hand">
+            /// The hand.
+            /// </param>
+            /// <param name="omm">
+            /// The omm.
+            /// </param>
+            /// <param name="ownmins">
+            /// The ownmins.
+            /// </param>
+            /// <param name="weapon">
+            /// The weapon.
+            /// </param>
+            /// <returns>
+            /// The <see cref="int"/>.
+            /// </returns>
             public int isMultiTurnComboTurn1(List<Handmanager.Handcard> hand, int omm, List<Minion> ownmins, CardDB.cardName weapon)
             {
-                if (!twoTurnCombo) return 0;
+                if (!this.twoTurnCombo) return 0;
                 int cardsincombo = 0;
                 Dictionary<CardDB.cardIDEnum, int> combocardscopy = new Dictionary<CardDB.cardIDEnum, int>(this.combocardsTurn1);
                 foreach (Handmanager.Handcard hc in hand)
@@ -238,13 +406,14 @@ namespace HREngine.Bots
                         combocardscopy[hc.card.cardIDenum]--;
                     }
                 }
+
                 if (cardsincombo == this.combot1len && omm < this.neededMana) return 1;
 
                 if (cardsincombo == this.combot1len)
                 {
-                    //search for required minions on field
+                    // search for required minions on field
                     int turn0requires = 0;
-                    foreach (CardDB.cardIDEnum s in combocardsTurn0Mobs.Keys)
+                    foreach (CardDB.cardIDEnum s in this.combocardsTurn0Mobs.Keys)
                     {
                         foreach (Minion m in ownmins)
                         {
@@ -256,19 +425,32 @@ namespace HREngine.Bots
                         }
                     }
 
-                    if (requiredWeapon != CardDB.cardName.unknown && requiredWeapon != weapon) return 1;
+                    if (this.requiredWeapon != CardDB.cardName.unknown && this.requiredWeapon != weapon) return 1;
 
-                    if (turn0requires >= combot0len) return 2;
+                    if (turn0requires >= this.combot0len) return 2;
 
                     return 1;
                 }
+
                 if (cardsincombo >= 1) return 1;
                 return 0;
             }
 
+            /// <summary>
+            /// The is multi turn combo turn 0.
+            /// </summary>
+            /// <param name="hand">
+            /// The hand.
+            /// </param>
+            /// <param name="omm">
+            /// The omm.
+            /// </param>
+            /// <returns>
+            /// The <see cref="int"/>.
+            /// </returns>
             public int isMultiTurnComboTurn0(List<Handmanager.Handcard> hand, int omm)
             {
-                if (!twoTurnCombo) return 0;
+                if (!this.twoTurnCombo) return 0;
                 int cardsincombo = 0;
                 Dictionary<CardDB.cardIDEnum, int> combocardscopy = new Dictionary<CardDB.cardIDEnum, int>(this.combocardsTurn0All);
                 foreach (Handmanager.Handcard hc in hand)
@@ -279,35 +461,65 @@ namespace HREngine.Bots
                         combocardscopy[hc.card.cardIDenum]--;
                     }
                 }
+
                 if (cardsincombo == this.combot0lenAll && omm < this.neededMana) return 1;
 
                 if (cardsincombo == this.combot0lenAll)
                 {
                     return 2;
                 }
+
                 if (cardsincombo >= 1) return 1;
                 return 0;
             }
 
-
+            /// <summary>
+            /// The is multi turn 1 card.
+            /// </summary>
+            /// <param name="card">
+            /// The card.
+            /// </param>
+            /// <returns>
+            /// The <see cref="bool"/>.
+            /// </returns>
             public bool isMultiTurn1Card(CardDB.Card card)
             {
                 if (this.combocardsTurn1.ContainsKey(card.cardIDenum))
                 {
                     return true;
                 }
+
                 return false;
             }
 
+            /// <summary>
+            /// The is card in combo.
+            /// </summary>
+            /// <param name="card">
+            /// The card.
+            /// </param>
+            /// <returns>
+            /// The <see cref="bool"/>.
+            /// </returns>
             public bool isCardInCombo(CardDB.Card card)
             {
                 if (this.combocards.ContainsKey(card.cardIDenum))
                 {
                     return true;
                 }
+
                 return false;
             }
 
+            /// <summary>
+            /// The has played combo.
+            /// </summary>
+            /// <param name="hand">
+            /// The hand.
+            /// </param>
+            /// <returns>
+            /// The <see cref="int"/>.
+            /// </returns>
             public int hasPlayedCombo(List<Handmanager.Handcard> hand)
             {
                 int cardsincombo = 0;
@@ -325,6 +537,15 @@ namespace HREngine.Bots
                 return 0;
             }
 
+            /// <summary>
+            /// The has played turn 0 combo.
+            /// </summary>
+            /// <param name="hand">
+            /// The hand.
+            /// </param>
+            /// <returns>
+            /// The <see cref="int"/>.
+            /// </returns>
             public int hasPlayedTurn0Combo(List<Handmanager.Handcard> hand)
             {
                 if (this.combocardsTurn0All.Count == 0) return 0;
@@ -343,6 +564,15 @@ namespace HREngine.Bots
                 return 0;
             }
 
+            /// <summary>
+            /// The has played turn 1 combo.
+            /// </summary>
+            /// <param name="hand">
+            /// The hand.
+            /// </param>
+            /// <returns>
+            /// The <see cref="int"/>.
+            /// </returns>
             public int hasPlayedTurn1Combo(List<Handmanager.Handcard> hand)
             {
                 if (this.combocardsTurn1.Count == 0) return 0;
@@ -363,6 +593,9 @@ namespace HREngine.Bots
 
         }
 
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
         public static ComboBreaker Instance
         {
             get
@@ -371,27 +604,34 @@ namespace HREngine.Bots
                 {
                     instance = new ComboBreaker();
                 }
+
                 return instance;
             }
         }
 
+        /// <summary>
+        /// Prevents a default instance of the <see cref="ComboBreaker"/> class from being created.
+        /// </summary>
         private ComboBreaker()
         {
-            readCombos();
-            if (attackFaceHP != -1)
+            this.readCombos();
+            if (this.attackFaceHP != -1)
             {
-                hp.setAttackFaceHP(attackFaceHP);
+                this.hp.setAttackFaceHP(this.attackFaceHP);
             }
         }
 
+        /// <summary>
+        /// The read combos.
+        /// </summary>
         private void readCombos()
         {
-            string[] lines = new string[0] { };
-            combos.Clear();
+            string[] lines = { };
+            this.combos.Clear();
             try
             {
                 string path = Settings.Instance.path;
-                lines = System.IO.File.ReadAllLines(path + "_combo.txt");
+                lines = File.ReadAllLines(path + "_combo.txt");
             }
             catch
             {
@@ -399,6 +639,7 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("cant find _combo.txt (if you dont created your own combos, ignore this message)");
                 return;
             }
+
             Helpfunctions.Instance.logg("read _combo.txt...");
             Helpfunctions.Instance.ErrorLog("read _combo.txt...");
             foreach (string line in lines)
@@ -408,7 +649,7 @@ namespace HREngine.Bots
                 {
                     try
                     {
-                        this.attackFaceHP = Convert.ToInt32(line.Replace("weapon:", ""));
+                        this.attackFaceHP = Convert.ToInt32(line.Replace("weapon:", string.Empty));
                     }
                     catch
                     {
@@ -422,12 +663,17 @@ namespace HREngine.Bots
                     {
                         try
                         {
-                            string cardvalue = line.Replace("cardvalue:", "");
+                            string cardvalue = line.Replace("cardvalue:", string.Empty);
                             CardDB.cardIDEnum ce = CardDB.Instance.cardIdstringToEnum(cardvalue.Split(',')[0]);
                             int val = Convert.ToInt32(cardvalue.Split(',')[1]);
-                            if (this.playByValue.ContainsKey(ce)) continue;
+                            if (this.playByValue.ContainsKey(ce))
+                            {
+                                continue;
+                            }
+
                             this.playByValue.Add(ce, val);
-                            //Helpfunctions.Instance.ErrorLog("adding: " + line);
+
+                            // Helpfunctions.Instance.ErrorLog("adding: " + line);
                         }
                         catch
                         {
@@ -454,69 +700,113 @@ namespace HREngine.Bots
 
         }
 
+        /// <summary>
+        /// The get penality for destroying combo.
+        /// </summary>
+        /// <param name="crd">
+        /// The crd.
+        /// </param>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
         public int getPenalityForDestroyingCombo(CardDB.Card crd, Playfield p)
         {
             if (this.combos.Count == 0) return 0;
             int pen = int.MaxValue;
             bool found = false;
-            int mana = Math.Max(hp.ownMaxMana, hp.currentMana);
+            int mana = Math.Max(this.hp.ownMaxMana, this.hp.currentMana);
             foreach (combo c in this.combos)
             {
                 if ((c.oHero == HeroEnum.None || c.oHero == p.ownHeroName) && c.isCardInCombo(crd))
                 {
-                    int iia = c.isInCombo(hm.handCards, hp.ownMaxMana);//check if we have all cards for a combo, and if the choosen card is one
-                    int iib = c.isMultiTurnComboTurn1(hm.handCards, mana, p.ownMinions, p.ownWeaponName);
+                    int iia = c.isInCombo(this.hm.handCards, this.hp.ownMaxMana);// check if we have all cards for a combo, and if the choosen card is one
+                    int iib = c.isMultiTurnComboTurn1(this.hm.handCards, mana, p.ownMinions, p.ownWeaponName);
 
                     int iic = Math.Max(iia, iib);
-                    if (iia == 2 && iib != 2 && c.isMultiTurn1Card(crd))// it is a card of the combo, is a turn 1 card, but turn 1 is not possible -> we have to play turn 0 cards first
+                    if (iia == 2 && iib != 2 && c.isMultiTurn1Card(crd))
                     {
+                        // it is a card of the combo, is a turn 1 card, but turn 1 is not possible -> we have to play turn 0 cards first
                         iic = 1;
                     }
+
                     if (iic == 1) found = true;
-                    if (iic == 1 && pen > c.cardspen[crd.cardIDenum]) pen = c.cardspen[crd.cardIDenum];//iic==1 will destroy combo
-                    if (iic == 2) pen = 0;//card is ok to play
+                    if (iic == 1 && pen > c.cardspen[crd.cardIDenum]) pen = c.cardspen[crd.cardIDenum];// iic==1 will destroy combo
+                    if (iic == 2) pen = 0;// card is ok to play
                 }
 
             }
+
             if (found) { return pen; }
             return 0;
 
         }
 
+        /// <summary>
+        /// The check if combo was played.
+        /// </summary>
+        /// <param name="alist">
+        /// The alist.
+        /// </param>
+        /// <param name="weapon">
+        /// The weapon.
+        /// </param>
+        /// <param name="heroname">
+        /// The heroname.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
         public int checkIfComboWasPlayed(List<Action> alist, CardDB.cardName weapon, HeroEnum heroname)
         {
-            if (this.combos.Count == 0) return 0;
-            //returns a penalty only if the combo could be played, but is not played completely
+            if (this.combos.Count == 0)
+            {
+                return 0;
+            }
+
+            // returns a penalty only if the combo could be played, but is not played completely
             List<Handmanager.Handcard> playedcards = new List<Handmanager.Handcard>();
             List<combo> searchingCombo = new List<combo>();
+
             // only check the cards, that are in a combo that can be played:
-            int mana = Math.Max(hp.ownMaxMana, hp.currentMana);
+            int mana = Math.Max(this.hp.ownMaxMana, this.hp.currentMana);
             foreach (Action a in alist)
             {
-                if (a.actionType != actionEnum.playcard) continue;
+                if (a.actionType != actionEnum.playcard)
+                {
+                    continue;
+                }
+
                 CardDB.Card crd = a.card.card;
-                //playedcards.Add(a.handcard);
+
+                // playedcards.Add(a.handcard);
                 foreach (combo c in this.combos)
                 {
                     if ((c.oHero == HeroEnum.None || c.oHero == heroname) && c.isCardInCombo(crd))
                     {
-                        int iia = c.isInCombo(hm.handCards, hp.ownMaxMana);
-                        int iib = c.isMultiTurnComboTurn1(hm.handCards, mana, hp.ownMinions, weapon);
+                        int iia = c.isInCombo(this.hm.handCards, this.hp.ownMaxMana);
+                        int iib = c.isMultiTurnComboTurn1(this.hm.handCards, mana, this.hp.ownMinions, weapon);
                         int iic = Math.Max(iia, iib);
                         if (iia == 2 && iib != 2 && c.isMultiTurn1Card(crd))
                         {
                             iic = 1;
                         }
+
                         if (iic == 2)
                         {
                             playedcards.Add(a.card); // add only the cards, which dont get a penalty
                         }
                     }
-
                 }
             }
 
-            if (playedcards.Count == 0) return 0;
+            if (playedcards.Count == 0)
+            {
+                return 0;
+            }
+
             bool wholeComboPlayed = false;
 
             int bonus = 0;
@@ -533,11 +823,23 @@ namespace HREngine.Bots
                 }
             }
 
-            if (wholeComboPlayed) return bonus;
-            return 250;
+            if (wholeComboPlayed)
+            {
+                return bonus;
+            }
 
+            return 250;
         }
 
+        /// <summary>
+        /// The get play value.
+        /// </summary>
+        /// <param name="ce">
+        /// The ce.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
         public int getPlayValue(CardDB.cardIDEnum ce)
         {
             if (this.playByValue.Count == 0) return 0;
@@ -545,6 +847,7 @@ namespace HREngine.Bots
             {
                 return this.playByValue[ce];
             }
+
             return 0;
 
         }

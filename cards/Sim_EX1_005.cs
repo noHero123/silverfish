@@ -1,14 +1,37 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_005.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_005.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_005 : SimTemplate //biggamehunter
+    /// <summary>
+    /// The sim_ e x 1_005.
+    /// </summary>
+    class Sim_EX1_005 : SimTemplate
 	{
+	    // biggamehunter
 
-//    kampfschrei:/ vernichtet einen diener mit mind. 7 angriff.
-		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+// kampfschrei:/ vernichtet einen diener mit mind. 7 angriff.
+        /// <summary>
+        /// The get battlecry effect.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
             if(target != null) p.minionGetDestroyed(target);
 		}

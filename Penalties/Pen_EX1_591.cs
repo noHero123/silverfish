@@ -1,14 +1,43 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Pen_EX1_591.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The pen_ e x 1_591.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Pen_EX1_591 : PenTemplate //auchenaisoulpriest
+    /// <summary>
+    /// The pen_ e x 1_591.
+    /// </summary>
+    class Pen_EX1_591 : PenTemplate
 	{
+	    // auchenaisoulpriest
 
-//    eure karten und fähigkeiten, die leben wiederherstellen, verursachen stattdessen nun schaden.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+// eure karten und fähigkeiten, die leben wiederherstellen, verursachen stattdessen nun schaden.
+        /// <summary>
+        /// The get play penalty.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        /// <param name="isLethal">
+        /// The is lethal.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
 		{
 		return 0;
 		}
