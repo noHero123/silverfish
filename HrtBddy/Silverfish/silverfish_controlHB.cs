@@ -586,20 +586,12 @@ namespace SilverfishControl
             Helpfunctions.Instance.ErrorLog("handle mulligan");
             List<HSCard> list = TritonHS.GetMulliganCards();
 
-            // Find mulligans cards where cost > MaxCost
-           
-            {
-                // Toggle this card
-                TritonHS.ToggleMulliganCard(c);
-
-                // Make sure we give the game time to actually click stuff.
-                yield return Coroutine.Sleep(1000);
-            }
-
             if (Mulligan.Instance.hasmulliganrules())
             {
                 HSCard enemyPlayer = TritonHS.EnemyHero;
+                HSCard ownPlayer = TritonHS.OurHero;
                 string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.Id);
+                string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.Id);
                 List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
                 foreach (HSCard item in list)
                 {
@@ -608,7 +600,7 @@ namespace SilverfishControl
                         celist.Add(new Mulligan.CardIDEntity(item.Id, item.EntityId));
                     }
                 }
-                List<int> mullientitys = Mulligan.Instance.whatShouldIMulligan(celist, enemName);
+                List<int> mullientitys = Mulligan.Instance.whatShouldIMulligan(celist, ownName, enemName);
                 foreach (HSCard item in list)
                 {
                     if (mullientitys.Contains(item.EntityId))
