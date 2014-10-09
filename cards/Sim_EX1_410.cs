@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_410.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_410.
+    ///     The sim_ e x 1_410.
     /// </summary>
-    class Sim_EX1_410 : SimTemplate
-	{
-	    // shieldslam
+    internal class Sim_EX1_410 : SimTemplate
+    {
+        // shieldslam
 
-// fügt einem diener für jeden eurer rüstungspunkte 1 schaden zu.
+        // fügt einem diener für jeden eurer rüstungspunkte 1 schaden zu.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,12 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-
-
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(p.ownHero.armor) : p.getEnemySpellDamageDamage(p.enemyHero.armor);
             p.minionGetDamageOrHeal(target, dmg);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

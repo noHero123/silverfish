@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_339.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_339.
+    ///     The sim_ e x 1_339.
     /// </summary>
-    class Sim_EX1_339 : SimTemplate
-	{
-	    // thoughtsteal
+    internal class Sim_EX1_339 : SimTemplate
+    {
+        // thoughtsteal
 
-// kopiert 2 karten aus dem deck eures gegners und fügt sie eurer hand hinzu.
+        // kopiert 2 karten aus dem deck eures gegners und fügt sie eurer hand hinzu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.drawACard(CardDB.cardName.unknown, ownplay, true);
             p.drawACard(CardDB.cardName.unknown, ownplay, true);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

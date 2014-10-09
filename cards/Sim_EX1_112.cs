@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_112.
+    ///     The sim_ e x 1_112.
     /// </summary>
-    class Sim_EX1_112 : SimTemplate
+    internal class Sim_EX1_112 : SimTemplate
     {
         // gelbinmekkatorque
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.Mekka1); // homingchicken
 
+        #endregion
+
         // kampfschrei:/ konstruiert eine fantastische erfindung.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -39,5 +45,7 @@ namespace HREngine.Bots
         {
             p.callKid(this.kid, own.zonepos, own.own, true);
         }
+
+        #endregion
     }
 }

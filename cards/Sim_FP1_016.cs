@@ -6,19 +6,20 @@
 //   The sim_ f p 1_016.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ f p 1_016.
-    /// </summary>
-    class Sim_FP1_016 : SimTemplate
-	{
-	    // wailingsoul
+    using System.Collections.Generic;
 
-// kampfschrei:/ bringt eure anderen diener zum schweigen/.
+    /// <summary>
+    ///     The sim_ f p 1_016.
+    /// </summary>
+    internal class Sim_FP1_016 : SimTemplate
+    {
+        // wailingsoul
+
+        // kampfschrei:/ bringt eure anderen diener zum schweigen/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -35,14 +36,14 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             List<Minion> temp = own.own ? p.ownMinions : p.enemyMinions;
             foreach (Minion m in temp)
             {
                 p.minionGetSilenced(m);
             }
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

@@ -9,12 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_067.
+    ///     The sim_ e x 1_067.
     /// </summary>
-    class Sim_EX1_067 : SimTemplate
-	{
-	    // argentcommander
+    internal class Sim_EX1_067 : SimTemplate
+    {
+        // argentcommander
 
-// ansturm/, gottesschild/
-	}
+        // ansturm/, gottesschild/
+    }
 }

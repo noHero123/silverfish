@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_029.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_029.
+    ///     The sim_ f p 1_029.
     /// </summary>
-    class Sim_FP1_029 : SimTemplate
-	{
-	    // dancingswords
+    internal class Sim_FP1_029 : SimTemplate
+    {
+        // dancingswords
 
-// todesröcheln:/ euer gegner zieht eine karte.
+        // todesröcheln:/ euer gegner zieht eine karte.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on deathrattle.
@@ -31,5 +32,6 @@ namespace HREngine.Bots
             p.drawACard(CardDB.cardName.unknown, !m.own);
         }
 
-	}
+        #endregion
+    }
 }

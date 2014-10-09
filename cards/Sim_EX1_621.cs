@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_621.
+    ///     The sim_ e x 1_621.
     /// </summary>
-    class Sim_EX1_621 : SimTemplate
-	{
-	    // circleofhealing
+    internal class Sim_EX1_621 : SimTemplate
+    {
+        // circleofhealing
 
-// stellt bei allen dienern #4 leben wieder her.
+        // stellt bei allen dienern #4 leben wieder her.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int heal = ownplay ? p.getSpellHeal(4) : p.getEnemySpellHeal(4);
             p.allMinionsGetDamage(-heal);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

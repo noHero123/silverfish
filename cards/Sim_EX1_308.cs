@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_308.cs" company="">
 //   
 // </copyright>
@@ -6,19 +6,19 @@
 //   The sim_ e x 1_308.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ e x 1_308.
-    /// </summary>
-    class Sim_EX1_308 : SimTemplate
-	{
-	    // soulfire
+    using System;
 
-// verursacht $4 schaden. werft eine zufällige karte ab.
+    /// <summary>
+    ///     The sim_ e x 1_308.
+    /// </summary>
+    internal class Sim_EX1_308 : SimTemplate
+    {
+        // soulfire
+
+        // verursacht $4 schaden. werft eine zufällige karte ab.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -36,7 +36,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);
             p.minionGetDamageOrHeal(target, dmg);
             if (ownplay)
@@ -44,7 +44,8 @@ namespace HREngine.Bots
                 p.owncarddraw -= Math.Min(1, p.owncards.Count);
                 p.owncards.RemoveRange(0, Math.Min(1, p.owncards.Count));
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_062.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_062.
+    ///     The sim_ e x 1_062.
     /// </summary>
-    class Sim_EX1_062 : SimTemplate
-	{
-	    // oldmurkeye
+    internal class Sim_EX1_062 : SimTemplate
+    {
+        // oldmurkeye
 
-// ansturm/. hat +1 angriff für jeden anderen murloc auf dem schlachtfeld.
+        // ansturm/. hat +1 angriff für jeden anderen murloc auf dem schlachtfeld.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             foreach (Minion m in p.ownMinions)
             {
                 if (m.handcard.card.race == 14)
@@ -48,7 +50,27 @@ namespace HREngine.Bots
                     p.minionGetBuffed(own, 1, 0);
                 }
             }
-		}
+        }
+
+        /// <summary>
+        /// The on minion died trigger.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="triggerEffectMinion">
+        /// The trigger effect minion.
+        /// </param>
+        /// <param name="diedMinion">
+        /// The died minion.
+        /// </param>
+        public override void onMinionDiedTrigger(Playfield p, Minion triggerEffectMinion, Minion diedMinion)
+        {
+            if (diedMinion.handcard.card.race == 14)
+            {
+                p.minionGetBuffed(triggerEffectMinion, -1, 0);
+            }
+        }
 
         /// <summary>
         /// The on minion is summoned.
@@ -70,25 +92,6 @@ namespace HREngine.Bots
             }
         }
 
-        /// <summary>
-        /// The on minion died trigger.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="triggerEffectMinion">
-        /// The trigger effect minion.
-        /// </param>
-        /// <param name="diedMinion">
-        /// The died minion.
-        /// </param>
-        public override void onMinionDiedTrigger(Playfield p, Minion triggerEffectMinion, Minion diedMinion)
-        {
-            if ( diedMinion.handcard.card.race == 14)
-            {
-                p.minionGetBuffed(triggerEffectMinion, -1, 0);
-            }
-        }
-
-	}
+        #endregion
+    }
 }

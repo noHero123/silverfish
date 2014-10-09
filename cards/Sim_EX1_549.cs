@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_549.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_549.
+    ///     The sim_ e x 1_549.
     /// </summary>
-    class Sim_EX1_549 : SimTemplate
-	{
-	    // bestialwrath
+    internal class Sim_EX1_549 : SimTemplate
+    {
+        // bestialwrath
 
-// verleiht einem wildtier +2 angriff und immunität/ in diesem zug.
+        // verleiht einem wildtier +2 angriff und immunität/ in diesem zug.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetTempBuff(target, 2, 0);
             target.immune = true;
-		}
+        }
 
-	}
+        #endregion
+    }
 }

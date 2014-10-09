@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_233.
+    ///     The sim_ c s 2_233.
     /// </summary>
-    class Sim_CS2_233 : SimTemplate
+    internal class Sim_CS2_233 : SimTemplate
     {
         // Blade Flurry
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -41,5 +42,7 @@ namespace HREngine.Bots
             // destroy own weapon
             p.lowerWeaponDurability(1000, true);
         }
+
+        #endregion
     }
 }

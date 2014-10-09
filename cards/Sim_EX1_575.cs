@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_575.
+    ///     The sim_ e x 1_575.
     /// </summary>
-    class Sim_EX1_575 : SimTemplate
-	{
-	    // manatidetotem
+    internal class Sim_EX1_575 : SimTemplate
+    {
+        // manatidetotem
 
-// zieht am ende eures zuges eine karte.
+        // zieht am ende eures zuges eine karte.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on turn ends trigger.
         /// </summary>
@@ -36,5 +38,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

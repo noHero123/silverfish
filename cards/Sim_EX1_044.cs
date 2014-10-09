@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_044.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_044.
+    ///     The sim_ e x 1_044.
     /// </summary>
-    class Sim_EX1_044 : SimTemplate
-	{
-	    // questingadventurer
+    internal class Sim_EX1_044 : SimTemplate
+    {
+        // questingadventurer
 
-// erhält jedes mal +1/+1, wenn ihr eine karte ausspielt.
+        // erhält jedes mal +1/+1, wenn ihr eine karte ausspielt.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card is going to be played.
         /// </summary>
@@ -31,12 +33,18 @@ namespace HREngine.Bots
         /// <param name="triggerEffectMinion">
         /// The trigger effect minion.
         /// </param>
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void onCardIsGoingToBePlayed(
+            Playfield p, 
+            CardDB.Card c, 
+            bool wasOwnCard, 
+            Minion triggerEffectMinion)
         {
             if (triggerEffectMinion.own == wasOwnCard)
             {
                 p.minionGetBuffed(triggerEffectMinion, 1, 1);
             }
         }
-	}
+
+        #endregion
+    }
 }

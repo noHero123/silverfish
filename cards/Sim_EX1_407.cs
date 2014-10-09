@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_407.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_407.
+    ///     The sim_ e x 1_407.
     /// </summary>
-    class Sim_EX1_407 : SimTemplate
-	{
-	    // brawl
+    internal class Sim_EX1_407 : SimTemplate
+    {
+        // brawl
 
-// vernichtet alle diener bis auf einen. (zufällige auswahl)
+        // vernichtet alle diener bis auf einen. (zufällige auswahl)
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.allMinionsGetDestroyed();
-		}
+        }
 
-	}
+        #endregion
+    }
 }

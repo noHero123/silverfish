@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_391.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_391.
+    ///     The sim_ e x 1_391.
     /// </summary>
-    class Sim_EX1_391 : SimTemplate
-	{
-	    // slam
+    internal class Sim_EX1_391 : SimTemplate
+    {
+        // slam
 
-// fügt einem diener $2 schaden zu. zieht eine karte, wenn er überlebt.
+        // fügt einem diener $2 schaden zu. zieht eine karte, wenn er überlebt.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,8 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
             if (target.Hp > dmg || target.immune || target.divineshild)
             {
@@ -43,8 +43,8 @@ namespace HREngine.Bots
             }
 
             p.minionGetDamageOrHeal(target, dmg);
-            
-		}
+        }
 
-	}
+        #endregion
+    }
 }

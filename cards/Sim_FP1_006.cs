@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_006.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_006.
+    ///     The sim_ f p 1_006.
     /// </summary>
-    class Sim_FP1_006 : SimTemplate
-	{
-	    // deathcharger
+    internal class Sim_FP1_006 : SimTemplate
+    {
+        // deathcharger
 
-// ansturm. todesröcheln:/ fügt eurem helden 3 schaden zu.
+        // ansturm. todesröcheln:/ fügt eurem helden 3 schaden zu.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on deathrattle.
@@ -38,5 +39,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

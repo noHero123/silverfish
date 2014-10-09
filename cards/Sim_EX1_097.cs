@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_097.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_097.
+    ///     The sim_ e x 1_097.
     /// </summary>
-    class Sim_EX1_097 : SimTemplate
-	{
-	    // abomination
+    internal class Sim_EX1_097 : SimTemplate
+    {
+        // abomination
 
-// spott/. todesröcheln:/ fügt allen charakteren 2 schaden zu.
+        // spott/. todesröcheln:/ fügt allen charakteren 2 schaden zu.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on deathrattle.
@@ -31,5 +32,6 @@ namespace HREngine.Bots
             p.allCharsGetDamage(2);
         }
 
-	}
+        #endregion
+    }
 }

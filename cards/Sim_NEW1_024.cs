@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_024.
+    ///     The sim_ ne w 1_024.
     /// </summary>
-    class Sim_NEW1_024 : SimTemplate
+    internal class Sim_NEW1_024 : SimTemplate
     {
         // captaingreenskin
 
         // kampfschrei:/ verleiht eurer waffe +1/+1.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -52,5 +54,7 @@ namespace HREngine.Bots
                 }
             }
         }
+
+        #endregion
     }
 }

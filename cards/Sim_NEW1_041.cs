@@ -6,18 +6,19 @@
 //   The sim_ ne w 1_041.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ ne w 1_041.
+    ///     The sim_ ne w 1_041.
     /// </summary>
-    class Sim_NEW1_041 : SimTemplate
+    internal class Sim_NEW1_041 : SimTemplate
     {
         // Stampeding Kodo
         // todo list
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -35,9 +36,8 @@ namespace HREngine.Bots
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-
             List<Minion> temp2 = own.own ? new List<Minion>(p.enemyMinions) : new List<Minion>(p.ownMinions);
-            temp2.Sort((a, b) => a.Hp.CompareTo(b.Hp));// destroys the weakest
+            temp2.Sort((a, b) => a.Hp.CompareTo(b.Hp)); // destroys the weakest
             foreach (Minion enemy in temp2)
             {
                 if (enemy.Angr <= 2)
@@ -46,9 +46,8 @@ namespace HREngine.Bots
                     break;
                 }
             }
-
         }
 
-
+        #endregion
     }
 }

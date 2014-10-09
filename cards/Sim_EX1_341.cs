@@ -6,19 +6,20 @@
 //   The sim_ e x 1_341.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ e x 1_341.
+    ///     The sim_ e x 1_341.
     /// </summary>
-    class Sim_EX1_341 : SimTemplate
+    internal class Sim_EX1_341 : SimTemplate
     {
         // lightwell
 
         // <deDE>Stellt zu Beginn Eures Zuges bei einem verletzten befreundeten Charakter 3 Leben wieder her.</deDE>
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on turn start trigger.
         /// </summary>
@@ -52,18 +53,30 @@ namespace HREngine.Bots
 
                     if (!healed)
                     {
-                        if (turnStartOfOwner) p.minionGetDamageOrHeal(p.ownHero, -heal);
-                        else p.minionGetDamageOrHeal(p.enemyHero, -heal);
+                        if (turnStartOfOwner)
+                        {
+                            p.minionGetDamageOrHeal(p.ownHero, -heal);
+                        }
+                        else
+                        {
+                            p.minionGetDamageOrHeal(p.enemyHero, -heal);
+                        }
                     }
                 }
                 else
                 {
-                    if (turnStartOfOwner) p.minionGetDamageOrHeal(p.ownHero, -heal);
-                    else p.minionGetDamageOrHeal(p.enemyHero, -heal);
+                    if (turnStartOfOwner)
+                    {
+                        p.minionGetDamageOrHeal(p.ownHero, -heal);
+                    }
+                    else
+                    {
+                        p.minionGetDamageOrHeal(p.enemyHero, -heal);
+                    }
                 }
-
             }
         }
-    }
 
+        #endregion
+    }
 }

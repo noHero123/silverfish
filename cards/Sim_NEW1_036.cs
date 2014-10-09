@@ -6,17 +6,17 @@
 //   The sim_ ne w 1_036.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ ne w 1_036.
+    ///     The sim_ ne w 1_036.
     /// </summary>
-    class Sim_NEW1_036 : SimTemplate
+    internal class Sim_NEW1_036 : SimTemplate
     {
         // commanding shout
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -44,5 +44,6 @@ namespace HREngine.Bots
             p.drawACard(CardDB.cardName.unknown, ownplay);
         }
 
+        #endregion
     }
 }

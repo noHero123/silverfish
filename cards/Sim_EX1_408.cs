@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_408.
+    ///     The sim_ e x 1_408.
     /// </summary>
-    class Sim_EX1_408 : SimTemplate
-	{
-	    // mortalstrike
+    internal class Sim_EX1_408 : SimTemplate
+    {
+        // mortalstrike
 
-// verursacht $4 schaden. verursacht stattdessen $6 schaden, wenn euer held max. 12 leben hat.
+        // verursacht $4 schaden. verursacht stattdessen $6 schaden, wenn euer held max. 12 leben hat.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = 0;
 
             if (ownplay)
@@ -46,7 +47,8 @@ namespace HREngine.Bots
             }
 
             p.minionGetDamageOrHeal(target, dmg);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

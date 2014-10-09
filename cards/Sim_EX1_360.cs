@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_360.
+    ///     The sim_ e x 1_360.
     /// </summary>
-    class Sim_EX1_360 : SimTemplate
+    internal class Sim_EX1_360 : SimTemplate
     {
         // Humility
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -35,5 +36,6 @@ namespace HREngine.Bots
             p.minionSetAngrToOne(target);
         }
 
+        #endregion
     }
 }

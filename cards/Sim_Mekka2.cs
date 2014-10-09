@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ mekka 2.
+    ///     The sim_ mekka 2.
     /// </summary>
-    class Sim_Mekka2 : SimTemplate
-	{
-	    // repairbot
+    internal class Sim_Mekka2 : SimTemplate
+    {
+        // repairbot
 
-// stellt am ende eures zuges bei einem verletzten charakter 6 leben wieder her.
+        // stellt am ende eures zuges bei einem verletzten charakter 6 leben wieder her.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn ends trigger.
@@ -33,7 +34,6 @@ namespace HREngine.Bots
         {
             if (turnEndOfOwner == triggerEffectMinion.own)
             {
-               
                 Minion tm = null;
                 int hl = triggerEffectMinion.own ? p.getMinionHeal(6) : p.getEnemyMinionHeal(6);
                 int heal = 0;
@@ -70,9 +70,9 @@ namespace HREngine.Bots
                         p.minionGetDamageOrHeal(p.enemyHero, -hl);
                     }
                 }
-
             }
         }
 
-	}
+        #endregion
+    }
 }

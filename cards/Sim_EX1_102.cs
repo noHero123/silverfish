@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_102.cs" company="">
 //   
 // </copyright>
@@ -6,19 +6,19 @@
 //   The sim_ e x 1_102.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ e x 1_102.
-    /// </summary>
-    class Sim_EX1_102 : SimTemplate
-	{
-	    // demolisher
+    using System.Collections.Generic;
 
-// fügt zu beginn eures zuges einem zufälligen feind 2 schaden zu.
+    /// <summary>
+    ///     The sim_ e x 1_102.
+    /// </summary>
+    internal class Sim_EX1_102 : SimTemplate
+    {
+        // demolisher
+
+        // fügt zu beginn eures zuges einem zufälligen feind 2 schaden zu.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn start trigger.
@@ -36,7 +36,7 @@ namespace HREngine.Bots
         {
             if (triggerEffectMinion.own == turnStartOfOwner)
             {
-                List<Minion> temp2 = turnStartOfOwner? p.enemyMinions : p.ownMinions;
+                List<Minion> temp2 = turnStartOfOwner ? p.enemyMinions : p.ownMinions;
                 bool dmgdone = false;
                 foreach (Minion mins in temp2)
                 {
@@ -47,10 +47,20 @@ namespace HREngine.Bots
 
                 if (!dmgdone)
                 {
-                    if (turnStartOfOwner) { p.minionGetDamageOrHeal(p.enemyHero, 2); } else { p.minionGetDamageOrHeal(p.ownHero, 2); }
-                };
+                    if (turnStartOfOwner)
+                    {
+                        p.minionGetDamageOrHeal(p.enemyHero, 2);
+                    }
+                    else
+                    {
+                        p.minionGetDamageOrHeal(p.ownHero, 2);
+                    }
+                }
+
+                ;
             }
         }
 
-	}
+        #endregion
+    }
 }

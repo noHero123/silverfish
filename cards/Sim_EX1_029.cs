@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_029.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_029.
+    ///     The sim_ e x 1_029.
     /// </summary>
-    class Sim_EX1_029 : SimTemplate
-	{
-	    // lepergnome
+    internal class Sim_EX1_029 : SimTemplate
+    {
+        // lepergnome
 
-// todesröcheln:/ fügt dem feindlichen helden 2 schaden zu.
+        // todesröcheln:/ fügt dem feindlichen helden 2 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on deathrattle.
         /// </summary>
@@ -37,5 +39,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

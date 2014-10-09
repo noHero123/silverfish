@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_591.cs" company="">
 //   
 // </copyright>
@@ -9,34 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_591.
+    ///     The sim_ e x 1_591.
     /// </summary>
-    class Sim_EX1_591 : SimTemplate
-	{
-	    // auchenaisoulpriest
+    internal class Sim_EX1_591 : SimTemplate
+    {
+        // auchenaisoulpriest
 
-// eure karten und fähigkeiten, die leben wiederherstellen, verursachen stattdessen nun schaden.
-        /// <summary>
-        /// The on aura starts.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        public override void onAuraStarts(Playfield p, Minion own)
-        {
-            if (own.own)
-            {
-                p.anzOwnAuchenaiSoulpriest++;
-            }
-            else
-            {
-                p.anzEnemyAuchenaiSoulpriest++;
-            }
-
-        }
+        // eure karten und fähigkeiten, die leben wiederherstellen, verursachen stattdessen nun schaden.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on aura ends.
@@ -59,6 +39,27 @@ namespace HREngine.Bots
             }
         }
 
+        /// <summary>
+        /// The on aura starts.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        public override void onAuraStarts(Playfield p, Minion own)
+        {
+            if (own.own)
+            {
+                p.anzOwnAuchenaiSoulpriest++;
+            }
+            else
+            {
+                p.anzEnemyAuchenaiSoulpriest++;
+            }
+        }
 
-	}
+        #endregion
+    }
 }

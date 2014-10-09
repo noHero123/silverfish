@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_400.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_400.
+    ///     The sim_ e x 1_400.
     /// </summary>
-    class Sim_EX1_400 : SimTemplate
-	{
-	    // whirlwind
+    internal class Sim_EX1_400 : SimTemplate
+    {
+        // whirlwind
 
-// fügt allen dienern $1 schaden zu.
+        // fügt allen dienern $1 schaden zu.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
             p.allMinionsGetDamage(dmg);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

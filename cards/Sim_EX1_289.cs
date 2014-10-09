@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_289.cs" company="">
 //   
 // </copyright>
@@ -9,15 +9,17 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_289.
+    ///     The sim_ e x 1_289.
     /// </summary>
-    class Sim_EX1_289 : SimTemplate
+    internal class Sim_EX1_289 : SimTemplate
     {
         // icebarrier
 
         // todo secret
 
         // geheimnis:/ wenn euer held angegriffen wird, erhält er 8 rüstung.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on secret play.
         /// </summary>
@@ -37,5 +39,7 @@ namespace HREngine.Bots
         {
             target.armor += 8;
         }
+
+        #endregion
     }
 }

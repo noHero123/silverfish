@@ -9,12 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_522.
+    ///     The sim_ e x 1_522.
     /// </summary>
-    class Sim_EX1_522 : SimTemplate
+    internal class Sim_EX1_522 : SimTemplate
     {
         // patient assasin
-       
-
     }
 }

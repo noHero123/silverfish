@@ -9,11 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ds 1_whelptoken.
+    ///     The sim_ds 1_whelptoken.
     /// </summary>
-    class Sim_ds1_whelptoken : SimTemplate
-	{
-	    // whelp
-		
-	}
+    internal class Sim_ds1_whelptoken : SimTemplate
+    {
+        // whelp
+    }
 }

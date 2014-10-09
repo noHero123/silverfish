@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_NEW1_003.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_003.
+    ///     The sim_ ne w 1_003.
     /// </summary>
-    class Sim_NEW1_003 : SimTemplate
-	{
-	    // sacrificialpact
+    internal class Sim_NEW1_003 : SimTemplate
+    {
+        // sacrificialpact
 
-// vernichtet einen dämon. stellt bei eurem helden #5 leben wieder her.
+        // vernichtet einen dämon. stellt bei eurem helden #5 leben wieder her.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetDestroyed(target);
             int heal = ownplay ? p.getSpellHeal(5) : p.getEnemySpellHeal(5);
             if (ownplay)
@@ -43,7 +45,8 @@ namespace HREngine.Bots
             {
                 p.minionGetDamageOrHeal(p.enemyHero, -heal);
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

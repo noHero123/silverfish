@@ -9,12 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_004.
+    ///     The sim_ f p 1_004.
     /// </summary>
-    class Sim_FP1_004 : SimTemplate
+    internal class Sim_FP1_004 : SimTemplate
     {
         // Mad Scientist
         // <deDE>&lt;b&gt;TodesrÃ¶cheln:&lt;/b&gt; Legt ein &lt;b&gt;Geheimnis&lt;/b&gt; aus Eurem Deck auf das Schlachtfeld.</deDE>
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on deathrattle.
@@ -46,7 +47,8 @@ namespace HREngine.Bots
             }
             else
             {
-                if (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.hunter || p.enemyHeroName == HeroEnum.pala)
+                if (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.hunter
+                    || p.enemyHeroName == HeroEnum.pala)
                 {
                     if (p.enemySecretCount <= 4)
                     {
@@ -66,8 +68,8 @@ namespace HREngine.Bots
                     }
                 }
             }
-            
         }
-    }
 
+        #endregion
+    }
 }

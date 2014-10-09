@@ -9,11 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_162.
+    ///     The sim_ c s 2_162.
     /// </summary>
-    class Sim_CS2_162 : SimTemplate
+    internal class Sim_CS2_162 : SimTemplate
     {
         // Lord of the Arena
-     
     }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_101.cs" company="">
 //   
 // </copyright>
@@ -9,18 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_101.
+    ///     The sim_ c s 2_101.
     /// </summary>
-    class Sim_CS2_101 : SimTemplate
+    internal class Sim_CS2_101 : SimTemplate
     {
         // reinforce
+        #region Fields
 
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_101t); // silverhandrecruit
 
+        #endregion
+
         // heldenfähigkeit/\nruft einen rekruten der silbernen hand (1/1) herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -42,5 +47,7 @@ namespace HREngine.Bots
 
             p.callKid(this.kid, posi, ownplay);
         }
+
+        #endregion
     }
 }

@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ pr o_001 b.
+    ///     The sim_ pr o_001 b.
     /// </summary>
-    class Sim_PRO_001b : SimTemplate
+    internal class Sim_PRO_001b : SimTemplate
     {
         // Rogues Do It...
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -36,5 +37,6 @@ namespace HREngine.Bots
             p.minionGetDamageOrHeal(target, dmg);
         }
 
+        #endregion
     }
 }

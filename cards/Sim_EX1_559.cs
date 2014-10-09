@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_559.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_559.
+    ///     The sim_ e x 1_559.
     /// </summary>
-    class Sim_EX1_559 : SimTemplate
-	{
-	    // archmageantonidas
+    internal class Sim_EX1_559 : SimTemplate
+    {
+        // archmageantonidas
 
-// erhaltet jedes mal einen „feuerball“-zauber auf eure hand, wenn ihr einen zauber wirkt.
+        // erhaltet jedes mal einen „feuerball“-zauber auf eure hand, wenn ihr einen zauber wirkt.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card is going to be played.
@@ -32,7 +33,11 @@ namespace HREngine.Bots
         /// <param name="triggerEffectMinion">
         /// The trigger effect minion.
         /// </param>
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void onCardIsGoingToBePlayed(
+            Playfield p, 
+            CardDB.Card c, 
+            bool wasOwnCard, 
+            Minion triggerEffectMinion)
         {
             if (wasOwnCard == triggerEffectMinion.own && c.type == CardDB.cardtype.SPELL)
             {
@@ -40,5 +45,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

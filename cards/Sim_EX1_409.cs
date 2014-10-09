@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_409.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_409.
+    ///     The sim_ e x 1_409.
     /// </summary>
-    class Sim_EX1_409 : SimTemplate
+    internal class Sim_EX1_409 : SimTemplate
     {
         // upgrade
+        #region Fields
+
         /// <summary>
-        /// The wcard.
+        ///     The wcard.
         /// </summary>
         private CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_409t); // heavyaxe
 
+        #endregion
+
         // wenn ihr eine waffe habt, erhält sie +1/+1. legt anderenfalls eine waffe (1/3) an.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -64,5 +70,7 @@ namespace HREngine.Bots
                 }
             }
         }
+
+        #endregion
     }
 }

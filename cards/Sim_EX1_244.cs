@@ -6,17 +6,18 @@
 //   The sim_ e x 1_244.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ e x 1_244.
+    ///     The sim_ e x 1_244.
     /// </summary>
-    class Sim_EX1_244 : SimTemplate
+    internal class Sim_EX1_244 : SimTemplate
     {
         // totemic might
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -35,7 +36,7 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             List<Minion> temp = ownplay ? p.ownMinions : p.enemyMinions;
-            for (int i = 0; i < temp.Count;i++ )
+            for (int i = 0; i < temp.Count; i++)
             {
                 if (temp[i].handcard.card.race == 21)
                 {
@@ -45,5 +46,6 @@ namespace HREngine.Bots
             }
         }
 
+        #endregion
     }
 }

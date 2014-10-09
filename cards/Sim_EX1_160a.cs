@@ -9,17 +9,22 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_160 a.
+    ///     The sim_ e x 1_160 a.
     /// </summary>
-    class Sim_EX1_160a : SimTemplate
+    internal class Sim_EX1_160a : SimTemplate
     {
         // summonapanther
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_160t); // panther
 
+        #endregion
+
         // ruft einen panther (3/2) herbei.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -42,5 +47,7 @@ namespace HREngine.Bots
 
             p.callKid(this.kid, posi, true);
         }
+
+        #endregion
     }
 }

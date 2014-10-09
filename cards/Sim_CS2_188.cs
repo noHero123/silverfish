@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_188.
+    ///     The sim_ c s 2_188.
     /// </summary>
-    class Sim_CS2_188 : SimTemplate
-	{
-	    // abusivesergeant
+    internal class Sim_CS2_188 : SimTemplate
+    {
+        // abusivesergeant
 
-// kampfschrei:/ verleiht einem diener +2 angriff in diesem zug.
+        // kampfschrei:/ verleiht einem diener +2 angriff in diesem zug.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (target != null) p.minionGetTempBuff(target, 2, 0);
-		}
+        {
+            if (target != null)
+            {
+                p.minionGetTempBuff(target, 2, 0);
+            }
+        }
 
-
-	}
+        #endregion
+    }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_066.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_066.
+    ///     The sim_ e x 1_066.
     /// </summary>
-    class Sim_EX1_066 : SimTemplate
-	{
-	    // acidicswampooze
+    internal class Sim_EX1_066 : SimTemplate
+    {
+        // acidicswampooze
 
-// kampfschrei:/ zerstört die waffe eures gegners.
+        // kampfschrei:/ zerstört die waffe eures gegners.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             p.lowerWeaponDurability(1000, !own.own);
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

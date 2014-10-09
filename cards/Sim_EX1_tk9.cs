@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_tk 9.
+    ///     The sim_ e x 1_tk 9.
     /// </summary>
-    class Sim_EX1_tk9 : SimTemplate
-	{
-	    // treant
+    internal class Sim_EX1_tk9 : SimTemplate
+    {
+        // treant
 
-// ansturm/. vernichtet diesen diener am ende des zuges.
+        // ansturm/. vernichtet diesen diener am ende des zuges.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn ends trigger.
@@ -37,5 +38,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

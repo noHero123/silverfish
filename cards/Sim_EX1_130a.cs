@@ -9,11 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_130 a.
+    ///     The sim_ e x 1_130 a.
     /// </summary>
-    class Sim_EX1_130a : SimTemplate
-	{
-	    // defender
-
-	}
+    internal class Sim_EX1_130a : SimTemplate
+    {
+        // defender
+    }
 }

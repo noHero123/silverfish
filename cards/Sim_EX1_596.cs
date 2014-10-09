@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_596.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_596.
+    ///     The sim_ e x 1_596.
     /// </summary>
-    class Sim_EX1_596 : SimTemplate
-	{
-	    // demonfire
+    internal class Sim_EX1_596 : SimTemplate
+    {
+        // demonfire
 
-// fügt einem diener $2 schaden zu. wenn das ziel ein verbündeter dämon ist, erhält er stattdessen +2/+2.
+        // fügt einem diener $2 schaden zu. wenn das ziel ein verbündeter dämon ist, erhält er stattdessen +2/+2.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -44,6 +46,6 @@ namespace HREngine.Bots
             }
         }
 
-
-	}
+        #endregion
+    }
 }

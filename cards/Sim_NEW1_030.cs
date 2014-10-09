@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_030.
+    ///     The sim_ ne w 1_030.
     /// </summary>
-    class Sim_NEW1_030 : SimTemplate
-	{
-	    // deathwing
+    internal class Sim_NEW1_030 : SimTemplate
+    {
+        // deathwing
 
-// kampfschrei:/ vernichtet alle anderen diener und werft eure hand ab.
+        // kampfschrei:/ vernichtet alle anderen diener und werft eure hand ab.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             p.allMinionsGetDestroyed();
             if (own.own)
             {
@@ -43,9 +45,8 @@ namespace HREngine.Bots
                 p.enemycarddraw = 0;
                 p.enemyAnzCards = 0;
             }
-		}
+        }
 
-	
-
-	}
+        #endregion
+    }
 }

@@ -9,11 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_010.
+    ///     The sim_ e x 1_010.
     /// </summary>
-    class Sim_EX1_010 : SimTemplate
+    internal class Sim_EX1_010 : SimTemplate
     {
         // Worgen Infiltrator
-      
     }
 }

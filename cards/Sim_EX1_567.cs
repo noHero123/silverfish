@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_567.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_567.
+    ///     The sim_ e x 1_567.
     /// </summary>
-    class Sim_EX1_567 : SimTemplate
-	{
-	    // doomhammer
+    internal class Sim_EX1_567 : SimTemplate
+    {
+        // doomhammer
 
-// windzorn/, überladung:/ (2)
+        // windzorn/, überladung:/ (2)
+        #region Fields
+
         /// <summary>
-        /// The card.
+        ///     The card.
         /// </summary>
-        CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_567);
+        private CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_567);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -37,10 +43,15 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-            if (ownplay) p.ueberladung += 2;
-            p.equipWeapon(this.card, ownplay);
-		}
+        {
+            if (ownplay)
+            {
+                p.ueberladung += 2;
+            }
 
-	}
+            p.equipWeapon(this.card, ownplay);
+        }
+
+        #endregion
+    }
 }

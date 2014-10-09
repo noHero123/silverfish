@@ -9,14 +9,16 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_594.
+    ///     The sim_ e x 1_594.
     /// </summary>
-    class Sim_EX1_594 : SimTemplate
+    internal class Sim_EX1_594 : SimTemplate
     {
         // vaporize
         // todo secret
 
         // geheimnis:/ wenn ein diener euren helden angreift, wird er vernichtet.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on secret play.
         /// </summary>
@@ -36,5 +38,7 @@ namespace HREngine.Bots
         {
             p.minionGetDestroyed(target);
         }
+
+        #endregion
     }
 }

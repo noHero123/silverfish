@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_332.
+    ///     The sim_ e x 1_332.
     /// </summary>
-    class Sim_EX1_332 : SimTemplate
-	{
-	    // silence
+    internal class Sim_EX1_332 : SimTemplate
+    {
+        // silence
 
-// bringt einen diener zum schweigen/.
+        // bringt einen diener zum schweigen/.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetSilenced(target);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_001.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_001.
+    ///     The sim_ e x 1_001.
     /// </summary>
-    class Sim_EX1_001 : SimTemplate
-	{
-	    // lightwarden
+    internal class Sim_EX1_001 : SimTemplate
+    {
+        // lightwarden
 
-// erhält jedes mal +2 angriff, wenn ein charakter geheilt wird.
+        // erhält jedes mal +2 angriff, wenn ein charakter geheilt wird.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on a hero got healed trigger.
         /// </summary>
@@ -45,10 +47,14 @@ namespace HREngine.Bots
         /// <param name="ownerOfMinionGotHealed">
         /// The owner of minion got healed.
         /// </param>
-        public override void onAMinionGotHealedTrigger(Playfield p, Minion triggerEffectMinion, bool ownerOfMinionGotHealed)
+        public override void onAMinionGotHealedTrigger(
+            Playfield p, 
+            Minion triggerEffectMinion, 
+            bool ownerOfMinionGotHealed)
         {
             p.minionGetBuffed(triggerEffectMinion, 2, 0);
         }
 
-	}
+        #endregion
+    }
 }

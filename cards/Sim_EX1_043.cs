@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_043.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_043.
+    ///     The sim_ e x 1_043.
     /// </summary>
-    class Sim_EX1_043 : SimTemplate
-	{
-	    // twilightdrake
+    internal class Sim_EX1_043 : SimTemplate
+    {
+        // twilightdrake
 
-// kampfschrei:/ erhält +1 leben für jede karte auf eurer hand.
+        // kampfschrei:/ erhält +1 leben für jede karte auf eurer hand.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             p.minionGetBuffed(own, 0, own.own ? p.owncards.Count : p.enemyAnzCards);
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

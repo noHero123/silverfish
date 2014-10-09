@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_014.cs" company="">
 //   
 // </copyright>
@@ -9,18 +9,22 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_014.
+    ///     The sim_ f p 1_014.
     /// </summary>
-    class Sim_FP1_014 : SimTemplate
+    internal class Sim_FP1_014 : SimTemplate
     {
         // stalagg
+        #region Fields
 
         /// <summary>
-        /// The thaddius.
+        ///     The thaddius.
         /// </summary>
         private CardDB.Card thaddius = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.FP1_014t);
 
+        #endregion
+
         // todesröcheln:/ ruft thaddius herbei, wenn feugen in diesem duell bereits gestorben ist.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on deathrattle.
@@ -38,5 +42,7 @@ namespace HREngine.Bots
                 p.callKid(this.thaddius, m.zonepos - 1, m.own);
             }
         }
+
+        #endregion
     }
 }

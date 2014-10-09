@@ -9,22 +9,28 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_323.
+    ///     The sim_ e x 1_323.
     /// </summary>
-    class Sim_EX1_323 : SimTemplate
+    internal class Sim_EX1_323 : SimTemplate
     {
         // lordjaraxxus
+        #region Fields
+
         /// <summary>
-        /// The card.
+        ///     The card.
         /// </summary>
         private CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_tk33);
 
         /// <summary>
-        /// The weapon.
+        ///     The weapon.
         /// </summary>
         private CardDB.Card weapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_323w);
 
+        #endregion
+
         // kampfschrei:/ vernichtet euren helden und ersetzt ihn durch lord jaraxxus.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -61,5 +67,7 @@ namespace HREngine.Bots
                 p.equipWeapon(this.weapon, own.own);
             }
         }
+
+        #endregion
     }
 }

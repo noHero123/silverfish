@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_016.cs" company="">
 //   
 // </copyright>
@@ -6,20 +6,21 @@
 //   The sim_ e x 1_016.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ e x 1_016.
+    ///     The sim_ e x 1_016.
     /// </summary>
-    class Sim_EX1_016 : SimTemplate
+    internal class Sim_EX1_016 : SimTemplate
     {
         // sylvanaswindrunner
         // todo make it better
 
         // todesröcheln:/ übernehmt die kontrolle über einen zufälligen feindlichen diener.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on deathrattle.
         /// </summary>
@@ -55,5 +56,7 @@ namespace HREngine.Bots
                 }
             }
         }
+
+        #endregion
     }
 }

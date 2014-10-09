@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_572.
+    ///     The sim_ e x 1_572.
     /// </summary>
-    class Sim_EX1_572 : SimTemplate
-	{
-	    // ysera
+    internal class Sim_EX1_572 : SimTemplate
+    {
+        // ysera
 
-// zieht am ende eures zuges eine traumkarte.
+        // zieht am ende eures zuges eine traumkarte.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn ends trigger.
@@ -37,5 +38,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

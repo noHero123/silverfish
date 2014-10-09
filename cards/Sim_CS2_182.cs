@@ -9,9 +9,9 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_182.
+    ///     The sim_ c s 2_182.
     /// </summary>
-    class Sim_CS2_182 : SimTemplate
+    internal class Sim_CS2_182 : SimTemplate
     {
         // Chillwind Yeti
     }

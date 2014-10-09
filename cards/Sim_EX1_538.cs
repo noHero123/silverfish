@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_538.cs" company="">
 //   
 // </copyright>
@@ -9,18 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_538.
+    ///     The sim_ e x 1_538.
     /// </summary>
-    class Sim_EX1_538 : SimTemplate
-	{
-	    // unleashthehounds
+    internal class Sim_EX1_538 : SimTemplate
+    {
+        // unleashthehounds
 
-// ruft für jeden feindlichen diener einen jagdhund (1/1) mit ansturm/ herbei.
+        // ruft für jeden feindlichen diener einen jagdhund (1/1) mit ansturm/ herbei.
+        #region Fields
 
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
-        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_538t);// hound
+        private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_538t); // hound
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -38,15 +43,16 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int anz = p.enemyMinions.Count;
             int posi = p.ownMinions.Count;
-            
+
             for (int i = 0; i < anz; i++)
             {
                 p.callKid(this.kid, posi, ownplay);
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

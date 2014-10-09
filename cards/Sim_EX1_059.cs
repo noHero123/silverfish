@@ -9,14 +9,16 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_059.
+    ///     The sim_ e x 1_059.
     /// </summary>
-    class Sim_EX1_059 : SimTemplate
-	{
-	    // crazedalchemist
+    internal class Sim_EX1_059 : SimTemplate
+    {
+        // crazedalchemist
 
-// kampfschrei:/ vertauscht angriff und leben eines dieners.
+        // kampfschrei:/ vertauscht angriff und leben eines dieners.
         // todo: use buffs after that
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -33,9 +35,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (target != null) p.minionSwapAngrAndHP(target);
-		}
+        {
+            if (target != null)
+            {
+                p.minionSwapAngrAndHP(target);
+            }
+        }
 
-	}
+        #endregion
+    }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_573.cs" company="">
 //   
 // </copyright>
@@ -6,24 +6,28 @@
 //   The sim_ e x 1_573.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ e x 1_573.
+    ///     The sim_ e x 1_573.
     /// </summary>
-    class Sim_EX1_573 : SimTemplate
+    internal class Sim_EX1_573 : SimTemplate
     {
         // cenarius
+        #region Fields
 
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_573t); // special treant
 
+        #endregion
+
         // wählt aus:/ verleiht euren anderen dienern +2/+2; oder ruft zwei treants (2/2) mit spott/ herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -57,5 +61,7 @@ namespace HREngine.Bots
                 p.callKid(this.kid, pos, own.own, true);
             }
         }
+
+        #endregion
     }
 }

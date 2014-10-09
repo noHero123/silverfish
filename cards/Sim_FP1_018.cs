@@ -9,14 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_018.
+    ///     The sim_ f p 1_018.
     /// </summary>
-    class Sim_FP1_018 : SimTemplate
+    internal class Sim_FP1_018 : SimTemplate
     {
         // duplicate
         // todo secret
 
         // geheimnis:/ wenn ein befreundeter diener stirbt, erhaltet ihr 2 kopien dieses dieners auf eure hand.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on secret play.
@@ -43,5 +44,7 @@ namespace HREngine.Bots
                 p.drawACard(p.revivingEnemyMinion, ownplay, true);
             }
         }
+
+        #endregion
     }
 }

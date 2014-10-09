@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_164.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_164.
+    ///     The sim_ e x 1_164.
     /// </summary>
-    class Sim_EX1_164 : SimTemplate
+    internal class Sim_EX1_164 : SimTemplate
     {
         // nourish
 
         // wählt aus:/ erhaltet 2 manakristalle; oder zieht 3 karten.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -93,7 +94,6 @@ namespace HREngine.Bots
             }
         }
 
+        #endregion
     }
-
-
 }

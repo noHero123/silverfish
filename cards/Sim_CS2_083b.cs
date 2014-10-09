@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_083b.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_083 b.
+    ///     The sim_ c s 2_083 b.
     /// </summary>
-    class Sim_CS2_083b : SimTemplate
-	{
-	    // daggermastery
+    internal class Sim_CS2_083b : SimTemplate
+    {
+        // daggermastery
 
-// heldenfähigkeit/\nlegt einen dolch (1/2) an.
+        // heldenfähigkeit/\nlegt einen dolch (1/2) an.
+        #region Fields
+
         /// <summary>
-        /// The weapon.
+        ///     The weapon.
         /// </summary>
-        CardDB.Card weapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_082);
+        private CardDB.Card weapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_082);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -41,5 +47,6 @@ namespace HREngine.Bots
             p.equipWeapon(this.weapon, ownplay);
         }
 
-	}
+        #endregion
+    }
 }

@@ -9,18 +9,24 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_554.
+    ///     The sim_ e x 1_554.
     /// </summary>
-    class Sim_EX1_554 : SimTemplate
+    internal class Sim_EX1_554 : SimTemplate
     {
         // snaketrap
         // todo secret
 
         // geheimnis:/ wenn einer eurer diener angegriffen wird, ruft ihr drei schlangen (1/1) herbei.
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_554t); // snake
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on secret play.
@@ -51,5 +57,7 @@ namespace HREngine.Bots
                 p.callKid(this.kid, posi, false);
             }
         }
+
+        #endregion
     }
 }

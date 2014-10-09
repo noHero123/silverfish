@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_226.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_226.
+    ///     The sim_ c s 2_226.
     /// </summary>
-    class Sim_CS2_226 : SimTemplate
-	{
-	    // frostwolfwarlord
+    internal class Sim_CS2_226 : SimTemplate
+    {
+        // frostwolfwarlord
 
-// kampfschrei:/ erhält +1/+1 für jeden anderen befreundeten diener auf dem schlachtfeld.
+        // kampfschrei:/ erhält +1/+1 für jeden anderen befreundeten diener auf dem schlachtfeld.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             int buff = own.own ? p.ownMinions.Count : p.enemyMinions.Count;
             p.minionGetBuffed(own, buff, buff);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

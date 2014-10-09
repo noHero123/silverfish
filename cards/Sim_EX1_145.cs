@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_145.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_145.
+    ///     The sim_ e x 1_145.
     /// </summary>
-    class Sim_EX1_145 : SimTemplate
-	{
-	    // preparation
+    internal class Sim_EX1_145 : SimTemplate
+    {
+        // preparation
 
-// der nächste zauber, den ihr in diesem zug wirkt, kostet (3) weniger.
+        // der nächste zauber, den ihr in diesem zug wirkt, kostet (3) weniger.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,12 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (ownplay)
             {
                 p.playedPreparation = true;
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

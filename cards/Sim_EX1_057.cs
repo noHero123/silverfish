@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_057.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_057.
+    ///     The sim_ e x 1_057.
     /// </summary>
-    class Sim_EX1_057 : SimTemplate
-	{
-	    // ancientbrewmaster
+    internal class Sim_EX1_057 : SimTemplate
+    {
+        // ancientbrewmaster
 
-// kampfschrei:/ lasst einen befreundeten diener vom schlachtfeld auf eure hand zurückkehren.
+        // kampfschrei:/ lasst einen befreundeten diener vom schlachtfeld auf eure hand zurückkehren.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,9 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (target != null) p.minionReturnToHand(target, target.own, 0);
-		}
+        {
+            if (target != null)
+            {
+                p.minionReturnToHand(target, target.own, 0);
+            }
+        }
 
-	}
+        #endregion
+    }
 }

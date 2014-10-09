@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_539.
+    ///     The sim_ e x 1_539.
     /// </summary>
-    class Sim_EX1_539 : SimTemplate
-	{
-	    // killcommand
+    internal class Sim_EX1_539 : SimTemplate
+    {
+        // killcommand
 
-// verursacht $3 schaden. verursacht stattdessen $5 schaden, wenn ihr ein wildtier besitzt.
+        // verursacht $3 schaden. verursacht stattdessen $5 schaden, wenn ihr ein wildtier besitzt.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (ownplay)
             {
                 bool haspet = false;
@@ -46,10 +48,15 @@ namespace HREngine.Bots
                 }
 
                 int dmg = ownplay ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
-                if (haspet) dmg = ownplay ? p.getSpellDamageDamage(5) : p.getEnemySpellDamageDamage(5);
+                if (haspet)
+                {
+                    dmg = ownplay ? p.getSpellDamageDamage(5) : p.getEnemySpellDamageDamage(5);
+                }
+
                 p.minionGetDamageOrHeal(target, dmg);
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

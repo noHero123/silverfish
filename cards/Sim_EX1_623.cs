@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_623.
+    ///     The sim_ e x 1_623.
     /// </summary>
-    class Sim_EX1_623 : SimTemplate
-	{
-	    // templeenforcer
+    internal class Sim_EX1_623 : SimTemplate
+    {
+        // templeenforcer
 
-// kampfschrei:/ verleiht einem befreundeten diener +3 leben.
+        // kampfschrei:/ verleiht einem befreundeten diener +3 leben.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,9 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (target != null) p.minionGetBuffed(target, 0, 3);
-		}
+        {
+            if (target != null)
+            {
+                p.minionGetBuffed(target, 0, 3);
+            }
+        }
 
-	}
+        #endregion
+    }
 }

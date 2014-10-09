@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_tt_004.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_tt_004.
+    ///     The sim_tt_004.
     /// </summary>
-    class Sim_tt_004 : SimTemplate
-	{
-	    // flesheatingghoul
+    internal class Sim_tt_004 : SimTemplate
+    {
+        // flesheatingghoul
 
-// erhält jedes mal +1 angriff, wenn ein diener stirbt.
+        // erhält jedes mal +1 angriff, wenn ein diener stirbt.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on minion died trigger.
         /// </summary>
@@ -33,5 +35,6 @@ namespace HREngine.Bots
             p.minionGetBuffed(triggerEffectMinion, 1, 0);
         }
 
-	}
+        #endregion
+    }
 }

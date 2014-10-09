@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_303.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_303.
+    ///     The sim_ e x 1_303.
     /// </summary>
-    class Sim_EX1_303 : SimTemplate
-	{
-	    // shadowflame
+    internal class Sim_EX1_303 : SimTemplate
+    {
+        // shadowflame
 
-// vernichtet einen befreundeten diener und fügt allen feindlichen dienern schaden zu, der seinem angriff entspricht.
+        // vernichtet einen befreundeten diener und fügt allen feindlichen dienern schaden zu, der seinem angriff entspricht.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,14 +34,14 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int damage1 = ownplay ? p.getSpellDamageDamage(target.Angr) : p.getEnemySpellDamageDamage(target.Angr);
 
             p.minionGetDestroyed(target);
 
             p.allMinionOfASideGetDamage(!ownplay, damage1);
+        }
 
-		}
-
-	}
+        #endregion
+    }
 }

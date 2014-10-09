@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_NEW1_019.cs" company="">
 //   
 // </copyright>
@@ -6,19 +6,20 @@
 //   The sim_ ne w 1_019.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ ne w 1_019.
+    ///     The sim_ ne w 1_019.
     /// </summary>
-    class Sim_NEW1_019 : SimTemplate
+    internal class Sim_NEW1_019 : SimTemplate
     {
         // knifejuggler
 
         // fügt einem zufälligen feind 1 schaden zu, nachdem ihr einen diener herbeigerufen habt.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on minion was summoned.
         /// </summary>
@@ -33,7 +34,8 @@ namespace HREngine.Bots
         /// </param>
         public override void onMinionWasSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
-            if (triggerEffectMinion.entitiyID != summonedMinion.entitiyID && triggerEffectMinion.own == summonedMinion.own)
+            if (triggerEffectMinion.entitiyID != summonedMinion.entitiyID
+                && triggerEffectMinion.own == summonedMinion.own)
             {
                 List<Minion> temp = triggerEffectMinion.own ? p.enemyMinions : p.ownMinions;
 
@@ -45,9 +47,21 @@ namespace HREngine.Bots
                     bool found = false;
                     foreach (Minion m in temp)
                     {
-                        if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2) continue; // dont attack nerubianegg!
-                        if (m.name == CardDB.cardName.defender) continue;
-                        if (m.name == CardDB.cardName.spellbender) continue;
+                        if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2)
+                        {
+                            continue; // dont attack nerubianegg!
+                        }
+
+                        if (m.name == CardDB.cardName.defender)
+                        {
+                            continue;
+                        }
+
+                        if (m.name == CardDB.cardName.spellbender)
+                        {
+                            continue;
+                        }
+
                         if (m.Hp >= 1 && minhp > m.Hp)
                         {
                             enemy = m;
@@ -63,25 +77,31 @@ namespace HREngine.Bots
                     else
                     {
                         if (triggerEffectMinion.own)
+                        {
                             p.minionGetDamageOrHeal(p.enemyHero, 1);
+                        }
                         else
+                        {
                             p.minionGetDamageOrHeal(p.ownHero, 1);
+                        }
                     }
-
                 }
                 else
                 {
                     if (triggerEffectMinion.own)
+                    {
                         p.minionGetDamageOrHeal(p.enemyHero, 1);
+                    }
                     else
+                    {
                         p.minionGetDamageOrHeal(p.ownHero, 1);
+                    }
                 }
 
                 triggerEffectMinion.stealth = false;
             }
         }
 
+        #endregion
     }
-
-
 }

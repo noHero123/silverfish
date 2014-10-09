@@ -9,11 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_017.
+    ///     The sim_ ne w 1_017.
     /// </summary>
-    class Sim_NEW1_017 : SimTemplate
+    internal class Sim_NEW1_017 : SimTemplate
     {
         // Hungry Crab
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -36,6 +38,8 @@ namespace HREngine.Bots
                 p.minionGetDestroyed(target);
                 p.minionGetBuffed(own, 2, 2);
             }
-        } 
+        }
+
+        #endregion
     }
 }

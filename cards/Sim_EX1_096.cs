@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_096.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_096.
+    ///     The sim_ e x 1_096.
     /// </summary>
-    class Sim_EX1_096 : SimTemplate
-	{
-	    // loothoarder
+    internal class Sim_EX1_096 : SimTemplate
+    {
+        // loothoarder
 
-// todesröcheln:/ zieht eine karte.
+        // todesröcheln:/ zieht eine karte.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on deathrattle.
@@ -31,5 +32,6 @@ namespace HREngine.Bots
             p.drawACard(CardDB.cardName.unknown, m.own);
         }
 
-	}
+        #endregion
+    }
 }

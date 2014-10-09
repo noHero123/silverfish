@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_173.
+    ///     The sim_ e x 1_173.
     /// </summary>
-    class Sim_EX1_173 : SimTemplate
-	{
-	    // starfire
+    internal class Sim_EX1_173 : SimTemplate
+    {
+        // starfire
 
-// verursacht $5 schaden. zieht eine karte.
+        // verursacht $5 schaden. zieht eine karte.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -40,5 +41,7 @@ namespace HREngine.Bots
             // this.owncarddraw++;
             p.drawACard(CardDB.cardName.unknown, ownplay);
         }
-	}
+
+        #endregion
+    }
 }

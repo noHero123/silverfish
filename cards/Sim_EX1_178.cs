@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_178.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_178.
+    ///     The sim_ e x 1_178.
     /// </summary>
-    class Sim_EX1_178 : SimTemplate
+    internal class Sim_EX1_178 : SimTemplate
     {
         // ancientofwar
 
         // wählt aus:/ +5 angriff; oder +5 leben und spott/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -45,7 +47,6 @@ namespace HREngine.Bots
             }
         }
 
-
+        #endregion
     }
-
 }

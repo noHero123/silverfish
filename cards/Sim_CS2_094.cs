@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_094.
+    ///     The sim_ c s 2_094.
     /// </summary>
-    class Sim_CS2_094 : SimTemplate
-	{
-	    // hammerofwrath
+    internal class Sim_CS2_094 : SimTemplate
+    {
+        // hammerofwrath
 
-// verursacht $3 schaden. zieht eine karte.
+        // verursacht $3 schaden. zieht eine karte.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,11 +34,12 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
             p.minionGetDamageOrHeal(target, dmg);
             p.drawACard(CardDB.cardName.unknown, ownplay);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

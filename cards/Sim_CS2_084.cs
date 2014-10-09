@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_084.
+    ///     The sim_ c s 2_084.
     /// </summary>
-    class Sim_CS2_084 : SimTemplate
-	{
-	    // huntersmark
+    internal class Sim_CS2_084 : SimTemplate
+    {
+        // huntersmark
 
-// setzt das leben eines dieners auf 1.
+        // setzt das leben eines dieners auf 1.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionSetLifetoOne(target);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

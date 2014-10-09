@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_009.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_009.
+    ///     The sim_ f p 1_009.
     /// </summary>
-    class Sim_FP1_009 : SimTemplate
+    internal class Sim_FP1_009 : SimTemplate
     {
         // deathlord
+        #region Fields
+
         /// <summary>
-        /// The c.
+        ///     The c.
         /// </summary>
         private CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_017); // nerubian
 
+        #endregion
+
         // spott. todesröcheln:/ euer gegner legt einen diener aus seinem deck auf das schlachtfeld.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on deathrattle.
         /// </summary>
@@ -34,5 +40,7 @@ namespace HREngine.Bots
             int place = m.own ? p.enemyMinions.Count : p.ownMinions.Count;
             p.callKid(this.c, place, !m.own);
         }
+
+        #endregion
     }
 }

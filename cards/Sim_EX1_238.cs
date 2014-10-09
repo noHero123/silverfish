@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_238.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_238.
+    ///     The sim_ e x 1_238.
     /// </summary>
-    class Sim_EX1_238 : SimTemplate
-	{
-	    // lightningbolt
+    internal class Sim_EX1_238 : SimTemplate
+    {
+        // lightningbolt
 
-// verursacht $3 schaden. überladung:/ (1)
+        // verursacht $3 schaden. überladung:/ (1)
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,11 +34,15 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
             p.minionGetDamageOrHeal(target, dmg);
-            if (ownplay) p.ueberladung++;
-		}
+            if (ownplay)
+            {
+                p.ueberladung++;
+            }
+        }
 
-	}
+        #endregion
+    }
 }

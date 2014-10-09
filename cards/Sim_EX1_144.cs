@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_144.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_144.
+    ///     The sim_ e x 1_144.
     /// </summary>
-    class Sim_EX1_144 : SimTemplate
-	{
-	    // shadowstep
+    internal class Sim_EX1_144 : SimTemplate
+    {
+        // shadowstep
 
-// lasst einen befreundeten diener auf eure hand zurückkehren. der diener kostet (2) weniger.
+        // lasst einen befreundeten diener auf eure hand zurückkehren. der diener kostet (2) weniger.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionReturnToHand(target, ownplay, target.handcard.card.cost - 2);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

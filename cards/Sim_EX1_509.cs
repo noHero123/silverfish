@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_509.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_509.
+    ///     The sim_ e x 1_509.
     /// </summary>
-    class Sim_EX1_509 : SimTemplate
-	{
-	    // murloctidecaller
+    internal class Sim_EX1_509 : SimTemplate
+    {
+        // murloctidecaller
 
-// erhält jedes mal +1 angriff, wenn ein murloc herbeigerufen wird.
+        // erhält jedes mal +1 angriff, wenn ein murloc herbeigerufen wird.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on minion is summoned.
         /// </summary>
@@ -30,8 +32,12 @@ namespace HREngine.Bots
         /// </param>
         public override void onMinionIsSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
-            if ((TAG_RACE)summonedMinion.handcard.card.race == TAG_RACE.MURLOC) p.minionGetBuffed(triggerEffectMinion, 1, 0);
+            if ((TAG_RACE)summonedMinion.handcard.card.race == TAG_RACE.MURLOC)
+            {
+                p.minionGetBuffed(triggerEffectMinion, 1, 0);
+            }
         }
 
-	}
+        #endregion
+    }
 }

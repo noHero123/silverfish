@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_011.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_011.
+    ///     The sim_ f p 1_011.
     /// </summary>
-    class Sim_FP1_011 : SimTemplate
-	{
-	    // webspinner
+    internal class Sim_FP1_011 : SimTemplate
+    {
+        // webspinner
 
-// todesröcheln:/ fügt eurer hand ein zufälliges wildtier hinzu.
+        // todesröcheln:/ fügt eurer hand ein zufälliges wildtier hinzu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on deathrattle.
         /// </summary>
@@ -30,5 +32,6 @@ namespace HREngine.Bots
             p.drawACard(CardDB.cardName.rivercrocolisk, m.own, true);
         }
 
-	}
+        #endregion
+    }
 }

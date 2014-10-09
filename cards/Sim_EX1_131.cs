@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_131.
+    ///     The sim_ e x 1_131.
     /// </summary>
-    class Sim_EX1_131 : SimTemplate
+    internal class Sim_EX1_131 : SimTemplate
     {
         // defiasringleader
+        #region Fields
+
         /// <summary>
-        /// The card.
+        ///     The card.
         /// </summary>
         private CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_131t);
 
+        #endregion
+
         // combo:/ ruft einen banditen der defias (2/1) herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -42,5 +48,7 @@ namespace HREngine.Bots
                 p.callKid(this.card, own.zonepos, own.own);
             }
         }
+
+        #endregion
     }
 }

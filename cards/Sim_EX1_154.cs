@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_154.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_154.
+    ///     The sim_ e x 1_154.
     /// </summary>
-    class Sim_EX1_154 : SimTemplate
-	{
-	    // wrath
+    internal class Sim_EX1_154 : SimTemplate
+    {
+        // wrath
 
-// wählt aus:/ fügt einem diener $3 schaden zu; oder fügt einem diener $1 schaden zu und zieht eine karte.
+        // wählt aus:/ fügt einem diener $3 schaden zu; oder fügt einem diener $1 schaden zu und zieht eine karte.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int damage = 0;
             if (choice == 1)
             {
@@ -50,7 +52,8 @@ namespace HREngine.Bots
             {
                 p.drawACard(CardDB.cardName.unknown, ownplay);
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

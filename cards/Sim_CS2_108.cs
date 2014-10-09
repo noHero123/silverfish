@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_108.
+    ///     The sim_ c s 2_108.
     /// </summary>
-    class Sim_CS2_108 : SimTemplate
-	{
-	    // execute
+    internal class Sim_CS2_108 : SimTemplate
+    {
+        // execute
 
-// vernichtet einen verletzten feindlichen diener.
+        // vernichtet einen verletzten feindlichen diener.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetDestroyed(target);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

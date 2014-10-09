@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_013.
+    ///     The sim_ f p 1_013.
     /// </summary>
-    class Sim_FP1_013 : SimTemplate
-	{
-	    // kelthuzad
+    internal class Sim_FP1_013 : SimTemplate
+    {
+        // kelthuzad
 
-// ruft am ende jedes zuges alle befreundeten diener herbei, die in diesem zug gestorben sind.
+        // ruft am ende jedes zuges alle befreundeten diener herbei, die in diesem zug gestorben sind.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on turn ends trigger.
         /// </summary>
@@ -41,6 +43,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
-
+        #endregion
+    }
 }

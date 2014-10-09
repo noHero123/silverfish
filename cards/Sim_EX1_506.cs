@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_506.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_506.
+    ///     The sim_ e x 1_506.
     /// </summary>
-    class Sim_EX1_506 : SimTemplate
+    internal class Sim_EX1_506 : SimTemplate
     {
         // murloctidehunter
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_506a); // murlocscout
 
+        #endregion
+
         // kampfschrei:/ ruft einen murlocspäher (1/1) herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -39,5 +45,7 @@ namespace HREngine.Bots
         {
             p.callKid(this.kid, own.zonepos, own.own, true);
         }
+
+        #endregion
     }
 }

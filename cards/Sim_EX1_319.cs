@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_319.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_319.
+    ///     The sim_ e x 1_319.
     /// </summary>
-    class Sim_EX1_319 : SimTemplate
-	{
-	    // flameimp
+    internal class Sim_EX1_319 : SimTemplate
+    {
+        // flameimp
 
-// kampfschrei:/ fügt eurem helden 3 schaden zu.
+        // kampfschrei:/ fügt eurem helden 3 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             if (own.own)
             {
                 p.minionGetDamageOrHeal(p.ownHero, 3);
@@ -41,8 +43,8 @@ namespace HREngine.Bots
             {
                 p.minionGetDamageOrHeal(p.enemyHero, 3);
             }
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

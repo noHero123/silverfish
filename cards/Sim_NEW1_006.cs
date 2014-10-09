@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_006.
+    ///     The sim_ ne w 1_006.
     /// </summary>
-    class Sim_NEW1_006 : SimTemplate
-	{
-	    // adrenalinerush
+    internal class Sim_NEW1_006 : SimTemplate
+    {
+        // adrenalinerush
 
-// draw a card. combo:/ draw 2 cards instead.
+        // draw a card. combo:/ draw 2 cards instead.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,10 +34,14 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.drawACard(CardDB.cardName.unknown, ownplay);
-            if (p.cardsPlayedThisTurn >= 1) p.drawACard(CardDB.cardName.unknown, ownplay);
-		}
+            if (p.cardsPlayedThisTurn >= 1)
+            {
+                p.drawACard(CardDB.cardName.unknown, ownplay);
+            }
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,14 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_045.
+    ///     The sim_ e x 1_045.
     /// </summary>
-    class Sim_EX1_045 : SimTemplate
-	{
-	    // ancientwatcher
+    internal class Sim_EX1_045 : SimTemplate
+    {
+        // ancientwatcher
 
-// kann nicht angreifen.
-		
-
-	}
+        // kann nicht angreifen.
+    }
 }

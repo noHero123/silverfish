@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_165.cs" company="">
 //   
 // </copyright>
@@ -9,22 +9,28 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_165.
+    ///     The sim_ e x 1_165.
     /// </summary>
-    class Sim_EX1_165 : SimTemplate
-	{
-	    // druidoftheclaw
+    internal class Sim_EX1_165 : SimTemplate
+    {
+        // druidoftheclaw
 
-// wählt aus:/ ansturm/; oder +2 leben und spott/.
-        /// <summary>
-        /// The cat.
-        /// </summary>
-        CardDB.Card cat = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_165t1);
+        // wählt aus:/ ansturm/; oder +2 leben und spott/.
+        #region Fields
 
         /// <summary>
-        /// The bear.
+        ///     The bear.
         /// </summary>
-        CardDB.Card bear = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_165t2);
+        private CardDB.Card bear = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_165t2);
+
+        /// <summary>
+        ///     The cat.
+        /// </summary>
+        private CardDB.Card cat = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_165t1);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The get battlecry effect.
@@ -42,7 +48,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             if (choice == 1)
             {
                 p.minionTransform(own, this.cat);
@@ -52,8 +58,8 @@ namespace HREngine.Bots
             {
                 p.minionTransform(own, this.bear);
             }
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

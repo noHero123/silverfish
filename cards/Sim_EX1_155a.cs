@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_155 a.
+    ///     The sim_ e x 1_155 a.
     /// </summary>
-    class Sim_EX1_155a : SimTemplate
-	{
-	    // markofnature
+    internal class Sim_EX1_155a : SimTemplate
+    {
+        // markofnature
 
-// +4 angriff.
+        // +4 angriff.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetBuffed(target, 4, 0);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

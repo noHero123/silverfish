@@ -9,14 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_hexfrog.
+    ///     The sim_hexfrog.
     /// </summary>
-    class Sim_hexfrog : SimTemplate
-	{
-	    // frog
+    internal class Sim_hexfrog : SimTemplate
+    {
+        // frog
 
-// spott/
-		
-
-	}
+        // spott/
+    }
 }

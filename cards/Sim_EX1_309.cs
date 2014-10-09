@@ -9,12 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_309.
+    ///     The sim_ e x 1_309.
     /// </summary>
-    class Sim_EX1_309 : SimTemplate
+    internal class Sim_EX1_309 : SimTemplate
     {
         // Siphon Soul
         // Vernichtet einen Diener. Stellt bei Eurem Helden #3 Leben wieder her.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -45,5 +46,6 @@ namespace HREngine.Bots
             }
         }
 
+        #endregion
     }
 }

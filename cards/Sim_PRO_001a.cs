@@ -9,15 +9,21 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ pr o_001 a.
+    ///     The sim_ pr o_001 a.
     /// </summary>
-    class Sim_PRO_001a : SimTemplate
+    internal class Sim_PRO_001a : SimTemplate
     {
         // I Am Murloc
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
-        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.PRO_001at);
+        private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.PRO_001at);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -36,7 +42,7 @@ namespace HREngine.Bots
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            int posi = ownplay ? p.ownMinions.Count : p.enemyMinions.Count ;
+            int posi = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
 
             p.callKid(this.kid, posi, ownplay);
             p.callKid(this.kid, posi, ownplay);
@@ -44,5 +50,6 @@ namespace HREngine.Bots
             p.callKid(this.kid, posi, ownplay);
         }
 
+        #endregion
     }
 }

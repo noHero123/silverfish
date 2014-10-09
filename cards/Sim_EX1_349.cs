@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_349.
+    ///     The sim_ e x 1_349.
     /// </summary>
-    class Sim_EX1_349 : SimTemplate
-	{
-	    // divinefavor
+    internal class Sim_EX1_349 : SimTemplate
+    {
+        // divinefavor
 
-// zieht so viele karten, bis ihr genauso viele karten auf eurer hand habt wie euer gegner.
+        // zieht so viele karten, bis ihr genauso viele karten auf eurer hand habt wie euer gegner.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,8 +34,8 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-            int diff = ownplay ? p.enemyAnzCards - p.owncards.Count :  p.owncards.Count - p.enemyAnzCards;
+        {
+            int diff = ownplay ? p.enemyAnzCards - p.owncards.Count : p.owncards.Count - p.enemyAnzCards;
             if (diff >= 1)
             {
                 for (int i = 0; i < diff; i++)
@@ -42,7 +44,8 @@ namespace HREngine.Bots
                     p.drawACard(CardDB.cardName.unknown, ownplay);
                 }
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

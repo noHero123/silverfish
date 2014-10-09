@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_GAME_006.cs" company="">
 //   
 // </copyright>
@@ -9,12 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ gam e_006.
+    ///     The sim_ gam e_006.
     /// </summary>
-    class Sim_GAME_006 : SimTemplate
-	{
-	    // noooooooooooo
+    internal class Sim_GAME_006 : SimTemplate
+    {
+        // noooooooooooo
 
-// leider wurde die karte, die ihr einst besaßt, entfernt. aber nehmt doch diese hier!
-	}
+        // leider wurde die karte, die ihr einst besaßt, entfernt. aber nehmt doch diese hier!
+    }
 }

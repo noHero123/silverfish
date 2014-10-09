@@ -9,12 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_007.
+    ///     The sim_ e x 1_007.
     /// </summary>
-    class Sim_EX1_007 : SimTemplate
+    internal class Sim_EX1_007 : SimTemplate
     {
         // Acolyte of Pain
         // <deDE>Zieht jedes Mal eine Karte, wenn dieser Diener Schaden erleidet.</deDE>
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on minion got dmg trigger.
         /// </summary>
@@ -39,5 +41,7 @@ namespace HREngine.Bots
                 triggerEffectMinion.anzGotDmg = 0;
             }
         }
+
+        #endregion
     }
 }

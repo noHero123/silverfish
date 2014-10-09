@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_DREAM_04.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ drea m_04.
+    ///     The sim_ drea m_04.
     /// </summary>
-    class Sim_DREAM_04 : SimTemplate
-	{
-	    // dream
+    internal class Sim_DREAM_04 : SimTemplate
+    {
+        // dream
 
-// lasst einen diener auf die hand seines besitzers zurückkehren.
+        // lasst einen diener auf die hand seines besitzers zurückkehren.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,10 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionReturnToHand(target, target.own, 0);
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

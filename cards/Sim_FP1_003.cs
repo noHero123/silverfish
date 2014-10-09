@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_003.cs" company="">
 //   
 // </copyright>
@@ -6,19 +6,20 @@
 //   The sim_ f p 1_003.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ f p 1_003.
-    /// </summary>
-    class Sim_FP1_003 : SimTemplate
-	{
-	    // echoingooze
+    using System.Collections.Generic;
 
-// kampfschrei:/ beschwört am ende des zuges eine exakte kopie dieses dieners.
+    /// <summary>
+    ///     The sim_ f p 1_003.
+    /// </summary>
+    internal class Sim_FP1_003 : SimTemplate
+    {
+        // echoingooze
+
+        // kampfschrei:/ beschwört am ende des zuges eine exakte kopie dieses dieners.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on turn ends trigger.
         /// </summary>
@@ -48,5 +49,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

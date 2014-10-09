@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_019.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,22 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_019.
+    ///     The sim_ f p 1_019.
     /// </summary>
-    class Sim_FP1_019 : SimTemplate
+    internal class Sim_FP1_019 : SimTemplate
     {
         // poisonseeds
+        #region Fields
+
         /// <summary>
-        /// The d.
+        ///     The d.
         /// </summary>
         private CardDB.Card d = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_158t);
 
+        #endregion
+
         // vernichtet alle diener und ruft für jeden einen treant (2/2) als ersatz herbei.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -51,5 +56,7 @@ namespace HREngine.Bots
                 p.callKid(this.d, 1, false);
             }
         }
+
+        #endregion
     }
 }

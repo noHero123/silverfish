@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_116.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_116.
+    ///     The sim_ e x 1_116.
     /// </summary>
-    class Sim_EX1_116 : SimTemplate
+    internal class Sim_EX1_116 : SimTemplate
     {
         // leeroyjenkins
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_116t); // whelp
 
+        #endregion
+
         // ansturm/. kampfschrei:/ ruft zwei welplinge (1/1) für euren gegner herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -41,5 +47,7 @@ namespace HREngine.Bots
             p.callKid(this.kid, pos, !own.own);
             p.callKid(this.kid, pos, !own.own);
         }
+
+        #endregion
     }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_557.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_557.
+    ///     The sim_ e x 1_557.
     /// </summary>
-    class Sim_EX1_557 : SimTemplate
-	{
-	    // natpagle
+    internal class Sim_EX1_557 : SimTemplate
+    {
+        // natpagle
 
-// zu beginn eures zuges besteht eine chance von 50%, dass ihr eine zusätzliche karte zieht.
+        // zu beginn eures zuges besteht eine chance von 50%, dass ihr eine zusätzliche karte zieht.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on turn start trigger.
         /// </summary>
@@ -36,5 +38,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

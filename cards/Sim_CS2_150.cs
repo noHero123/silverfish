@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_150.
+    ///     The sim_ c s 2_150.
     /// </summary>
-    class Sim_CS2_150 : SimTemplate
-	{
-	    // stormpikecommando
+    internal class Sim_CS2_150 : SimTemplate
+    {
+        // stormpikecommando
 
-// kampfschrei:/ verursacht 2 schaden.
+        // kampfschrei:/ verursacht 2 schaden.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             p.minionGetDamageOrHeal(target, 2);
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

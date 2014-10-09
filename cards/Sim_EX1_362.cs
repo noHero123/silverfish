@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_362.
+    ///     The sim_ e x 1_362.
     /// </summary>
-    class Sim_EX1_362 : SimTemplate
-	{
-	    // argentprotector
+    internal class Sim_EX1_362 : SimTemplate
+    {
+        // argentprotector
 
-// kampfschrei:/ verleiht einem befreundeten diener gottesschild/.
+        // kampfschrei:/ verleiht einem befreundeten diener gottesschild/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,9 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (target != null) target.divineshild = true;
-		}
+        {
+            if (target != null)
+            {
+                target.divineshild = true;
+            }
+        }
 
-	}
+        #endregion
+    }
 }

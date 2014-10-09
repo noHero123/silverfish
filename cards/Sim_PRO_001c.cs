@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_PRO_001c.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,22 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ pr o_001 c.
+    ///     The sim_ pr o_001 c.
     /// </summary>
-    class Sim_PRO_001c : SimTemplate
+    internal class Sim_PRO_001c : SimTemplate
     {
         // powerofthehorde
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_390);
 
+        #endregion
+
         // beschwört einen zufälligen krieger der horde.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -42,5 +47,7 @@ namespace HREngine.Bots
 
             p.callKid(this.kid, posi, ownplay);
         }
+
+        #endregion
     }
 }

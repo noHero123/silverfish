@@ -9,26 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_227.
+    ///     The sim_ c s 2_227.
     /// </summary>
-    class Sim_CS2_227 : SimTemplate
-	{
-	    // venturecomercenary
+    internal class Sim_CS2_227 : SimTemplate
+    {
+        // venturecomercenary
 
-// eure diener kosten (3) mehr.
-        /// <summary>
-        /// The on aura starts.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        public override void onAuraStarts(Playfield p, Minion own)
-		{
-           if(own.own) p.soeldnerDerVenture++;
-		}
+        // eure diener kosten (3) mehr.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on aura ends.
@@ -41,8 +29,29 @@ namespace HREngine.Bots
         /// </param>
         public override void onAuraEnds(Playfield p, Minion own)
         {
-           if(own.own) p.soeldnerDerVenture--;
+            if (own.own)
+            {
+                p.soeldnerDerVenture--;
+            }
         }
 
-	}
+        /// <summary>
+        /// The on aura starts.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        public override void onAuraStarts(Playfield p, Minion own)
+        {
+            if (own.own)
+            {
+                p.soeldnerDerVenture++;
+            }
+        }
+
+        #endregion
+    }
 }

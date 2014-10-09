@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_284.
+    ///     The sim_ e x 1_284.
     /// </summary>
-    class Sim_EX1_284 : SimTemplate
-	{
-	    // azuredrake
+    internal class Sim_EX1_284 : SimTemplate
+    {
+        // azuredrake
 
-// zauberschaden +1/. kampfschrei:/ zieht eine karte.
+        // zauberschaden +1/. kampfschrei:/ zieht eine karte.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,30 +34,8 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-           
-            p.drawACard(CardDB.cardName.unknown, own.own);
-		}
-
-        /// <summary>
-        /// The on aura starts.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        public override void onAuraStarts(Playfield p, Minion m)
         {
-            if (m.own)
-            {
-                p.spellpower++;
-            }
-            else
-            {
-                p.enemyspellpower++;
-            }
+            p.drawACard(CardDB.cardName.unknown, own.own);
         }
 
         /// <summary>
@@ -79,6 +59,27 @@ namespace HREngine.Bots
             }
         }
 
+        /// <summary>
+        /// The on aura starts.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
+        public override void onAuraStarts(Playfield p, Minion m)
+        {
+            if (m.own)
+            {
+                p.spellpower++;
+            }
+            else
+            {
+                p.enemyspellpower++;
+            }
+        }
 
-	}
+        #endregion
+    }
 }

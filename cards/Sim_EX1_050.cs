@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_050.
+    ///     The sim_ e x 1_050.
     /// </summary>
-    class Sim_EX1_050 : SimTemplate
-	{
-	    // coldlightoracle
+    internal class Sim_EX1_050 : SimTemplate
+    {
+        // coldlightoracle
 
-// kampfschrei:/ jeder spieler zieht 2 karten.
+        // kampfschrei:/ jeder spieler zieht 2 karten.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,14 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             p.drawACard(CardDB.cardName.unknown, true);
             p.drawACard(CardDB.cardName.unknown, true);
             p.drawACard(CardDB.cardName.unknown, false);
             p.drawACard(CardDB.cardName.unknown, false);
+        }
 
-		}
-
-
-	}
+        #endregion
+    }
 }

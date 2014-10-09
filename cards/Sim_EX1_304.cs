@@ -6,19 +6,20 @@
 //   The sim_ e x 1_304.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ e x 1_304.
-    /// </summary>
-    class Sim_EX1_304 : SimTemplate
-	{
-	    // voidterror
+    using System.Collections.Generic;
 
-// kampfschrei:/ vernichtet die benachbarten diener und verleiht ihm deren angriff und leben.
+    /// <summary>
+    ///     The sim_ e x 1_304.
+    /// </summary>
+    internal class Sim_EX1_304 : SimTemplate
+    {
+        // voidterror
+
+        // kampfschrei:/ vernichtet die benachbarten diener und verleiht ihm deren angriff und leben.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -35,7 +36,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             List<Minion> temp = own.own ? p.ownMinions : p.enemyMinions;
 
             int angr = 0;
@@ -51,8 +52,8 @@ namespace HREngine.Bots
             }
 
             p.minionGetBuffed(own, angr, hp);
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_295.cs" company="">
 //   
 // </copyright>
@@ -9,14 +9,16 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_295.
+    ///     The sim_ e x 1_295.
     /// </summary>
-    class Sim_EX1_295 : SimTemplate
+    internal class Sim_EX1_295 : SimTemplate
     {
         // iceblock
         // todo secret
 
         // geheimnis:/ wenn euer held tödlichen schaden erleidet, wird dieser verhindert und der held wird immun/ in diesem zug.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on secret play.
         /// </summary>
@@ -37,5 +39,7 @@ namespace HREngine.Bots
             target.Hp += number;
             target.immune = true;
         }
+
+        #endregion
     }
 }

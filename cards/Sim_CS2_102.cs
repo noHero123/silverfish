@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_102.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_102.
+    ///     The sim_ c s 2_102.
     /// </summary>
-    class Sim_CS2_102 : SimTemplate
-	{
-	    // armorup
+    internal class Sim_CS2_102 : SimTemplate
+    {
+        // armorup
 
-// heldenfähigkeit/\nerhaltet 2 rüstung.
+        // heldenfähigkeit/\nerhaltet 2 rüstung.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (ownplay)
             {
                 p.ownHero.armor += 2;
@@ -42,7 +43,8 @@ namespace HREngine.Bots
             {
                 p.enemyHero.armor += 2;
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

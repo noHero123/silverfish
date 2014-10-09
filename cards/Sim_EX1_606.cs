@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_606.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_606.
+    ///     The sim_ e x 1_606.
     /// </summary>
-    class Sim_EX1_606 : SimTemplate
-	{
-	    // shieldblock
+    internal class Sim_EX1_606 : SimTemplate
+    {
+        // shieldblock
 
-// erhaltet 5 rüstung. zieht eine karte.
+        // erhaltet 5 rüstung. zieht eine karte.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (ownplay)
             {
                 p.ownHero.armor += 5;
@@ -43,7 +45,8 @@ namespace HREngine.Bots
             }
 
             p.drawACard(CardDB.cardName.unknown, ownplay);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,9 +9,9 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_565.
+    ///     The sim_ e x 1_565.
     /// </summary>
-    class Sim_EX1_565 : SimTemplate
+    internal class Sim_EX1_565 : SimTemplate
     {
         // Flametongue Totem
         // note buff and debuff is handled by playfield (faster)

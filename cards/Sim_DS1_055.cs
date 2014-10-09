@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ d s 1_055.
+    ///     The sim_ d s 1_055.
     /// </summary>
-    class Sim_DS1_055 : SimTemplate
-	{
-	    // darkscalehealer
+    internal class Sim_DS1_055 : SimTemplate
+    {
+        // darkscalehealer
 
-// kampfschrei:/ stellt bei allen befreundeten charakteren 2 leben wieder her.
+        // kampfschrei:/ stellt bei allen befreundeten charakteren 2 leben wieder her.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,11 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             int heal = own.own ? p.getMinionHeal(2) : p.getEnemyMinionHeal(2);
             p.allCharsOfASideGetDamage(own.own, -heal);
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

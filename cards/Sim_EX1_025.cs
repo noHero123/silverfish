@@ -9,15 +9,21 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_025.
+    ///     The sim_ e x 1_025.
     /// </summary>
-    class Sim_EX1_025 : SimTemplate
+    internal class Sim_EX1_025 : SimTemplate
     {
         // dragonling mechanic
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
-        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_025t);// mechanicaldragonling
+        private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_025t); // mechanicaldragonling
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The get battlecry effect.
@@ -39,5 +45,6 @@ namespace HREngine.Bots
             p.callKid(this.kid, own.zonepos, own.own, true);
         }
 
+        #endregion
     }
 }

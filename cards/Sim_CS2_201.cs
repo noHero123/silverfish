@@ -9,10 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_201.
+    ///     The sim_ c s 2_201.
     /// </summary>
-    class Sim_CS2_201 : SimTemplate
-	{
-	    // corehound
-	}
+    internal class Sim_CS2_201 : SimTemplate
+    {
+        // corehound
+    }
 }

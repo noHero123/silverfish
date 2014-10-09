@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_007 a.
+    ///     The sim_ ne w 1_007 a.
     /// </summary>
-    class Sim_NEW1_007a : SimTemplate
+    internal class Sim_NEW1_007a : SimTemplate
     {
         // starfall choice left
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -36,5 +37,6 @@ namespace HREngine.Bots
             p.allMinionOfASideGetDamage(!ownplay, dmg);
         }
 
+        #endregion
     }
 }

@@ -9,26 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_017.
+    ///     The sim_ f p 1_017.
     /// </summary>
-    class Sim_FP1_017 : SimTemplate
-	{
-	    // nerubarweblord
+    internal class Sim_FP1_017 : SimTemplate
+    {
+        // nerubarweblord
 
-// diener mit kampfschrei/ kosten (2) mehr.
-        /// <summary>
-        /// The on aura starts.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        public override void onAuraStarts(Playfield p, Minion own)
-		{
-            p.nerubarweblord++;
-		}
+        // diener mit kampfschrei/ kosten (2) mehr.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on aura ends.
@@ -44,6 +32,20 @@ namespace HREngine.Bots
             p.nerubarweblord--;
         }
 
+        /// <summary>
+        /// The on aura starts.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        public override void onAuraStarts(Playfield p, Minion own)
+        {
+            p.nerubarweblord++;
+        }
 
-	}
+        #endregion
+    }
 }

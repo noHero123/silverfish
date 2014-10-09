@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_622.
+    ///     The sim_ e x 1_622.
     /// </summary>
-    class Sim_EX1_622 : SimTemplate
-	{
-	    // shadowworddeath
+    internal class Sim_EX1_622 : SimTemplate
+    {
+        // shadowworddeath
 
-// vernichtet einen diener mit mind. 5 angriff.
+        // vernichtet einen diener mit mind. 5 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetDestroyed(target);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

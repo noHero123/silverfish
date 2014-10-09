@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_595.
+    ///     The sim_ e x 1_595.
     /// </summary>
-    class Sim_EX1_595 : SimTemplate
-	{
-	    // cultmaster
+    internal class Sim_EX1_595 : SimTemplate
+    {
+        // cultmaster
 
-// zieht jedes mal eine karte, wenn einer eurer anderen diener stirbt.
+        // zieht jedes mal eine karte, wenn einer eurer anderen diener stirbt.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on minion died trigger.
@@ -37,5 +38,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

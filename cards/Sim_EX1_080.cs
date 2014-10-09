@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_080.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_080.
+    ///     The sim_ e x 1_080.
     /// </summary>
-    class Sim_EX1_080 : SimTemplate
-	{
-	    // secretkeeper
+    internal class Sim_EX1_080 : SimTemplate
+    {
+        // secretkeeper
 
-// erhält jedes mal +1/+1, wenn ein geheimnis/ ausgespielt wird.
+        // erhält jedes mal +1/+1, wenn ein geheimnis/ ausgespielt wird.
 
         // we do them manually in playfield
         /*public override void onCardWasPlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
@@ -25,5 +25,5 @@ namespace HREngine.Bots
                 p.minionGetBuffed(triggerEffectMinion, 1, 1);
             }
         }*/
-	}
+    }
 }

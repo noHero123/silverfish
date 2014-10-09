@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_110.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_110.
+    ///     The sim_ e x 1_110.
     /// </summary>
-    class Sim_EX1_110 : SimTemplate
-	{
-	    // cairnebloodhoof
+    internal class Sim_EX1_110 : SimTemplate
+    {
+        // cairnebloodhoof
 
-// todesröcheln:/ ruft baine bluthuf (4/5) herbei.
+        // todesröcheln:/ ruft baine bluthuf (4/5) herbei.
+        #region Fields
+
         /// <summary>
-        /// The blaine.
+        ///     The blaine.
         /// </summary>
-        CardDB.Card blaine = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_110t);
+        private CardDB.Card blaine = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_110t);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on deathrattle.
@@ -32,8 +38,9 @@ namespace HREngine.Bots
         /// </param>
         public override void onDeathrattle(Playfield p, Minion m)
         {
-            p.callKid(this.blaine, m.zonepos-1, m.own);
+            p.callKid(this.blaine, m.zonepos - 1, m.own);
         }
 
-	}
+        #endregion
+    }
 }

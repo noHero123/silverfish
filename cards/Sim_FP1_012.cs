@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_012.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_012.
+    ///     The sim_ f p 1_012.
     /// </summary>
-    class Sim_FP1_012 : SimTemplate
+    internal class Sim_FP1_012 : SimTemplate
     {
         // sludgebelcher
+        #region Fields
+
         /// <summary>
-        /// The c.
+        ///     The c.
         /// </summary>
         private CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.FP1_012t);
 
+        #endregion
+
         // spott.\ntodesröcheln:/ ruft einen schleim (1/2) mit spott/ herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on deathrattle.
         /// </summary>
@@ -33,5 +39,7 @@ namespace HREngine.Bots
         {
             p.callKid(this.c, m.zonepos - 1, m.own);
         }
+
+        #endregion
     }
 }

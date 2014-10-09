@@ -9,9 +9,9 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_287.
+    ///     The sim_ e x 1_287.
     /// </summary>
-    class Sim_EX1_287 : SimTemplate
+    internal class Sim_EX1_287 : SimTemplate
     {
         // counterspell
         // todo secret

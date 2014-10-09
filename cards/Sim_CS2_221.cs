@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_221.
+    ///     The sim_ c s 2_221.
     /// </summary>
-    class Sim_CS2_221 : SimTemplate
-	{
-	    // spitefulsmith
+    internal class Sim_CS2_221 : SimTemplate
+    {
+        // spitefulsmith
 
-// wutanfall:/ eure waffe hat +2 angriff.
+        // wutanfall:/ eure waffe hat +2 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on enrage start.
         /// </summary>
@@ -35,7 +37,7 @@ namespace HREngine.Bots
                     p.ownWeaponAttack += 2;
                 }
             }
-            else 
+            else
             {
                 if (p.enemyWeaponDurability >= 1)
                 {
@@ -74,6 +76,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
-
+        #endregion
+    }
 }

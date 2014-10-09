@@ -9,12 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_405.
+    ///     The sim_ e x 1_405.
     /// </summary>
-    class Sim_EX1_405 : SimTemplate
-	{
-	    // shieldbearer
+    internal class Sim_EX1_405 : SimTemplate
+    {
+        // shieldbearer
 
-// spott/
-	}
+        // spott/
+    }
 }

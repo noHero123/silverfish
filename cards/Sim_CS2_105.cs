@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_105.
+    ///     The sim_ c s 2_105.
     /// </summary>
-    class Sim_CS2_105 : SimTemplate
-	{
-	    // heroicstrike
+    internal class Sim_CS2_105 : SimTemplate
+    {
+        // heroicstrike
 
-// verleiht eurem helden +4 angriff in diesem zug.
+        // verleiht eurem helden +4 angriff in diesem zug.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (ownplay)
             {
                 p.minionGetTempBuff(p.ownHero, 4, 0);
@@ -41,8 +43,8 @@ namespace HREngine.Bots
             {
                 p.minionGetTempBuff(p.enemyHero, 4, 0);
             }
+        }
 
-		}
-
-	}
+        #endregion
+    }
 }

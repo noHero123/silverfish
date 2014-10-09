@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_083.cs" company="">
 //   
 // </copyright>
@@ -6,29 +6,34 @@
 //   The sim_ e x 1_083.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ e x 1_083.
+    ///     The sim_ e x 1_083.
     /// </summary>
-    class Sim_EX1_083 : SimTemplate
+    internal class Sim_EX1_083 : SimTemplate
     {
         // tinkmasteroverspark
+        #region Fields
+
         /// <summary>
-        /// The card 1.
+        ///     The card 1.
         /// </summary>
         private CardDB.Card card1 = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_tk29); // rex
 
         /// <summary>
-        /// The card 2.
+        ///     The card 2.
         /// </summary>
         private CardDB.Card card2 = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_tk28); // squirrel
 
+        #endregion
+
         // todo better
         // kampfschrei:/ verwandelt einen anderen zufälligen diener in einen teufelssaurier (5/5) oder ein eichhörnchen (1/1).
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -76,5 +81,7 @@ namespace HREngine.Bots
                 }
             }
         }
+
+        #endregion
     }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_313.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_313.
+    ///     The sim_ e x 1_313.
     /// </summary>
-    class Sim_EX1_313 : SimTemplate
-	{
-	    // pitlord
+    internal class Sim_EX1_313 : SimTemplate
+    {
+        // pitlord
 
-// kampfschrei:/ fügt eurem helden 5 schaden zu.
+        // kampfschrei:/ fügt eurem helden 5 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             if (own.own)
             {
                 p.minionGetDamageOrHeal(p.ownHero, 5);
@@ -41,8 +43,8 @@ namespace HREngine.Bots
             {
                 p.minionGetDamageOrHeal(p.enemyHero, 5);
             }
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

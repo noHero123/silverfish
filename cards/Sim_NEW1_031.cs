@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_NEW1_031.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_031.
+    ///     The sim_ ne w 1_031.
     /// </summary>
-    class Sim_NEW1_031 : SimTemplate
-	{
-	    // animalcompanion
+    internal class Sim_NEW1_031 : SimTemplate
+    {
+        // animalcompanion
 
-// ruft einen zufälligen wildtierbegleiter herbei.
+        // ruft einen zufälligen wildtierbegleiter herbei.
+        #region Fields
+
         /// <summary>
-        /// The c 2.
+        ///     The c 2.
         /// </summary>
-        CardDB.Card c2 = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_032);// misha
+        private CardDB.Card c2 = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_032); // misha
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -37,10 +43,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-            int placeoffather = ownplay?  p.ownMinions.Count : p.enemyMinions.Count;
+        {
+            int placeoffather = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
             p.callKid(this.c2, placeoffather, ownplay);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ drea m_05.
+    ///     The sim_ drea m_05.
     /// </summary>
-    class Sim_DREAM_05 : SimTemplate
+    internal class Sim_DREAM_05 : SimTemplate
     {
         // Nightmare
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -43,5 +44,6 @@ namespace HREngine.Bots
             }
         }
 
+        #endregion
     }
 }

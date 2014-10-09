@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_009.
+    ///     The sim_ ne w 1_009.
     /// </summary>
-    class Sim_NEW1_009 : SimTemplate
-	{
-	    // healingtotem
+    internal class Sim_NEW1_009 : SimTemplate
+    {
+        // healingtotem
 
-// stellt am ende eures zuges bei allen befreundeten dienern 1 leben wieder her.
+        // stellt am ende eures zuges bei allen befreundeten dienern 1 leben wieder her.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn ends trigger.
@@ -38,5 +39,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

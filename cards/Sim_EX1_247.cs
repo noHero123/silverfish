@@ -9,15 +9,21 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_247.
+    ///     The sim_ e x 1_247.
     /// </summary>
-    class Sim_EX1_247 : SimTemplate
-	{
-	    // stormforgedaxe
+    internal class Sim_EX1_247 : SimTemplate
+    {
+        // stormforgedaxe
+        #region Fields
+
         /// <summary>
-        /// The card.
+        ///     The card.
         /// </summary>
-        CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_247);
+        private CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_247);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -37,8 +43,12 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             p.equipWeapon(this.card, ownplay);
-            if (ownplay) p.ueberladung ++;
+            if (ownplay)
+            {
+                p.ueberladung ++;
+            }
         }
 
-	}
+        #endregion
+    }
 }

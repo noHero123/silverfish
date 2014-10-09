@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_008.
+    ///     The sim_ ne w 1_008.
     /// </summary>
-    class Sim_NEW1_008: SimTemplate
+    internal class Sim_NEW1_008 : SimTemplate
     {
         // ancient of lore
 
         // Zieht 2 Karten; oder stellt 5 Leben wieder her
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -45,5 +47,6 @@ namespace HREngine.Bots
             }
         }
 
+        #endregion
     }
 }

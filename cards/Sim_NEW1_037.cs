@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_NEW1_037.cs" company="">
 //   
 // </copyright>
@@ -6,19 +6,20 @@
 //   The sim_ ne w 1_037.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ ne w 1_037.
-    /// </summary>
-    class Sim_NEW1_037 : SimTemplate
-	{
-	    // masterswordsmith
+    using System.Collections.Generic;
 
-// verleiht am ende eures zuges einem anderen zufälligen befreundeten diener +1 angriff.
+    /// <summary>
+    ///     The sim_ ne w 1_037.
+    /// </summary>
+    internal class Sim_NEW1_037 : SimTemplate
+    {
+        // masterswordsmith
+
+        // verleiht am ende eures zuges einem anderen zufälligen befreundeten diener +1 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on turn ends trigger.
         /// </summary>
@@ -36,15 +37,20 @@ namespace HREngine.Bots
             if (turnEndOfOwner == triggerEffectMinion.own)
             {
                 List<Minion> temp2 = new List<Minion>(p.ownMinions);
-                temp2.Sort((a, b) => a.Angr.CompareTo(b.Angr));// buff the weakest
+                temp2.Sort((a, b) => a.Angr.CompareTo(b.Angr)); // buff the weakest
                 foreach (Minion mins in temp2)
                 {
-                    if (triggerEffectMinion.zonepos == mins.zonepos) continue;
+                    if (triggerEffectMinion.zonepos == mins.zonepos)
+                    {
+                        continue;
+                    }
+
                     p.minionGetBuffed(mins, 1, 0);
                     break;
                 }
             }
         }
 
-	}
+        #endregion
+    }
 }

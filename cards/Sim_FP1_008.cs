@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_008.cs" company="">
 //   
 // </copyright>
@@ -9,12 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_008.
+    ///     The sim_ f p 1_008.
     /// </summary>
-    class Sim_FP1_008 : SimTemplate
-	{
-	    // spectralknight
+    internal class Sim_FP1_008 : SimTemplate
+    {
+        // spectralknight
 
-// kann nicht als ziel von zaubern oder heldenfähigkeiten gewählt werden.
-	}
+        // kann nicht als ziel von zaubern oder heldenfähigkeiten gewählt werden.
+    }
 }

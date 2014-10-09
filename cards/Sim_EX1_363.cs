@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_363.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_363.
+    ///     The sim_ e x 1_363.
     /// </summary>
-    class Sim_EX1_363 : SimTemplate
-	{
-	    // blessingofwisdom
+    internal class Sim_EX1_363 : SimTemplate
+    {
+        // blessingofwisdom
 
-// wählt einen diener aus. zieht jedes mal eine karte, wenn er angreift.
+        // wählt einen diener aus. zieht jedes mal eine karte, wenn er angreift.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (ownplay)
             {
                 target.ownBlessingOfWisdom++;
@@ -42,8 +43,8 @@ namespace HREngine.Bots
             {
                 target.enemyBlessingOfWisdom++;
             }
+        }
 
-		}
-
-	}
+        #endregion
+    }
 }

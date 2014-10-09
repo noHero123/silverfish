@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_245.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_245.
+    ///     The sim_ e x 1_245.
     /// </summary>
-    class Sim_EX1_245 : SimTemplate
-	{
-	    // earthshock
+    internal class Sim_EX1_245 : SimTemplate
+    {
+        // earthshock
 
-// bringt einen diener zum schweigen/ und fügt ihm dann $1 schaden zu.
+        // bringt einen diener zum schweigen/ und fügt ihm dann $1 schaden zu.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,11 +34,12 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetSilenced(target);
             int dmg = ownplay ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
             p.minionGetDamageOrHeal(target, dmg);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

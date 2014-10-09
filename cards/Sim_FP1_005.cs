@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_005.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_005.
+    ///     The sim_ f p 1_005.
     /// </summary>
-    class Sim_FP1_005 : SimTemplate
-	{
-	    // shadeofnaxxramas
+    internal class Sim_FP1_005 : SimTemplate
+    {
+        // shadeofnaxxramas
 
-// verstohlenheit/. erhält zu beginn eures zuges +1/+1.
+        // verstohlenheit/. erhält zu beginn eures zuges +1/+1.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn start trigger.
@@ -37,5 +38,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

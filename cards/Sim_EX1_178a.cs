@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_178 a.
+    ///     The sim_ e x 1_178 a.
     /// </summary>
-    class Sim_EX1_178a : SimTemplate
-	{
-	    // rooted
+    internal class Sim_EX1_178a : SimTemplate
+    {
+        // rooted
 
-// +5 leben und spott/.
+        // +5 leben und spott/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,11 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             p.minionGetBuffed(own, 0, 5);
             own.taunt = true;
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

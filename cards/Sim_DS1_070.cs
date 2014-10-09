@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ d s 1_070.
+    ///     The sim_ d s 1_070.
     /// </summary>
-    class Sim_DS1_070 : SimTemplate
-	{
-	    // houndmaster
+    internal class Sim_DS1_070 : SimTemplate
+    {
+        // houndmaster
 
-// kampfschrei:/ verleiht einem befreundeten wildtier +2/+2 und spott/.
+        // kampfschrei:/ verleiht einem befreundeten wildtier +2/+2 und spott/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,14 +34,14 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             if (target != null)
             {
                 p.minionGetBuffed(target, 2, 2);
                 target.taunt = true;
             }
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

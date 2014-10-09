@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_026.cs" company="">
 //   
 // </copyright>
@@ -6,19 +6,19 @@
 //   The sim_ f p 1_026.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ f p 1_026.
-    /// </summary>
-    class Sim_FP1_026 : SimTemplate
-	{
-	    // anubarambusher
+    using System.Collections.Generic;
 
-// todesröcheln:/ lasst einen zufälligen befreundeten diener auf eure hand zurückkehren.
+    /// <summary>
+    ///     The sim_ f p 1_026.
+    /// </summary>
+    internal class Sim_FP1_026 : SimTemplate
+    {
+        // anubarambusher
+
+        // todesröcheln:/ lasst einen zufälligen befreundeten diener auf eure hand zurückkehren.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on deathrattle.
@@ -52,7 +52,11 @@ namespace HREngine.Bots
                 {
                     Minion target = new Minion();
                     target = temp[0];
-                    if (temp.Count >= 2 && !target.taunt && temp[1].taunt) target = temp[1];
+                    if (temp.Count >= 2 && !target.taunt && temp[1].taunt)
+                    {
+                        target = temp[1];
+                    }
+
                     p.minionReturnToHand(target, m.own, 0);
                 }
                 else
@@ -60,11 +64,16 @@ namespace HREngine.Bots
                     Minion target = new Minion();
 
                     target = temp[0];
-                    if (temp.Count >= 2 && target.taunt && !temp[1].taunt) target = temp[1];
+                    if (temp.Count >= 2 && target.taunt && !temp[1].taunt)
+                    {
+                        target = temp[1];
+                    }
+
                     p.minionReturnToHand(target, m.own, 0);
                 }
             }
         }
 
-	}
+        #endregion
+    }
 }

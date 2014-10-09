@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_384.cs" company="">
 //   
 // </copyright>
@@ -6,20 +6,21 @@
 //   The sim_ e x 1_384.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ e x 1_384.
-    /// </summary>
-    class Sim_EX1_384 : SimTemplate
-	{
-	    // avengingwrath
+    using System.Collections.Generic;
 
-// verursacht $8 schaden, der zufällig auf feindliche charaktere verteilt wird.
+    /// <summary>
+    ///     The sim_ e x 1_384.
+    /// </summary>
+    internal class Sim_EX1_384 : SimTemplate
+    {
+        // avengingwrath
+
+        // verursacht $8 schaden, der zufällig auf feindliche charaktere verteilt wird.
         // todo for enemy
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -44,8 +45,14 @@ namespace HREngine.Bots
 
             if ((ownplay && p.enemyHero.Hp <= times) || (!ownplay && p.ownHero.Hp <= times))
             {
-                if (ownplay) p.minionGetDamageOrHeal(p.enemyHero, p.enemyHero.Hp - 1);
-                else p.minionGetDamageOrHeal(p.ownHero, p.ownHero.Hp - 1);
+                if (ownplay)
+                {
+                    p.minionGetDamageOrHeal(p.enemyHero, p.enemyHero.Hp - 1);
+                }
+                else
+                {
+                    p.minionGetDamageOrHeal(p.ownHero, p.ownHero.Hp - 1);
+                }
             }
             else
             {
@@ -59,7 +66,10 @@ namespace HREngine.Bots
                         bool found = false;
                         foreach (Minion m in temp)
                         {
-                            if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2) continue; // dont attack nerubianegg!
+                            if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2)
+                            {
+                                continue; // dont attack nerubianegg!
+                            }
 
                             if (m.Hp >= 1 && minhp > m.Hp)
                             {
@@ -76,18 +86,25 @@ namespace HREngine.Bots
                         else
                         {
                             if (ownplay)
+                            {
                                 p.minionGetDamageOrHeal(p.enemyHero, 1);
+                            }
                             else
+                            {
                                 p.minionGetDamageOrHeal(p.ownHero, 1);
+                            }
                         }
-
                     }
                     else
                     {
                         if (ownplay)
+                        {
                             p.minionGetDamageOrHeal(p.enemyHero, 1);
+                        }
                         else
+                        {
                             p.minionGetDamageOrHeal(p.ownHero, 1);
+                        }
                     }
 
                     i++;
@@ -95,5 +112,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

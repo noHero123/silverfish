@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_022.cs" company="">
 //   
 // </copyright>
@@ -6,23 +6,27 @@
 //   The sim_ f p 1_022.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ f p 1_022.
+    ///     The sim_ f p 1_022.
     /// </summary>
-    class Sim_FP1_022 : SimTemplate
+    internal class Sim_FP1_022 : SimTemplate
     {
         // voidcaller
+        #region Fields
+
         /// <summary>
-        /// The c.
+        ///     The c.
         /// </summary>
         private CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_301); // felguard
 
+        #endregion
+
         // todesröcheln:/ legt einen zufälligen dämon aus eurer hand auf das schlachtfeld.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on deathrattle.
@@ -63,5 +67,7 @@ namespace HREngine.Bots
                 }
             }
         }
+
+        #endregion
     }
 }

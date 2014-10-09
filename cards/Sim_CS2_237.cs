@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_237.
+    ///     The sim_ c s 2_237.
     /// </summary>
-    class Sim_CS2_237 : SimTemplate
-	{
-	    // starvingbuzzard
+    internal class Sim_CS2_237 : SimTemplate
+    {
+        // starvingbuzzard
 
-// zieht jedes mal eine karte, wenn ihr ein wildtier herbeiruft.
+        // zieht jedes mal eine karte, wenn ihr ein wildtier herbeiruft.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on minion is summoned.
         /// </summary>
@@ -30,11 +32,13 @@ namespace HREngine.Bots
         /// </param>
         public override void onMinionIsSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
-            if (triggerEffectMinion.own == summonedMinion.own && (TAG_RACE)summonedMinion.handcard.card.race == TAG_RACE.PET)
+            if (triggerEffectMinion.own == summonedMinion.own
+                && (TAG_RACE)summonedMinion.handcard.card.race == TAG_RACE.PET)
             {
                 p.drawACard(CardDB.cardName.unknown, triggerEffectMinion.own);
             }
         }
 
-	}
+        #endregion
+    }
 }

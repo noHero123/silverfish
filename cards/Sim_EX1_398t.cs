@@ -9,16 +9,21 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_398 t.
+    ///     The sim_ e x 1_398 t.
     /// </summary>
-    class Sim_EX1_398t : SimTemplate
-	{
-	    // battleaxe
+    internal class Sim_EX1_398t : SimTemplate
+    {
+        // battleaxe
+        #region Fields
 
         /// <summary>
-        /// The wcard.
+        ///     The wcard.
         /// </summary>
-        CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_398t);
+        private CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_398t);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -39,5 +44,7 @@ namespace HREngine.Bots
         {
             p.equipWeapon(this.wcard, ownplay);
         }
-	}
+
+        #endregion
+    }
 }

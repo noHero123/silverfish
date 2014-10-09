@@ -6,19 +6,20 @@
 //   The sim_ e x 1_160 b.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ e x 1_160 b.
-    /// </summary>
-    class Sim_EX1_160b : SimTemplate
-	{
-	    // leaderofthepack
+    using System.Collections.Generic;
 
-// verleiht euren dienern +1/+1.
+    /// <summary>
+    ///     The sim_ e x 1_160 b.
+    /// </summary>
+    internal class Sim_EX1_160b : SimTemplate
+    {
+        // leaderofthepack
+
+        // verleiht euren dienern +1/+1.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -41,7 +42,8 @@ namespace HREngine.Bots
             {
                 p.minionGetBuffed(m, 1, 1);
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_587.
+    ///     The sim_ e x 1_587.
     /// </summary>
-    class Sim_EX1_587 : SimTemplate
-	{
-	    // windspeaker
+    internal class Sim_EX1_587 : SimTemplate
+    {
+        // windspeaker
 
-// kampfschrei:/ verleiht einem befreundeten diener windzorn/.
+        // kampfschrei:/ verleiht einem befreundeten diener windzorn/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (target != null) p.minionGetWindfurry(target);
-		}
+        {
+            if (target != null)
+            {
+                p.minionGetWindfurry(target);
+            }
+        }
 
-
-	}
+        #endregion
+    }
 }

@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_236.
+    ///     The sim_ c s 2_236.
     /// </summary>
-    class Sim_CS2_236 : SimTemplate
-	{
-	    // divinespirit
+    internal class Sim_CS2_236 : SimTemplate
+    {
+        // divinespirit
 
-// verdoppelt das leben eines dieners.
+        // verdoppelt das leben eines dieners.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetBuffed(target, 0, target.Hp);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_093.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_093.
+    ///     The sim_ c s 2_093.
     /// </summary>
-    class Sim_CS2_093 : SimTemplate
-	{
-	    // consecration
+    internal class Sim_CS2_093 : SimTemplate
+    {
+        // consecration
 
-// fügt allen feinden $2 schaden zu.
+        // fügt allen feinden $2 schaden zu.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
             p.allCharsOfASideGetDamage(!ownplay, dmg);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

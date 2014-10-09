@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_316.
+    ///     The sim_ e x 1_316.
     /// </summary>
-    class Sim_EX1_316 : SimTemplate
-	{
-	    // poweroverwhelming
+    internal class Sim_EX1_316 : SimTemplate
+    {
+        // poweroverwhelming
 
-// verleiht einem befreundeten diener bis zum ende des zuges +4/+4. dann stirbt er. auf schreckliche art und weise.
+        // verleiht einem befreundeten diener bis zum ende des zuges +4/+4. dann stirbt er. auf schreckliche art und weise.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetBuffed(target, 4, 4);
             if (ownplay)
             {
@@ -43,8 +44,8 @@ namespace HREngine.Bots
             {
                 target.destroyOnEnemyTurnEnd = true;
             }
+        }
 
-		}
-
-	}
+        #endregion
+    }
 }

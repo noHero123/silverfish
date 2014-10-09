@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_Mekka3.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ mekka 3.
+    ///     The sim_ mekka 3.
     /// </summary>
-    class Sim_Mekka3 : SimTemplate
-	{
-	    // emboldener3000
+    internal class Sim_Mekka3 : SimTemplate
+    {
+        // emboldener3000
 
-// verleiht am ende eures zuges einem zufälligen diener +1/+1.
+        // verleiht am ende eures zuges einem zufälligen diener +1/+1.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn ends trigger.
@@ -60,5 +61,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

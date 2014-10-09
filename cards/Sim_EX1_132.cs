@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_132.cs" company="">
 //   
 // </copyright>
@@ -9,14 +9,16 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_132.
+    ///     The sim_ e x 1_132.
     /// </summary>
-    class Sim_EX1_132 : SimTemplate
+    internal class Sim_EX1_132 : SimTemplate
     {
         // eyeforaneye
         // todo secret
 
         // geheimnis:/ wenn euer held schaden erleidet, wird dem feindlichen helden ebenso viel schaden zugefügt.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on secret play.
         /// </summary>
@@ -42,5 +44,7 @@ namespace HREngine.Bots
                 p.minionGetDamageOrHeal(p.ownHero, dmg);
             }
         }
+
+        #endregion
     }
 }

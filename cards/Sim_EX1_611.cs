@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_611.cs" company="">
 //   
 // </copyright>
@@ -9,14 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_611.
+    ///     The sim_ e x 1_611.
     /// </summary>
-    class Sim_EX1_611 : SimTemplate
+    internal class Sim_EX1_611 : SimTemplate
     {
         // freezingtrap
         // todo secret
 
         // geheimnis:/ wenn ein feindlicher diener angreift, lasst ihn auf die hand seines besitzers zurückkehren. zusätzlich kostet er (2) mehr.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on secret play.
@@ -46,5 +47,7 @@ namespace HREngine.Bots
 
             target.Hp = -100;
         }
+
+        #endregion
     }
 }

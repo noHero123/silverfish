@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_609.cs" company="">
 //   
 // </copyright>
@@ -9,14 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_609.
+    ///     The sim_ e x 1_609.
     /// </summary>
-    class Sim_EX1_609 : SimTemplate
+    internal class Sim_EX1_609 : SimTemplate
     {
         // snipe
         // todo secret
 
         // geheimnis:/ wenn euer gegner einen diener ausspielt, werden diesem $4 schaden zugefügt.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on secret play.
@@ -39,5 +40,7 @@ namespace HREngine.Bots
 
             p.minionGetDamageOrHeal(target, dmg);
         }
+
+        #endregion
     }
 }

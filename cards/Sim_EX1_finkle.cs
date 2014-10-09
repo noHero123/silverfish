@@ -9,11 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_finkle.
+    ///     The sim_ e x 1_finkle.
     /// </summary>
-    class Sim_EX1_finkle : SimTemplate
-	{
-	    // finkleeinhorn
-	
-	}
+    internal class Sim_EX1_finkle : SimTemplate
+    {
+        // finkleeinhorn
+    }
 }

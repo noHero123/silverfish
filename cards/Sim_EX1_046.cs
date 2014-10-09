@@ -9,12 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_046.
+    ///     The sim_ e x 1_046.
     /// </summary>
-    class Sim_EX1_046 : SimTemplate
+    internal class Sim_EX1_046 : SimTemplate
     {
         // Dark Iron Dwarf
         // +2 tempattack
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,7 +34,12 @@ namespace HREngine.Bots
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (target != null) p.minionGetTempBuff(target, 2, 0);
+            if (target != null)
+            {
+                p.minionGetTempBuff(target, 2, 0);
+            }
         }
+
+        #endregion
     }
 }

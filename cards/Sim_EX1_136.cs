@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_136.
+    ///     The sim_ e x 1_136.
     /// </summary>
-    class Sim_EX1_136 : SimTemplate
+    internal class Sim_EX1_136 : SimTemplate
     {
         // redemption
         // todo secret
         // geheimnis:/ wenn einer eurer diener stirbt, wird er mit 1 leben wiederbelebt.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on secret play.
@@ -82,9 +83,8 @@ namespace HREngine.Bots
                     }
                 }
             }
-
         }
 
+        #endregion
     }
-
 }

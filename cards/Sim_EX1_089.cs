@@ -6,19 +6,20 @@
 //   The sim_ e x 1_089.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ e x 1_089.
-    /// </summary>
-    class Sim_EX1_089 : SimTemplate
-	{
-	    // arcanegolem
+    using System;
 
-// ansturm/. kampfschrei:/ gebt eurem gegner 1 manakristall.
+    /// <summary>
+    ///     The sim_ e x 1_089.
+    /// </summary>
+    internal class Sim_EX1_089 : SimTemplate
+    {
+        // arcanegolem
+
+        // ansturm/. kampfschrei:/ gebt eurem gegner 1 manakristall.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -35,17 +36,17 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             if (own.own)
             {
-                p.enemyMaxMana = Math.Min(10, p.enemyMaxMana+1);
+                p.enemyMaxMana = Math.Min(10, p.enemyMaxMana + 1);
             }
             else
             {
                 p.ownMaxMana = Math.Min(10, p.ownMaxMana + 1);
             }
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

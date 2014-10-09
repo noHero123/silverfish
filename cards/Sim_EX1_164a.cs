@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_164 a.
+    ///     The sim_ e x 1_164 a.
     /// </summary>
-    class Sim_EX1_164a : SimTemplate
+    internal class Sim_EX1_164a : SimTemplate
     {
         // nourish
 
         // erhaltet 2 manakristalle.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -82,6 +83,6 @@ namespace HREngine.Bots
             }
         }
 
+        #endregion
     }
-
 }

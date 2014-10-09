@@ -9,9 +9,9 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_023.
+    ///     The sim_ e x 1_023.
     /// </summary>
-    class Sim_EX1_023 : SimTemplate
+    internal class Sim_EX1_023 : SimTemplate
     {
         // Silvermoon Guardian
     }

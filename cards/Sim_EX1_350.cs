@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_350.cs" company="">
 //   
 // </copyright>
@@ -9,29 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_350.
+    ///     The sim_ e x 1_350.
     /// </summary>
-    class Sim_EX1_350 : SimTemplate
-	{
-	    // prophetvelen
+    internal class Sim_EX1_350 : SimTemplate
+    {
+        // prophetvelen
 
-// verdoppelt den schaden und die heilung eurer zauber und heldenfähigkeiten.
-        /// <summary>
-        /// The on aura starts.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        public override void onAuraStarts(Playfield p, Minion own)
-		{
-            if (own.own)
-            {
-                p.doublepriest++;
-            }
-		}
+        // verdoppelt den schaden und die heilung eurer zauber und heldenfähigkeiten.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on aura ends.
@@ -50,5 +35,23 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        /// <summary>
+        /// The on aura starts.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        public override void onAuraStarts(Playfield p, Minion own)
+        {
+            if (own.own)
+            {
+                p.doublepriest++;
+            }
+        }
+
+        #endregion
+    }
 }

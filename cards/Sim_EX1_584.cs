@@ -6,19 +6,20 @@
 //   The sim_ e x 1_584.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ e x 1_584.
+    ///     The sim_ e x 1_584.
     /// </summary>
-    class Sim_EX1_584 : SimTemplate
+    internal class Sim_EX1_584 : SimTemplate
     {
         // ancientmage
 
         // kampfschrei:/ verleiht benachbarten dienern zauberschaden +1/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -53,5 +54,7 @@ namespace HREngine.Bots
                 }
             }
         }
+
+        #endregion
     }
 }

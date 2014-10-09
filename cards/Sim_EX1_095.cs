@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_095.
+    ///     The sim_ e x 1_095.
     /// </summary>
-    class Sim_EX1_095 : SimTemplate
-	{
-	    // gadgetzanauctioneer
+    internal class Sim_EX1_095 : SimTemplate
+    {
+        // gadgetzanauctioneer
 
-// zieht jedes mal eine karte, wenn ihr einen zauber wirkt.
+        // zieht jedes mal eine karte, wenn ihr einen zauber wirkt.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card is going to be played.
@@ -32,14 +33,18 @@ namespace HREngine.Bots
         /// <param name="triggerEffectMinion">
         /// The trigger effect minion.
         /// </param>
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void onCardIsGoingToBePlayed(
+            Playfield p, 
+            CardDB.Card c, 
+            bool wasOwnCard, 
+            Minion triggerEffectMinion)
         {
             if (c.type == CardDB.cardtype.SPELL && wasOwnCard == triggerEffectMinion.own)
             {
                 p.drawACard(CardDB.cardName.unknown, wasOwnCard);
             }
-
         }
 
-	}
+        #endregion
+    }
 }

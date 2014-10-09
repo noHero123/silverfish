@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_GAME_002.cs" company="">
 //   
 // </copyright>
@@ -9,12 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ gam e_002.
+    ///     The sim_ gam e_002.
     /// </summary>
-    class Sim_GAME_002 : SimTemplate
-	{
-	    // avatarofthecoin
+    internal class Sim_GAME_002 : SimTemplate
+    {
+        // avatarofthecoin
 
-// i&gt;ihr habt den münzwurf verloren, aber einen freund gewonnen./i&gt;
-	}
+        // i&gt;ihr habt den münzwurf verloren, aber einen freund gewonnen./i&gt;
+    }
 }

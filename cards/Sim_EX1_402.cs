@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_402.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_402.
+    ///     The sim_ e x 1_402.
     /// </summary>
-    class Sim_EX1_402 : SimTemplate
-	{
-	    // armorsmith
+    internal class Sim_EX1_402 : SimTemplate
+    {
+        // armorsmith
 
-// erhaltet jedes mal 1 rüstung, wenn ein befreundeter diener schaden erleidet.
+        // erhaltet jedes mal 1 rüstung, wenn ein befreundeter diener schaden erleidet.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on minion got dmg trigger.
@@ -35,7 +36,7 @@ namespace HREngine.Bots
             {
                 if (triggerEffectMinion.own)
                 {
-                    p.ownHero.armor  += 1;
+                    p.ownHero.armor += 1;
                 }
                 else
                 {
@@ -44,5 +45,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ mekka 1.
+    ///     The sim_ mekka 1.
     /// </summary>
-    class Sim_Mekka1 : SimTemplate
-	{
-	    // homingchicken
+    internal class Sim_Mekka1 : SimTemplate
+    {
+        // homingchicken
 
-// vernichtet zu beginn eures zuges diesen diener und zieht 3 karten.
+        // vernichtet zu beginn eures zuges diesen diener und zieht 3 karten.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn start trigger.
@@ -40,5 +41,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

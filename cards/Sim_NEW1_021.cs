@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_021.
+    ///     The sim_ ne w 1_021.
     /// </summary>
-    class Sim_NEW1_021 : SimTemplate
-	{
-	    // doomsayer
+    internal class Sim_NEW1_021 : SimTemplate
+    {
+        // doomsayer
 
-// vernichtet zu beginn eures zuges alle diener.
+        // vernichtet zu beginn eures zuges alle diener.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn start trigger.
@@ -37,5 +38,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

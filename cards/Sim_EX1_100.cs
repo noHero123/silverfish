@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_100.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_100.
+    ///     The sim_ e x 1_100.
     /// </summary>
-    class Sim_EX1_100 : SimTemplate
-	{
-	    // lorewalkercho
+    internal class Sim_EX1_100 : SimTemplate
+    {
+        // lorewalkercho
 
-// wenn ein spieler einen zauber wirkt, erhält der andere spieler eine kopie desselben auf seine hand.
+        // wenn ein spieler einen zauber wirkt, erhält der andere spieler eine kopie desselben auf seine hand.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card is going to be played.
@@ -32,7 +33,11 @@ namespace HREngine.Bots
         /// <param name="triggerEffectMinion">
         /// The trigger effect minion.
         /// </param>
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void onCardIsGoingToBePlayed(
+            Playfield p, 
+            CardDB.Card c, 
+            bool wasOwnCard, 
+            Minion triggerEffectMinion)
         {
             if (c.type == CardDB.cardtype.SPELL)
             {
@@ -40,5 +45,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

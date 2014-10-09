@@ -9,17 +9,22 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_040.
+    ///     The sim_ ne w 1_040.
     /// </summary>
-    class Sim_NEW1_040 : SimTemplate
+    internal class Sim_NEW1_040 : SimTemplate
     {
         // hogger
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_040t); // gnoll
 
+        #endregion
+
         // ruft am ende eures zuges einen gnoll (2/2) mit spott/ herbei.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn ends trigger.
@@ -42,5 +47,7 @@ namespace HREngine.Bots
                 p.callKid(this.kid, posi, triggerEffectMinion.own);
             }
         }
+
+        #endregion
     }
 }

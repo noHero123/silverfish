@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_379.
+    ///     The sim_ e x 1_379.
     /// </summary>
-    class Sim_EX1_379 : SimTemplate
+    internal class Sim_EX1_379 : SimTemplate
     {
         // repentance
 
         // geheimnis:/ wenn euer gegner einen diener ausspielt, wird dessen leben auf 1 verringert.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on secret play.
@@ -38,5 +39,7 @@ namespace HREngine.Bots
             target.maxHp = 1;
             target.wounded = false;
         }
+
+        #endregion
     }
 }

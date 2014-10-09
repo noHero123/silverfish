@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_141.
+    ///     The sim_ c s 2_141.
     /// </summary>
-    class Sim_CS2_141 : SimTemplate
-	{
-	    // ironforgerifleman
+    internal class Sim_CS2_141 : SimTemplate
+    {
+        // ironforgerifleman
 
-// kampfschrei:/ verursacht 1 schaden.
+        // kampfschrei:/ verursacht 1 schaden.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,11 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             int dmg = 1;
             p.minionGetDamageOrHeal(target, dmg);
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

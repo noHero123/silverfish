@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_NEW1_004.cs" company="">
 //   
 // </copyright>
@@ -9,14 +9,16 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_004.
+    ///     The sim_ ne w 1_004.
     /// </summary>
-    class Sim_NEW1_004 : SimTemplate
-	{
-	    // vanish
+    internal class Sim_NEW1_004 : SimTemplate
+    {
+        // vanish
 
-// lasst alle diener auf die hand ihrer besitzer zurückkehren.
+        // lasst alle diener auf die hand ihrer besitzer zurückkehren.
         // todo clear playfield
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -60,8 +62,6 @@ namespace HREngine.Bots
             p.spellpower = 0;
             p.enemyspellpower = 0;
 
-
-
             p.winzigebeschwoererin = 0;
             p.managespenst = 0;
             p.soeldnerDerVenture = 0;
@@ -80,8 +80,8 @@ namespace HREngine.Bots
 
             p.ownMinions.Clear();
             p.enemyMinions.Clear();
-
         }
 
-	}
+        #endregion
+    }
 }

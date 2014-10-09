@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_412.
+    ///     The sim_ e x 1_412.
     /// </summary>
-    class Sim_EX1_412 : SimTemplate
-	{
-	    // ragingworgen
+    internal class Sim_EX1_412 : SimTemplate
+    {
+        // ragingworgen
 
-// wutanfall:/ windzorn/ und +1 angriff
+        // wutanfall:/ windzorn/ und +1 angriff
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on enrage start.
         /// </summary>
@@ -44,9 +46,12 @@ namespace HREngine.Bots
         {
             m.Angr--;
             m.windfury = false;
-            if (m.numAttacksThisTurn == 1) m.Ready = false;
+            if (m.numAttacksThisTurn == 1)
+            {
+                m.Ready = false;
+            }
         }
 
-
-	}
+        #endregion
+    }
 }

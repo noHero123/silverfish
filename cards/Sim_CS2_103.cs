@@ -9,11 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_103.
+    ///     The sim_ c s 2_103.
     /// </summary>
-    class Sim_CS2_103 : SimTemplate
+    internal class Sim_CS2_103 : SimTemplate
     {
         // Charge
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -35,5 +37,6 @@ namespace HREngine.Bots
             p.minionGetCharge(target);
         }
 
+        #endregion
     }
 }

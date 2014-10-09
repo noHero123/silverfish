@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_DS1h_292.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ d s 1 h_292.
+    ///     The sim_ d s 1 h_292.
     /// </summary>
-    class Sim_DS1h_292 : SimTemplate
-	{
-	    // steadyshot
+    internal class Sim_DS1h_292 : SimTemplate
+    {
+        // steadyshot
 
-// heldenfähigkeit/\nfügt dem feindlichen helden 2 schaden zu.
+        // heldenfähigkeit/\nfügt dem feindlichen helden 2 schaden zu.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,20 +34,28 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = 2;
             if (ownplay)
             {
-                if (p.doublepriest >= 1) dmg *= 2 * p.doublepriest;
+                if (p.doublepriest >= 1)
+                {
+                    dmg *= 2 * p.doublepriest;
+                }
+
                 p.minionGetDamageOrHeal(p.enemyHero, dmg);
             }
             else
             {
-                if (p.enemydoublepriest >= 1) dmg *= 2 * p.enemydoublepriest;
+                if (p.enemydoublepriest >= 1)
+                {
+                    dmg *= 2 * p.enemydoublepriest;
+                }
+
                 p.minionGetDamageOrHeal(p.ownHero, dmg);
             }
+        }
 
-		}
-
-	}
+        #endregion
+    }
 }

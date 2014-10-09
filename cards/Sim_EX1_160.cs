@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_160.cs" company="">
 //   
 // </copyright>
@@ -6,23 +6,28 @@
 //   The sim_ e x 1_160.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ e x 1_160.
-    /// </summary>
-    class Sim_EX1_160 : SimTemplate
-	{
-	    // powerofthewild
+    using System.Collections.Generic;
 
-// wählt aus:/ verleiht euren dienern +1/+1; oder ruft einen panther (3/2) herbei.
+    /// <summary>
+    ///     The sim_ e x 1_160.
+    /// </summary>
+    internal class Sim_EX1_160 : SimTemplate
+    {
+        // powerofthewild
+
+        // wählt aus:/ verleiht euren dienern +1/+1; oder ruft einen panther (3/2) herbei.
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
-        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_160t);// panther
+        private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_160t); // panther
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -40,7 +45,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (choice == 1)
             {
                 List<Minion> temp = ownplay ? p.ownMinions : p.enemyMinions;
@@ -54,9 +59,9 @@ namespace HREngine.Bots
             {
                 int posi = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
                 p.callKid(this.kid, posi, true);
-                
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

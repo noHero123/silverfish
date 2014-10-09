@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_146.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_146.
+    ///     The sim_ c s 2_146.
     /// </summary>
-    class Sim_CS2_146 : SimTemplate
-	{
-	    // southseadeckhand
+    internal class Sim_CS2_146 : SimTemplate
+    {
+        // southseadeckhand
 
-// hat ansturm/, während ihr eine waffe angelegt habt.
+        // hat ansturm/, während ihr eine waffe angelegt habt.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             if (own.own)
             {
                 if (p.ownWeaponDurability >= 1)
@@ -47,7 +49,8 @@ namespace HREngine.Bots
                     p.minionGetCharge(own);
                 }
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

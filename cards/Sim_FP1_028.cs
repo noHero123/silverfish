@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_FP1_028.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_028.
+    ///     The sim_ f p 1_028.
     /// </summary>
-    class Sim_FP1_028 : SimTemplate
-	{
-	    // undertaker
+    internal class Sim_FP1_028 : SimTemplate
+    {
+        // undertaker
 
-// erhält jedes mal +1/+1, wenn ihr einen diener mit todesröcheln/ herbeiruft.
+        // erhält jedes mal +1/+1, wenn ihr einen diener mit todesröcheln/ herbeiruft.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on minion is summoned.
@@ -33,9 +34,13 @@ namespace HREngine.Bots
         {
             if (triggerEffectMinion.own == summonedMinion.own)
             {
-                if (summonedMinion.handcard.card.deathrattle) p.minionGetBuffed(triggerEffectMinion, 1, 1);
+                if (summonedMinion.handcard.card.deathrattle)
+                {
+                    p.minionGetBuffed(triggerEffectMinion, 1, 1);
+                }
             }
         }
 
-	}
+        #endregion
+    }
 }

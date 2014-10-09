@@ -9,31 +9,16 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_076.
+    ///     The sim_ e x 1_076.
     /// </summary>
-    class Sim_EX1_076 : SimTemplate
+    internal class Sim_EX1_076 : SimTemplate
     {
         // pintsizedsummoner
 
         // todo enemy stuff
 
         // der erste diener, den ihr in einem zug ausspielt, kostet (1) weniger.
-        /// <summary>
-        /// The on aura starts.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        public override void onAuraStarts(Playfield p, Minion own)
-        {
-            if (own.own)
-            {
-                p.winzigebeschwoererin++;
-            }
-        }
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on aura ends.
@@ -51,5 +36,24 @@ namespace HREngine.Bots
                 p.winzigebeschwoererin--;
             }
         }
+
+        /// <summary>
+        /// The on aura starts.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        public override void onAuraStarts(Playfield p, Minion own)
+        {
+            if (own.own)
+            {
+                p.winzigebeschwoererin++;
+            }
+        }
+
+        #endregion
     }
 }

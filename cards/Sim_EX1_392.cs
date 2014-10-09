@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_392.cs" company="">
 //   
 // </copyright>
@@ -6,19 +6,19 @@
 //   The sim_ e x 1_392.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ e x 1_392.
-    /// </summary>
-    class Sim_EX1_392 : SimTemplate
-	{
-	    // battlerage
+    using System.Collections.Generic;
 
-// zieht eine karte für jeden verletzten befreundeten charakter.
+    /// <summary>
+    ///     The sim_ e x 1_392.
+    /// </summary>
+    internal class Sim_EX1_392 : SimTemplate
+    {
+        // battlerage
+
+        // zieht eine karte für jeden verletzten befreundeten charakter.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -36,9 +36,9 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-            List<Minion> temp = ownplay? p.ownMinions : p.enemyMinions;
-            foreach (Minion mnn in temp )
+        {
+            List<Minion> temp = ownplay ? p.ownMinions : p.enemyMinions;
+            foreach (Minion mnn in temp)
             {
                 if (mnn.wounded)
                 {
@@ -46,10 +46,17 @@ namespace HREngine.Bots
                 }
             }
 
-            if (ownplay && p.ownHero.Hp < 30) p.drawACard(CardDB.cardName.unknown, true);
-            if (!ownplay && p.enemyHero.Hp < 30) p.drawACard(CardDB.cardName.unknown, false);
+            if (ownplay && p.ownHero.Hp < 30)
+            {
+                p.drawACard(CardDB.cardName.unknown, true);
+            }
 
-		}
+            if (!ownplay && p.enemyHero.Hp < 30)
+            {
+                p.drawACard(CardDB.cardName.unknown, false);
+            }
+        }
 
-	}
+        #endregion
+    }
 }

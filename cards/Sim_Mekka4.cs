@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_Mekka4.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,22 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ mekka 4.
+    ///     The sim_ mekka 4.
     /// </summary>
-    class Sim_Mekka4 : SimTemplate
+    internal class Sim_Mekka4 : SimTemplate
     {
         // poultryizer
+        #region Fields
+
         /// <summary>
-        /// The c.
+        ///     The c.
         /// </summary>
         private CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.Mekka4t);
 
+        #endregion
+
         // verwandelt zu beginn eures zuges einen zufälligen diener in ein huhn (1/1).
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn start trigger.
@@ -63,5 +68,7 @@ namespace HREngine.Bots
                 }
             }
         }
+
+        #endregion
     }
 }

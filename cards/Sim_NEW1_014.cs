@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_014.
+    ///     The sim_ ne w 1_014.
     /// </summary>
-    class Sim_NEW1_014 : SimTemplate
-	{
-	    // masterofdisguise
+    internal class Sim_NEW1_014 : SimTemplate
+    {
+        // masterofdisguise
 
-// kampfschrei:/ verleiht einem befreundeten diener verstohlenheit/.
+        // kampfschrei:/ verleiht einem befreundeten diener verstohlenheit/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (target != null) target.stealth = true;
-		}
+        {
+            if (target != null)
+            {
+                target.stealth = true;
+            }
+        }
 
-
-	}
+        #endregion
+    }
 }

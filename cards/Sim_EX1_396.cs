@@ -9,9 +9,9 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_396.
+    ///     The sim_ e x 1_396.
     /// </summary>
-    class Sim_EX1_396 : SimTemplate
+    internal class Sim_EX1_396 : SimTemplate
     {
         // mogushan warden
     }

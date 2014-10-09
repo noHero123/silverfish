@@ -9,9 +9,9 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_007 t.
+    ///     The sim_ f p 1_007 t.
     /// </summary>
-    class Sim_FP1_007t : SimTemplate
+    internal class Sim_FP1_007t : SimTemplate
     {
         // Nerubian
     }

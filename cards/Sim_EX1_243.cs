@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_243.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_243.
+    ///     The sim_ e x 1_243.
     /// </summary>
-    class Sim_EX1_243 : SimTemplate
-	{
-	    // dustdevil
+    internal class Sim_EX1_243 : SimTemplate
+    {
+        // dustdevil
 
-// windzorn/, überladung:/ (2)
+        // windzorn/, überladung:/ (2)
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,9 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (own.own) p.ueberladung += 2;
-		}
+        {
+            if (own.own)
+            {
+                p.ueberladung += 2;
+            }
+        }
 
-	}
+        #endregion
+    }
 }

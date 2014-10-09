@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_165 b.
+    ///     The sim_ e x 1_165 b.
     /// </summary>
-    class Sim_EX1_165b : SimTemplate
-	{
-	    // bearform
+    internal class Sim_EX1_165b : SimTemplate
+    {
+        // bearform
 
-// +2 leben und spott/.
+        // +2 leben und spott/.
+        #region Fields
+
         /// <summary>
-        /// The bear.
+        ///     The bear.
         /// </summary>
-        CardDB.Card bear = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_165t2);
+        private CardDB.Card bear = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_165t2);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The get battlecry effect.
@@ -38,8 +44,9 @@ namespace HREngine.Bots
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-                p.minionTransform(own, this.bear);
+            p.minionTransform(own, this.bear);
         }
 
-	}
+        #endregion
+    }
 }

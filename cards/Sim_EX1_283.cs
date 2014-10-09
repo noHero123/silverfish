@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_283.
+    ///     The sim_ e x 1_283.
     /// </summary>
-    class Sim_EX1_283 : SimTemplate
-	{
-	    // frostelemental
+    internal class Sim_EX1_283 : SimTemplate
+    {
+        // frostelemental
 
-// kampfschrei:/ friert/ einen charakter ein.
+        // kampfschrei:/ friert/ einen charakter ein.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             target.frozen = true;
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

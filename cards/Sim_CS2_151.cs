@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_151.
+    ///     The sim_ c s 2_151.
     /// </summary>
-    class Sim_CS2_151 : SimTemplate
+    internal class Sim_CS2_151 : SimTemplate
     {
         // silverhandknight
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_152); // squire
 
+        #endregion
+
         // kampfschrei:/ ruft einen knappen (2/2) herbei.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -39,5 +45,7 @@ namespace HREngine.Bots
         {
             p.callKid(this.kid, own.zonepos, own.own, true);
         }
+
+        #endregion
     }
 }

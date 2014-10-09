@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_371.
+    ///     The sim_ e x 1_371.
     /// </summary>
-    class Sim_EX1_371 : SimTemplate
-	{
-	    // handofprotection
+    internal class Sim_EX1_371 : SimTemplate
+    {
+        // handofprotection
 
-// verleiht einem diener gottesschild/.
+        // verleiht einem diener gottesschild/.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             target.divineshild = true;
-		}
+        }
 
-	}
+        #endregion
+    }
 }

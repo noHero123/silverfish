@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_DS1_188.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ d s 1_188.
+    ///     The sim_ d s 1_188.
     /// </summary>
-    class Sim_DS1_188 : SimTemplate
+    internal class Sim_DS1_188 : SimTemplate
     {
         // gladiatorslongbow
+        #region Fields
+
         /// <summary>
-        /// The c.
+        ///     The c.
         /// </summary>
         private CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.DS1_188);
 
+        #endregion
+
         // euer held ist immun/, während er angreift.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -39,5 +45,7 @@ namespace HREngine.Bots
         {
             p.equipWeapon(this.c, ownplay);
         }
+
+        #endregion
     }
 }

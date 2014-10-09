@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_084.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_084.
+    ///     The sim_ e x 1_084.
     /// </summary>
-    class Sim_EX1_084 : SimTemplate
-	{
-	    // warsongcommander
+    internal class Sim_EX1_084 : SimTemplate
+    {
+        // warsongcommander
 
-// jedes mal, wenn ihr einen diener mit max. 3 angriff herbeiruft, erhält dieser ansturm/.
+        // jedes mal, wenn ihr einen diener mit max. 3 angriff herbeiruft, erhält dieser ansturm/.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on minion is summoned.
@@ -31,11 +32,12 @@ namespace HREngine.Bots
         /// </param>
         public override void onMinionIsSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
-            if (triggerEffectMinion.own == summonedMinion.own && summonedMinion.handcard.card.Attack <= 3 )
+            if (triggerEffectMinion.own == summonedMinion.own && summonedMinion.handcard.card.Attack <= 3)
             {
                 p.minionGetCharge(summonedMinion);
             }
         }
 
-	}
+        #endregion
+    }
 }

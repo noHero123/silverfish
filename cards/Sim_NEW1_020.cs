@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_NEW1_020.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_020.
+    ///     The sim_ ne w 1_020.
     /// </summary>
-    class Sim_NEW1_020 : SimTemplate
-	{
-	    // wildpyromancer
+    internal class Sim_NEW1_020 : SimTemplate
+    {
+        // wildpyromancer
 
-// fügt allen dienern 1 schaden zu, nachdem ihr einen zauber gewirkt habt.
+        // fügt allen dienern 1 schaden zu, nachdem ihr einen zauber gewirkt habt.
         // we do this manually (because there are only 2 minions which have this trigger)
         /*public override void onCardWasPlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
         {
@@ -25,5 +25,5 @@ namespace HREngine.Bots
             }
         }
         */
-	}
+    }
 }

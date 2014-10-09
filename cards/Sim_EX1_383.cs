@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_383.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,22 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_383.
+    ///     The sim_ e x 1_383.
     /// </summary>
-    class Sim_EX1_383 : SimTemplate
+    internal class Sim_EX1_383 : SimTemplate
     {
         // tirionfordring
+        #region Fields
+
         /// <summary>
-        /// The card.
+        ///     The card.
         /// </summary>
         private CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_383t);
 
+        #endregion
+
         // gottesschild/. spott/. todesröcheln:/ legt einen aschenbringer (5/3) an.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on deathrattle.
@@ -34,5 +39,7 @@ namespace HREngine.Bots
         {
             p.equipWeapon(this.card, m.own);
         }
+
+        #endregion
     }
 }

@@ -9,11 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ placeholder card.
+    ///     The sim_ placeholder card.
     /// </summary>
-    class Sim_PlaceholderCard : SimTemplate
-	{
-	    // placeholdercard
-		
-	}
+    internal class Sim_PlaceholderCard : SimTemplate
+    {
+        // placeholdercard
+    }
 }

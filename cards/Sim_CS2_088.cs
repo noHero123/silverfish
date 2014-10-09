@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_088.
+    ///     The sim_ c s 2_088.
     /// </summary>
-    class Sim_CS2_088 : SimTemplate
-	{
-	    // guardianofkings
+    internal class Sim_CS2_088 : SimTemplate
+    {
+        // guardianofkings
 
-// kampfschrei:/ stellt bei eurem helden 6 leben wieder her.
+        // kampfschrei:/ stellt bei eurem helden 6 leben wieder her.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             int heal = own.own ? p.getMinionHeal(6) : p.getEnemyMinionHeal(6);
 
             if (own.own)
@@ -43,8 +45,8 @@ namespace HREngine.Bots
             {
                 p.minionGetDamageOrHeal(p.enemyHero, -heal);
             }
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

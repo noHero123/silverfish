@@ -9,11 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ drea m_03.
+    ///     The sim_ drea m_03.
     /// </summary>
-    class Sim_DREAM_03 : SimTemplate
-	{
-	    // emeralddrake
-		
-	}
+    internal class Sim_DREAM_03 : SimTemplate
+    {
+        // emeralddrake
+    }
 }

@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_134.
+    ///     The sim_ e x 1_134.
     /// </summary>
-    class Sim_EX1_134 : SimTemplate
-	{
-	    // si7agent
+    internal class Sim_EX1_134 : SimTemplate
+    {
+        // si7agent
 
-// combo:/ verursacht 2 schaden.
+        // combo:/ verursacht 2 schaden.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,12 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if ( p.cardsPlayedThisTurn >= 1)
+        {
+            if (p.cardsPlayedThisTurn >= 1)
             {
                 p.minionGetDamageOrHeal(target, 2);
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

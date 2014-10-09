@@ -9,16 +9,21 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_080.
+    ///     The sim_ c s 2_080.
     /// </summary>
-    class Sim_CS2_080 : SimTemplate
-	{
-	    // assassinsblade
+    internal class Sim_CS2_080 : SimTemplate
+    {
+        // assassinsblade
+        #region Fields
 
         /// <summary>
-        /// The w.
+        ///     The w.
         /// </summary>
-        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_080);
+        private CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_080);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -40,5 +45,6 @@ namespace HREngine.Bots
             p.equipWeapon(this.w, ownplay);
         }
 
-	}
+        #endregion
+    }
 }

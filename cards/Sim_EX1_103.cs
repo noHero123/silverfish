@@ -6,17 +6,17 @@
 //   The sim_ e x 1_103.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ e x 1_103.
+    ///     The sim_ e x 1_103.
     /// </summary>
-    class Sim_EX1_103 : SimTemplate
+    internal class Sim_EX1_103 : SimTemplate
     {
         // Coldlight Seer
+        #region Public Methods and Operators
 
         /// <summary>
         /// The get battlecry effect.
@@ -39,8 +39,13 @@ namespace HREngine.Bots
 
             for (int i = 0; i < temp.Count; i++)
             {
-                if((TAG_RACE)temp[i].handcard.card.race == TAG_RACE.MURLOC) p.minionGetBuffed(temp[i], 0, 2);
+                if ((TAG_RACE)temp[i].handcard.card.race == TAG_RACE.MURLOC)
+                {
+                    p.minionGetBuffed(temp[i], 0, 2);
+                }
             }
         }
+
+        #endregion
     }
 }

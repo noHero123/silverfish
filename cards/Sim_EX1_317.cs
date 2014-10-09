@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_317.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_317.
+    ///     The sim_ e x 1_317.
     /// </summary>
-    class Sim_EX1_317 : SimTemplate
-	{
-	    // sensedemons
+    internal class Sim_EX1_317 : SimTemplate
+    {
+        // sensedemons
 
-// fügt eurer hand zwei zufällige dämonen aus eurem deck hinzu.
+        // fügt eurer hand zwei zufällige dämonen aus eurem deck hinzu.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.drawACard(CardDB.cardName.unknown, ownplay);
             p.drawACard(CardDB.cardName.unknown, ownplay);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

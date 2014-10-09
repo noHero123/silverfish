@@ -9,35 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_608.
+    ///     The sim_ e x 1_608.
     /// </summary>
-    class Sim_EX1_608 : SimTemplate
-	{
-	    // sorcerersapprentice
+    internal class Sim_EX1_608 : SimTemplate
+    {
+        // sorcerersapprentice
 
-// eure zauber kosten (1) weniger.
-        /// <summary>
-        /// The on aura starts.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        public override void onAuraStarts(Playfield p, Minion own)
-        {
-            if (own.own)
-            {
-                p.anzOwnsorcerersapprentice++;
-            }
-            else
-            {
-                p.anzEnemysorcerersapprentice++;
-                
-            }
-
-        }
+        // eure zauber kosten (1) weniger.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on aura ends.
@@ -59,5 +38,28 @@ namespace HREngine.Bots
                 p.anzEnemysorcerersapprentice--;
             }
         }
-	}
+
+        /// <summary>
+        /// The on aura starts.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        public override void onAuraStarts(Playfield p, Minion own)
+        {
+            if (own.own)
+            {
+                p.anzOwnsorcerersapprentice++;
+            }
+            else
+            {
+                p.anzEnemysorcerersapprentice++;
+            }
+        }
+
+        #endregion
+    }
 }

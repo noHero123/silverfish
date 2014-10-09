@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_NEW1_005.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_005.
+    ///     The sim_ ne w 1_005.
     /// </summary>
-    class Sim_NEW1_005 : SimTemplate
-	{
-	    // kidnapper
+    internal class Sim_NEW1_005 : SimTemplate
+    {
+        // kidnapper
 
-// combo:/ lasst einen diener auf die hand seines besitzers zurückkehren.
+        // combo:/ lasst einen diener auf die hand seines besitzers zurückkehren.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (p.cardsPlayedThisTurn >= 1) p.minionReturnToHand(target, target.own, 0);
-		}
+        {
+            if (p.cardsPlayedThisTurn >= 1)
+            {
+                p.minionReturnToHand(target, target.own, 0);
+            }
+        }
 
-
-	}
+        #endregion
+    }
 }

@@ -6,19 +6,20 @@
 //   The sim_ e x 1_058.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
-    /// <summary>
-    /// The sim_ e x 1_058.
-    /// </summary>
-    class Sim_EX1_058 : SimTemplate
-	{
-	    // sunfuryprotector
+    using System.Collections.Generic;
 
-// kampfschrei:/ verleiht benachbarten dienern spott/.
+    /// <summary>
+    ///     The sim_ e x 1_058.
+    /// </summary>
+    internal class Sim_EX1_058 : SimTemplate
+    {
+        // sunfuryprotector
+
+        // kampfschrei:/ verleiht benachbarten dienern spott/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -35,7 +36,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             List<Minion> temp = own.own ? p.ownMinions : p.enemyMinions;
             foreach (Minion m in temp)
             {
@@ -44,7 +45,8 @@ namespace HREngine.Bots
                     m.taunt = true;
                 }
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

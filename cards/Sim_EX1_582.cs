@@ -9,33 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_582.
+    ///     The sim_ e x 1_582.
     /// </summary>
-    class Sim_EX1_582 : SimTemplate
-	{
-	    // dalaranmage
+    internal class Sim_EX1_582 : SimTemplate
+    {
+        // dalaranmage
 
-// zauberschaden +1/
-        /// <summary>
-        /// The on aura starts.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        public override void onAuraStarts(Playfield p, Minion own)
-        {
-            if (own.own)
-            {
-                p.spellpower++;
-            }
-            else
-            {
-                p.enemyspellpower++;
-            }
-        }
+        // zauberschaden +1/
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on aura ends.
@@ -58,5 +39,27 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        /// <summary>
+        /// The on aura starts.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        public override void onAuraStarts(Playfield p, Minion own)
+        {
+            if (own.own)
+            {
+                p.spellpower++;
+            }
+            else
+            {
+                p.enemyspellpower++;
+            }
+        }
+
+        #endregion
+    }
 }

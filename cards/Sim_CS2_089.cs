@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_089.
+    ///     The sim_ c s 2_089.
     /// </summary>
-    class Sim_CS2_089 : SimTemplate
-	{
-	    // holylight
+    internal class Sim_CS2_089 : SimTemplate
+    {
+        // holylight
 
-// stellt #6 leben wieder her.
+        // stellt #6 leben wieder her.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int heal = ownplay ? p.getSpellHeal(6) : p.getEnemySpellHeal(6);
             p.minionGetDamageOrHeal(target, -heal);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

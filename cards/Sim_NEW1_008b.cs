@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_008 b.
+    ///     The sim_ ne w 1_008 b.
     /// </summary>
-    class Sim_NEW1_008b : SimTemplate
-	{
-	    // ancientsecrets
+    internal class Sim_NEW1_008b : SimTemplate
+    {
+        // ancientsecrets
 
-// stellt 5 leben wieder her.
+        // stellt 5 leben wieder her.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             int heal = own.own ? p.getMinionHeal(5) : p.getEnemyMinionHeal(5);
             p.minionGetDamageOrHeal(target, -heal);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

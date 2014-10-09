@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_617.cs" company="">
 //   
 // </copyright>
@@ -6,19 +6,19 @@
 //   The sim_ e x 1_617.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ e x 1_617.
+    ///     The sim_ e x 1_617.
     /// </summary>
-    class Sim_EX1_617 : SimTemplate
+    internal class Sim_EX1_617 : SimTemplate
     {
         // deadlyshot
 
         // vernichtet einen zufälligen feindlichen diener.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -45,5 +45,7 @@ namespace HREngine.Bots
                 break;
             }
         }
+
+        #endregion
     }
 }

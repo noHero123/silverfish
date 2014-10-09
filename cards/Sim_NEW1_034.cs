@@ -9,14 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_034.
+    ///     The sim_ ne w 1_034.
     /// </summary>
-    class Sim_NEW1_034 : SimTemplate
-	{
-	    // huffer
+    internal class Sim_NEW1_034 : SimTemplate
+    {
+        // huffer
 
-// ansturm/
-		
-
-	}
+        // ansturm/
+    }
 }

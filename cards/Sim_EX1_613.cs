@@ -9,11 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_613.
+    ///     The sim_ e x 1_613.
     /// </summary>
-    class Sim_EX1_613 : SimTemplate
+    internal class Sim_EX1_613 : SimTemplate
     {
         // edwin van cleefe
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -31,10 +33,16 @@ namespace HREngine.Bots
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-
-            if(own.own) p.minionGetBuffed(own, p.cardsPlayedThisTurn * 2, p.cardsPlayedThisTurn * 2);
-            else p.minionGetBuffed(own, p.enemyAnzCards * 2, p.enemyAnzCards * 2);
+            if (own.own)
+            {
+                p.minionGetBuffed(own, p.cardsPlayedThisTurn * 2, p.cardsPlayedThisTurn * 2);
+            }
+            else
+            {
+                p.minionGetBuffed(own, p.enemyAnzCards * 2, p.enemyAnzCards * 2);
+            }
         }
 
+        #endregion
     }
 }

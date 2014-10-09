@@ -9,11 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_076.
+    ///     The sim_ c s 2_076.
     /// </summary>
-    class Sim_CS2_076 : SimTemplate
+    internal class Sim_CS2_076 : SimTemplate
     {
         // Assassinate
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -35,5 +36,6 @@ namespace HREngine.Bots
             p.minionGetDestroyed(target);
         }
 
+        #endregion
     }
 }

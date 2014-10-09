@@ -9,13 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_162.
+    ///     The sim_ e x 1_162.
     /// </summary>
-    class Sim_EX1_162 : SimTemplate
-	{
-	    // direwolfalpha
+    internal class Sim_EX1_162 : SimTemplate
+    {
+        // direwolfalpha
 
-// benachbarte diener haben +1 angriff.
+        // benachbarte diener haben +1 angriff.
         // note buff and debuff is handled by playfield (faster)
         /*
         public override void onAuraStarts(Playfield p, Minion own)
@@ -67,5 +67,5 @@ namespace HREngine.Bots
                 }
             }
         }*/
-	}
+    }
 }

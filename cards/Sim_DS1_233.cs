@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_DS1_233.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ d s 1_233.
+    ///     The sim_ d s 1_233.
     /// </summary>
-    class Sim_DS1_233 : SimTemplate
-	{
-	    // mindblast
+    internal class Sim_DS1_233 : SimTemplate
+    {
+        // mindblast
 
-// fügt dem feindlichen helden $5 schaden zu.
+        // fügt dem feindlichen helden $5 schaden zu.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             int dmg = ownplay ? p.getSpellDamageDamage(5) : p.getEnemySpellDamageDamage(5);
             if (ownplay)
             {
@@ -43,7 +44,8 @@ namespace HREngine.Bots
             {
                 p.minionGetDamageOrHeal(p.ownHero, dmg);
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

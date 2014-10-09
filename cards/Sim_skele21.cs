@@ -9,11 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_skele 21.
+    ///     The sim_skele 21.
     /// </summary>
-    class Sim_skele21 : SimTemplate
-	{
-	    // damagedgolem
-		
-	}
+    internal class Sim_skele21 : SimTemplate
+    {
+        // damagedgolem
+    }
 }

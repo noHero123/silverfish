@@ -9,18 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_130.
+    ///     The sim_ e x 1_130.
     /// </summary>
-    class Sim_EX1_130 : SimTemplate
+    internal class Sim_EX1_130 : SimTemplate
     {
         // noblesacrifice
         // todo secret
         // geheimnis:/ wenn ein feind angreift, ruft ihr einen verteidiger (2/1) als neues ziel herbei.
+        #region Fields
 
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
-        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130a);
+        private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_130a);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on secret play.
@@ -68,9 +73,8 @@ namespace HREngine.Bots
                     }
                 }
             }
-
         }
 
+        #endregion
     }
-
 }

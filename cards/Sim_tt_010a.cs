@@ -9,14 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_tt_010 a.
+    ///     The sim_tt_010 a.
     /// </summary>
-    class Sim_tt_010a : SimTemplate
-	{
-	    // spellbender
+    internal class Sim_tt_010a : SimTemplate
+    {
+        // spellbender
 
-// zauberformerin
-		
-
-	}
+        // zauberformerin
+    }
 }

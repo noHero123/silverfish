@@ -9,12 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_179.
+    ///     The sim_ c s 2_179.
     /// </summary>
-    class Sim_CS2_179 : SimTemplate
+    internal class Sim_CS2_179 : SimTemplate
     {
         // senjien shieldmasta
-        
-
     }
 }

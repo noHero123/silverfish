@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_128.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_128.
+    ///     The sim_ e x 1_128.
     /// </summary>
-    class Sim_EX1_128 : SimTemplate
-	{
-	    // conceal
+    internal class Sim_EX1_128 : SimTemplate
+    {
+        // conceal
 
-// verleiht euren dienern bis zu eurem nächsten zug verstohlenheit/.
+        // verleiht euren dienern bis zu eurem nächsten zug verstohlenheit/.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (ownplay)
             {
                 foreach (Minion m in p.ownMinions)
@@ -56,8 +57,8 @@ namespace HREngine.Bots
                     }
                 }
             }
-		}
+        }
 
-	}
-
+        #endregion
+    }
 }

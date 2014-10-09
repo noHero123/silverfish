@@ -9,15 +9,21 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_026.
+    ///     The sim_ ne w 1_026.
     /// </summary>
-    class Sim_NEW1_026 : SimTemplate
+    internal class Sim_NEW1_026 : SimTemplate
     {
         // Violet Teacher
+        #region Fields
+
         /// <summary>
-        /// The card.
+        ///     The card.
         /// </summary>
         public CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NEW1_026t);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card is going to be played.
@@ -34,15 +40,19 @@ namespace HREngine.Bots
         /// <param name="triggerEffectMinion">
         /// The trigger effect minion.
         /// </param>
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void onCardIsGoingToBePlayed(
+            Playfield p, 
+            CardDB.Card c, 
+            bool wasOwnCard, 
+            Minion triggerEffectMinion)
         {
             if (wasOwnCard == triggerEffectMinion.own && c.type == CardDB.cardtype.SPELL)
             {
-                int place = wasOwnCard? p.ownMinions.Count : p.enemyMinions.Count;
+                int place = wasOwnCard ? p.ownMinions.Count : p.enemyMinions.Count;
                 p.callKid(this.card, place, wasOwnCard);
             }
         }
 
+        #endregion
     }
-
 }

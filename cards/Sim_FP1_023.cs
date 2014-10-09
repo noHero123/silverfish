@@ -6,18 +6,19 @@
 //   The sim_ f p 1_023.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ f p 1_023.
+    ///     The sim_ f p 1_023.
     /// </summary>
-    class Sim_FP1_023 : SimTemplate
+    internal class Sim_FP1_023 : SimTemplate
     {
         // dark cultist
         // todo list
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on deathrattle.
         /// </summary>
@@ -49,21 +50,26 @@ namespace HREngine.Bots
                 if (m.own)
                 {
                     Minion target = temp[0];
-                    if (temp.Count >= 2 && target.taunt && !temp[1].taunt) target = temp[1];
+                    if (temp.Count >= 2 && target.taunt && !temp[1].taunt)
+                    {
+                        target = temp[1];
+                    }
+
                     p.minionGetBuffed(target, 0, 3);
                 }
                 else
                 {
-
                     Minion target = temp[0];
-                    if (temp.Count >= 2 && !target.taunt && temp[1].taunt) target = temp[1];
+                    if (temp.Count >= 2 && !target.taunt && temp[1].taunt)
+                    {
+                        target = temp[1];
+                    }
+
                     p.minionGetBuffed(target, 0, 3);
                 }
             }
-
         }
-        
 
-            
+        #endregion
     }
 }

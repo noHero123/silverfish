@@ -9,15 +9,21 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_398.
+    ///     The sim_ e x 1_398.
     /// </summary>
-    class Sim_EX1_398 : SimTemplate
+    internal class Sim_EX1_398 : SimTemplate
     {
         // Arathi Weaponsmith
+        #region Fields
+
         /// <summary>
-        /// The wcard.
+        ///     The wcard.
         /// </summary>
-        CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_398t);// battleaxe
+        private CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_398t); // battleaxe
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The get battlecry effect.
@@ -37,8 +43,8 @@ namespace HREngine.Bots
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
             p.equipWeapon(this.wcard, own.own);
-
         }
 
+        #endregion
     }
 }

@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_027.
+    ///     The sim_ f p 1_027.
     /// </summary>
-    class Sim_FP1_027 : SimTemplate
-	{
-	    // stoneskingargoyle
+    internal class Sim_FP1_027 : SimTemplate
+    {
+        // stoneskingargoyle
 
-// stellt zu beginn eures zuges das volle leben dieses dieners wieder her.
+        // stellt zu beginn eures zuges das volle leben dieses dieners wieder her.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on turn start trigger.
@@ -33,10 +34,13 @@ namespace HREngine.Bots
         {
             if (triggerEffectMinion.own == turnStartOfOwner)
             {
-                int heal = triggerEffectMinion.own ? p.getMinionHeal(triggerEffectMinion.maxHp - triggerEffectMinion.Hp) : p.getEnemyMinionHeal(triggerEffectMinion.maxHp - triggerEffectMinion.Hp);
+                int heal = triggerEffectMinion.own
+                               ? p.getMinionHeal(triggerEffectMinion.maxHp - triggerEffectMinion.Hp)
+                               : p.getEnemyMinionHeal(triggerEffectMinion.maxHp - triggerEffectMinion.Hp);
                 p.minionGetDamageOrHeal(triggerEffectMinion, -heal);
             }
         }
 
-	}
+        #endregion
+    }
 }

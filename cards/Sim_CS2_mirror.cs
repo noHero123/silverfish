@@ -9,14 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_mirror.
+    ///     The sim_ c s 2_mirror.
     /// </summary>
-    class Sim_CS2_mirror : SimTemplate
-	{
-	    // mirrorimage
+    internal class Sim_CS2_mirror : SimTemplate
+    {
+        // mirrorimage
 
-// spott/
-		
-
-	}
+        // spott/
+    }
 }

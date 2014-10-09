@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_203.
+    ///     The sim_ c s 2_203.
     /// </summary>
-    class Sim_CS2_203 : SimTemplate
-	{
-	    // ironbeakowl
+    internal class Sim_CS2_203 : SimTemplate
+    {
+        // ironbeakowl
 
-// kampfschrei:/ bringt einen diener zum schweigen/.
+        // kampfschrei:/ bringt einen diener zum schweigen/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (target != null) p.minionGetSilenced(target);
-		}
+        {
+            if (target != null)
+            {
+                p.minionGetSilenced(target);
+            }
+        }
 
-
-	}
+        #endregion
+    }
 }

@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_104.
+    ///     The sim_ c s 2_104.
     /// </summary>
-    class Sim_CS2_104 : SimTemplate
-	{
-	    // rampage
+    internal class Sim_CS2_104 : SimTemplate
+    {
+        // rampage
 
-// verleiht einem verletzten diener +3/+3.
+        // verleiht einem verletzten diener +3/+3.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,9 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetBuffed(target, 3, 3);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

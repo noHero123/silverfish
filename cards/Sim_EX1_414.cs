@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_414.
+    ///     The sim_ e x 1_414.
     /// </summary>
-    class Sim_EX1_414 : SimTemplate
-	{
-	    // grommashhellscream
+    internal class Sim_EX1_414 : SimTemplate
+    {
+        // grommashhellscream
 
-// ansturm/, wutanfall:/ +6 angriff
+        // ansturm/, wutanfall:/ +6 angriff
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on enrage start.
         /// </summary>
@@ -27,7 +29,7 @@ namespace HREngine.Bots
         /// </param>
         public override void onEnrageStart(Playfield p, Minion m)
         {
-            m.Angr+=6;
+            m.Angr += 6;
         }
 
         /// <summary>
@@ -41,8 +43,9 @@ namespace HREngine.Bots
         /// </param>
         public override void onEnrageStop(Playfield p, Minion m)
         {
-            m.Angr-=6;
+            m.Angr -= 6;
         }
 
-	}
+        #endregion
+    }
 }

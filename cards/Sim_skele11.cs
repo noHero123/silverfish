@@ -9,14 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_skele 11.
+    ///     The sim_skele 11.
     /// </summary>
-    class Sim_skele11 : SimTemplate
-	{
-	    // skeleton
+    internal class Sim_skele11 : SimTemplate
+    {
+        // skeleton
 
-// /
-		
-
-	}
+        // /
+    }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_334.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_334.
+    ///     The sim_ e x 1_334.
     /// </summary>
-    class Sim_EX1_334 : SimTemplate
-	{
-	    // shadowmadness
+    internal class Sim_EX1_334 : SimTemplate
+    {
+        // shadowmadness
 
-// übernehmt bis zum ende des zuges die kontrolle über einen feindlichen diener mit max. 3 angriff.
+        // übernehmt bis zum ende des zuges die kontrolle über einen feindlichen diener mit max. 3 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             target.shadowmadnessed = true;
             p.minionGetControlled(target, ownplay, true);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

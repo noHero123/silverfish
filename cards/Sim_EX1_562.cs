@@ -9,18 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_562.
+    ///     The sim_ e x 1_562.
     /// </summary>
-    class Sim_EX1_562 : SimTemplate
+    internal class Sim_EX1_562 : SimTemplate
     {
         // onyxia
+        #region Fields
 
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_116t); // whelp
 
+        #endregion
+
         // kampfschrei:/ ruft welplinge (1/1) herbei, bis eure seite des schlachtfelds voll ist.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -45,5 +50,7 @@ namespace HREngine.Bots
                 p.callKid(this.kid, own.zonepos, own.own, true);
             }
         }
+
+        #endregion
     }
 }

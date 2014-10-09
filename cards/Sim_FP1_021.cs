@@ -9,15 +9,21 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_021.
+    ///     The sim_ f p 1_021.
     /// </summary>
-    class Sim_FP1_021 : SimTemplate
+    internal class Sim_FP1_021 : SimTemplate
     {
         // Death's Bite
+        #region Fields
+
         /// <summary>
-        /// The w.
+        ///     The w.
         /// </summary>
-        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.FP1_021);
+        private CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.FP1_021);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -53,5 +59,6 @@ namespace HREngine.Bots
             p.allMinionsGetDamage(1);
         }
 
+        #endregion
     }
 }

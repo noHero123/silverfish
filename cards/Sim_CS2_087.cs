@@ -9,11 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_087.
+    ///     The sim_ c s 2_087.
     /// </summary>
-    class Sim_CS2_087 : SimTemplate
+    internal class Sim_CS2_087 : SimTemplate
     {
         // Blessing of Might
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -34,5 +36,6 @@ namespace HREngine.Bots
             p.minionGetBuffed(target, 3, 0);
         }
 
+        #endregion
     }
 }

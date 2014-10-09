@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_366.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,22 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_366.
+    ///     The sim_ e x 1_366.
     /// </summary>
-    class Sim_EX1_366 : SimTemplate
+    internal class Sim_EX1_366 : SimTemplate
     {
         // swordofjustice
+        #region Fields
+
         /// <summary>
-        /// The card.
+        ///     The card.
         /// </summary>
         private CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_366);
 
+        #endregion
+
         // jedes mal, wenn ihr einen diener herbeiruft, erhält dieser +1/+1 und diese waffe verliert 1 haltbarkeit.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -61,5 +66,7 @@ namespace HREngine.Bots
                 p.lowerWeaponDurability(1, triggerEffectMinion.own);
             }
         }
+
+        #endregion
     }
 }

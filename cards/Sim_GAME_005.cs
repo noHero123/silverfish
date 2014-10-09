@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_GAME_005.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ gam e_005.
+    ///     The sim_ gam e_005.
     /// </summary>
-    class Sim_GAME_005 : SimTemplate
-	{
-	    // thecoin
+    internal class Sim_GAME_005 : SimTemplate
+    {
+        // thecoin
 
-// erhaltet 1 manakristall nur für diesen zug.
+        // erhaltet 1 manakristall nur für diesen zug.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -43,5 +45,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

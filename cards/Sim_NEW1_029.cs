@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_NEW1_029.cs" company="">
 //   
 // </copyright>
@@ -9,14 +9,16 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_029.
+    ///     The sim_ ne w 1_029.
     /// </summary>
-    class Sim_NEW1_029 : SimTemplate
-	{
-	    // millhousemanastorm
+    internal class Sim_NEW1_029 : SimTemplate
+    {
+        // millhousemanastorm
 
-// kampfschrei:/ im nächsten zug kosten zauber für euren gegner (0) mana.
+        // kampfschrei:/ im nächsten zug kosten zauber für euren gegner (0) mana.
         // todo implement the nomanacosts for the enemyturn
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -33,10 +35,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (own.own) p.weHavePlayedMillhouseManastorm = true;
-		}
+        {
+            if (own.own)
+            {
+                p.weHavePlayedMillhouseManastorm = true;
+            }
+        }
 
-
-	}
+        #endregion
+    }
 }

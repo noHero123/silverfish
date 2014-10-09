@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_561.
+    ///     The sim_ e x 1_561.
     /// </summary>
-    class Sim_EX1_561 : SimTemplate
-	{
-	    // alexstrasza
+    internal class Sim_EX1_561 : SimTemplate
+    {
+        // alexstrasza
 
-// kampfschrei:/ setzt das verbleibende leben eines helden auf 15.
+        // kampfschrei:/ setzt das verbleibende leben eines helden auf 15.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,10 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             target.Hp = 15;
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

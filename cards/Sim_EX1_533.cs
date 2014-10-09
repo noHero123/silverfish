@@ -9,11 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_533.
+    ///     The sim_ e x 1_533.
     /// </summary>
-    class Sim_EX1_533 : SimTemplate
+    internal class Sim_EX1_533 : SimTemplate
     {
         // Misdirection
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on secret play.
         /// </summary>
@@ -89,13 +91,12 @@ namespace HREngine.Bots
                 }
             }
 
-
             if (newTarget != null)
             {
                 number = newTarget.entitiyID;
             }
         }
 
+        #endregion
     }
-
 }

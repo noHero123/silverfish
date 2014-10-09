@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_009.
+    ///     The sim_ e x 1_009.
     /// </summary>
-    class Sim_EX1_009 : SimTemplate
-	{
-	    // angrychicken
+    internal class Sim_EX1_009 : SimTemplate
+    {
+        // angrychicken
 
-// wutanfall:/ +5 angriff.
+        // wutanfall:/ +5 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on enrage start.
         /// </summary>
@@ -39,10 +41,11 @@ namespace HREngine.Bots
         /// <param name="m">
         /// The m.
         /// </param>
-        public override void  onEnrageStop(Playfield p, Minion m)
+        public override void onEnrageStop(Playfield p, Minion m)
         {
             p.minionGetBuffed(m, -5, 0);
         }
 
-	}
+        #endregion
+    }
 }

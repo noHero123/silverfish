@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_082.cs" company="">
 //   
 // </copyright>
@@ -6,20 +6,21 @@
 //   The sim_ e x 1_082.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ e x 1_082.
+    ///     The sim_ e x 1_082.
     /// </summary>
-    class Sim_EX1_082 : SimTemplate
+    internal class Sim_EX1_082 : SimTemplate
     {
         // madbomber
         // todo make it better
 
         // kampfschrei:/ verursacht 3 schaden, der zufällig auf alle anderen charaktere aufgeteilt wird.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -63,5 +64,7 @@ namespace HREngine.Bots
                 p.minionGetDamageOrHeal(p.enemyHero, 1);
             }
         }
+
+        #endregion
     }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_248.cs" company="">
 //   
 // </copyright>
@@ -9,17 +9,22 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_248.
+    ///     The sim_ e x 1_248.
     /// </summary>
-    class Sim_EX1_248 : SimTemplate
+    internal class Sim_EX1_248 : SimTemplate
     {
         // feralspirit
+        #region Fields
+
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
         private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_tk11); // spiritwolf
 
+        #endregion
+
         // ruft zwei geisterwölfe (2/3) mit spott/ herbei. überladung:/ (2)
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -47,5 +52,7 @@ namespace HREngine.Bots
                 p.ueberladung += 2;
             }
         }
+
+        #endregion
     }
 }

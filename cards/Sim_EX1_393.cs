@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_393.
+    ///     The sim_ e x 1_393.
     /// </summary>
-    class Sim_EX1_393 : SimTemplate
-	{
-	    // amaniberserker
+    internal class Sim_EX1_393 : SimTemplate
+    {
+        // amaniberserker
 
-// wutanfall:/ +3 angriff
+        // wutanfall:/ +3 angriff
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on enrage start.
@@ -45,5 +46,6 @@ namespace HREngine.Bots
             m.Angr -= 3;
         }
 
-	}
+        #endregion
+    }
 }

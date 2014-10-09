@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_008 a.
+    ///     The sim_ ne w 1_008 a.
     /// </summary>
-    class Sim_NEW1_008a : SimTemplate
-	{
-	    // ancientteachings
+    internal class Sim_NEW1_008a : SimTemplate
+    {
+        // ancientteachings
 
-// zieht 2 karten.
+        // zieht 2 karten.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,9 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             p.drawACard(CardDB.cardName.unknown, own.own);
             p.drawACard(CardDB.cardName.unknown, own.own);
-		}
-	}
+        }
+
+        #endregion
+    }
 }

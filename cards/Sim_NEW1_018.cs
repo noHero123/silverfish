@@ -9,11 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_018.
+    ///     The sim_ ne w 1_018.
     /// </summary>
-    class Sim_NEW1_018 : SimTemplate
+    internal class Sim_NEW1_018 : SimTemplate
     {
         // bloodsail raider
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -31,8 +33,9 @@ namespace HREngine.Bots
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-             own.Angr += p.ownWeaponAttack;
+            own.Angr += p.ownWeaponAttack;
         }
 
+        #endregion
     }
 }

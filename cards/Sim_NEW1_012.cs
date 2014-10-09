@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_NEW1_012.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_012.
+    ///     The sim_ ne w 1_012.
     /// </summary>
-    class Sim_NEW1_012 : SimTemplate
-	{
-	    // manawyrm
+    internal class Sim_NEW1_012 : SimTemplate
+    {
+        // manawyrm
 
-// erhält jedes mal +1 angriff, wenn ihr einen zauber wirkt.
+        // erhält jedes mal +1 angriff, wenn ihr einen zauber wirkt.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card is going to be played.
         /// </summary>
@@ -31,12 +33,18 @@ namespace HREngine.Bots
         /// <param name="triggerEffectMinion">
         /// The trigger effect minion.
         /// </param>
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void onCardIsGoingToBePlayed(
+            Playfield p, 
+            CardDB.Card c, 
+            bool wasOwnCard, 
+            Minion triggerEffectMinion)
         {
             if (triggerEffectMinion.own == wasOwnCard && c.type == CardDB.cardtype.SPELL)
             {
                 triggerEffectMinion.Angr++;
             }
         }
-	}
+
+        #endregion
+    }
 }

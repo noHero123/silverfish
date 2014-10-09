@@ -9,14 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ mekka 4 t.
+    ///     The sim_ mekka 4 t.
     /// </summary>
-    class Sim_Mekka4t : SimTemplate
-	{
-	    // chicken
+    internal class Sim_Mekka4t : SimTemplate
+    {
+        // chicken
 
-// i&gt;put, put, put!/i&gt;
-		
-
-	}
+        // i&gt;put, put, put!/i&gt;
+    }
 }

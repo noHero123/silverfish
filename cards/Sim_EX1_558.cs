@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_558.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_558.
+    ///     The sim_ e x 1_558.
     /// </summary>
-    class Sim_EX1_558 : SimTemplate
+    internal class Sim_EX1_558 : SimTemplate
     {
         // harrisonjones
 
         // kampfschrei:/ zerstört die waffe eures gegners. zieht ihrer haltbarkeit entsprechend karten.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -53,5 +55,7 @@ namespace HREngine.Bots
                 p.lowerWeaponDurability(1000, true);
             }
         }
+
+        #endregion
     }
 }

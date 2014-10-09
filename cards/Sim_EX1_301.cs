@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_301.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_301.
+    ///     The sim_ e x 1_301.
     /// </summary>
-    class Sim_EX1_301 : SimTemplate
-	{
-	    // felguard
+    internal class Sim_EX1_301 : SimTemplate
+    {
+        // felguard
 
-// spott/. kampfschrei:/ zerstört einen eurer manakristalle.
+        // spott/. kampfschrei:/ zerstört einen eurer manakristalle.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             if (own.own)
             {
                 p.ownMaxMana--;
@@ -41,8 +43,8 @@ namespace HREngine.Bots
             {
                 p.enemyMaxMana--;
             }
-		}
+        }
 
-
-	}
+        #endregion
+    }
 }

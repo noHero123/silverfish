@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_CS2_074.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_074.
+    ///     The sim_ c s 2_074.
     /// </summary>
-    class Sim_CS2_074 : SimTemplate
-	{
-	    // deadlypoison
+    internal class Sim_CS2_074 : SimTemplate
+    {
+        // deadlypoison
 
-// eure waffe erhält +2 angriff.
+        // eure waffe erhält +2 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (ownplay)
             {
                 if (p.ownWeaponDurability >= 1)
@@ -49,7 +51,8 @@ namespace HREngine.Bots
                     p.enemyHero.Angr += 2;
                 }
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

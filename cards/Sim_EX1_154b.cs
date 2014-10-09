@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_154b.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_154 b.
+    ///     The sim_ e x 1_154 b.
     /// </summary>
-    class Sim_EX1_154b : SimTemplate
-	{
-	    // wrath
+    internal class Sim_EX1_154b : SimTemplate
+    {
+        // wrath
 
-// fügt einem diener $1 schaden zu. zieht eine karte.
+        // fügt einem diener $1 schaden zu. zieht eine karte.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -40,5 +41,7 @@ namespace HREngine.Bots
             p.minionGetDamageOrHeal(target, damage);
             p.drawACard(CardDB.cardName.unknown, ownplay);
         }
-	}
+
+        #endregion
+    }
 }

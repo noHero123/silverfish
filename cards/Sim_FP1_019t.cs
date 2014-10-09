@@ -9,11 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ f p 1_019 t.
+    ///     The sim_ f p 1_019 t.
     /// </summary>
-    class Sim_FP1_019t : SimTemplate
-	{
-	    // treant
-		
-	}
+    internal class Sim_FP1_019t : SimTemplate
+    {
+        // treant
+    }
 }

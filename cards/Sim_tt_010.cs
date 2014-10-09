@@ -9,18 +9,23 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_tt_010.
+    ///     The sim_tt_010.
     /// </summary>
-    class Sim_tt_010 : SimTemplate
+    internal class Sim_tt_010 : SimTemplate
     {
         // spellbender
         // todo secret
         // geheimnis:/ wenn ein feind einen zauber auf einen diener wirkt, ruft ihr einen diener (1/3) als neues ziel herbei.
+        #region Fields
 
         /// <summary>
-        /// The kid.
+        ///     The kid.
         /// </summary>
-        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.tt_010a);
+        private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.tt_010a);
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on secret play.
@@ -68,9 +73,8 @@ namespace HREngine.Bots
                     }
                 }
             }
-
         }
 
+        #endregion
     }
-
 }

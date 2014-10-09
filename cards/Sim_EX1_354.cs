@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_354.
+    ///     The sim_ e x 1_354.
     /// </summary>
-    class Sim_EX1_354 : SimTemplate
+    internal class Sim_EX1_354 : SimTemplate
     {
         // lay on hands
 
         // Stellt #8 Leben wieder her. Zieht 3 Karten.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -40,8 +42,8 @@ namespace HREngine.Bots
                 // this.owncarddraw++;
                 p.drawACard(CardDB.cardName.unknown, ownplay);
             }
-            
         }
 
+        #endregion
     }
 }

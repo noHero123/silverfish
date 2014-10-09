@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_155.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_155.
+    ///     The sim_ e x 1_155.
     /// </summary>
-    class Sim_EX1_155 : SimTemplate
-	{
-	    // markofnature
+    internal class Sim_EX1_155 : SimTemplate
+    {
+        // markofnature
 
-// wählt aus:/ verleiht einem diener +4 angriff; oder +4 leben und spott/.
+        // wählt aus:/ verleiht einem diener +4 angriff; oder +4 leben und spott/.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -32,7 +34,7 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             if (choice == 1)
             {
                 p.minionGetBuffed(target, 4, 0);
@@ -43,7 +45,8 @@ namespace HREngine.Bots
                 p.minionGetBuffed(target, 0, 4);
                 target.taunt = true;
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

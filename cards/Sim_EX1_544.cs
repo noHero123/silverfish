@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_544.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_544.
+    ///     The sim_ e x 1_544.
     /// </summary>
-    class Sim_EX1_544 : SimTemplate
+    internal class Sim_EX1_544 : SimTemplate
     {
         // flare
 
         // alle diener verlieren verstohlenheit/. zerstört alle feindlichen geheimnisse/. zieht eine karte.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -57,6 +58,6 @@ namespace HREngine.Bots
             p.drawACard(CardDB.cardName.unknown, ownplay);
         }
 
+        #endregion
     }
-
 }

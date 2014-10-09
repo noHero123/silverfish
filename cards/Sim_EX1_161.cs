@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_161.
+    ///     The sim_ e x 1_161.
     /// </summary>
-    class Sim_EX1_161 : SimTemplate
-	{
-	    // naturalize
+    internal class Sim_EX1_161 : SimTemplate
+    {
+        // naturalize
 
-// vernichtet einen diener. euer gegner zieht 2 karten.
+        // vernichtet einen diener. euer gegner zieht 2 karten.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on card play.
@@ -33,11 +34,12 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetDestroyed(target);
             p.drawACard(CardDB.cardName.unknown, !ownplay);
             p.drawACard(CardDB.cardName.unknown, !ownplay);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

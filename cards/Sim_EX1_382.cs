@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_382.
+    ///     The sim_ e x 1_382.
     /// </summary>
-    class Sim_EX1_382 : SimTemplate
-	{
-	    // aldorpeacekeeper
+    internal class Sim_EX1_382 : SimTemplate
+    {
+        // aldorpeacekeeper
 
-// kampfschrei:/ setzt den angriff eines feindlichen dieners auf 1.
+        // kampfschrei:/ setzt den angriff eines feindlichen dieners auf 1.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,9 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if(target != null) p.minionSetAngrToOne(target);
-		}
+        {
+            if (target != null)
+            {
+                p.minionSetAngrToOne(target);
+            }
+        }
 
-	}
+        #endregion
+    }
 }

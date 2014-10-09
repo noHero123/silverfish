@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_005.
+    ///     The sim_ e x 1_005.
     /// </summary>
-    class Sim_EX1_005 : SimTemplate
-	{
-	    // biggamehunter
+    internal class Sim_EX1_005 : SimTemplate
+    {
+        // biggamehunter
 
-// kampfschrei:/ vernichtet einen diener mit mind. 7 angriff.
+        // kampfschrei:/ vernichtet einen diener mit mind. 7 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,13 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if(target != null) p.minionGetDestroyed(target);
-		}
+        {
+            if (target != null)
+            {
+                p.minionGetDestroyed(target);
+            }
+        }
 
-
-	}
+        #endregion
+    }
 }

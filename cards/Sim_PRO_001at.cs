@@ -9,11 +9,10 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ pr o_001 at.
+    ///     The sim_ pr o_001 at.
     /// </summary>
-    class Sim_PRO_001at : SimTemplate
-	{
-	    // murloc
-		
-	}
+    internal class Sim_PRO_001at : SimTemplate
+    {
+        // murloc
+    }
 }

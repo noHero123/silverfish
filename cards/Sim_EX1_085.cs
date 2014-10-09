@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_085.cs" company="">
 //   
 // </copyright>
@@ -6,20 +6,21 @@
 //   The sim_ e x 1_085.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-
 namespace HREngine.Bots
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// The sim_ e x 1_085.
+    ///     The sim_ e x 1_085.
     /// </summary>
-    class Sim_EX1_085 : SimTemplate
+    internal class Sim_EX1_085 : SimTemplate
     {
         // mindcontroltech
         // todo list
 
         // kampfschrei:/ falls euer gegner mind. 4 diener hat, übernehmt zufällig die kontrolle über einen davon.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -70,5 +71,7 @@ namespace HREngine.Bots
                 }
             }
         }
+
+        #endregion
     }
 }

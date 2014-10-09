@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_603.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_603.
+    ///     The sim_ e x 1_603.
     /// </summary>
-    class Sim_EX1_603 : SimTemplate
-	{
-	    // crueltaskmaster
+    internal class Sim_EX1_603 : SimTemplate
+    {
+        // crueltaskmaster
 
-// kampfschrei:/ fügt einem diener 1 schaden zu und verleiht ihm +2 angriff.
+        // kampfschrei:/ fügt einem diener 1 schaden zu und verleiht ihm +2 angriff.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,14 +34,14 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             if (target != null)
             {
                 p.minionGetDamageOrHeal(target, 1);
                 p.minionGetTempBuff(target, 2, 0);
             }
+        }
 
-		}
-
-	}
+        #endregion
+    }
 }

@@ -9,11 +9,13 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ ne w 1_038.
+    ///     The sim_ ne w 1_038.
     /// </summary>
-    class Sim_NEW1_038 : SimTemplate
+    internal class Sim_NEW1_038 : SimTemplate
     {
         // Gruul
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on turn ends trigger.
         /// </summary>
@@ -30,7 +32,7 @@ namespace HREngine.Bots
         {
             p.minionGetBuffed(triggerEffectMinion, 1, 1);
         }
-        
 
+        #endregion
     }
 }

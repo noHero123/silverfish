@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_019.
+    ///     The sim_ e x 1_019.
     /// </summary>
-    class Sim_EX1_019 : SimTemplate
+    internal class Sim_EX1_019 : SimTemplate
     {
         // shatteredsuncleric
 
         // kampfschrei:/ verleiht einem befreundeten diener +1/+1.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -33,9 +35,12 @@ namespace HREngine.Bots
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (target != null) p.minionGetBuffed(target, 1, 1);
+            if (target != null)
+            {
+                p.minionGetBuffed(target, 1, 1);
+            }
         }
 
-
+        #endregion
     }
 }

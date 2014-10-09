@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_586.cs" company="">
 //   
 // </copyright>
@@ -9,12 +9,12 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_586.
+    ///     The sim_ e x 1_586.
     /// </summary>
-    class Sim_EX1_586 : SimTemplate
-	{
-	    // seagiant
+    internal class Sim_EX1_586 : SimTemplate
+    {
+        // seagiant
 
-// kostet (1) weniger für jeden anderen diener auf dem schlachtfeld.
-	}
+        // kostet (1) weniger für jeden anderen diener auf dem schlachtfeld.
+    }
 }

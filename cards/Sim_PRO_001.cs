@@ -9,13 +9,15 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ pr o_001.
+    ///     The sim_ pr o_001.
     /// </summary>
-    class Sim_PRO_001 : SimTemplate
-	{
-	    // elitetaurenchieftain
+    internal class Sim_PRO_001 : SimTemplate
+    {
+        // elitetaurenchieftain
 
-// kampfschrei:/ verleiht beiden spielern die macht des rock! (durch eine powerakkordkarte)
+        // kampfschrei:/ verleiht beiden spielern die macht des rock! (durch eine powerakkordkarte)
+        #region Public Methods and Operators
+
         /// <summary>
         /// The get battlecry effect.
         /// </summary>
@@ -32,10 +34,11 @@ namespace HREngine.Bots
         /// The choice.
         /// </param>
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
+        {
             p.drawACard(CardDB.cardName.roguesdoit, true, true);
             p.drawACard(CardDB.cardName.roguesdoit, false, true);
-		}
+        }
 
-	}
+        #endregion
+    }
 }

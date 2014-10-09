@@ -9,9 +9,9 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ c s 2_231.
+    ///     The sim_ c s 2_231.
     /// </summary>
-    class Sim_CS2_231 : SimTemplate
+    internal class Sim_CS2_231 : SimTemplate
     {
         // wisp
     }

@@ -9,14 +9,16 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_365.
+    ///     The sim_ e x 1_365.
     /// </summary>
-    class Sim_EX1_365 : SimTemplate
+    internal class Sim_EX1_365 : SimTemplate
     {
         // holywrath
         // todo ask the posibility manager!
 
         // zieht eine karte und verursacht schaden, der ihren kosten entspricht.
+        #region Public Methods and Operators
+
         /// <summary>
         /// The on card play.
         /// </summary>
@@ -39,5 +41,7 @@ namespace HREngine.Bots
             int dmg = ownplay ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
             p.minionGetDamageOrHeal(target, dmg);
         }
+
+        #endregion
     }
 }

@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Sim_EX1_531.cs" company="">
 //   
 // </copyright>
@@ -9,13 +9,14 @@
 namespace HREngine.Bots
 {
     /// <summary>
-    /// The sim_ e x 1_531.
+    ///     The sim_ e x 1_531.
     /// </summary>
-    class Sim_EX1_531 : SimTemplate
-	{
-	    // scavenginghyena
+    internal class Sim_EX1_531 : SimTemplate
+    {
+        // scavenginghyena
 
-// erhält jedes mal +2/+1, wenn ein befreundetes wildtier stirbt.
+        // erhält jedes mal +2/+1, wenn ein befreundetes wildtier stirbt.
+        #region Public Methods and Operators
 
         /// <summary>
         /// The on minion died trigger.
@@ -37,5 +38,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }
