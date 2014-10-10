@@ -586,12 +586,14 @@ namespace SilverfishRush
             Helpfunctions.Instance.ErrorLog("handle mulligan");
             List<HSCard> list = TritonHS.GetMulliganCards();
 
-            if (Mulligan.Instance.hasmulliganrules())
+            HSCard enemyPlayer = TritonHS.EnemyHero;
+            HSCard ownPlayer = TritonHS.OurHero;
+            string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.Id);
+            string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.Id);
+
+            if (Mulligan.Instance.hasmulliganrules(ownName, enemName))
             {
-                HSCard enemyPlayer = TritonHS.EnemyHero;
-                HSCard ownPlayer = TritonHS.OurHero;
-                string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.Id);
-                string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.Id);
+
                 List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
                 foreach (HSCard item in list)
                 {
@@ -645,7 +647,7 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "113";
+        public string versionnumber = "113.2";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -13786,10 +13788,19 @@ namespace SilverfishRush
 
         }
 
-        public bool hasmulliganrules()
+        public bool hasmulliganrules(string ownclass, string enemclass)
         {
             if (this.holdlist.Count == 0 && this.deletelist.Count == 0) return false;
-            return true;
+            bool hasARule = false;
+            foreach (mulliitem mi in this.holdlist)
+            {
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass)) hasARule = true;
+            }
+            foreach (mulliitem mi in this.deletelist)
+            {
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass)) hasARule = true;
+            }
+            return hasARule;
         }
 
         public List<int> whatShouldIMulligan(List<CardIDEntity> cards, string ownclass, string enemclass)

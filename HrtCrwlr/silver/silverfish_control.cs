@@ -501,23 +501,24 @@ namespace HREngine.Bots
             {
                 return new HREngine.API.Actions.MakeNothingAction();
             }
+            //Helpfunctions.Instance.ErrorLog("handle mulligan");
+
             if ((TAG_MULLIGAN)HRPlayer.GetLocalPlayer().GetTag(HRGameTag.MULLIGAN_STATE) != TAG_MULLIGAN.INPUT)
             {
                 //Helpfunctions.Instance.ErrorLog("but we have to wait :D");
                 return null;
             }
-            
+
             if (HRMulligan.IsMulliganActive())
             {
-                Helpfunctions.Instance.ErrorLog("handle mulligan...");
-
                 var list = HRCard.GetCards(HRPlayer.GetLocalPlayer(), HRCardZone.HAND);
-                if (Mulligan.Instance.hasmulliganrules())
+                HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
+                HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
+                string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
+                string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.GetHeroCard().GetEntity().GetCardId());
+                if (Mulligan.Instance.hasmulliganrules(ownName, enemName))
                 {
-                    HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
-                    HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
-                    string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
-                    string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.GetHeroCard().GetEntity().GetCardId());
+
                     List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
                     foreach (var item in list)
                     {
@@ -562,11 +563,6 @@ namespace HREngine.Bots
 
                 if (Mulligan.Instance.loserLoserLoser)
                 {
-                    Helpfunctions.Instance.ErrorLog("concede check...");
-                    HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
-                    HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
-                    string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
-                    string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.GetHeroCard().GetEntity().GetCardId());
                     if (!autoconcede())
                     {
                         concedeVSenemy(ownName, enemName);
@@ -1008,7 +1004,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "113.1";
+        public string versionnumber = "113.2";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -14212,10 +14208,19 @@ namespace HREngine.Bots
 
         }
 
-        public bool hasmulliganrules()
+        public bool hasmulliganrules(string ownclass, string enemclass)
         {
             if (this.holdlist.Count == 0 && this.deletelist.Count == 0) return false;
-            return true;
+            bool hasARule = false;
+            foreach (mulliitem mi in this.holdlist)
+            {
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass)) hasARule = true;
+            }
+            foreach (mulliitem mi in this.deletelist)
+            {
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass)) hasARule = true;
+            }
+            return hasARule;
         }
 
         public List<int> whatShouldIMulligan(List<CardIDEntity> cards, string ownclass, string enemclass)
