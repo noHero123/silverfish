@@ -750,107 +750,39 @@ namespace HREngine.Bots
                         }
 
                         // optional params (bools)
-                        bool ex = false; // exhausted
-                        if (s.Contains(" ex"))
-                        {
-                            ex = true;
-                        }
+                        bool ex = s.Contains(" ex");
 
-                        bool taunt = false;
-                        if (s.Contains(" tnt"))
-                        {
-                            taunt = true;
-                        }
+                        bool taunt = s.Contains(" tnt");
 
-                        bool frzn = false;
-                        if (s.Contains(" frz"))
-                        {
-                            frzn = true;
-                        }
+                        bool frzn = s.Contains(" frz");
 
-                        bool silenced = false;
-                        if (s.Contains(" silenced"))
-                        {
-                            silenced = true;
-                        }
+                        bool silenced = s.Contains(" silenced");
 
-                        bool divshield = false;
-                        if (s.Contains(" divshield"))
-                        {
-                            divshield = true;
-                        }
+                        bool divshield = s.Contains(" divshield");
 
-                        bool ptt = false; // played this turn
-                        if (s.Contains(" ptt"))
-                        {
-                            ptt = true;
-                        }
+                        bool ptt = s.Contains(" ptt");
 
-                        bool wndfry = false; // windfurry
-                        if (s.Contains(" wndfr"))
-                        {
-                            wndfry = true;
-                        }
+                        bool wndfry = s.Contains(" wndfr");
 
-                        bool stl = false; // stealth
-                        if (s.Contains(" stlth"))
-                        {
-                            stl = true;
-                        }
+                        bool stl = s.Contains(" stlth");
 
-                        bool pois = false; // poision
-                        if (s.Contains(" poi"))
-                        {
-                            pois = true;
-                        }
+                        bool pois = s.Contains(" poi");
 
-                        bool immn = false; // immune
-                        if (s.Contains(" imm"))
-                        {
-                            immn = true;
-                        }
+                        bool immn = s.Contains(" imm");
 
-                        bool cncdl = false; // concedal buffed
-                        if (s.Contains(" cncdl"))
-                        {
-                            cncdl = true;
-                        }
+                        bool cncdl = s.Contains(" cncdl");
 
-                        bool destroyOnOwnTurnStart = false; // destroyOnOwnTurnStart
-                        if (s.Contains(" dstrOwnTrnStrt"))
-                        {
-                            destroyOnOwnTurnStart = true;
-                        }
+                        bool destroyOnOwnTurnStart = s.Contains(" dstrOwnTrnStrt");
 
-                        bool destroyOnOwnTurnEnd = false; // destroyOnOwnTurnEnd
-                        if (s.Contains(" dstrOwnTrnnd"))
-                        {
-                            destroyOnOwnTurnEnd = true;
-                        }
+                        bool destroyOnOwnTurnEnd = s.Contains(" dstrOwnTrnnd");
 
-                        bool destroyOnEnemyTurnStart = false; // destroyOnEnemyTurnStart
-                        if (s.Contains(" dstrEnmTrnStrt"))
-                        {
-                            destroyOnEnemyTurnStart = true;
-                        }
+                        bool destroyOnEnemyTurnStart = s.Contains(" dstrEnmTrnStrt");
 
-                        bool destroyOnEnemyTurnEnd = false; // destroyOnEnemyTurnEnd
-                        if (s.Contains(" dstrEnmTrnnd"))
-                        {
-                            destroyOnEnemyTurnEnd = true;
-                        }
+                        bool destroyOnEnemyTurnEnd = s.Contains(" dstrEnmTrnnd");
 
-                        bool shadowmadnessed = false; // shadowmadnessed
-                        if (s.Contains(" shdwmdnssd"))
-                        {
-                            shadowmadnessed = true;
-                        }
+                        bool shadowmadnessed = s.Contains(" shdwmdnssd");
 
-                        bool cntlower = false; // shadowmadnessed
-                        if (s.Contains(" cantLowerHpBelowOne"))
-                        {
-                            cntlower = true;
-                        }
+                        bool cntlower = s.Contains(" cantLowerHpBelowOne");
 
                         // optional params (ints)
                         int chrg = 0; // charge

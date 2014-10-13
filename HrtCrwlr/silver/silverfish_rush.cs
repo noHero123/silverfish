@@ -501,6 +501,8 @@ namespace HREngine.Bots
             {
                 return new HREngine.API.Actions.MakeNothingAction();
             }
+            //Helpfunctions.Instance.ErrorLog("handle mulligan");
+
             if ((TAG_MULLIGAN)HRPlayer.GetLocalPlayer().GetTag(HRGameTag.MULLIGAN_STATE) != TAG_MULLIGAN.INPUT)
             {
                 //Helpfunctions.Instance.ErrorLog("but we have to wait :D");
@@ -509,15 +511,14 @@ namespace HREngine.Bots
 
             if (HRMulligan.IsMulliganActive())
             {
-                Helpfunctions.Instance.ErrorLog("handle mulligan...");
-
                 var list = HRCard.GetCards(HRPlayer.GetLocalPlayer(), HRCardZone.HAND);
-                if (Mulligan.Instance.hasmulliganrules())
+                HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
+                HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
+                string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
+                string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.GetHeroCard().GetEntity().GetCardId());
+                if (Mulligan.Instance.hasmulliganrules(ownName, enemName))
                 {
-                    HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
-                    HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
-                    string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
-                    string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.GetHeroCard().GetEntity().GetCardId());
+
                     List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
                     foreach (var item in list)
                     {
@@ -562,11 +563,6 @@ namespace HREngine.Bots
 
                 if (Mulligan.Instance.loserLoserLoser)
                 {
-                    Helpfunctions.Instance.ErrorLog("concede check...");
-                    HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
-                    HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
-                    string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
-                    string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.GetHeroCard().GetEntity().GetCardId());
                     if (!autoconcede())
                     {
                         concedeVSenemy(ownName, enemName);
@@ -1008,7 +1004,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "113.1";
+        public string versionnumber = "113.3";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -14044,7 +14040,7 @@ namespace HREngine.Bots
             public int howmuch = 2;
             public string[] requiresCard = null;
             public int manarule = -1;
-
+            public string rulestring = "";
             public mulliitem(string id, string own, string enemy, int number, string[] req = null, int mrule = -1)
             {
                 this.cardid = id;
@@ -14054,6 +14050,18 @@ namespace HREngine.Bots
                 this.requiresCard = req;
                 this.manarule = mrule;
             }
+
+            public mulliitem(string all, string id, string own, string enemy, int number, string[] req = null, int mrule = -1)
+            {
+                this.cardid = id;
+                this.ownclass = own;
+                this.enemyclass = enemy;
+                this.howmuch = number;
+                this.requiresCard = req;
+                this.manarule = mrule;
+                this.rulestring = all;
+            }
+
         }
 
         class concedeItem
@@ -14147,24 +14155,24 @@ namespace HREngine.Bots
                             {
                                 if ((crd.Split(':')).Length == 3)
                                 {
-                                    this.holdlist.Add(new mulliitem(crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1]), crd.Split(':')[2].Split('/')));
+                                    this.holdlist.Add(new mulliitem(line, crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1]), crd.Split(':')[2].Split('/')));
                                 }
                                 else
                                 {
-                                    this.holdlist.Add(new mulliitem(crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1])));
+                                    this.holdlist.Add(new mulliitem(line, crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1])));
                                 }
 
                             }
                             else
                             {
-                                this.holdlist.Add(new mulliitem(crd, ownclass, enemyclass, 2));
+                                this.holdlist.Add(new mulliitem(line, crd, ownclass, enemyclass, 2));
                             }
                         }
 
                         if (line.Split(';').Length == 5)
                         {
                             int manarule = Convert.ToInt32(line.Split(';')[4]);
-                            this.holdlist.Add(new mulliitem("#MANARULE", ownclass, enemyclass, 2, null, manarule));
+                            this.holdlist.Add(new mulliitem(line, "#MANARULE", ownclass, enemyclass, 2, null, manarule));
                         }
 
                     }
@@ -14186,13 +14194,13 @@ namespace HREngine.Bots
                             foreach (string crd in cardlist.Split(','))
                             {
                                 if (crd == null || crd == "") continue;
-                                this.deletelist.Add(new mulliitem(crd, ownclass, enemyclass, 2));
+                                this.deletelist.Add(new mulliitem(line, crd, ownclass, enemyclass, 2));
                             }
 
                             if (line.Split(';').Length == 5)
                             {
                                 int manarule = Convert.ToInt32(line.Split(';')[4]);
-                                this.deletelist.Add(new mulliitem("#MANARULE", ownclass, enemyclass, 2, null, manarule));
+                                this.deletelist.Add(new mulliitem(line, "#MANARULE", ownclass, enemyclass, 2, null, manarule));
                             }
 
                         }
@@ -14212,10 +14220,29 @@ namespace HREngine.Bots
 
         }
 
-        public bool hasmulliganrules()
+        public bool hasmulliganrules(string ownclass, string enemclass)
         {
             if (this.holdlist.Count == 0 && this.deletelist.Count == 0) return false;
-            return true;
+            bool hasARule = false;
+            foreach (mulliitem mi in this.holdlist)
+            {
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass)) hasARule = true;
+            }
+            foreach (mulliitem mi in this.deletelist)
+            {
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass)) hasARule = true;
+            }
+            return hasARule;
+        }
+
+        public bool hasHoldListRule(string ownclass, string enemclass)
+        {
+            bool hasARule = false;
+            foreach (mulliitem mi in this.holdlist)
+            {
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass)) hasARule = true;
+            }
+            return hasARule;
         }
 
         public List<int> whatShouldIMulligan(List<CardIDEntity> cards, string ownclass, string enemclass)
@@ -14231,6 +14258,7 @@ namespace HREngine.Bots
                         if (CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(c.id)).cost >= mi.manarule)
                         {
                             if (discarditems.Contains(c.entitiy)) continue;
+                            Helpfunctions.Instance.ErrorLog("discard " + c.id + " because of this rule " + mi.rulestring);
                             discarditems.Add(c.entitiy);
                         }
                         continue;
@@ -14239,12 +14267,13 @@ namespace HREngine.Bots
                     if (c.id == mi.cardid && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
                     {
                         if (discarditems.Contains(c.entitiy)) continue;
+                        Helpfunctions.Instance.ErrorLog("discard " + c.id + " because of this rule " + mi.rulestring);
                         discarditems.Add(c.entitiy);
                     }
                 }
             }
 
-            if (holdlist.Count == 0) return discarditems;
+            if (holdlist.Count == 0 || !hasHoldListRule(ownclass, enemclass)) return discarditems;
 
             Dictionary<string, int> holddic = new Dictionary<string, int>();
             foreach (CardIDEntity c in cards)

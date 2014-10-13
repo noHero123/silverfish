@@ -297,8 +297,7 @@ namespace HREngine.Bots
             if (simulateTwoTurns && bestplay.value > -1000)
             {
                 bestplay.prepareNextTurn(true);
-                rootfield.value = 0.5f * bestval
-                                  + 0.5f * Ai.Instance.nextTurnSimulator[this.thread].doallmoves(bestplay, false, print);
+                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator[this.thread].doallmoves(bestplay, false, print);
             }
         }
 
