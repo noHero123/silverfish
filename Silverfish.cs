@@ -18,6 +18,7 @@ namespace HREngine.Bots
     /// </summary>
     public class Silverfish
     {
+<<<<<<< HEAD
         #region Fields
 
         /// <summary>

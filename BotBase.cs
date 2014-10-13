@@ -440,13 +440,14 @@ namespace HREngine.Bots
 
             if (HRMulligan.IsMulliganActive())
             {
-                List<HRCard> list = HRCard.GetCards(HRPlayer.GetLocalPlayer(), HRCardZone.HAND);
-                if (Mulligan.Instance.hasmulliganrules())
+                var list = HRCard.GetCards(HRPlayer.GetLocalPlayer(), HRCardZone.HAND);
+                HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
+                HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
+                string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
+                string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.GetHeroCard().GetEntity().GetCardId());
+                if (Mulligan.Instance.hasmulliganrules(ownName, enemName))
                 {
-                    HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
-                    HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
-                    string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
-                    string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.GetHeroCard().GetEntity().GetCardId());
+                    
                     List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
                     foreach (HRCard item in list)
                     {
@@ -496,11 +497,7 @@ namespace HREngine.Bots
                 // writeSettings();
                 if (Mulligan.Instance.loserLoserLoser)
                 {
-                    HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
-                    HRPlayer ownPlayer = HRPlayer.GetLocalPlayer();
-                    string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
-                    string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.GetHeroCard().GetEntity().GetCardId());
-                    if (!this.autoconcede())
+                    if (!autoconcede())
                     {
                         this.concedeVSenemy(ownName, enemName);
                     }
