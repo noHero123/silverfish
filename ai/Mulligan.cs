@@ -1,73 +1,65 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Mulligan.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The mulligan.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+
 namespace HREngine.Bots
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-
-    /// <summary>
-    ///     The mulligan.
-    /// </summary>
     public class Mulligan
     {
-        #region Static Fields
-
-        /// <summary>
-        ///     The instance.
-        /// </summary>
-        private static Mulligan instance;
-
-        #endregion
-
-        #region Fields
-
-        /// <summary>
-        ///     The loser loser loser.
-        /// </summary>
-        public bool loserLoserLoser = false;
-
-        /// <summary>
-        ///     The concedelist.
-        /// </summary>
-        private List<concedeItem> concedelist = new List<concedeItem>();
-
-        /// <summary>
-        ///     The deletelist.
-        /// </summary>
-        private List<mulliitem> deletelist = new List<mulliitem>();
-
-        /// <summary>
-        ///     The holdlist.
-        /// </summary>
-        private List<mulliitem> holdlist = new List<mulliitem>();
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>
-        /// Verhindert, dass eine Standardinstanz der <see cref="Mulligan"/> Klasse erstellt wird. 
-        ///     Prevents a default instance of the <see cref="Mulligan"/> class from being created.
-        /// </summary>
-        private Mulligan()
+        public class CardIDEntity
         {
-            this.readCombos();
+            public string id = "";
+            public int entitiy = 0;
+            public CardIDEntity(string id, int entt)
+            {
+                this.id = id;
+                this.entitiy = entt;
+            }
         }
 
-        #endregion
+        class mulliitem
+        {
+            public string cardid = "";
+            public string enemyclass = "";
+            public string ownclass = "";
+            public int howmuch = 2;
+            public string[] requiresCard;
+            public int manarule = -1;
+            public string rulestring = "";
+            public mulliitem(string id, string own, string enemy, int number, string[] req = null, int mrule = -1)
+            {
+                this.cardid = id;
+                this.ownclass = own;
+                this.enemyclass = enemy;
+                this.howmuch = number;
+                this.requiresCard = req;
+                this.manarule = mrule;
+            }
 
-        #region Public Properties
+            public mulliitem(string all, string id, string own, string enemy, int number, string[] req = null, int mrule = -1)
+            {
+                this.cardid = id;
+                this.ownclass = own;
+                this.enemyclass = enemy;
+                this.howmuch = number;
+                this.requiresCard = req;
+                this.manarule = mrule;
+                this.rulestring = all;
+            }
+        }
 
-        /// <summary>
-        ///     Gets the instance.
-        /// </summary>
+        class concedeItem
+        {
+            public HeroEnum urhero = HeroEnum.None;
+            public List<HeroEnum> enemhero = new List<HeroEnum>();
+        }
+
+        List<mulliitem> holdlist = new List<mulliitem>();
+        List<mulliitem> deletelist = new List<mulliitem>();
+        List<concedeItem> concedelist = new List<concedeItem>();
+        public bool loserLoserLoser = false;
+
+        private static Mulligan instance;
+
         public static Mulligan Instance
         {
             get
@@ -76,77 +68,191 @@ namespace HREngine.Bots
             }
         }
 
-        #endregion
+        private Mulligan()
+        {
+            readCombos();
+        }
 
-        #region Public Methods and Operators
+        private void readCombos()
+        {
+            string[] lines;
+            this.holdlist.Clear();
+            this.deletelist.Clear();
+            try
+            {
+                string path = Settings.Instance.path;
+                lines = System.IO.File.ReadAllLines(path + "_mulligan.txt");
+            }
+            catch
+            {
+                Helpfunctions.Instance.logg("cant find _mulligan.txt");
+                Helpfunctions.Instance.ErrorLog("cant find _mulligan.txt (if you dont created your own mulliganfile, ignore this message)");
+                return;
+            }
 
-        /// <summary>
-        ///     The hasmulliganrules.
-        /// </summary>
-        /// <returns>
-        ///     The <see cref="bool" />.
-        /// </returns>
-        public bool hasmulliganrules()
+            Helpfunctions.Instance.logg("read _mulligan.txt...");
+            Helpfunctions.Instance.ErrorLog("read _mulligan.txt...");
+            foreach (string line in lines)
+            {
+                if (line.StartsWith("loser"))
+                {
+                    this.loserLoserLoser = true;
+                    continue;
+                }
+
+                if (line.StartsWith("concede:"))
+                {
+                    try
+                    {
+                        string ownh = line.Split(':')[1];
+                        concedeItem ci = new concedeItem { urhero = Hrtprozis.Instance.heroNametoEnum(ownh) };
+                        string enemlist = line.Split(':')[2];
+                        foreach (string s in enemlist.Split(','))
+                        {
+                            ci.enemhero.Add(Hrtprozis.Instance.heroNametoEnum(s));
+                        }
+
+                        concedelist.Add(ci);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.logg("mullimaker cant read: " + line);
+                        Helpfunctions.Instance.ErrorLog("mullimaker cant read: " + line);
+                    }
+
+                    continue;
+                }
+
+                if (line.StartsWith("hold;"))
+                {
+                    try
+                    {
+                        string ownclass = line.Split(';')[1];
+                        string enemyclass = line.Split(';')[2];
+                        string cardlist = line.Split(';')[3];
+                        foreach (string crd in cardlist.Split(','))
+                        {
+                            if (crd.Contains(":"))
+                            {
+                                this.holdlist.Add(
+                                    crd.Split(':').Length == 3
+                                        ? new mulliitem(
+                                              line,
+                                              crd.Split(':')[0],
+                                              ownclass,
+                                              enemyclass,
+                                              Convert.ToInt32(crd.Split(':')[1]),
+                                              crd.Split(':')[2].Split('/'))
+                                        : new mulliitem(
+                                              line,
+                                              crd.Split(':')[0],
+                                              ownclass,
+                                              enemyclass,
+                                              Convert.ToInt32(crd.Split(':')[1])));
+                            }
+                            else
+                            {
+                                this.holdlist.Add(new mulliitem(line, crd, ownclass, enemyclass, 2));
+                            }
+                        }
+
+                        if (line.Split(';').Length == 5)
+                        {
+                            int manarule = Convert.ToInt32(line.Split(';')[4]);
+                            this.holdlist.Add(new mulliitem(line, "#MANARULE", ownclass, enemyclass, 2, null, manarule));
+                        }
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.logg("mullimaker cant read: " + line);
+                        Helpfunctions.Instance.ErrorLog("mullimaker cant read: " + line);
+                    }
+                }
+                else
+                {
+                    if (line.StartsWith("discard;"))
+                    {
+                        try
+                        {
+                            string ownclass = line.Split(';')[1];
+                            string enemyclass = line.Split(';')[2];
+                            string cardlist = line.Split(';')[3];
+                            foreach (string crd in cardlist.Split(','))
+                            {
+                                if (string.IsNullOrEmpty(crd))
+                                {
+                                    continue;
+                                }
+
+                                this.deletelist.Add(new mulliitem(line, crd, ownclass, enemyclass, 2));
+                            }
+
+                            if (line.Split(';').Length == 5)
+                            {
+                                int manarule = Convert.ToInt32(line.Split(';')[4]);
+                                this.deletelist.Add(new mulliitem(line, "#MANARULE", ownclass, enemyclass, 2, null, manarule));
+                            }
+                        }
+                        catch
+                        {
+                            Helpfunctions.Instance.logg("mullimaker cant read: " + line);
+                            Helpfunctions.Instance.ErrorLog("mullimaker cant read: " + line);
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+            }
+
+        }
+
+        public bool hasmulliganrules(string ownclass, string enemclass)
         {
             if (this.holdlist.Count == 0 && this.deletelist.Count == 0)
             {
                 return false;
             }
 
-            return true;
-        }
-
-        /// <summary>
-        /// The set auto concede.
-        /// </summary>
-        /// <param name="mode">
-        /// The mode.
-        /// </param>
-        public void setAutoConcede(bool mode)
-        {
-            this.loserLoserLoser = mode;
-        }
-
-        /// <summary>
-        /// The should concede.
-        /// </summary>
-        /// <param name="ownhero">
-        /// The ownhero.
-        /// </param>
-        /// <param name="enemHero">
-        /// The enem hero.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        public bool shouldConcede(HeroEnum ownhero, HeroEnum enemHero)
-        {
-            foreach (concedeItem ci in this.concedelist)
+            bool hasARule = false;
+            foreach (mulliitem mi in this.holdlist)
             {
-                if (ci.urhero == ownhero && ci.enemhero.Contains(enemHero))
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass)
+                    && (mi.ownclass == "all" || mi.ownclass == ownclass))
                 {
-                    return true;
+                    hasARule = true;
                 }
             }
 
-            return false;
+            foreach (mulliitem mi in this.deletelist)
+            {
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass)
+                    && (mi.ownclass == "all" || mi.ownclass == ownclass))
+                {
+                    hasARule = true;
+                }
+            }
+
+            return hasARule;
         }
 
-        /// <summary>
-        /// The what should i mulligan.
-        /// </summary>
-        /// <param name="cards">
-        /// The cards.
-        /// </param>
-        /// <param name="ownclass">
-        /// The ownclass.
-        /// </param>
-        /// <param name="enemclass">
-        /// The enemclass.
-        /// </param>
-        /// <returns>
-        /// The <see cref="List"/>.
-        /// </returns>
+        public bool hasHoldListRule(string ownclass, string enemclass)
+        {
+            bool hasARule = false;
+            foreach (mulliitem mi in this.holdlist)
+            {
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass)
+                    && (mi.ownclass == "all" || mi.ownclass == ownclass))
+                {
+                    hasARule = true;
+                }
+            }
+
+            return hasARule;
+        }
+
         public List<int> whatShouldIMulligan(List<CardIDEntity> cards, string ownclass, string enemclass)
         {
             List<int> discarditems = new List<int>();
@@ -155,37 +261,36 @@ namespace HREngine.Bots
             {
                 foreach (CardIDEntity c in cards)
                 {
-                    if (mi.cardid == "#MANARULE" && (mi.enemyclass == "all" || mi.enemyclass == enemclass)
-                        && (mi.ownclass == "all" || mi.ownclass == ownclass))
+                    if (mi.cardid == "#MANARULE" && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
                     {
-                        if (CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(c.id)).cost
-                            >= mi.manarule)
+                        if (CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(c.id)).cost >= mi.manarule)
                         {
                             if (discarditems.Contains(c.entitiy))
                             {
                                 continue;
                             }
 
+                            Helpfunctions.Instance.ErrorLog(
+                                "discard " + c.id + " because of this rule " + mi.rulestring);
                             discarditems.Add(c.entitiy);
                         }
-
                         continue;
                     }
 
-                    if (c.id == mi.cardid && (mi.enemyclass == "all" || mi.enemyclass == enemclass)
-                        && (mi.ownclass == "all" || mi.ownclass == ownclass))
+                    if (c.id == mi.cardid && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
                     {
                         if (discarditems.Contains(c.entitiy))
                         {
                             continue;
                         }
 
+                        Helpfunctions.Instance.ErrorLog("discard " + c.id + " because of this rule " + mi.rulestring);
                         discarditems.Add(c.entitiy);
                     }
                 }
             }
 
-            if (this.holdlist.Count == 0)
+            if (holdlist.Count == 0 || !hasHoldListRule(ownclass, enemclass))
             {
                 return discarditems;
             }
@@ -196,66 +301,65 @@ namespace HREngine.Bots
                 bool delete = true;
                 foreach (mulliitem mi in this.holdlist)
                 {
-                    if (mi.cardid == "#MANARULE" && (mi.enemyclass == "all" || mi.enemyclass == enemclass)
-                        && (mi.ownclass == "all" || mi.ownclass == ownclass))
+                    if (mi.cardid == "#MANARULE" && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
                     {
-                        if (CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(c.id)).cost
-                            <= mi.manarule)
+                        if (CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(c.id)).cost <= mi.manarule)
                         {
                             delete = false;
                         }
-
                         continue;
                     }
 
-                    if (c.id == mi.cardid && (mi.enemyclass == "all" || mi.enemyclass == enemclass)
-                        && (mi.ownclass == "all" || mi.ownclass == ownclass))
+                    if (c.id != mi.cardid || (mi.enemyclass != "all" && mi.enemyclass != enemclass)
+                        || (mi.ownclass != "all" && mi.ownclass != ownclass))
                     {
-                        if (mi.requiresCard == null)
+                        continue;
+                    }
+
+                    if (mi.requiresCard == null)
+                    {
+                        if (holddic.ContainsKey(c.id)) // we are holding one of the cards
                         {
-                            if (holddic.ContainsKey(c.id))
-                            {
-                                // we are holding one of the cards
-                                if (mi.howmuch == 2)
-                                {
-                                    delete = false;
-                                }
-                            }
-                            else
+                            if (mi.howmuch == 2)
                             {
                                 delete = false;
                             }
                         }
                         else
                         {
-                            bool hasRequirements = false;
-                            foreach (CardIDEntity reqs in cards)
+                            delete = false;
+                        }
+                    }
+                    else
+                    {
+                        bool hasRequirements = false;
+                        foreach (CardIDEntity reqs in cards)
+                        {
+                            foreach (string s in mi.requiresCard)
                             {
-                                foreach (string s in mi.requiresCard)
+                                if (s == reqs.id)
                                 {
-                                    if (s == reqs.id)
-                                    {
-                                        hasRequirements = true;
-                                        break;
-                                    }
+                                    hasRequirements = true;
+                                    break;
                                 }
                             }
+                        }
 
-                            if (hasRequirements)
+                        if (!hasRequirements)
+                        {
+                            continue;
+                        }
+
+                        if (holddic.ContainsKey(c.id)) // we are holding one of the cards
+                        {
+                            if (mi.howmuch == 2)
                             {
-                                if (holddic.ContainsKey(c.id))
-                                {
-                                    // we are holding one of the cards
-                                    if (mi.howmuch == 2)
-                                    {
-                                        delete = false;
-                                    }
-                                }
-                                else
-                                {
-                                    delete = false;
-                                }
+                                delete = false;
                             }
+                        }
+                        else
+                        {
+                            delete = false;
                         }
                     }
                 }
@@ -287,284 +391,22 @@ namespace HREngine.Bots
             return discarditems;
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        ///     The read combos.
-        /// </summary>
-        private void readCombos()
+        public void setAutoConcede(bool mode)
         {
-            string[] lines = { };
-            this.holdlist.Clear();
-            this.deletelist.Clear();
-            try
-            {
-                string path = Settings.Instance.path;
-                lines = File.ReadAllLines(path + "_mulligan.txt");
-            }
-            catch
-            {
-                Helpfunctions.Instance.logg("cant find _mulligan.txt");
-                Helpfunctions.Instance.ErrorLog(
-                    "cant find _mulligan.txt (if you dont created your own mulliganfile, ignore this message)");
-                return;
-            }
-
-            Helpfunctions.Instance.logg("read _mulligan.txt...");
-            Helpfunctions.Instance.ErrorLog("read _mulligan.txt...");
-            foreach (string line in lines)
-            {
-                if (line.StartsWith("loser"))
-                {
-                    this.loserLoserLoser = true;
-                    continue;
-                }
-
-                if (line.StartsWith("concede:"))
-                {
-                    try
-                    {
-                        string ownh = line.Split(':')[1];
-                        concedeItem ci = new concedeItem { urhero = Hrtprozis.Instance.heroNametoEnum(ownh) };
-                        string enemlist = line.Split(':')[2];
-                        foreach (string s in enemlist.Split(','))
-                        {
-                            ci.enemhero.Add(Hrtprozis.Instance.heroNametoEnum(s));
-                        }
-
-                        this.concedelist.Add(ci);
-                    }
-                    catch
-                    {
-                        Helpfunctions.Instance.logg("mullimaker cant read: " + line);
-                        Helpfunctions.Instance.ErrorLog("mullimaker cant read: " + line);
-                    }
-
-                    continue;
-                }
-
-                if (line.StartsWith("hold;"))
-                {
-                    try
-                    {
-                        string ownclass = line.Split(';')[1];
-                        string enemyclass = line.Split(';')[2];
-                        string cardlist = line.Split(';')[3];
-                        foreach (string crd in cardlist.Split(','))
-                        {
-                            if (crd.Contains(":"))
-                            {
-                                if (crd.Split(':').Length == 3)
-                                {
-                                    this.holdlist.Add(
-                                        new mulliitem(
-                                            crd.Split(':')[0], 
-                                            ownclass, 
-                                            enemyclass, 
-                                            Convert.ToInt32(crd.Split(':')[1]), 
-                                            crd.Split(':')[2].Split('/')));
-                                }
-                                else
-                                {
-                                    this.holdlist.Add(
-                                        new mulliitem(
-                                            crd.Split(':')[0], 
-                                            ownclass, 
-                                            enemyclass, 
-                                            Convert.ToInt32(crd.Split(':')[1])));
-                                }
-                            }
-                            else
-                            {
-                                this.holdlist.Add(new mulliitem(crd, ownclass, enemyclass, 2));
-                            }
-                        }
-
-                        if (line.Split(';').Length == 5)
-                        {
-                            int manarule = Convert.ToInt32(line.Split(';')[4]);
-                            this.holdlist.Add(new mulliitem("#MANARULE", ownclass, enemyclass, 2, null, manarule));
-                        }
-                    }
-                    catch
-                    {
-                        Helpfunctions.Instance.logg("mullimaker cant read: " + line);
-                        Helpfunctions.Instance.ErrorLog("mullimaker cant read: " + line);
-                    }
-                }
-                else
-                {
-                    if (line.StartsWith("discard;"))
-                    {
-                        try
-                        {
-                            string ownclass = line.Split(';')[1];
-                            string enemyclass = line.Split(';')[2];
-                            string cardlist = line.Split(';')[3];
-                            foreach (string crd in cardlist.Split(','))
-                            {
-                                if (crd == null || crd == string.Empty)
-                                {
-                                    continue;
-                                }
-
-                                this.deletelist.Add(new mulliitem(crd, ownclass, enemyclass, 2));
-                            }
-
-                            if (line.Split(';').Length == 5)
-                            {
-                                int manarule = Convert.ToInt32(line.Split(';')[4]);
-                                this.deletelist.Add(new mulliitem("#MANARULE", ownclass, enemyclass, 2, null, manarule));
-                            }
-                        }
-                        catch
-                        {
-                            Helpfunctions.Instance.logg("mullimaker cant read: " + line);
-                            Helpfunctions.Instance.ErrorLog("mullimaker cant read: " + line);
-                        }
-                    }
-                }
-            }
+            this.loserLoserLoser = mode;
         }
 
-        #endregion
-
-        /// <summary>
-        ///     The card id entity.
-        /// </summary>
-        public class CardIDEntity
+        public bool shouldConcede(HeroEnum ownhero, HeroEnum enemHero)
         {
-            #region Fields
-
-            /// <summary>
-            ///     The entitiy.
-            /// </summary>
-            public int entitiy = 0;
-
-            /// <summary>
-            ///     The id.
-            /// </summary>
-            public string id = string.Empty;
-
-            #endregion
-
-            #region Constructors and Destructors
-
-            /// <summary>
-            /// Initialisiert eine neue Instanz der <see cref="CardIDEntity"/> Klasse. 
-            /// Initializes a new instance of the <see cref="CardIDEntity"/> class.
-            /// </summary>
-            /// <param name="id">
-            /// The id.
-            /// </param>
-            /// <param name="entt">
-            /// The entt.
-            /// </param>
-            public CardIDEntity(string id, int entt)
+            foreach (concedeItem ci in concedelist)
             {
-                this.id = id;
-                this.entitiy = entt;
+                if (ci.urhero == ownhero && ci.enemhero.Contains(enemHero))
+                {
+                    return true;
+                }
             }
 
-            #endregion
-        }
-
-        /// <summary>
-        ///     The concede item.
-        /// </summary>
-        private class concedeItem
-        {
-            #region Fields
-
-            /// <summary>
-            ///     The enemhero.
-            /// </summary>
-            public List<HeroEnum> enemhero = new List<HeroEnum>();
-
-            /// <summary>
-            ///     The urhero.
-            /// </summary>
-            public HeroEnum urhero = HeroEnum.None;
-
-            #endregion
-        }
-
-        /// <summary>
-        ///     The mulliitem.
-        /// </summary>
-        private class mulliitem
-        {
-            #region Fields
-
-            /// <summary>
-            ///     The cardid.
-            /// </summary>
-            public string cardid = string.Empty;
-
-            /// <summary>
-            ///     The enemyclass.
-            /// </summary>
-            public string enemyclass = string.Empty;
-
-            /// <summary>
-            ///     The howmuch.
-            /// </summary>
-            public int howmuch = 2;
-
-            /// <summary>
-            ///     The manarule.
-            /// </summary>
-            public int manarule = -1;
-
-            /// <summary>
-            ///     The ownclass.
-            /// </summary>
-            public string ownclass = string.Empty;
-
-            /// <summary>
-            ///     The requires card.
-            /// </summary>
-            public string[] requiresCard;
-
-            #endregion
-
-            #region Constructors and Destructors
-
-            /// <summary>
-            /// Initialisiert eine neue Instanz der <see cref="mulliitem"/> Klasse. 
-            /// Initializes a new instance of the <see cref="mulliitem"/> class.
-            /// </summary>
-            /// <param name="id">
-            /// The id.
-            /// </param>
-            /// <param name="own">
-            /// The own.
-            /// </param>
-            /// <param name="enemy">
-            /// The enemy.
-            /// </param>
-            /// <param name="number">
-            /// The number.
-            /// </param>
-            /// <param name="req">
-            /// The req.
-            /// </param>
-            /// <param name="mrule">
-            /// The mrule.
-            /// </param>
-            public mulliitem(string id, string own, string enemy, int number, string[] req = null, int mrule = -1)
-            {
-                this.cardid = id;
-                this.ownclass = own;
-                this.enemyclass = enemy;
-                this.howmuch = number;
-                this.requiresCard = req;
-                this.manarule = mrule;
-            }
-
-            #endregion
+            return false;
         }
     }
 }
