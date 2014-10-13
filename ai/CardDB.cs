@@ -10810,9 +10810,6 @@ namespace HREngine.Bots
                     return cardIDEnum.XXX_001;
             }
 
-
-
-
             return cardIDEnum.None;
         }
 
@@ -10831,73 +10828,50 @@ namespace HREngine.Bots
             {
                 case "unknown":
                     return cardName.unknown;
-
                 case "hogger":
                     return cardName.hogger;
-
                 case "heigantheunclean":
                     return cardName.heigantheunclean;
-
                 case "necroticaura":
                     return cardName.necroticaura;
-
                 case "starfall":
                     return cardName.starfall;
-
                 case "barrel":
                     return cardName.barrel;
-
                 case "damagereflector":
                     return cardName.damagereflector;
-
                 case "edwinvancleef":
                     return cardName.edwinvancleef;
-
                 case "gothiktheharvester":
                     return cardName.gothiktheharvester;
-
                 case "perditionsblade":
                     return cardName.perditionsblade;
-
                 case "bloodsailraider":
                     return cardName.bloodsailraider;
-
                 case "guardianoficecrown":
                     return cardName.guardianoficecrown;
-
                 case "bloodmagethalnos":
                     return cardName.bloodmagethalnos;
-
                 case "rooted":
                     return cardName.rooted;
-
                 case "wisp":
                     return cardName.wisp;
-
                 case "rachelledavis":
                     return cardName.rachelledavis;
-
                 case "senjinshieldmasta":
                     return cardName.senjinshieldmasta;
-
                 case "totemicmight":
                     return cardName.totemicmight;
-
                 case "uproot":
                     return cardName.uproot;
-
                 case "opponentdisconnect":
                     return cardName.opponentdisconnect;
-
                 case "unrelentingrider":
                     return cardName.unrelentingrider;
-
                 case "shandoslesson":
                     return cardName.shandoslesson;
-
                 case "hemetnesingwary":
                     return cardName.hemetnesingwary;
-
                 case "decimate":
                     return cardName.decimate;
 
@@ -12831,14 +12805,7 @@ namespace HREngine.Bots
         /// </returns>
         public Card getCardDataFromID(cardIDEnum id)
         {
-            if (this.cardidToCardList.ContainsKey(id))
-            {
-                return this.cardidToCardList[id];
-
-                // return new Card(cardidToCardList[id]);
-            }
-
-            return this.unknownCard;
+            return this.cardidToCardList.ContainsKey(id) ? this.cardidToCardList[id] : this.unknownCard;
         }
 
         /// <summary>
@@ -12856,123 +12823,74 @@ namespace HREngine.Bots
             {
                 case cardIDEnum.NEW1_007b:
                     return new Sim_NEW1_007b();
-
-
                 case cardIDEnum.EX1_613:
                     return new Sim_EX1_613();
-
-
                 case cardIDEnum.EX1_133:
                     return new Sim_EX1_133();
-
-
                 case cardIDEnum.NEW1_018:
                     return new Sim_NEW1_018();
-
-
                 case cardIDEnum.EX1_012:
                     return new Sim_EX1_012();
-
-
                 case cardIDEnum.EX1_178a:
                     return new Sim_EX1_178a();
-
-
                 case cardIDEnum.CS2_231:
                     return new Sim_CS2_231();
-
-
                 case cardIDEnum.CS2_179:
                     return new Sim_CS2_179();
-
-
                 case cardIDEnum.EX1_244:
                     return new Sim_EX1_244();
-
-
                 case cardIDEnum.EX1_178b:
                     return new Sim_EX1_178b();
-
-
                 case cardIDEnum.EX1_573b:
                     return new Sim_EX1_573b();
-
-
                 case cardIDEnum.NEW1_007a:
                     return new Sim_NEW1_007a();
-
-
                 case cardIDEnum.EX1_345t:
                     return new Sim_EX1_345t();
-
-
                 case cardIDEnum.FP1_007t:
                     return new Sim_FP1_007t();
-
-
                 case cardIDEnum.EX1_025:
                     return new Sim_EX1_025();
-
-
                 case cardIDEnum.EX1_396:
                     return new Sim_EX1_396();
-
-
                 case cardIDEnum.NEW1_017:
                     return new Sim_NEW1_017();
-
-
                 case cardIDEnum.NEW1_008a:
                     return new Sim_NEW1_008a();
-
-
                 case cardIDEnum.EX1_533:
                     return new Sim_EX1_533();
-
-
                 case cardIDEnum.EX1_522:
                     return new Sim_EX1_522();
-
 
                 // case CardDB.cardIDEnum.NAX11_04: return new Sim_NAX11_04();
                 case cardIDEnum.NEW1_026:
                     return new Sim_NEW1_026();
-
-
                 case cardIDEnum.EX1_398:
                     return new Sim_EX1_398();
-
 
                 // case CardDB.cardIDEnum.NAX4_04: return new Sim_NAX4_04();
                 case cardIDEnum.EX1_007:
                     return new Sim_EX1_007();
-
-
                 case cardIDEnum.CS1_112:
                     return new Sim_CS1_112();
-
                 case cardIDEnum.NEW1_036:
                     return new Sim_NEW1_036();
                 case cardIDEnum.EX1_258:
                     return new Sim_EX1_258();
                 case cardIDEnum.HERO_01:
                     return new Sim_HERO_01();
-
                 case cardIDEnum.CS2_087:
                     return new Sim_CS2_087();
                 case cardIDEnum.DREAM_05:
                     return new Sim_DREAM_05();
-
                 case cardIDEnum.CS2_092:
                     return new Sim_CS2_092();
                 case cardIDEnum.CS2_022:
                     return new Sim_CS2_022();
                 case cardIDEnum.EX1_046:
                     return new Sim_EX1_046();
-
                 case cardIDEnum.PRO_001b:
                     return new Sim_PRO_001b();
-
                 case cardIDEnum.PRO_001a:
                     return new Sim_PRO_001a();
                 case cardIDEnum.CS2_103:
@@ -12987,24 +12905,20 @@ namespace HREngine.Bots
                     return new Sim_NEW1_038();
                 case cardIDEnum.CS2_009:
                     return new Sim_CS2_009();
-
                 case cardIDEnum.EX1_010:
                     return new Sim_EX1_010();
                 case cardIDEnum.CS2_024:
                     return new Sim_CS2_024();
-
                 case cardIDEnum.EX1_565:
                     return new Sim_EX1_565();
                 case cardIDEnum.CS2_076:
                     return new Sim_CS2_076();
                 case cardIDEnum.FP1_004:
                     return new Sim_FP1_004();
-
                 case cardIDEnum.CS2_162:
                     return new Sim_CS2_162();
                 case cardIDEnum.EX1_110t:
                     return new Sim_EX1_110t();
-
                 case cardIDEnum.CS2_181:
                     return new Sim_CS2_181();
                 case cardIDEnum.EX1_309:
@@ -13033,7 +12947,6 @@ namespace HREngine.Bots
                     return new Sim_FP1_021();
                 case cardIDEnum.EX1_411:
                     return new Sim_EX1_411();
-
                 case cardIDEnum.CS2_053:
                     return new Sim_CS2_053();
                 case cardIDEnum.CS2_182:
@@ -13058,13 +12971,10 @@ namespace HREngine.Bots
                     return new Sim_EX1_006();
                 case cardIDEnum.NEW1_031:
                     return new Sim_NEW1_031();
-
                 case cardIDEnum.DREAM_04:
                     return new Sim_DREAM_04();
-
                 case cardIDEnum.EX1_004:
                     return new Sim_EX1_004();
-
                 case cardIDEnum.EX1_095:
                     return new Sim_EX1_095();
                 case cardIDEnum.NEW1_007:
@@ -13083,14 +12993,12 @@ namespace HREngine.Bots
                     return new Sim_CS2_125();
                 case cardIDEnum.EX1_137:
                     return new Sim_EX1_137();
-
                 case cardIDEnum.DS1_185:
                     return new Sim_DS1_185();
                 case cardIDEnum.FP1_010:
                     return new Sim_FP1_010();
                 case cardIDEnum.EX1_598:
                     return new Sim_EX1_598();
-
                 case cardIDEnum.EX1_304:
                     return new Sim_EX1_304();
                 case cardIDEnum.EX1_302:
@@ -13107,24 +13015,18 @@ namespace HREngine.Bots
                     return new Sim_NEW1_005();
                 case cardIDEnum.EX1_062:
                     return new Sim_EX1_062();
-
                 case cardIDEnum.Mekka1:
                     return new Sim_Mekka1();
-
                 case cardIDEnum.tt_010a:
                     return new Sim_tt_010a();
-
                 case cardIDEnum.CS2_072:
                     return new Sim_CS2_072();
                 case cardIDEnum.EX1_tk28:
                     return new Sim_EX1_tk28();
-
                 case cardIDEnum.FP1_014:
                     return new Sim_FP1_014();
-
                 case cardIDEnum.EX1_409t:
                     return new Sim_EX1_409t();
-
                 case cardIDEnum.EX1_507:
                     return new Sim_EX1_507();
                 case cardIDEnum.EX1_144:
@@ -13139,18 +13041,14 @@ namespace HREngine.Bots
                     return new Sim_EX1_005();
                 case cardIDEnum.EX1_382:
                     return new Sim_EX1_382();
-
                 case cardIDEnum.CS2_028:
                     return new Sim_CS2_028();
-
                 case cardIDEnum.EX1_538:
                     return new Sim_EX1_538();
-
                 case cardIDEnum.DREAM_02:
                     return new Sim_DREAM_02();
                 case cardIDEnum.EX1_581:
                     return new Sim_EX1_581();
-
                 case cardIDEnum.EX1_131t:
                     return new Sim_EX1_131t();
                 case cardIDEnum.CS2_147:
@@ -13165,15 +13063,12 @@ namespace HREngine.Bots
                     return new Sim_EX1_166b();
                 case cardIDEnum.EX1_066:
                     return new Sim_EX1_066();
-
                 case cardIDEnum.EX1_355:
                     return new Sim_EX1_355();
-
                 case cardIDEnum.EX1_534:
                     return new Sim_EX1_534();
                 case cardIDEnum.EX1_162:
                     return new Sim_EX1_162();
-
                 case cardIDEnum.EX1_363:
                     return new Sim_EX1_363();
                 case cardIDEnum.EX1_164a:
@@ -13196,7 +13091,6 @@ namespace HREngine.Bots
                     return new Sim_EX1_076();
                 case cardIDEnum.EX1_048:
                     return new Sim_EX1_048();
-
                 case cardIDEnum.FP1_026:
                     return new Sim_FP1_026();
                 case cardIDEnum.CS2_074:
@@ -13219,7 +13113,6 @@ namespace HREngine.Bots
                     return new Sim_NEW1_008();
                 case cardIDEnum.CS2_119:
                     return new Sim_CS2_119();
-
                 case cardIDEnum.CS2_121:
                     return new Sim_CS2_121();
                 case cardIDEnum.CS1h_001:
@@ -13232,17 +13125,14 @@ namespace HREngine.Bots
                     return new Sim_CS2_196();
                 case cardIDEnum.EX1_312:
                     return new Sim_EX1_312();
-
                 case cardIDEnum.FP1_022:
                     return new Sim_FP1_022();
                 case cardIDEnum.EX1_160b:
                     return new Sim_EX1_160b();
                 case cardIDEnum.EX1_563:
                     return new Sim_EX1_563();
-
                 case cardIDEnum.FP1_031:
                     return new Sim_FP1_031();
-
                 case cardIDEnum.NEW1_029:
                     return new Sim_NEW1_029();
                 case cardIDEnum.CS1_129:
@@ -13253,7 +13143,6 @@ namespace HREngine.Bots
                     return new Sim_Mekka4t();
                 case cardIDEnum.EX1_158:
                     return new Sim_EX1_158();
-
                 case cardIDEnum.NEW1_025:
                     return new Sim_NEW1_025();
                 case cardIDEnum.FP1_012t:
@@ -13270,7 +13159,6 @@ namespace HREngine.Bots
                     return new Sim_FP1_019();
                 case cardIDEnum.PRO_001at:
                     return new Sim_PRO_001at();
-
                 case cardIDEnum.EX1_625t:
                     return new Sim_EX1_625t();
                 case cardIDEnum.EX1_014:
@@ -13279,7 +13167,6 @@ namespace HREngine.Bots
                     return new Sim_CS2_097();
                 case cardIDEnum.EX1_558:
                     return new Sim_EX1_558();
-
                 case cardIDEnum.EX1_tk29:
                     return new Sim_EX1_tk29();
                 case cardIDEnum.CS2_186:
@@ -13292,12 +13179,10 @@ namespace HREngine.Bots
                     return new Sim_FP1_014t();
                 case cardIDEnum.EX1_578:
                     return new Sim_EX1_578();
-
                 case cardIDEnum.CS2_221:
                     return new Sim_CS2_221();
                 case cardIDEnum.EX1_019:
                     return new Sim_EX1_019();
-
                 case cardIDEnum.FP1_019t:
                     return new Sim_FP1_019t();
                 case cardIDEnum.EX1_132:
@@ -13308,26 +13193,20 @@ namespace HREngine.Bots
                     return new Sim_EX1_105();
                 case cardIDEnum.NEW1_011:
                     return new Sim_NEW1_011();
-
                 case cardIDEnum.EX1_017:
                     return new Sim_EX1_017();
                 case cardIDEnum.EX1_249:
                     return new Sim_EX1_249();
-
                 case cardIDEnum.FP1_002t:
                     return new Sim_FP1_002t();
-
                 case cardIDEnum.EX1_313:
                     return new Sim_EX1_313();
-
                 case cardIDEnum.EX1_155b:
                     return new Sim_EX1_155b();
-
                 case cardIDEnum.NEW1_033:
                     return new Sim_NEW1_033();
                 case cardIDEnum.CS2_106:
                     return new Sim_CS2_106();
-
                 case cardIDEnum.FP1_018:
                     return new Sim_FP1_018();
                 case cardIDEnum.DS1_233:
@@ -13338,14 +13217,12 @@ namespace HREngine.Bots
                     return new Sim_NEW1_024();
                 case cardIDEnum.CS2_189:
                     return new Sim_CS2_189();
-
                 case cardIDEnum.NEW1_037:
                     return new Sim_NEW1_037();
                 case cardIDEnum.EX1_414:
                     return new Sim_EX1_414();
                 case cardIDEnum.EX1_538t:
                     return new Sim_EX1_538t();
-
                 case cardIDEnum.EX1_586:
                     return new Sim_EX1_586();
                 case cardIDEnum.EX1_310:
@@ -13368,7 +13245,6 @@ namespace HREngine.Bots
                     return new Sim_CS2_155();
                 case cardIDEnum.CS2_213:
                     return new Sim_CS2_213();
-
                 case cardIDEnum.CS2_004:
                     return new Sim_CS2_004();
                 case cardIDEnum.CS2_023:
@@ -13377,10 +13253,8 @@ namespace HREngine.Bots
                     return new Sim_EX1_164();
                 case cardIDEnum.EX1_009:
                     return new Sim_EX1_009();
-
                 case cardIDEnum.FP1_007:
                     return new Sim_FP1_007();
-
                 case cardIDEnum.EX1_345:
                     return new Sim_EX1_345();
                 case cardIDEnum.EX1_116:
@@ -13389,7 +13263,6 @@ namespace HREngine.Bots
                     return new Sim_EX1_399();
                 case cardIDEnum.EX1_587:
                     return new Sim_EX1_587();
-
                 case cardIDEnum.EX1_571:
                     return new Sim_EX1_571();
                 case cardIDEnum.EX1_335:
@@ -13398,10 +13271,8 @@ namespace HREngine.Bots
                     return new Sim_HERO_08();
                 case cardIDEnum.EX1_166a:
                     return new Sim_EX1_166a();
-
                 case cardIDEnum.EX1_finkle:
                     return new Sim_EX1_finkle();
-
                 case cardIDEnum.EX1_164b:
                     return new Sim_EX1_164b();
                 case cardIDEnum.EX1_283:
@@ -13424,19 +13295,16 @@ namespace HREngine.Bots
                     return new Sim_FP1_013();
                 case cardIDEnum.NEW1_006:
                     return new Sim_NEW1_006();
-
                 case cardIDEnum.EX1_509:
                     return new Sim_EX1_509();
                 case cardIDEnum.EX1_612:
                     return new Sim_EX1_612();
                 case cardIDEnum.EX1_021:
                     return new Sim_EX1_021();
-
                 case cardIDEnum.CS2_226:
                     return new Sim_CS2_226();
                 case cardIDEnum.EX1_608:
                     return new Sim_EX1_608();
-
                 case cardIDEnum.EX1_624:
                     return new Sim_EX1_624();
                 case cardIDEnum.EX1_616:
@@ -13445,12 +13313,10 @@ namespace HREngine.Bots
                     return new Sim_EX1_008();
                 case cardIDEnum.PlaceholderCard:
                     return new Sim_PlaceholderCard();
-
                 case cardIDEnum.EX1_045:
                     return new Sim_EX1_045();
                 case cardIDEnum.EX1_015:
                     return new Sim_EX1_015();
-
                 case cardIDEnum.CS2_171:
                     return new Sim_CS2_171();
                 case cardIDEnum.CS2_041:
@@ -13463,10 +13329,8 @@ namespace HREngine.Bots
                     return new Sim_HERO_07();
                 case cardIDEnum.EX1_412:
                     return new Sim_EX1_412();
-
                 case cardIDEnum.CS2_117:
                     return new Sim_CS2_117();
-
                 case cardIDEnum.EX1_562:
                     return new Sim_EX1_562();
                 case cardIDEnum.EX1_055:
@@ -13475,7 +13339,6 @@ namespace HREngine.Bots
                     return new Sim_FP1_012();
                 case cardIDEnum.EX1_317t:
                     return new Sim_EX1_317t();
-
                 case cardIDEnum.EX1_278:
                     return new Sim_EX1_278();
                 case cardIDEnum.CS2_tk1:
@@ -13492,12 +13355,10 @@ namespace HREngine.Bots
                     return new Sim_CS2_141();
                 case cardIDEnum.PRO_001:
                     return new Sim_PRO_001();
-
                 case cardIDEnum.CS2_173:
                     return new Sim_CS2_173();
                 case cardIDEnum.CS2_017:
                     return new Sim_CS2_017();
-
                 case cardIDEnum.EX1_392:
                     return new Sim_EX1_392();
                 case cardIDEnum.EX1_593:
@@ -13506,7 +13367,6 @@ namespace HREngine.Bots
                     return new Sim_EX1_049();
                 case cardIDEnum.EX1_002:
                     return new Sim_EX1_002();
-
                 case cardIDEnum.CS2_056:
                     return new Sim_CS2_056();
                 case cardIDEnum.EX1_596:
@@ -13517,32 +13377,26 @@ namespace HREngine.Bots
                     return new Sim_EX1_323();
                 case cardIDEnum.CS2_073:
                     return new Sim_CS2_073();
-
                 case cardIDEnum.EX1_001:
                     return new Sim_EX1_001();
-
                 case cardIDEnum.EX1_044:
                     return new Sim_EX1_044();
-
                 case cardIDEnum.Mekka4:
                     return new Sim_Mekka4();
                 case cardIDEnum.CS2_142:
                     return new Sim_CS2_142();
-
                 case cardIDEnum.EX1_573:
                     return new Sim_EX1_573();
                 case cardIDEnum.FP1_009:
                     return new Sim_FP1_009();
                 case cardIDEnum.CS2_050:
                     return new Sim_CS2_050();
-
                 case cardIDEnum.EX1_390:
                     return new Sim_EX1_390();
                 case cardIDEnum.EX1_610:
                     return new Sim_EX1_610();
                 case cardIDEnum.hexfrog:
                     return new Sim_hexfrog();
-
                 case cardIDEnum.CS2_082:
                     return new Sim_CS2_082();
                 case cardIDEnum.NEW1_040:
@@ -13557,14 +13411,12 @@ namespace HREngine.Bots
                     return new Sim_CS2_077();
                 case cardIDEnum.NEW1_014:
                     return new Sim_NEW1_014();
-
                 case cardIDEnum.GAME_002:
                     return new Sim_GAME_002();
                 case cardIDEnum.EX1_165:
                     return new Sim_EX1_165();
                 case cardIDEnum.CS2_013t:
                     return new Sim_CS2_013t();
-
                 case cardIDEnum.EX1_tk11:
                     return new Sim_EX1_tk11();
                 case cardIDEnum.EX1_591:
@@ -13583,7 +13435,6 @@ namespace HREngine.Bots
                     return new Sim_CS2_063();
                 case cardIDEnum.EX1_145:
                     return new Sim_EX1_145();
-
                 case cardIDEnum.EX1_110:
                     return new Sim_EX1_110();
                 case cardIDEnum.EX1_408:
@@ -13606,15 +13457,12 @@ namespace HREngine.Bots
                     return new Sim_EX1_323h();
                 case cardIDEnum.EX1_tk9:
                     return new Sim_EX1_tk9();
-
                 case cardIDEnum.CS2_037:
                     return new Sim_CS2_037();
                 case cardIDEnum.CS2_007:
                     return new Sim_CS2_007();
-
                 case cardIDEnum.CS2_227:
                     return new Sim_CS2_227();
-
                 case cardIDEnum.NEW1_003:
                     return new Sim_NEW1_003();
                 case cardIDEnum.GAME_006:
@@ -13625,10 +13473,8 @@ namespace HREngine.Bots
                     return new Sim_EX1_097();
                 case cardIDEnum.tt_004:
                     return new Sim_tt_004();
-
                 case cardIDEnum.EX1_096:
                     return new Sim_EX1_096();
-
                 case cardIDEnum.EX1_126:
                     return new Sim_EX1_126();
                 case cardIDEnum.EX1_577:
@@ -13651,12 +13497,10 @@ namespace HREngine.Bots
                     return new Sim_CS2_114();
                 case cardIDEnum.CS1_069:
                     return new Sim_CS1_069();
-
                 case cardIDEnum.EX1_173:
                     return new Sim_EX1_173();
                 case cardIDEnum.CS1_042:
                     return new Sim_CS1_042();
-
                 case cardIDEnum.EX1_506a:
                     return new Sim_EX1_506a();
                 case cardIDEnum.EX1_298:
@@ -13667,18 +13511,14 @@ namespace HREngine.Bots
                     return new Sim_FP1_001();
                 case cardIDEnum.HERO_02:
                     return new Sim_HERO_02();
-
                 case cardIDEnum.CS2_051:
                     return new Sim_CS2_051();
                 case cardIDEnum.NEW1_016:
                     return new Sim_NEW1_016();
-
                 case cardIDEnum.EX1_033:
                     return new Sim_EX1_033();
-
                 case cardIDEnum.EX1_028:
                     return new Sim_EX1_028();
-
                 case cardIDEnum.EX1_621:
                     return new Sim_EX1_621();
                 case cardIDEnum.EX1_554:
@@ -13689,23 +13529,18 @@ namespace HREngine.Bots
                     return new Sim_FP1_017();
                 case cardIDEnum.EX1_409:
                     return new Sim_EX1_409();
-
                 case cardIDEnum.EX1_410:
                     return new Sim_EX1_410();
-
                 case cardIDEnum.CS2_039:
                     return new Sim_CS2_039();
-
                 case cardIDEnum.EX1_557:
                     return new Sim_EX1_557();
-
                 case cardIDEnum.DS1_070:
                     return new Sim_DS1_070();
                 case cardIDEnum.CS2_033:
                     return new Sim_CS2_033();
                 case cardIDEnum.EX1_536:
                     return new Sim_EX1_536();
-
                 case cardIDEnum.EX1_559:
                     return new Sim_EX1_559();
                 case cardIDEnum.CS2_052:
@@ -13726,12 +13561,10 @@ namespace HREngine.Bots
                     return new Sim_EX1_625();
                 case cardIDEnum.CS2_026:
                     return new Sim_CS2_026();
-
                 case cardIDEnum.EX1_294:
                     return new Sim_EX1_294();
                 case cardIDEnum.EX1_287:
                     return new Sim_EX1_287();
-
                 case cardIDEnum.EX1_625t2:
                     return new Sim_EX1_625t2();
                 case cardIDEnum.CS2_118:
@@ -13740,19 +13573,16 @@ namespace HREngine.Bots
                     return new Sim_CS2_124();
                 case cardIDEnum.Mekka3:
                     return new Sim_Mekka3();
-
                 case cardIDEnum.EX1_112:
                     return new Sim_EX1_112();
                 case cardIDEnum.FP1_011:
                     return new Sim_FP1_011();
-
                 case cardIDEnum.HERO_04:
                     return new Sim_HERO_04();
                 case cardIDEnum.EX1_607:
                     return new Sim_EX1_607();
                 case cardIDEnum.DREAM_03:
                     return new Sim_DREAM_03();
-
                 case cardIDEnum.FP1_003:
                     return new Sim_FP1_003();
                 case cardIDEnum.CS2_105:
@@ -13773,7 +13603,6 @@ namespace HREngine.Bots
                     return new Sim_CS2_187();
                 case cardIDEnum.EX1_020:
                     return new Sim_EX1_020();
-
                 case cardIDEnum.EX1_011:
                     return new Sim_EX1_011();
                 case cardIDEnum.CS2_057:
@@ -13782,17 +13611,14 @@ namespace HREngine.Bots
                     return new Sim_EX1_274();
                 case cardIDEnum.EX1_306:
                     return new Sim_EX1_306();
-
                 case cardIDEnum.EX1_170:
                     return new Sim_EX1_170();
                 case cardIDEnum.EX1_617:
                     return new Sim_EX1_617();
-
                 case cardIDEnum.CS2_101:
                     return new Sim_CS2_101();
                 case cardIDEnum.FP1_015:
                     return new Sim_FP1_015();
-
                 case cardIDEnum.CS2_005:
                     return new Sim_CS2_005();
                 case cardIDEnum.EX1_537:
@@ -13801,12 +13627,10 @@ namespace HREngine.Bots
                     return new Sim_EX1_384();
                 case cardIDEnum.EX1_362:
                     return new Sim_EX1_362();
-
                 case cardIDEnum.EX1_301:
                     return new Sim_EX1_301();
                 case cardIDEnum.CS2_235:
                     return new Sim_CS2_235();
-
                 case cardIDEnum.EX1_029:
                     return new Sim_EX1_029();
                 case cardIDEnum.CS2_042:
@@ -13819,7 +13643,6 @@ namespace HREngine.Bots
                     return new Sim_EX1_609();
                 case cardIDEnum.NEW1_027:
                     return new Sim_NEW1_027();
-
                 case cardIDEnum.EX1_165a:
                     return new Sim_EX1_165a();
                 case cardIDEnum.EX1_570:
@@ -13830,7 +13653,6 @@ namespace HREngine.Bots
                     return new Sim_EX1_556();
                 case cardIDEnum.EX1_543:
                     return new Sim_EX1_543();
-
                 case cardIDEnum.NEW1_009:
                     return new Sim_NEW1_009();
                 case cardIDEnum.EX1_100:
@@ -13845,7 +13667,6 @@ namespace HREngine.Bots
                     return new Sim_EX1_043();
                 case cardIDEnum.EX1_050:
                     return new Sim_EX1_050();
-
                 case cardIDEnum.FP1_005:
                     return new Sim_FP1_005();
                 case cardIDEnum.EX1_620:
@@ -13856,7 +13677,6 @@ namespace HREngine.Bots
                     return new Sim_HERO_09();
                 case cardIDEnum.EX1_067:
                     return new Sim_EX1_067();
-
                 case cardIDEnum.EX1_277:
                     return new Sim_EX1_277();
                 case cardIDEnum.Mekka2:
@@ -13865,7 +13685,6 @@ namespace HREngine.Bots
                     return new Sim_FP1_024();
                 case cardIDEnum.FP1_030:
                     return new Sim_FP1_030();
-
                 case cardIDEnum.EX1_178:
                     return new Sim_EX1_178();
                 case cardIDEnum.CS2_222:
@@ -15357,11 +15176,7 @@ namespace HREngine.Bots
                 if (this.isRequirementInList(ErrorType2.REQ_TARGET_WITH_RACE))
                 {
                     addEnemyHero = false;
-                    addOwnHero = false;
-                    if (p.ownHeroName == HeroEnum.lordjaraxxus && (TAG_RACE)this.needRaceForPlaying == TAG_RACE.DEMON)
-                    {
-                        addOwnHero = true;
-                    }
+                    addOwnHero = p.ownHeroName == HeroEnum.lordjaraxxus && (TAG_RACE)this.needRaceForPlaying == TAG_RACE.DEMON;
 
                     if (p.enemyHeroName == HeroEnum.lordjaraxxus && (TAG_RACE)this.needRaceForPlaying == TAG_RACE.DEMON)
                     {
@@ -15372,7 +15187,7 @@ namespace HREngine.Bots
                     foreach (Minion m in p.ownMinions)
                     {
                         k++;
-                        if (!(m.handcard.card.race == this.needRaceForPlaying))
+                        if (m.handcard.card.race != this.needRaceForPlaying)
                         {
                             ownMins[k] = false;
                         }
@@ -15382,7 +15197,7 @@ namespace HREngine.Bots
                     foreach (Minion m in p.enemyMinions)
                     {
                         k++;
-                        if (!(m.handcard.card.race == this.needRaceForPlaying))
+                        if (m.handcard.card.race != this.needRaceForPlaying)
                         {
                             enemyMins[k] = false;
                         }
@@ -15458,12 +15273,7 @@ namespace HREngine.Bots
             /// </returns>
             public bool isRequirementInList(ErrorType2 et)
             {
-                if (this.playrequires.Contains(et))
-                {
-                    return true;
-                }
-
-                return false;
+                return this.playrequires.Contains(et);
             }
 
             #endregion
