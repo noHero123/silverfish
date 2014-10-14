@@ -1,21 +1,49 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_CS2_026.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ c s 2_026.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_CS2_026 : SimTemplate //frostnova
-	{
+    using System.Collections.Generic;
 
-//    friert/ alle feindlichen diener ein.
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-            List<Minion> temp = (ownplay) ? p.enemyMinions : p.ownMinions;
-            for (int i = 0; i < temp.Count; i++)
+    /// <summary>
+    ///     The sim_ c s 2_026.
+    /// </summary>
+    internal class Sim_CS2_026 : SimTemplate
+    {
+        // frostnova
+
+        // friert/ alle feindlichen diener ein.
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The on card play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            List<Minion> temp = ownplay ? p.enemyMinions : p.ownMinions;
+            foreach (Minion t in temp)
             {
-                temp[i].frozen = true;
+                t.frozen = true;
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

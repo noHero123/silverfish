@@ -1,15 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Pen_CS2_188.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The pen_ c s 2_188.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Pen_CS2_188 : PenTemplate //abusivesergeant
-	{
+    /// <summary>
+    ///     The pen_ c s 2_188.
+    /// </summary>
+    internal class Pen_CS2_188 : PenTemplate
+    {
+        // abusivesergeant
 
-//    kampfschrei:/ verleiht einem diener +2 angriff in diesem zug.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
+        // kampfschrei:/ verleiht einem diener +2 angriff in diesem zug.
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The get play penalty.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        /// <param name="isLethal">
+        /// The is lethal.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+        {
             if (target.own)
             {
                 if (!m.Ready)
@@ -19,16 +50,26 @@ namespace HREngine.Bots
             }
             else
             {
-                if (m.handcard.card.type == CardDB.cardtype.MOB && p.ownMinions.Count == 0) return 0;
-                //allow it if you have biggamehunter
+                if (m.handcard.card.type == CardDB.cardtype.MOB && p.ownMinions.Count == 0)
+                {
+                    return 0;
+                }
+
+                // allow it if you have biggamehunter
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.name == CardDB.cardName.biggamehunter ||hc.card.name == CardDB.cardName.shadowworddeath ) return 0;
+                    if (hc.card.name == CardDB.cardName.biggamehunter || hc.card.name == CardDB.cardName.shadowworddeath)
+                    {
+                        return 0;
+                    }
                 }
+
                 return 500;
             }
-		return 0;
-		}
 
-	}
+            return 0;
+        }
+
+        #endregion
+    }
 }

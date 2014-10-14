@@ -1,17 +1,49 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Pen_EX1_129.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The pen_ e x 1_129.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Pen_EX1_129 : PenTemplate //fanofknives
-	{
+    /// <summary>
+    ///     The pen_ e x 1_129.
+    /// </summary>
+    internal class Pen_EX1_129 : PenTemplate
+    {
+        // fanofknives
 
-//    fügt allen feindlichen dienern $1 schaden zu. zieht eine karte.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        // fügt allen feindlichen dienern $1 schaden zu. zieht eine karte.
+        #region Public Methods and Operators
 
-	}
+        /// <summary>
+        /// The get play penalty.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        /// <param name="isLethal">
+        /// The is lethal.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+        {
+            return 0;
+        }
+
+        #endregion
+    }
 }

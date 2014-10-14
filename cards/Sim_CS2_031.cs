@@ -1,18 +1,42 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_CS2_031.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ c s 2_031.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_CS2_031 : SimTemplate //icelance
-	{
+    /// <summary>
+    ///     The sim_ c s 2_031.
+    /// </summary>
+    internal class Sim_CS2_031 : SimTemplate
+    {
+        // icelance
 
-//    friert/ einen charakter ein. wenn er bereits eingefroren/ ist, werden ihm stattdessen $4 schaden zugefügt.
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        // friert/ einen charakter ein. wenn er bereits eingefroren/ ist, werden ihm stattdessen $4 schaden zugefügt.
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The on card play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            int dmg = (ownplay) ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);
+            int dmg = ownplay ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);
 
-            
             if (target.frozen)
             {
                 p.minionGetDamageOrHeal(target, dmg);
@@ -21,9 +45,8 @@ namespace HREngine.Bots
             {
                 target.frozen = true;
             }
+        }
 
-            
-		}
-
-	}
+        #endregion
+    }
 }

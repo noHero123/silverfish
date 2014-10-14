@@ -1,18 +1,41 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_294.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_294.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-    class Sim_EX1_294 : SimTemplate //mirrorentity
+    /// <summary>
+    ///     The sim_ e x 1_294.
+    /// </summary>
+    internal class Sim_EX1_294 : SimTemplate
     {
-        //todo secret
-        //    geheimnis:/ wenn euer gegner einen diener ausspielt, beschwört ihr eine kopie desselben herbei.
+        // mirrorentity
+        // todo secret
+        // geheimnis:/ wenn euer gegner einen diener ausspielt, beschwört ihr eine kopie desselben herbei.
+        #region Public Methods and Operators
 
+        /// <summary>
+        /// The on secret play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="number">
+        /// The number.
+        /// </param>
         public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
         {
-
-            int posi = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
+            int posi = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
             p.callKid(target.handcard.card, posi, ownplay);
             if (ownplay)
             {
@@ -26,7 +49,8 @@ namespace HREngine.Bots
             }
             else
             {
-                if (p.enemyMinions.Count >= 1 && p.enemyMinions[p.enemyMinions.Count - 1].name == target.handcard.card.name)
+                if (p.enemyMinions.Count >= 1
+                    && p.enemyMinions[p.enemyMinions.Count - 1].name == target.handcard.card.name)
                 {
                     int e = p.enemyMinions[p.enemyMinions.Count - 1].entitiyID;
                     p.enemyMinions[p.enemyMinions.Count - 1].setMinionTominion(target);
@@ -36,6 +60,6 @@ namespace HREngine.Bots
             }
         }
 
+        #endregion
     }
-
 }

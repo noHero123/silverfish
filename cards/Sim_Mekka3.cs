@@ -1,14 +1,35 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_Mekka3.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ mekka 3.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_Mekka3 : SimTemplate //emboldener3000
-	{
+    /// <summary>
+    ///     The sim_ mekka 3.
+    /// </summary>
+    internal class Sim_Mekka3 : SimTemplate
+    {
+        // emboldener3000
 
-//    verleiht am ende eures zuges einem zufälligen diener +1/+1.
+        // verleiht am ende eures zuges einem zufälligen diener +1/+1.
+        #region Public Methods and Operators
 
+        /// <summary>
+        /// The on turn ends trigger.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="triggerEffectMinion">
+        /// The trigger effect minion.
+        /// </param>
+        /// <param name="turnEndOfOwner">
+        /// The turn end of owner.
+        /// </param>
         public override void onTurnEndsTrigger(Playfield p, Minion triggerEffectMinion, bool turnEndOfOwner)
         {
             if (triggerEffectMinion.own == turnEndOfOwner)
@@ -23,6 +44,7 @@ namespace HREngine.Bots
                         ges = m.Angr + m.Hp;
                     }
                 }
+
                 foreach (Minion m in p.enemyMinions)
                 {
                     if (m.Angr + m.Hp < ges)
@@ -31,6 +53,7 @@ namespace HREngine.Bots
                         ges = m.Angr + m.Hp;
                     }
                 }
+
                 if (ges <= 999)
                 {
                     p.minionGetBuffed(tm, 1, 1);
@@ -38,5 +61,6 @@ namespace HREngine.Bots
             }
         }
 
-	}
+        #endregion
+    }
 }

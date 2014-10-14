@@ -1,13 +1,13 @@
-﻿// the ai :D
-//please ask/write me if you use this in your project
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="" file="action.cs">
+//   
+// </copyright>
+// <summary>
+//   The action enum.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-
-
-//TODO:
+ //TODO:
 
 //cardids of duplicate + avenge
 //nozdormu (for computing time :D)
@@ -16,36 +16,123 @@ using System.Text;
 //scharmuetzel kills all :D
 //todo deathlord-guessing
 //todo kelthuzad dont know which minion died this turn in rl
-
-
-
-
 namespace HREngine.Bots
 {
+    using System;
 
+    /// <summary>
+    ///     The action enum.
+    /// </summary>
     public enum actionEnum
     {
-        endturn = 0,
-        playcard,
-        attackWithHero,
-        useHeroPower,
+        /// <summary>
+        ///     The endturn.
+        /// </summary>
+        endturn = 0, 
+
+        /// <summary>
+        ///     The playcard.
+        /// </summary>
+        playcard, 
+
+        /// <summary>
+        ///     The attack with hero.
+        /// </summary>
+        attackWithHero, 
+
+        /// <summary>
+        ///     The use hero power.
+        /// </summary>
+        useHeroPower, 
+
+        /// <summary>
+        ///     The attack with minion.
+        /// </summary>
         attackWithMinion
     }
 
-    //todo make to struct
+    // todo make to struct
+    /// <summary>
+    ///     The action.
+    /// </summary>
     public class Action
     {
+        #region Fields
 
+        /// <summary>
+        ///     The action type.
+        /// </summary>
         public actionEnum actionType;
+
+        /// <summary>
+        ///     The card.
+        /// </summary>
         public Handmanager.Handcard card;
-        //public int cardEntitiy;
-        public int place; //= target where card/minion is placed
-        public Minion own;
-        public Minion target;
+
+        // public int cardEntitiy;
+
+        /// <summary>
+        ///     The druidchoice.
+        /// </summary>
         public int druidchoice; // 1 left card, 2 right card
+
+        /// <summary>
+        ///     The own.
+        /// </summary>
+        public Minion own;
+
+        /// <summary>
+        ///     The penalty.
+        /// </summary>
         public int penalty;
 
-        public Action(actionEnum type, Handmanager.Handcard hc, Minion ownCardEntity, int place, Minion target, int pen, int choice)
+        /// <summary>
+        ///     The place.
+        /// </summary>
+        public int place; // = target where card/minion is placed
+
+        /// <summary>
+        ///     The target.
+        /// </summary>
+        public Minion target;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initialisiert eine neue Instanz der <see cref="Action"/> Klasse. 
+        /// Initializes a new instance of the <see cref="Action"/> class.
+        /// </summary>
+        /// <param name="type">
+        /// The type.
+        /// </param>
+        /// <param name="hc">
+        /// The hc.
+        /// </param>
+        /// <param name="ownCardEntity">
+        /// The own card entity.
+        /// </param>
+        /// <param name="place">
+        /// The place.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="pen">
+        /// The pen.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public Action(
+            actionEnum type, 
+            Handmanager.Handcard hc, 
+            Minion ownCardEntity, 
+            int place, 
+            Minion target, 
+            int pen, 
+            int choice)
         {
             this.actionType = type;
             this.card = hc;
@@ -54,32 +141,57 @@ namespace HREngine.Bots
             this.target = target;
             this.penalty = pen;
             this.druidchoice = choice;
-
         }
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz der <see cref="Action"/> Klasse. 
+        /// Initializes a new instance of the <see cref="Action"/> class.
+        /// </summary>
+        /// <param name="s">
+        /// The s.
+        /// </param>
+        /// <param name="p">
+        /// The p.
+        /// </param>
         public Action(string s, Playfield p)
         {
-            if(s.StartsWith("play "))
+            if (s.StartsWith("play "))
             {
                 this.actionType = actionEnum.playcard;
 
-                int cardEnt = Convert.ToInt32( s.Split(new string[]{"id "}, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                int cardEnt =
+                    Convert.ToInt32(s.Split(new[] { "id " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
                 int targetEnt = -1;
-                if (s.Contains("target ")) targetEnt = Convert.ToInt32(s.Split(new string[] { "target " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                if (s.Contains("target "))
+                {
+                    targetEnt =
+                        Convert.ToInt32(
+                            s.Split(new[] { "target " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                }
+
                 int place = 0;
-                if (s.Contains("pos ")) place = Convert.ToInt32(s.Split(new string[] { "pos " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                if (s.Contains("pos "))
+                {
+                    place =
+                        Convert.ToInt32(
+                            s.Split(new[] { "pos " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                }
+
                 int choice = 0;
-                if (s.Contains("choice ")) choice = Convert.ToInt32(s.Split(new string[] { "choice " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-               
+                if (s.Contains("choice "))
+                {
+                    choice =
+                        Convert.ToInt32(
+                            s.Split(new[] { "choice " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                }
+
                 this.own = null;
 
-                this.card = new Handmanager.Handcard();
-                this.card.entity = cardEnt;
+                this.card = new Handmanager.Handcard { entity = cardEnt };
 
                 if (targetEnt >= 0)
                 {
-                    Minion m = new Minion();
-                    m.entitiyID = targetEnt;
+                    Minion m = new Minion { entitiyID = targetEnt };
                     this.target = m;
                 }
                 else
@@ -89,7 +201,6 @@ namespace HREngine.Bots
 
                 this.place = place;
                 this.druidchoice = choice;
-
             }
 
             if (s.StartsWith("attack "))
@@ -98,18 +209,16 @@ namespace HREngine.Bots
 
                 int ownEnt = Convert.ToInt32(s.Split(' ')[1].Split(' ')[0]);
                 int targetEnt = Convert.ToInt32(s.Split(' ')[3].Split(' ')[0]);
-                
+
                 this.place = 0;
                 this.druidchoice = 0;
 
                 this.card = null;
 
-                Minion m = new Minion();
-                m.entitiyID = targetEnt;
+                Minion m = new Minion { entitiyID = targetEnt };
                 this.target = m;
 
-                Minion o = new Minion();
-                o.entitiyID = ownEnt;
+                Minion o = new Minion { entitiyID = ownEnt };
                 this.own = o;
             }
 
@@ -124,12 +233,10 @@ namespace HREngine.Bots
 
                 this.card = null;
 
-                Minion m = new Minion();
-                m.entitiyID = targetEnt;
+                Minion m = new Minion { entitiyID = targetEnt };
                 this.target = m;
 
                 this.own = p.ownHero;
-
             }
 
             if (s.StartsWith("useability on target "))
@@ -143,12 +250,10 @@ namespace HREngine.Bots
 
                 this.card = null;
 
-                Minion m = new Minion();
-                m.entitiyID = targetEnt;
+                Minion m = new Minion { entitiyID = targetEnt };
                 this.target = m;
 
                 this.own = null;
-
             }
 
             if (s == "useability")
@@ -160,9 +265,15 @@ namespace HREngine.Bots
                 this.own = null;
                 this.target = null;
             }
-
         }
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz der <see cref="Action"/> Klasse. 
+        /// Initializes a new instance of the <see cref="Action"/> class.
+        /// </summary>
+        /// <param name="a">
+        /// The a.
+        /// </param>
         public Action(Action a)
         {
             this.actionType = a.actionType;
@@ -174,6 +285,16 @@ namespace HREngine.Bots
             this.penalty = a.penalty;
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The print.
+        /// </summary>
+        /// <param name="tobuffer">
+        /// The tobuffer.
+        /// </param>
         public void print(bool tobuffer = false)
         {
             Helpfunctions help = Helpfunctions.Instance;
@@ -194,21 +315,26 @@ namespace HREngine.Bots
                         playaction += " pos " + this.place;
                     }
 
-                    if (this.druidchoice >= 1) playaction += " choice " + this.druidchoice;
+                    if (this.druidchoice >= 1)
+                    {
+                        playaction += " choice " + this.druidchoice;
+                    }
 
                     help.writeToBuffer(playaction);
                 }
+
                 if (this.actionType == actionEnum.attackWithMinion)
                 {
                     help.writeToBuffer("attack " + this.own.entitiyID + " enemy " + this.target.entitiyID);
                 }
+
                 if (this.actionType == actionEnum.attackWithHero)
                 {
                     help.writeToBuffer("heroattack " + this.target.entitiyID);
                 }
+
                 if (this.actionType == actionEnum.useHeroPower)
                 {
-
                     if (this.target != null)
                     {
                         help.writeToBuffer("useability on target " + this.target.entitiyID);
@@ -218,8 +344,10 @@ namespace HREngine.Bots
                         help.writeToBuffer("useability");
                     }
                 }
+
                 return;
             }
+
             if (this.actionType == actionEnum.playcard)
             {
                 string playaction = "play ";
@@ -235,18 +363,24 @@ namespace HREngine.Bots
                     playaction += " pos " + this.place;
                 }
 
-                if (this.druidchoice >= 1) playaction += " choice " + this.druidchoice;
+                if (this.druidchoice >= 1)
+                {
+                    playaction += " choice " + this.druidchoice;
+                }
 
                 help.logg(playaction);
             }
+
             if (this.actionType == actionEnum.attackWithMinion)
             {
                 help.logg("attacker: " + this.own.entitiyID + " enemy: " + this.target.entitiyID);
             }
+
             if (this.actionType == actionEnum.attackWithHero)
             {
                 help.logg("attack with hero, enemy: " + this.target.entitiyID);
             }
+
             if (this.actionType == actionEnum.useHeroPower)
             {
                 help.logg("useability ");
@@ -255,9 +389,10 @@ namespace HREngine.Bots
                     help.logg("on enemy: " + this.target.entitiyID);
                 }
             }
-            help.logg("");
+
+            help.logg(string.Empty);
         }
 
+        #endregion
     }
-
 }

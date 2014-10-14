@@ -1,19 +1,44 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_155b.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_155 b.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_155b : SimTemplate //markofnature
-	{
+    /// <summary>
+    ///     The sim_ e x 1_155 b.
+    /// </summary>
+    internal class Sim_EX1_155b : SimTemplate
+    {
+        // markofnature
 
-//    +4 leben und spott/.
+        // +4 leben und spott/.
+        #region Public Methods and Operators
 
+        /// <summary>
+        /// The on card play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
+        {
             p.minionGetBuffed(target, 0, 4);
             target.taunt = true;
-		}
+        }
 
-	}
+        #endregion
+    }
 }

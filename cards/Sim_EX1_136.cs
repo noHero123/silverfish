@@ -1,34 +1,41 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_136.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_136.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-    class Sim_EX1_136 : SimTemplate //redemption
+    /// <summary>
+    ///     The sim_ e x 1_136.
+    /// </summary>
+    internal class Sim_EX1_136 : SimTemplate
     {
-        //todo secret
-        //    geheimnis:/ wenn einer eurer diener stirbt, wird er mit 1 leben wiederbelebt.
+        // redemption
+        // todo secret
+        // geheimnis:/ wenn einer eurer diener stirbt, wird er mit 1 leben wiederbelebt.
+        #region Public Methods and Operators
 
+        /// <summary>
+        /// The on secret play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="number">
+        /// The number.
+        /// </param>
         public override void onSecretPlay(Playfield p, bool ownplay, int number)
         {
-            int posi = 0;
-            if (ownplay)
-            {
-                posi = p.ownMinions.Count;
-            }
-            else
-            {
-                posi = p.enemyMinions.Count;
-            }
-            CardDB.Card kid = null;
-            if (ownplay)
-            {
-                kid = CardDB.Instance.getCardDataFromID(p.revivingOwnMinion);
-            }
-            else
-            {
-                kid = CardDB.Instance.getCardDataFromID(p.revivingEnemyMinion);
-            }
+            int posi = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
+
+            CardDB.Card kid = CardDB.Instance.getCardDataFromID(ownplay ? p.revivingOwnMinion : p.revivingEnemyMinion);
+
             p.callKid(kid, posi, ownplay);
             if (ownplay)
             {
@@ -60,9 +67,8 @@ namespace HREngine.Bots
                     }
                 }
             }
-
         }
 
+        #endregion
     }
-
 }

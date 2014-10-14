@@ -1,14 +1,39 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_NEW1_004.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ ne w 1_004.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_NEW1_004 : SimTemplate //vanish
-	{
+    /// <summary>
+    ///     The sim_ ne w 1_004.
+    /// </summary>
+    internal class Sim_NEW1_004 : SimTemplate
+    {
+        // vanish
 
-//    lasst alle diener auf die hand ihrer besitzer zurückkehren.
-        //todo clear playfield
+        // lasst alle diener auf die hand ihrer besitzer zurückkehren.
+        // todo clear playfield
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The on card play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             p.anzOwnRaidleader = 0;
@@ -37,8 +62,6 @@ namespace HREngine.Bots
             p.spellpower = 0;
             p.enemyspellpower = 0;
 
-
-
             p.winzigebeschwoererin = 0;
             p.managespenst = 0;
             p.soeldnerDerVenture = 0;
@@ -49,14 +72,16 @@ namespace HREngine.Bots
             {
                 p.drawACard(m.name, true, true);
             }
+
             foreach (Minion m in p.enemyMinions)
             {
                 p.drawACard(m.name, false, true);
             }
+
             p.ownMinions.Clear();
             p.enemyMinions.Clear();
-
         }
 
-	}
+        #endregion
+    }
 }

@@ -1,14 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_NEW1_010.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ ne w 1_010.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_NEW1_010 : SimTemplate //alakirthewindlord
-	{
+    /// <summary>
+    ///     The sim_ ne w 1_010.
+    /// </summary>
+    internal class Sim_NEW1_010 : SimTemplate
+    {
+        // alakirthewindlord
 
-//    windzorn/, ansturm/, gottesschild/, spott/
-		
-
-	}
+        // windzorn/, ansturm/, gottesschild/, spott/
+    }
 }

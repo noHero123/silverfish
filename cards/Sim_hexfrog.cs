@@ -1,14 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_hexfrog.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_hexfrog.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_hexfrog : SimTemplate //frog
-	{
+    /// <summary>
+    ///     The sim_hexfrog.
+    /// </summary>
+    internal class Sim_hexfrog : SimTemplate
+    {
+        // frog
 
-//    spott/
-		
-
-	}
+        // spott/
+    }
 }

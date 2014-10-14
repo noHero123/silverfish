@@ -1,17 +1,49 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Pen_EX1_050.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The pen_ e x 1_050.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Pen_EX1_050 : PenTemplate //coldlightoracle
-	{
+    /// <summary>
+    ///     The pen_ e x 1_050.
+    /// </summary>
+    internal class Pen_EX1_050 : PenTemplate
+    {
+        // coldlightoracle
 
-//    kampfschrei:/ jeder spieler zieht 2 karten.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-		{
-		return 0;
-		}
+        // kampfschrei:/ jeder spieler zieht 2 karten.
+        #region Public Methods and Operators
 
-	}
+        /// <summary>
+        /// The get play penalty.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        /// <param name="isLethal">
+        /// The is lethal.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+        {
+            return 0;
+        }
+
+        #endregion
+    }
 }

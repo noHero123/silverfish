@@ -1,14 +1,42 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_FP1_022.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ f p 1_022.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_FP1_022 : SimTemplate //voidcaller
-	{
-        CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_301);//felguard
-//    todesröcheln:/ legt einen zufälligen dämon aus eurer hand auf das schlachtfeld.
+    using System.Collections.Generic;
 
+    /// <summary>
+    ///     The sim_ f p 1_022.
+    /// </summary>
+    internal class Sim_FP1_022 : SimTemplate
+    {
+        // voidcaller
+        #region Fields
+
+        /// <summary>
+        ///     The c.
+        /// </summary>
+        private CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_301); // felguard
+
+        #endregion
+
+        // todesröcheln:/ legt einen zufälligen dämon aus eurer hand auf das schlachtfeld.
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The on deathrattle.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
         public override void onDeathrattle(Playfield p, Minion m)
         {
             if (m.own)
@@ -30,16 +58,16 @@ namespace HREngine.Bots
                     p.removeCard(mnn);
                     break;
                 }
-
             }
             else
             {
                 if (p.enemyAnzCards >= 1)
                 {
-                    p.callKid(c, p.enemyMinions.Count , false);
+                    p.callKid(this.c, p.enemyMinions.Count, false);
                 }
             }
         }
 
-	}
+        #endregion
+    }
 }

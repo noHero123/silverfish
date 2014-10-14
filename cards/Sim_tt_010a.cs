@@ -1,14 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_tt_010a.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_tt_010 a.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_tt_010a : SimTemplate //spellbender
-	{
+    /// <summary>
+    ///     The sim_tt_010 a.
+    /// </summary>
+    internal class Sim_tt_010a : SimTemplate
+    {
+        // spellbender
 
-//    zauberformerin
-		
-
-	}
+        // zauberformerin
+    }
 }

@@ -1,18 +1,40 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_FP1_020.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ f p 1_020.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-    class Sim_FP1_020 : SimTemplate //avenge
-    {
-        //todo secret
-        //    geheimnis:/ wenn einer eurer diener stirbt, erhält ein zufälliger befreundeter diener +3/+2.
+    using System.Collections.Generic;
 
+    /// <summary>
+    ///     The sim_ f p 1_020.
+    /// </summary>
+    internal class Sim_FP1_020 : SimTemplate
+    {
+        // avenge
+        // todo secret
+        // geheimnis:/ wenn einer eurer diener stirbt, erhält ein zufälliger befreundeter diener +3/+2.
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The on secret play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="number">
+        /// The number.
+        /// </param>
         public override void onSecretPlay(Playfield p, bool ownplay, int number)
         {
             List<Minion> temp = new List<Minion>();
-
 
             if (ownplay)
             {
@@ -32,20 +54,26 @@ namespace HREngine.Bots
                 if (ownplay)
                 {
                     Minion trgt = temp[0];
-                    if (temp.Count >= 2 && trgt.taunt && !temp[1].taunt) trgt = temp[1];
+                    if (temp.Count >= 2 && trgt.taunt && !temp[1].taunt)
+                    {
+                        trgt = temp[1];
+                    }
+
                     p.minionGetBuffed(trgt, 3, 2);
                 }
                 else
                 {
-
                     Minion trgt = temp[0];
-                    if (temp.Count >= 2 && !trgt.taunt && temp[1].taunt) trgt = temp[1];
+                    if (temp.Count >= 2 && !trgt.taunt && temp[1].taunt)
+                    {
+                        trgt = temp[1];
+                    }
+
                     p.minionGetBuffed(trgt, 3, 2);
                 }
             }
-
-
         }
-    }
 
+        #endregion
+    }
 }

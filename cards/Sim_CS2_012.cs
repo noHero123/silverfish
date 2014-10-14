@@ -1,19 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_CS2_012.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ c s 2_012.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_CS2_012 : SimTemplate //swipe
-	{
+    using System.Collections.Generic;
 
-//    fügt einem feind $4 schaden und allen anderen feinden $1 schaden zu.
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-            int dmg = (ownplay)? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
-            int dmg1 = (ownplay) ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);
+    /// <summary>
+    ///     The sim_ c s 2_012.
+    /// </summary>
+    internal class Sim_CS2_012 : SimTemplate
+    {
+        // swipe
 
-            List<Minion> temp = (ownplay) ? p.enemyMinions : p.ownMinions;
+        // fügt einem feind $4 schaden und allen anderen feinden $1 schaden zu.
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The on card play.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="ownplay">
+        /// The ownplay.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            int dmg = ownplay ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
+            int dmg1 = ownplay ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);
+
+            List<Minion> temp = ownplay ? p.enemyMinions : p.ownMinions;
             p.minionGetDamageOrHeal(target, dmg1);
             foreach (Minion m in temp)
             {
@@ -22,6 +49,7 @@ namespace HREngine.Bots
                     p.minionGetDamageOrHeal(m, dmg);
                 }
             }
+
             if (ownplay)
             {
                 if (p.enemyHero.entitiyID != target.entitiyID)
@@ -35,9 +63,9 @@ namespace HREngine.Bots
                 {
                     p.minionGetDamageOrHeal(p.ownHero, dmg);
                 }
-                
             }
-		}
+        }
 
-	}
+        #endregion
+    }
 }

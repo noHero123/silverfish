@@ -1,19 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_EX1_612.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ e x 1_612.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-	class Sim_EX1_612 : SimTemplate //kirintormage
-	{
+    /// <summary>
+    ///     The sim_ e x 1_612.
+    /// </summary>
+    internal class Sim_EX1_612 : SimTemplate
+    {
+        // kirintormage
 
-//    kampfschrei:/ das nächste geheimnis/, das ihr in diesem zug ausspielt, kostet (0).
+        // kampfschrei:/ das nächste geheimnis/, das ihr in diesem zug ausspielt, kostet (0).
+        #region Public Methods and Operators
 
-		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-		{
-            if (own.own) p.playedmagierinderkirintor = true;
-		}
+        /// <summary>
+        /// The get battlecry effect.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="own">
+        /// The own.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="choice">
+        /// The choice.
+        /// </param>
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            if (own.own)
+            {
+                p.playedmagierinderkirintor = true;
+            }
+        }
 
-
-	}
+        #endregion
+    }
 }

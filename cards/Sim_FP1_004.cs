@@ -1,13 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Sim_FP1_004.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The sim_ f p 1_004.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace HREngine.Bots
 {
-    class Sim_FP1_004 : SimTemplate//Mad Scientist
+    /// <summary>
+    ///     The sim_ f p 1_004.
+    /// </summary>
+    internal class Sim_FP1_004 : SimTemplate
     {
-        //<deDE>&lt;b&gt;TodesrÃ¶cheln:&lt;/b&gt; Legt ein &lt;b&gt;Geheimnis&lt;/b&gt; aus Eurem Deck auf das Schlachtfeld.</deDE>
+        // Mad Scientist
+        // <deDE>&lt;b&gt;TodesrÃ¶cheln:&lt;/b&gt; Legt ein &lt;b&gt;Geheimnis&lt;/b&gt; aus Eurem Deck auf das Schlachtfeld.</deDE>
+        #region Public Methods and Operators
 
+        /// <summary>
+        /// The on deathrattle.
+        /// </summary>
+        /// <param name="p">
+        /// The p.
+        /// </param>
+        /// <param name="m">
+        /// The m.
+        /// </param>
         public override void onDeathrattle(Playfield p, Minion m)
         {
             if (m.own)
@@ -16,10 +34,12 @@ namespace HREngine.Bots
                 {
                     p.ownSecretsIDList.Add(CardDB.cardIDEnum.EX1_289);
                 }
+
                 if (p.ownHeroName == HeroEnum.hunter)
                 {
                     p.ownSecretsIDList.Add(CardDB.cardIDEnum.EX1_554);
                 }
+
                 if (p.ownHeroName == HeroEnum.pala)
                 {
                     p.ownSecretsIDList.Add(CardDB.cardIDEnum.EX1_130);
@@ -27,7 +47,8 @@ namespace HREngine.Bots
             }
             else
             {
-                if (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.hunter || p.enemyHeroName == HeroEnum.pala)
+                if (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.hunter
+                    || p.enemyHeroName == HeroEnum.pala)
                 {
                     if (p.enemySecretCount <= 4)
                     {
@@ -37,16 +58,18 @@ namespace HREngine.Bots
                         {
                             si.canBe_redemption = false;
                         }
+
                         if (Settings.Instance.useSecretsPlayArround)
                         {
                             p.enemySecretList.Add(si);
                         }
+
                         p.nextEntity++;
                     }
                 }
             }
-            
         }
-    }
 
+        #endregion
+    }
 }
