@@ -1,34 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_007.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_007.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_007.
-    /// </summary>
-    internal class Sim_EX1_007 : SimTemplate
+    class Sim_EX1_007 : SimTemplate//Acolyte of Pain
     {
-        // Acolyte of Pain
-        // <deDE>Zieht jedes Mal eine Karte, wenn dieser Diener Schaden erleidet.</deDE>
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on minion got dmg trigger.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="triggerEffectMinion">
-        /// The trigger effect minion.
-        /// </param>
-        /// <param name="ownDmgdMinion">
-        /// The own dmgd minion.
-        /// </param>
+        //  <deDE>Zieht jedes Mal eine Karte, wenn dieser Diener Schaden erleidet.</deDE>
         public override void onMinionGotDmgTrigger(Playfield p, Minion triggerEffectMinion, bool ownDmgdMinion)
         {
             if (triggerEffectMinion.anzGotDmg >= 1)
@@ -37,11 +15,8 @@ namespace HREngine.Bots
                 {
                     p.drawACard(CardDB.cardName.unknown, triggerEffectMinion.own);
                 }
-
                 triggerEffectMinion.anzGotDmg = 0;
             }
         }
-
-        #endregion
     }
 }

@@ -1,22 +1,15 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_560.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_560.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_560.
-    /// </summary>
-    internal class Sim_EX1_560 : SimTemplate
-    {
-        // nozdormu
+	class Sim_EX1_560 : SimTemplate //nozdormu
+	{
 
-        // spieler haben nur jeweils 15 sekunden für ihren zug.
+//    spieler haben nur jeweils 15 sekunden für ihren zug.
 
-        // todo
-    }
+        //todo
+
+	}
 }

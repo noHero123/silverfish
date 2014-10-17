@@ -1,18 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_DREAM_03.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ drea m_03.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ drea m_03.
-    /// </summary>
-    internal class Sim_DREAM_03 : SimTemplate
-    {
-        // emeralddrake
-    }
+	class Sim_DREAM_03 : SimTemplate //emeralddrake
+	{
+
+//
+		
+
+	}
 }

@@ -1,49 +1,17 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Pen_EX1_539.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The pen_ e x 1_539.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The pen_ e x 1_539.
-    /// </summary>
-    internal class Pen_EX1_539 : PenTemplate
-    {
-        // killcommand
+	class Pen_EX1_539 : PenTemplate //killcommand
+	{
 
-        // verursacht $3 schaden. verursacht stattdessen $5 schaden, wenn ihr ein wildtier besitzt.
-        #region Public Methods and Operators
+//    verursacht $3 schaden. verursacht stattdessen $5 schaden, wenn ihr ein wildtier besitzt.
+		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		{
+		return 0;
+		}
 
-        /// <summary>
-        /// The get play penalty.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        /// <param name="isLethal">
-        /// The is lethal.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-        {
-            return 0;
-        }
-
-        #endregion
-    }
+	}
 }

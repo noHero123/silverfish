@@ -1,60 +1,22 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_001.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_001.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_001.
-    /// </summary>
-    internal class Sim_EX1_001 : SimTemplate
-    {
-        // lightwarden
+	class Sim_EX1_001 : SimTemplate //lightwarden
+	{
 
-        // erhält jedes mal +2 angriff, wenn ein charakter geheilt wird.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on a hero got healed trigger.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="triggerEffectMinion">
-        /// The trigger effect minion.
-        /// </param>
-        /// <param name="ownerOfHeroGotHealed">
-        /// The owner of hero got healed.
-        /// </param>
+//    erhält jedes mal +2 angriff, wenn ein charakter geheilt wird.
         public override void onAHeroGotHealedTrigger(Playfield p, Minion triggerEffectMinion, bool ownerOfHeroGotHealed)
         {
             p.minionGetBuffed(triggerEffectMinion, 2, 0);
         }
 
-        /// <summary>
-        /// The on a minion got healed trigger.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="triggerEffectMinion">
-        /// The trigger effect minion.
-        /// </param>
-        /// <param name="ownerOfMinionGotHealed">
-        /// The owner of minion got healed.
-        /// </param>
-        public override void onAMinionGotHealedTrigger(
-            Playfield p, 
-            Minion triggerEffectMinion, 
-            bool ownerOfMinionGotHealed)
+        public override void onAMinionGotHealedTrigger(Playfield p, Minion triggerEffectMinion, bool ownerOfMinionGotHealed)
         {
             p.minionGetBuffed(triggerEffectMinion, 2, 0);
         }
 
-        #endregion
-    }
+	}
 }

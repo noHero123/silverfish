@@ -1,40 +1,16 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_570.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_570.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_570.
-    /// </summary>
-    internal class Sim_EX1_570 : SimTemplate
-    {
-        // bite
+	class Sim_EX1_570 : SimTemplate //bite
+	{
 
-        // verleiht eurem helden +4 angriff in diesem zug und 4 rüstung.
-        #region Public Methods and Operators
+//    verleiht eurem helden +4 angriff in diesem zug und 4 rüstung.
 
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-        {
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		{
             if (ownplay)
             {
                 p.minionGetTempBuff(p.ownHero, 4, 0);
@@ -44,9 +20,9 @@ namespace HREngine.Bots
             {
                 p.minionGetTempBuff(p.enemyHero, 4, 0);
                 p.enemyHero.armor += 4;
-            }
-        }
 
-        #endregion
-    }
+            }
+		}
+
+	}
 }

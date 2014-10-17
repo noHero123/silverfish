@@ -1,333 +1,89 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BoardTester.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The board tester.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
 
-    // reads the board and simulates it
-    /// <summary>
-    ///     The board tester.
-    /// </summary>
     public class BoardTester
     {
-        #region Fields
 
-        /// <summary>
-        ///     The datareaded.
-        /// </summary>
+        public string evalFunction = "control";
+        int maxwide = 3000;
+        int twoturnsim = 256;
+        bool simEnemy2Turn = false;
+        int pprob1 = 50;
+        int pprob2 = 80;
+        bool playarround = false;
+
+        int ownPlayer = 1;
+        int enemmaxman = 0;
+
+        Minion ownHero;
+        Minion enemyHero;
+
+        int ownHEntity = 0;
+        int enemyHEntity = 1;
+
+        int mana = 0;
+        int maxmana = 0;
+        string ownheroname = "";
+        int ownherohp = 0;
+        int ownheromaxhp = 30;
+        int enemyheromaxhp = 30;
+        int ownherodefence = 0;
+        bool ownheroready = false;
+        bool ownHeroimmunewhileattacking = false;
+        int ownheroattacksThisRound = 0;
+        int ownHeroAttack = 0;
+        int ownHeroTempAttack = 0;
+        string ownHeroWeapon = "";
+        int ownHeroWeaponAttack = 0;
+        int ownHeroWeaponDurability = 0;
+        int numOptionPlayedThisTurn = 0;
+        int numMinionsPlayedThisTurn = 0;
+        int cardsPlayedThisTurn = 0;
+        int overdrive = 0;
+
+        int ownDecksize = 30;
+        int enemyDecksize = 30;
+        int ownFatigue = 0;
+        int enemyFatigue = 0;
+
+        bool heroImmune = false;
+        bool enemyHeroImmune = false;
+
+        int enemySecretAmount = 0;
+        List<SecretItem> enemySecrets = new List<SecretItem>();
+
+        bool ownHeroFrozen = false;
+
+        List<string> ownsecretlist = new List<string>();
+        string enemyheroname = "";
+        int enemyherohp = 0;
+        int enemyherodefence = 0;
+        bool enemyFrozen = false;
+        int enemyWeaponAttack = 0;
+        int enemyWeaponDur = 0;
+        string enemyWeapon = "";
+        int enemyNumberHand = 5;
+
+        List<Minion> ownminions = new List<Minion>();
+        List<Minion> enemyminions = new List<Minion>();
+        List<Handmanager.Handcard> handcards = new List<Handmanager.Handcard>();
+        List<CardDB.cardIDEnum> enemycards = new List<CardDB.cardIDEnum>();
+        List<GraveYardItem> turnGraveYard = new List<GraveYardItem>();
+
+        bool feugendead = false;
+        bool stalaggdead = false;
         public bool datareaded = false;
 
-        /// <summary>
-        ///     The eval function.
-        /// </summary>
-        public string evalFunction = "control";
-
-        /// <summary>
-        ///     The cards played this turn.
-        /// </summary>
-        private int cardsPlayedThisTurn;
-
-        /// <summary>
-        ///     The enemmaxman.
-        /// </summary>
-        private int enemmaxman;
-
-        /// <summary>
-        ///     The enemy decksize.
-        /// </summary>
-        private int enemyDecksize = 30;
-
-        /// <summary>
-        ///     The enemy fatigue.
-        /// </summary>
-        private int enemyFatigue;
-
-        /// <summary>
-        ///     The enemy frozen.
-        /// </summary>
-        private bool enemyFrozen;
-
-        /// <summary>
-        ///     The enemy h entity.
-        /// </summary>
-        private int enemyHEntity = 1;
-
-        /// <summary>
-        ///     The enemy hero.
-        /// </summary>
-        private Minion enemyHero;
-
-        /// <summary>
-        ///     The enemy hero immune.
-        /// </summary>
-        private bool enemyHeroImmune;
-
-        /// <summary>
-        ///     The enemy number hand.
-        /// </summary>
-        private int enemyNumberHand = 5;
-
-        /// <summary>
-        ///     The enemy secret amount.
-        /// </summary>
-        private int enemySecretAmount;
-
-        /// <summary>
-        ///     The enemy secrets.
-        /// </summary>
-        private List<SecretItem> enemySecrets = new List<SecretItem>();
-
-        /// <summary>
-        ///     The enemy weapon.
-        /// </summary>
-        private string enemyWeapon = string.Empty;
-
-        /// <summary>
-        ///     The enemy weapon attack.
-        /// </summary>
-        private int enemyWeaponAttack;
-
-        /// <summary>
-        ///     The enemy weapon dur.
-        /// </summary>
-        private int enemyWeaponDur;
-
-        /// <summary>
-        ///     The enemycards.
-        /// </summary>
-        private List<CardDB.cardIDEnum> enemycards = new List<CardDB.cardIDEnum>();
-
-        /// <summary>
-        ///     The enemyherodefence.
-        /// </summary>
-        private int enemyherodefence;
-
-        /// <summary>
-        ///     The enemyherohp.
-        /// </summary>
-        private int enemyherohp;
-
-        /// <summary>
-        ///     The enemyheromaxhp.
-        /// </summary>
-        private int enemyheromaxhp = 30;
-
-        /// <summary>
-        ///     The enemyheroname.
-        /// </summary>
-        private string enemyheroname = string.Empty;
-
-        /// <summary>
-        ///     The enemyminions.
-        /// </summary>
-        private List<Minion> enemyminions = new List<Minion>();
-
-        /// <summary>
-        ///     The feugendead.
-        /// </summary>
-        private bool feugendead;
-
-        /// <summary>
-        ///     The handcards.
-        /// </summary>
-        private List<Handmanager.Handcard> handcards = new List<Handmanager.Handcard>();
-
-        /// <summary>
-        ///     The hero immune.
-        /// </summary>
-        private bool heroImmune;
-
-        /// <summary>
-        ///     The mana.
-        /// </summary>
-        private int mana;
-
-        /// <summary>
-        ///     The maxmana.
-        /// </summary>
-        private int maxmana;
-
-        /// <summary>
-        ///     The maxwide.
-        /// </summary>
-        private int maxwide = 3000;
-
-        /// <summary>
-        ///     The num minions played this turn.
-        /// </summary>
-        private int numMinionsPlayedThisTurn;
-
-        /// <summary>
-        ///     The num option played this turn.
-        /// </summary>
-        private int numOptionPlayedThisTurn;
-
-        /// <summary>
-        ///     The overdrive.
-        /// </summary>
-        private int overdrive;
-
-        /// <summary>
-        ///     The own decksize.
-        /// </summary>
-        private int ownDecksize = 30;
-
-        /// <summary>
-        ///     The own fatigue.
-        /// </summary>
-        private int ownFatigue;
-
-        /// <summary>
-        ///     The own h entity.
-        /// </summary>
-        private int ownHEntity;
-
-        /// <summary>
-        ///     The own hero.
-        /// </summary>
-        private Minion ownHero;
-
-        /// <summary>
-        ///     The own hero attack.
-        /// </summary>
-        private int ownHeroAttack;
-
-        /// <summary>
-        ///     The own hero frozen.
-        /// </summary>
-        private bool ownHeroFrozen;
-
-        /// <summary>
-        ///     The own hero temp attack.
-        /// </summary>
-        private int ownHeroTempAttack;
-
-        /// <summary>
-        ///     The own hero weapon.
-        /// </summary>
-        private string ownHeroWeapon = string.Empty;
-
-        /// <summary>
-        ///     The own hero weapon attack.
-        /// </summary>
-        private int ownHeroWeaponAttack;
-
-        /// <summary>
-        ///     The own hero weapon durability.
-        /// </summary>
-        private int ownHeroWeaponDurability;
-
-        /// <summary>
-        ///     The own heroimmunewhileattacking.
-        /// </summary>
-        private bool ownHeroimmunewhileattacking;
-
-        /// <summary>
-        ///     The own player.
-        /// </summary>
-        private int ownPlayer = 1;
-
-        /// <summary>
-        ///     The ownheroattacks this round.
-        /// </summary>
-        private int ownheroattacksThisRound;
-
-        /// <summary>
-        ///     The ownherodefence.
-        /// </summary>
-        private int ownherodefence;
-
-        /// <summary>
-        ///     The ownherohp.
-        /// </summary>
-        private int ownherohp;
-
-        /// <summary>
-        ///     The ownheromaxhp.
-        /// </summary>
-        private int ownheromaxhp = 30;
-
-        /// <summary>
-        ///     The ownheroname.
-        /// </summary>
-        private string ownheroname = string.Empty;
-
-        /// <summary>
-        ///     The ownheroready.
-        /// </summary>
-        private bool ownheroready;
-
-        /// <summary>
-        ///     The ownminions.
-        /// </summary>
-        private List<Minion> ownminions = new List<Minion>();
-
-        /// <summary>
-        ///     The ownsecretlist.
-        /// </summary>
-        private List<string> ownsecretlist = new List<string>();
-
-        /// <summary>
-        ///     The playarround.
-        /// </summary>
-        private bool playarround;
-
-        /// <summary>
-        ///     The pprob 1.
-        /// </summary>
-        private int pprob1 = 50;
-
-        /// <summary>
-        ///     The pprob 2.
-        /// </summary>
-        private int pprob2 = 80;
-
-        /// <summary>
-        ///     The sim enemy 2 turn.
-        /// </summary>
-        private bool simEnemy2Turn;
-
-        /// <summary>
-        ///     The stalaggdead.
-        /// </summary>
-        private bool stalaggdead;
-
-        /// <summary>
-        ///     The turn grave yard.
-        /// </summary>
-        private List<GraveYardItem> turnGraveYard = new List<GraveYardItem>();
-
-        /// <summary>
-        ///     The twoturnsim.
-        /// </summary>
-        private int twoturnsim = 256;
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>
-        /// Initialisiert eine neue Instanz der <see cref="BoardTester"/> Klasse. 
-        /// Initializes a new instance of the <see cref="BoardTester"/> class.
-        /// </summary>
-        /// <param name="data">
-        /// The data.
-        /// </param>
         public BoardTester(string data = "")
         {
-            string og = string.Empty;
-            string eg = string.Empty;
+            string og = "";
+            string eg = "";
 
-            string omd = string.Empty;
-            string emd = string.Empty;
+            string omd = "";
+            string emd = "";
 
             int ets = 20;
             int ents = 20;
@@ -336,18 +92,20 @@ namespace HREngine.Bots
             int ntssd = 6;
             int ntssm = 50;
 
+            int alpha = 50;
+
             bool dosecrets = false;
 
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
-            string[] lines = { };
-            if (data == string.Empty)
+            string[] lines = new string[0] { };
+            if (data == "")
             {
                 this.datareaded = false;
                 try
                 {
                     string path = Settings.Instance.path;
-                    lines = File.ReadAllLines(path + "test.txt");
+                    lines = System.IO.File.ReadAllLines(path + "test.txt");
                     this.datareaded = true;
                 }
                 catch
@@ -361,7 +119,7 @@ namespace HREngine.Bots
             else
             {
                 this.datareaded = true;
-                lines = data.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                lines = data.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             CardDB.Card heroability = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_034);
@@ -382,12 +140,10 @@ namespace HREngine.Bots
                 {
                     break;
                 }
-
                 if (s.StartsWith("####"))
                 {
                     continue;
                 }
-
                 if (s.StartsWith("start calculations, current time: "))
                 {
                     Ai.Instance.currentCalculatedBoard = s.Split(' ')[4].Split(' ')[0];
@@ -396,26 +152,20 @@ namespace HREngine.Bots
 
                     this.maxwide = Convert.ToInt32(s.Split(' ')[7].Split(' ')[0]);
 
-                    // following params are optional
+                    //following params are optional
                     this.twoturnsim = 256;
-                    if (s.Contains("twoturnsim "))
-                    {
-                        this.twoturnsim =
-                            Convert.ToInt32(
-                                s.Split(new[] { "twoturnsim " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                    }
+                    if (s.Contains("twoturnsim ")) this.twoturnsim = Convert.ToInt32(s.Split(new string[] { "twoturnsim " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
 
                     if (s.Contains(" face "))
                     {
-                        string facehp =
-                            s.Split(new[] { "face " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0];
+                        string facehp = s.Split(new string[] { "face " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0];
                         ComboBreaker.Instance.attackFaceHP = Convert.ToInt32(facehp);
                     }
 
                     this.playarround = false;
                     if (s.Contains("playaround "))
                     {
-                        string probs = s.Split(new[] { "playaround " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        string probs = s.Split(new string[] { "playaround " }, StringSplitOptions.RemoveEmptyEntries)[1];
                         this.playarround = true;
                         this.pprob1 = Convert.ToInt32(probs.Split(' ')[0]);
                         this.pprob2 = Convert.ToInt32(probs.Split(' ')[1]);
@@ -423,33 +173,33 @@ namespace HREngine.Bots
 
                     if (s.Contains(" ets "))
                     {
-                        string eturnsim = s.Split(new[] { " ets " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        string eturnsim = s.Split(new string[] { " ets " }, StringSplitOptions.RemoveEmptyEntries)[1];
                         ets = Convert.ToInt32(eturnsim.Split(' ')[0]);
                     }
 
                     if (s.Contains(" ents "))
                     {
-                        string eturnsim = s.Split(new[] { " ents " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        string eturnsim = s.Split(new string[] { " ents " }, StringSplitOptions.RemoveEmptyEntries)[1];
                         ents = Convert.ToInt32(eturnsim.Split(' ')[0]);
                     }
 
                     if (s.Contains(" ntss "))
                     {
-                        string probs = s.Split(new[] { " ntss " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        string probs = s.Split(new string[] { " ntss " }, StringSplitOptions.RemoveEmptyEntries)[1];
                         this.playarround = true;
                         ntssd = Convert.ToInt32(probs.Split(' ')[0]);
                         ntssw = Convert.ToInt32(probs.Split(' ')[1]);
                         ntssm = Convert.ToInt32(probs.Split(' ')[2]);
                     }
 
-                    if (s.Contains("simEnemy2Turn"))
-                    {
-                        this.simEnemy2Turn = true;
-                    }
+                    if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
 
-                    if (s.Contains(" secret"))
+                    if (s.Contains(" secret")) dosecrets = true;
+
+                    if (s.Contains(" weight "))
                     {
-                        dosecrets = true;
+                        string alphaval = s.Split(new string[] { " weight " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        alpha = Convert.ToInt32(alphaval.Split(' ')[0]);
                     }
 
                     continue;
@@ -464,65 +214,48 @@ namespace HREngine.Bots
                         string secretstuff = s.Split(';')[1];
                         foreach (string sec in secretstuff.Split(','))
                         {
-                            if (sec == string.Empty || sec == string.Empty || sec == " ")
-                            {
-                                continue;
-                            }
-
+                            if (sec == "" || sec == String.Empty || sec == " ") continue;
                             this.enemySecrets.Add(new SecretItem(sec));
                         }
-                    }
 
+                    }
                     continue;
                 }
 
                 if (s.StartsWith("mana "))
                 {
-                    string ss = s.Replace("mana ", string.Empty);
-                    this.mana = Convert.ToInt32(ss.Split('/')[0]);
-                    this.maxmana = Convert.ToInt32(ss.Split('/')[1]);
+                    string ss = s.Replace("mana ", "");
+                    mana = Convert.ToInt32(ss.Split('/')[0]);
+                    maxmana = Convert.ToInt32(ss.Split('/')[1]);
                 }
 
                 if (s.StartsWith("emana "))
                 {
-                    string ss = s.Replace("emana ", string.Empty);
-                    this.enemmaxman = Convert.ToInt32(ss);
+                    string ss = s.Replace("emana ", "");
+                    enemmaxman = Convert.ToInt32(ss);
                 }
 
                 if (s.StartsWith("Enemy cards: "))
                 {
-                    this.enemyNumberHand = Convert.ToInt32(s.Split(' ')[2]);
+                    enemyNumberHand = Convert.ToInt32(s.Split(' ')[2]);
                     continue;
                 }
 
                 if (s.StartsWith("GraveYard:"))
                 {
-                    if (s.Contains("fgn"))
-                    {
-                        this.feugendead = true;
-                    }
-
-                    if (s.Contains("stlgg"))
-                    {
-                        this.stalaggdead = true;
-                    }
-
+                    if (s.Contains("fgn")) this.feugendead = true;
+                    if (s.Contains("stlgg")) this.stalaggdead = true;
                     continue;
                 }
 
                 if (s.StartsWith("osecrets: "))
                 {
-                    string secs = s.Replace("osecrets: ", string.Empty);
+                    string secs = s.Replace("osecrets: ", "");
                     foreach (string sec in secs.Split(' '))
                     {
-                        if (sec == string.Empty || sec == string.Empty)
-                        {
-                            continue;
-                        }
-
+                        if (sec == "" || sec == string.Empty) continue;
                         this.ownsecretlist.Add(sec);
                     }
-
                     continue;
                 }
 
@@ -538,16 +271,14 @@ namespace HREngine.Bots
                     continue;
                 }
 
+
+
                 if (s.StartsWith("probs: "))
                 {
                     int i = 0;
                     foreach (string p in s.Split(' '))
                     {
-                        if (p.StartsWith("probs:") || p == string.Empty || p == null)
-                        {
-                            continue;
-                        }
-
+                        if (p.StartsWith("probs:") || p == "" || p == null) continue;
                         int num = Convert.ToInt32(p);
                         CardDB.cardIDEnum c = CardDB.cardIDEnum.None;
                         if (i == 0)
@@ -556,7 +287,6 @@ namespace HREngine.Bots
                             {
                                 c = CardDB.cardIDEnum.CS2_032;
                             }
-
                             if (this.enemyheroname == "warrior")
                             {
                                 c = CardDB.cardIDEnum.EX1_400;
@@ -598,19 +328,17 @@ namespace HREngine.Bots
 
                         if (num == 1)
                         {
-                            this.enemycards.Add(c);
+                            enemycards.Add(c);
                         }
-
                         if (num == 0)
                         {
-                            this.enemycards.Add(c);
-                            this.enemycards.Add(c);
+                            enemycards.Add(c);
+                            enemycards.Add(c);
                         }
-
                         i++;
                     }
 
-                    Probabilitymaker.Instance.setEnemyCards(this.enemycards);
+                    Probabilitymaker.Instance.setEnemyCards(enemycards);
                     continue;
                 }
 
@@ -619,249 +347,167 @@ namespace HREngine.Bots
                     og = s;
                     continue;
                 }
-
                 if (s.StartsWith("eg:"))
                 {
                     eg = s;
                     continue;
                 }
 
-                if (readstate == 42 && counter == 1)
+                if (readstate == 42 && counter == 1) // player
                 {
-                    // player
                     this.overdrive = Convert.ToInt32(s.Split(' ')[2]);
                     this.numMinionsPlayedThisTurn = Convert.ToInt32(s.Split(' ')[0]);
                     this.cardsPlayedThisTurn = Convert.ToInt32(s.Split(' ')[1]);
                     this.ownPlayer = Convert.ToInt32(s.Split(' ')[3]);
                 }
 
-                if (readstate == 1 && counter == 1)
+                if (readstate == 1 && counter == 1) // class + hp + defence + immunewhile attacking + immune
                 {
-                    // class + hp + defence + immunewhile attacking + immune
-                    this.ownheroname = s.Split(' ')[0];
-                    this.ownherohp = Convert.ToInt32(s.Split(' ')[1]);
-                    this.ownheromaxhp = Convert.ToInt32(s.Split(' ')[2]);
-                    this.ownherodefence = Convert.ToInt32(s.Split(' ')[3]);
-                    this.ownHeroimmunewhileattacking = s.Split(' ')[4] == "True";
-                    this.heroImmune = s.Split(' ')[5] == "True";
-                    this.ownHEntity = Convert.ToInt32(s.Split(' ')[6]);
-                    this.ownheroready = s.Split(' ')[7] == "True";
-                    this.ownheroattacksThisRound = Convert.ToInt32(s.Split(' ')[8]);
-                    this.ownHeroFrozen = s.Split(' ')[9] == "True";
-                    this.ownHeroAttack = Convert.ToInt32(s.Split(' ')[10]);
-                    this.ownHeroTempAttack = Convert.ToInt32(s.Split(' ')[11]);
+                    ownheroname = s.Split(' ')[0];
+                    ownherohp = Convert.ToInt32(s.Split(' ')[1]);
+                    ownheromaxhp = Convert.ToInt32(s.Split(' ')[2]);
+                    ownherodefence = Convert.ToInt32(s.Split(' ')[3]);
+                    this.ownHeroimmunewhileattacking = (s.Split(' ')[4] == "True") ? true : false;
+                    this.heroImmune = (s.Split(' ')[5] == "True") ? true : false;
+                    ownHEntity = Convert.ToInt32(s.Split(' ')[6]);
+                    ownheroready = (s.Split(' ')[7] == "True") ? true : false;
+                    ownheroattacksThisRound = Convert.ToInt32(s.Split(' ')[8]);
+                    ownHeroFrozen = (s.Split(' ')[9] == "True") ? true : false;
+                    ownHeroAttack = Convert.ToInt32(s.Split(' ')[10]);
+                    ownHeroTempAttack = Convert.ToInt32(s.Split(' ')[11]);
+
                 }
 
-                if (readstate == 1 && counter == 2)
+                if (readstate == 1 && counter == 2) // own hero weapon
                 {
-                    // own hero weapon
-                    this.ownHeroWeaponAttack = Convert.ToInt32(s.Split(' ')[1]);
+                    ownHeroWeaponAttack = Convert.ToInt32(s.Split(' ')[1]);
                     this.ownHeroWeaponDurability = Convert.ToInt32(s.Split(' ')[2]);
-                    this.ownHeroWeapon = this.ownHeroWeaponAttack == 0 ? string.Empty : s.Split(' ')[3];
+                    if (ownHeroWeaponAttack == 0)
+                    {
+                        ownHeroWeapon = ""; //:D
+                    }
+                    else
+                    {
+                        ownHeroWeapon = s.Split(' ')[3];
+                    }
                 }
 
-                if (readstate == 1 && counter == 3)
+                if (readstate == 1 && counter == 3) // ability + abilityready
                 {
-                    // ability + abilityready
                     abilityReady = (s.Split(' ')[1] == "True");
                     heroability = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(s.Split(' ')[2]));
                 }
 
-                if (readstate == 1 && counter >= 5)
+                if (readstate == 1 && counter >= 5) // secrets
                 {
-                    // secrets
                     if (!s.StartsWith("enemyhero:"))
                     {
-                        this.ownsecretlist.Add(s.Replace(" ", string.Empty));
+                        ownsecretlist.Add(s.Replace(" ", ""));
                     }
                 }
 
-                if (readstate == 2 && counter == 1)
+                if (readstate == 2 && counter == 1) // class + hp + defence + frozen + immune
                 {
-                    // class + hp + defence + frozen + immune
-                    this.enemyheroname = s.Split(' ')[0];
-                    this.enemyherohp = Convert.ToInt32(s.Split(' ')[1]);
-                    this.enemyheromaxhp = Convert.ToInt32(s.Split(' ')[2]);
-                    this.enemyherodefence = Convert.ToInt32(s.Split(' ')[3]);
-                    this.enemyFrozen = s.Split(' ')[4] == "True";
-                    this.enemyHeroImmune = s.Split(' ')[5] == "True";
-                    this.enemyHEntity = Convert.ToInt32(s.Split(' ')[6]);
+                    enemyheroname = s.Split(' ')[0];
+                    enemyherohp = Convert.ToInt32(s.Split(' ')[1]);
+                    enemyheromaxhp = Convert.ToInt32(s.Split(' ')[2]);
+                    enemyherodefence = Convert.ToInt32(s.Split(' ')[3]);
+                    enemyFrozen = (s.Split(' ')[4] == "True") ? true : false;
+                    enemyHeroImmune = (s.Split(' ')[5] == "True") ? true : false;
+                    enemyHEntity = Convert.ToInt32(s.Split(' ')[6]);
                 }
 
-                if (readstate == 2 && counter == 2)
+                if (readstate == 2 && counter == 2) // wepon + stuff
                 {
-                    // wepon + stuff
                     this.enemyWeaponAttack = Convert.ToInt32(s.Split(' ')[1]);
                     this.enemyWeaponDur = Convert.ToInt32(s.Split(' ')[2]);
-                    this.enemyWeapon = this.enemyWeaponDur == 0 ? string.Empty : s.Split(' ')[3];
-                }
+                    if (enemyWeaponDur == 0)
+                    {
+                        this.enemyWeapon = "";
+                    }
+                    else
+                    {
+                        this.enemyWeapon = s.Split(' ')[3];
+                    }
 
-                if (readstate == 2 && counter == 3)
-                {
-                    // ability
-                    enemyability = CardDB.Instance.getCardDataFromID(
-                        CardDB.Instance.cardIdstringToEnum(s.Split(' ')[2]));
                 }
-
-                if (readstate == 2 && counter == 4)
+                if (readstate == 2 && counter == 3) // ability
                 {
-                    // fatigue
+                    enemyability = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(s.Split(' ')[2]));
+                }
+                if (readstate == 2 && counter == 4) // fatigue
+                {
                     this.ownDecksize = Convert.ToInt32(s.Split(' ')[1]);
                     this.enemyDecksize = Convert.ToInt32(s.Split(' ')[3]);
                     this.ownFatigue = Convert.ToInt32(s.Split(' ')[2]);
                     this.enemyFatigue = Convert.ToInt32(s.Split(' ')[4]);
                 }
 
-                if (readstate == 3)
+                if (readstate == 3) // minion + enchantment
                 {
-                    // minion + enchantment
                     if (s.Contains(" zp:"))
                     {
+
                         string minionname = s.Split(' ')[0];
                         string minionid = s.Split(' ')[1];
-                        int zp =
-                            Convert.ToInt32(
-                                s.Split(new[] { " zp:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int zp = Convert.ToInt32(s.Split(new string[] { " zp:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
                         int ent = 1000 + j;
-                        if (s.Contains(" e:"))
-                        {
-                            ent =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " e:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                        }
-
-                        int attack =
-                            Convert.ToInt32(
-                                s.Split(new[] { " A:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                        int hp =
-                            Convert.ToInt32(
-                                s.Split(new[] { " H:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                        int maxhp =
-                            Convert.ToInt32(
-                                s.Split(new[] { " mH:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                        bool ready = s.Split(new[] { " rdy:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]
-                                     == "True";
+                        if (s.Contains(" e:")) ent = Convert.ToInt32(s.Split(new string[] { " e:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int attack = Convert.ToInt32(s.Split(new string[] { " A:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int hp = Convert.ToInt32(s.Split(new string[] { " H:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int maxhp = Convert.ToInt32(s.Split(new string[] { " mH:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        bool ready = s.Split(new string[] { " rdy:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0] == "True";
                         int natt = 0;
-                        if (s.Contains(" natt:"))
-                        {
-                            natt =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " natt:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                        }
+                        if (s.Contains(" natt:")) natt = Convert.ToInt32(s.Split(new string[] { " natt:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
 
                         // optional params (bools)
                         bool ex = s.Contains(" ex");
-
                         bool taunt = s.Contains(" tnt");
-
                         bool frzn = s.Contains(" frz");
-
                         bool silenced = s.Contains(" silenced");
-
                         bool divshield = s.Contains(" divshield");
-
                         bool ptt = s.Contains(" ptt");
-
                         bool wndfry = s.Contains(" wndfr");
-
                         bool stl = s.Contains(" stlth");
-
                         bool pois = s.Contains(" poi");
-
                         bool immn = s.Contains(" imm");
-
                         bool cncdl = s.Contains(" cncdl");
-
                         bool destroyOnOwnTurnStart = s.Contains(" dstrOwnTrnStrt");
-
                         bool destroyOnOwnTurnEnd = s.Contains(" dstrOwnTrnnd");
-
                         bool destroyOnEnemyTurnStart = s.Contains(" dstrEnmTrnStrt");
-
                         bool destroyOnEnemyTurnEnd = s.Contains(" dstrEnmTrnnd");
-
                         bool shadowmadnessed = s.Contains(" shdwmdnssd");
-
                         bool cntlower = s.Contains(" cantLowerHpBelowOne");
+                        //optional params (ints)
 
-                        // optional params (ints)
-                        int chrg = 0; // charge
-                        if (s.Contains(" chrg("))
-                        {
-                            chrg =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " chrg(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
-                        }
 
-                        int adjadmg = 0; // adjadmg
-                        if (s.Contains(" adjaattk("))
-                        {
-                            adjadmg =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " adjaattk(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')
-                                        [0]);
-                        }
+                        int chrg = 0;//charge
+                        if (s.Contains(" chrg(")) chrg = Convert.ToInt32(s.Split(new string[] { " chrg(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        int tmpdmg = 0; // adjadmg
-                        if (s.Contains(" tmpattck("))
-                        {
-                            tmpdmg =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " tmpattck(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')
-                                        [0]);
-                        }
+                        int adjadmg = 0;//adjadmg
+                        if (s.Contains(" adjaattk(")) adjadmg = Convert.ToInt32(s.Split(new string[] { " adjaattk(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        int spllpwr = 0; // adjadmg
-                        if (s.Contains(" spllpwr("))
-                        {
-                            spllpwr =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " spllpwr(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[
-                                        0]);
-                        }
+                        int tmpdmg = 0;//adjadmg
+                        if (s.Contains(" tmpattck(")) tmpdmg = Convert.ToInt32(s.Split(new string[] { " tmpattck(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        int ancestralspirit = 0; // adjadmg
-                        if (s.Contains(" ancstrl("))
-                        {
-                            ancestralspirit =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " ancstrl(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[
-                                        0]);
-                        }
+                        int spllpwr = 0;//adjadmg
+                        if (s.Contains(" spllpwr(")) spllpwr = Convert.ToInt32(s.Split(new string[] { " spllpwr(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        int ownBlessingOfWisdom = 0; // adjadmg
-                        if (s.Contains(" ownBlssng("))
-                        {
-                            ownBlessingOfWisdom =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " ownBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(
-                                        ')')[0]);
-                        }
+                        int ancestralspirit = 0;//adjadmg
+                        if (s.Contains(" ancstrl(")) ancestralspirit = Convert.ToInt32(s.Split(new string[] { " ancstrl(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        int enemyBlessingOfWisdom = 0; // adjadmg
-                        if (s.Contains(" enemyBlssng("))
-                        {
-                            enemyBlessingOfWisdom =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " enemyBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(
-                                        ')')[0]);
-                        }
+                        int ownBlessingOfWisdom = 0;//adjadmg
+                        if (s.Contains(" ownBlssng(")) ownBlessingOfWisdom = Convert.ToInt32(s.Split(new string[] { " ownBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        int souloftheforest = 0; // adjadmg
-                        if (s.Contains(" souloffrst("))
-                        {
-                            souloftheforest =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " souloffrst(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(
-                                        ')')[0]);
-                        }
+                        int enemyBlessingOfWisdom = 0;//adjadmg
+                        if (s.Contains(" enemyBlssng(")) enemyBlessingOfWisdom = Convert.ToInt32(s.Split(new string[] { " enemyBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        tempminion =
-                            this.createNewMinion(
-                                new Handmanager.Handcard(
-                                    CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), 
-                                zp, 
-                                true);
+                        int souloftheforest = 0;//adjadmg
+                        if (s.Contains(" souloffrst(")) souloftheforest = Convert.ToInt32(s.Split(new string[] { " souloffrst(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+
+
+                        tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, true);
                         tempminion.own = true;
                         tempminion.entitiyID = ent;
                         tempminion.handcard.entity = ent;
@@ -899,162 +545,82 @@ namespace HREngine.Bots
                         tempminion.enemyBlessingOfWisdom = enemyBlessingOfWisdom;
                         tempminion.souloftheforest = souloftheforest;
 
-                        if (maxhp > hp)
-                        {
-                            tempminion.wounded = true;
-                        }
-
+                        if (maxhp > hp) tempminion.wounded = true;
                         tempminion.updateReadyness();
                         this.ownminions.Add(tempminion);
+
+
+
                     }
+
                 }
 
-                if (readstate == 4)
+                if (readstate == 4) // minion or enchantment
                 {
-                    // minion or enchantment
                     if (s.Contains(" zp:"))
                     {
+
                         string minionname = s.Split(' ')[0];
                         string minionid = s.Split(' ')[1];
-                        int zp =
-                            Convert.ToInt32(
-                                s.Split(new[] { " zp:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int zp = Convert.ToInt32(s.Split(new string[] { " zp:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
                         int ent = 1000 + j;
-                        if (s.Contains(" e:"))
-                        {
-                            ent =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " e:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                        }
-
-                        int attack =
-                            Convert.ToInt32(
-                                s.Split(new[] { " A:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                        int hp =
-                            Convert.ToInt32(
-                                s.Split(new[] { " H:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                        int maxhp =
-                            Convert.ToInt32(
-                                s.Split(new[] { " mH:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                        bool ready = s.Split(new[] { " rdy:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]
-                                     == "True";
+                        if (s.Contains(" e:")) ent = Convert.ToInt32(s.Split(new string[] { " e:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int attack = Convert.ToInt32(s.Split(new string[] { " A:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int hp = Convert.ToInt32(s.Split(new string[] { " H:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int maxhp = Convert.ToInt32(s.Split(new string[] { " mH:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        bool ready = s.Split(new string[] { " rdy:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0] == "True" ? true : false;
                         int natt = 0;
-
-                        // if (s.Contains(" natt:")) natt = Convert.ToInt32(s.Split(new string[] { " natt:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        //if (s.Contains(" natt:")) natt = Convert.ToInt32(s.Split(new string[] { " natt:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
 
                         // optional params (bools)
-                        bool ex = s.Contains(" ex"); // exhausted
-
+                        bool ex = s.Contains(" ex");
                         bool taunt = s.Contains(" tnt");
-
                         bool frzn = s.Contains(" frz");
-
                         bool silenced = s.Contains(" silenced");
-
                         bool divshield = s.Contains(" divshield");
-
                         bool ptt = s.Contains(" ptt");
-
                         bool wndfry = s.Contains(" wndfr");
-
                         bool stl = s.Contains(" stlth");
-
                         bool pois = s.Contains(" poi");
-
                         bool immn = s.Contains(" imm");
-
                         bool cncdl = s.Contains(" cncdl");
-
                         bool destroyOnOwnTurnStart = s.Contains(" dstrOwnTrnStrt");
-
                         bool destroyOnOwnTurnEnd = s.Contains(" dstrOwnTrnnd");
-
                         bool destroyOnEnemyTurnStart = s.Contains(" dstrEnmTrnStrt");
-
                         bool destroyOnEnemyTurnEnd = s.Contains(" dstrEnmTrnnd");
-
                         bool shadowmadnessed = s.Contains(" shdwmdnssd");
-
                         bool cntlower = s.Contains(" cantLowerHpBelowOne");
 
-                        // optional params (ints)
-                        int chrg = 0; // charge
-                        if (s.Contains(" chrg("))
-                        {
-                            chrg =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " chrg(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
-                        }
+                        //optional params (ints)
 
-                        int adjadmg = 0; // adjadmg
-                        if (s.Contains(" adjaattk("))
-                        {
-                            adjadmg =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " adjaattk(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')
-                                        [0]);
-                        }
 
-                        int tmpdmg = 0; // adjadmg
-                        if (s.Contains(" tmpattck("))
-                        {
-                            tmpdmg =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " tmpattck(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')
-                                        [0]);
-                        }
+                        int chrg = 0;//charge
+                        if (s.Contains(" chrg(")) chrg = Convert.ToInt32(s.Split(new string[] { " chrg(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        int spllpwr = 0; // adjadmg
-                        if (s.Contains(" spllpwr("))
-                        {
-                            spllpwr =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " spllpwr(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[
-                                        0]);
-                        }
+                        int adjadmg = 0;//adjadmg
+                        if (s.Contains(" adjaattk(")) adjadmg = Convert.ToInt32(s.Split(new string[] { " adjaattk(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        int ancestralspirit = 0; // adjadmg
-                        if (s.Contains(" ancstrl("))
-                        {
-                            ancestralspirit =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " ancstrl(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[
-                                        0]);
-                        }
+                        int tmpdmg = 0;//adjadmg
+                        if (s.Contains(" tmpattck(")) tmpdmg = Convert.ToInt32(s.Split(new string[] { " tmpattck(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        int ownBlessingOfWisdom = 0; // adjadmg
-                        if (s.Contains(" ownBlssng("))
-                        {
-                            ownBlessingOfWisdom =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " ownBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(
-                                        ')')[0]);
-                        }
+                        int spllpwr = 0;//adjadmg
+                        if (s.Contains(" spllpwr(")) spllpwr = Convert.ToInt32(s.Split(new string[] { " spllpwr(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        int enemyBlessingOfWisdom = 0; // adjadmg
-                        if (s.Contains(" enemyBlssng("))
-                        {
-                            enemyBlessingOfWisdom =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " enemyBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(
-                                        ')')[0]);
-                        }
+                        int ancestralspirit = 0;//adjadmg
+                        if (s.Contains(" ancstrl(")) ancestralspirit = Convert.ToInt32(s.Split(new string[] { " ancstrl(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        int souloftheforest = 0; // adjadmg
-                        if (s.Contains(" souloffrst("))
-                        {
-                            souloftheforest =
-                                Convert.ToInt32(
-                                    s.Split(new[] { " souloffrst(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(
-                                        ')')[0]);
-                        }
+                        int ownBlessingOfWisdom = 0;//adjadmg
+                        if (s.Contains(" ownBlssng(")) ownBlessingOfWisdom = Convert.ToInt32(s.Split(new string[] { " ownBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
 
-                        tempminion =
-                            this.createNewMinion(
-                                new Handmanager.Handcard(
-                                    CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), 
-                                zp, 
-                                false);
+                        int enemyBlessingOfWisdom = 0;//adjadmg
+                        if (s.Contains(" enemyBlssng(")) enemyBlessingOfWisdom = Convert.ToInt32(s.Split(new string[] { " enemyBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int souloftheforest = 0;//adjadmg
+                        if (s.Contains(" souloffrst(")) souloftheforest = Convert.ToInt32(s.Split(new string[] { " souloffrst(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+
+
+                        tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, false);
                         tempminion.own = false;
                         tempminion.entitiyID = ent;
                         tempminion.handcard.entity = ent;
@@ -1092,19 +658,19 @@ namespace HREngine.Bots
                         tempminion.enemyBlessingOfWisdom = enemyBlessingOfWisdom;
                         tempminion.souloftheforest = souloftheforest;
 
-                        if (maxhp > hp)
-                        {
-                            tempminion.wounded = true;
-                        }
-
+                        if (maxhp > hp) tempminion.wounded = true;
                         tempminion.updateReadyness();
                         this.enemyminions.Add(tempminion);
+
+
                     }
+
+
                 }
 
-                if (readstate == 5)
+                if (readstate == 5) // minion or enchantment
                 {
-                    // minion or enchantment
+
                     Handmanager.Handcard card = new Handmanager.Handcard();
 
                     string minionname = s.Split(' ')[2];
@@ -1115,8 +681,10 @@ namespace HREngine.Bots
                     card.entity = Convert.ToInt32(s.Split(' ')[5]);
                     card.manacost = mana;
                     card.position = pos;
-                    this.handcards.Add(card);
+                    handcards.Add(card);
+
                 }
+
 
                 if (s.StartsWith("ownhero:"))
                 {
@@ -1154,40 +722,33 @@ namespace HREngine.Bots
                     counter = 0;
                 }
 
+
+
                 counter++;
                 j++;
             }
-
             Helpfunctions.Instance.logg("rdy");
 
-            Hrtprozis.Instance.setOwnPlayer(this.ownPlayer);
-            Handmanager.Instance.setOwnPlayer(this.ownPlayer);
+
+            Hrtprozis.Instance.setOwnPlayer(ownPlayer);
+            Handmanager.Instance.setOwnPlayer(ownPlayer);
 
             this.numOptionPlayedThisTurn = 0;
-            this.numOptionPlayedThisTurn += this.cardsPlayedThisTurn + this.ownheroattacksThisRound;
+            this.numOptionPlayedThisTurn += this.cardsPlayedThisTurn + ownheroattacksThisRound;
             foreach (Minion m in this.ownminions)
             {
                 this.numOptionPlayedThisTurn += m.numAttacksThisTurn;
             }
 
-            Hrtprozis.Instance.updatePlayer(
-                this.maxmana, 
-                this.mana, 
-                this.cardsPlayedThisTurn, 
-                this.numMinionsPlayedThisTurn, 
-                this.numOptionPlayedThisTurn, 
-                this.overdrive, 
-                this.ownHEntity, 
-                this.enemyHEntity);
-            Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, this.enemySecretAmount);
+
+            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, ownHEntity, enemyHEntity);
+            Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);
 
             bool herowindfury = false;
-            if (this.ownHeroWeapon == "doomhammer")
-            {
-                herowindfury = true;
-            }
+            if (this.ownHeroWeapon == "doomhammer") herowindfury = true;
 
-            // create heros:
+            //create heros:
+
             this.ownHero = new Minion();
             this.enemyHero = new Minion();
             this.ownHero.isHero = true;
@@ -1196,144 +757,106 @@ namespace HREngine.Bots
             this.enemyHero.own = false;
             this.ownHero.maxHp = this.ownheromaxhp;
             this.enemyHero.maxHp = this.enemyheromaxhp;
-            this.ownHero.entitiyID = this.ownHEntity;
-            this.enemyHero.entitiyID = this.enemyHEntity;
+            this.ownHero.entitiyID = ownHEntity;
+            this.enemyHero.entitiyID = enemyHEntity;
 
-            this.ownHero.Angr = this.ownHeroAttack;
-            this.ownHero.Hp = this.ownherohp;
-            this.ownHero.armor = this.ownherodefence;
-            this.ownHero.frozen = this.ownHeroFrozen;
-            this.ownHero.immuneWhileAttacking = this.ownHeroimmunewhileattacking;
-            this.ownHero.immune = this.heroImmune;
-            this.ownHero.numAttacksThisTurn = this.ownheroattacksThisRound;
+            this.ownHero.Angr = ownHeroAttack;
+            this.ownHero.Hp = ownherohp;
+            this.ownHero.armor = ownherodefence;
+            this.ownHero.frozen = ownHeroFrozen;
+            this.ownHero.immuneWhileAttacking = ownHeroimmunewhileattacking;
+            this.ownHero.immune = heroImmune;
+            this.ownHero.numAttacksThisTurn = ownheroattacksThisRound;
             this.ownHero.windfury = herowindfury;
 
-            this.enemyHero.Angr = this.enemyWeaponAttack;
-            this.enemyHero.Hp = this.enemyherohp;
-            this.enemyHero.frozen = this.enemyFrozen;
-            this.enemyHero.armor = this.enemyherodefence;
-            this.enemyHero.immune = this.enemyHeroImmune;
+            this.enemyHero.Angr = enemyWeaponAttack;
+            this.enemyHero.Hp = enemyherohp;
+            this.enemyHero.frozen = enemyFrozen;
+            this.enemyHero.armor = enemyherodefence;
+            this.enemyHero.immune = enemyHeroImmune;
             this.enemyHero.Ready = false;
 
             this.ownHero.updateReadyness();
 
-            // set Simulation stuff
+
+            //set Simulation stuff
+
             Ai.Instance.botBase = new BehaviorControl();
 
-            if (this.evalFunction == "rush")
-            {
-                Ai.Instance.botBase = new BehaviorRush();
-            }
 
-            if (this.evalFunction == "mana")
-            {
-                Ai.Instance.botBase = new BehaviorMana();
-            }
+
+            if (this.evalFunction == "rush") Ai.Instance.botBase = new BehaviorRush();
+
+            if (this.evalFunction == "mana") Ai.Instance.botBase = new BehaviorMana();
 
             Ai.Instance.setMaxWide(this.maxwide);
             Ai.Instance.setTwoTurnSimulation(false, this.twoturnsim);
             Settings.Instance.simEnemySecondTurn = this.simEnemy2Turn;
-
-            // Ai.Instance.nextTurnSimulator.updateParams();
+            //Ai.Instance.nextTurnSimulator.updateParams();
             Settings.Instance.playarround = this.playarround;
             Settings.Instance.playaroundprob = this.pprob1;
             Settings.Instance.playaroundprob2 = this.pprob2;
             Ai.Instance.setPlayAround();
 
-            // save data
-            Hrtprozis.Instance.updateOwnHero(
-                this.ownHeroWeapon, 
-                this.ownHeroWeaponAttack, 
-                this.ownHeroWeaponDurability, 
-                this.ownheroname, 
-                heroability, 
-                abilityReady, 
-                this.ownHero);
-            Hrtprozis.Instance.updateEnemyHero(
-                this.enemyWeapon, 
-                this.enemyWeaponAttack, 
-                this.enemyWeaponDur, 
-                this.enemyheroname, 
-                this.enemmaxman, 
-                enemyability, 
-                this.enemyHero);
+            //save data
+            Hrtprozis.Instance.updateOwnHero(this.ownHeroWeapon, this.ownHeroWeaponAttack, this.ownHeroWeaponDurability, this.ownheroname, heroability, abilityReady, this.ownHero);
+            Hrtprozis.Instance.updateEnemyHero(this.enemyWeapon, this.enemyWeaponAttack, this.enemyWeaponDur, this.enemyheroname, enemmaxman, enemyability, this.enemyHero);
 
             Hrtprozis.Instance.updateMinions(this.ownminions, this.enemyminions);
 
-            Hrtprozis.Instance.updateFatigueStats(
-                this.ownDecksize, 
-                this.ownFatigue, 
-                this.enemyDecksize, 
-                this.enemyFatigue);
+            Hrtprozis.Instance.updateFatigueStats(this.ownDecksize, this.ownFatigue, this.enemyDecksize, this.enemyFatigue);
 
-            Handmanager.Instance.setHandcards(this.handcards, this.handcards.Count, this.enemyNumberHand);
+            Handmanager.Instance.setHandcards(this.handcards, this.handcards.Count, enemyNumberHand);
 
-            Probabilitymaker.Instance.setEnemySecretData(this.enemySecrets);
+            Probabilitymaker.Instance.setEnemySecretData(enemySecrets);
 
             Probabilitymaker.Instance.setTurnGraveYard(this.turnGraveYard);
             Probabilitymaker.Instance.stalaggDead = this.stalaggdead;
             Probabilitymaker.Instance.feugenDead = this.feugendead;
 
-            if (og != string.Empty)
-            {
-                Probabilitymaker.Instance.readGraveyards(og, eg);
-            }
-
-            if (omd != string.Empty)
-            {
-                Probabilitymaker.Instance.readTurnGraveYard(omd, emd);
-            }
-
-            // Ai.Instance.enemyTurnSim.maxwide = ets;
-            // Ai.Instance.enemySecondTurnSim.maxwide = ents;
+            if (og != "") Probabilitymaker.Instance.readGraveyards(og, eg);
+            if (omd != "") Probabilitymaker.Instance.readTurnGraveYard(omd, emd);
+            //Ai.Instance.enemyTurnSim.maxwide = ets;
+            //Ai.Instance.enemySecondTurnSim.maxwide = ents;
             Settings.Instance.enemyTurnMaxWide = ets;
             Settings.Instance.enemySecondTurnMaxWide = ents;
 
             Settings.Instance.nextTurnDeep = ntssd;
             Settings.Instance.nextTurnMaxWide = ntssw;
             Settings.Instance.nextTurnTotalBoards = ntssm;
+            //Ai.Instance.nextTurnSimulator.updateParams(ntssd, ntssw, ntssm);
 
-            // Ai.Instance.nextTurnSimulator.updateParams(ntssd, ntssw, ntssm);
             Settings.Instance.useSecretsPlayArround = dosecrets;
+
+            Settings.Instance.setWeights(alpha);
+
         }
 
-        #endregion
 
-        #region Public Methods and Operators
 
-        /// <summary>
-        /// The create new minion.
-        /// </summary>
-        /// <param name="hc">
-        /// The hc.
-        /// </param>
-        /// <param name="zonepos">
-        /// The zonepos.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Minion"/>.
-        /// </returns>
         public Minion createNewMinion(Handmanager.Handcard hc, int zonepos, bool own)
         {
-            Minion m = new Minion();
-            Handmanager.Handcard handc = new Handmanager.Handcard(hc);
-            m.handcard = handc;
+            Minion m = new Minion
+            {
+                handcard = new Handmanager.Handcard(hc),
+                zonepos = zonepos,
+                entitiyID = hc.entity,
+                Angr = hc.card.Attack,
+                Hp = hc.card.Health,
+                maxHp = hc.card.Health,
+                name = hc.card.name,
+                playedThisTurn = true,
+                numAttacksThisTurn = 0
+            };
+
             m.own = own;
             m.isHero = false;
             m.entitiyID = hc.entity;
-            m.Angr = hc.card.Attack;
-            m.Hp = hc.card.Health;
-            m.maxHp = hc.card.Health;
-            m.name = hc.card.name;
             m.playedThisTurn = true;
             m.numAttacksThisTurn = 0;
-            m.zonepos = zonepos;
             m.windfury = hc.card.windfury;
             m.taunt = hc.card.tank;
-            m.charge = hc.card.Charge ? 1 : 0;
+            m.charge = (hc.card.Charge) ? 1 : 0;
             m.divineshild = hc.card.Shield;
             m.poisonous = hc.card.poisionous;
             m.stealth = hc.card.Stealth;
@@ -1344,10 +867,12 @@ namespace HREngine.Bots
             {
                 m.Angr = m.Hp;
             }
-
             return m;
         }
 
-        #endregion
+
+
+
     }
+
 }

@@ -1,50 +1,19 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_320.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_320.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_320.
-    /// </summary>
-    internal class Sim_EX1_320 : SimTemplate
-    {
-        // baneofdoom
+	class Sim_EX1_320 : SimTemplate //baneofdoom
+	{
 
-        // fügt einem charakter $2 schaden zu. beschwört einen zufälligen dämon, wenn der schaden tödlich ist.
-        #region Fields
+//    fügt einem charakter $2 schaden zu. beschwört einen zufälligen dämon, wenn der schaden tödlich ist.
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_059);//bloodimp
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		{
 
-        /// <summary>
-        ///     The kid.
-        /// </summary>
-        private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_059); // bloodimp
 
-        #endregion
-
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-        {
-            int dmg = ownplay ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
+            int dmg = (ownplay) ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
 
             bool summondemon = false;
 
@@ -57,12 +26,12 @@ namespace HREngine.Bots
 
             if (summondemon)
             {
-                int posi = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-
-                p.callKid(this.kid, posi, ownplay);
+                int posi = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
+                
+                p.callKid(kid, posi, ownplay);
             }
-        }
 
-        #endregion
-    }
+		}
+
+	}
 }

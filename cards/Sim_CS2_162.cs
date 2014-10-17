@@ -1,18 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_162.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_162.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_162.
-    /// </summary>
-    internal class Sim_CS2_162 : SimTemplate
+    class Sim_CS2_162 : SimTemplate//Lord of the Arena
     {
-        // Lord of the Arena
+
+     
+
     }
 }

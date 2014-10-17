@@ -1,43 +1,17 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_084.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_084.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_084.
-    /// </summary>
-    internal class Sim_CS2_084 : SimTemplate
-    {
-        // huntersmark
+	class Sim_CS2_084 : SimTemplate //huntersmark
+	{
 
-        // setzt das leben eines dieners auf 1.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-        {
+//    setzt das leben eines dieners auf 1.
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		{
             p.minionSetLifetoOne(target);
-        }
+		}
 
-        #endregion
-    }
+	}
 }

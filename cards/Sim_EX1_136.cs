@@ -1,35 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_136.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_136.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_136.
-    /// </summary>
-    internal class Sim_EX1_136 : SimTemplate
+    class Sim_EX1_136 : SimTemplate //redemption
     {
-        // redemption
-        // todo secret
-        // geheimnis:/ wenn einer eurer diener stirbt, wird er mit 1 leben wiederbelebt.
-        #region Public Methods and Operators
+        //todo secret
+        //    geheimnis:/ wenn einer eurer diener stirbt, wird er mit 1 leben wiederbelebt.
 
-        /// <summary>
-        /// The on secret play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="number">
-        /// The number.
-        /// </param>
         public override void onSecretPlay(Playfield p, bool ownplay, int number)
         {
             int posi = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
@@ -67,8 +46,8 @@ namespace HREngine.Bots
                     }
                 }
             }
+
         }
 
-        #endregion
     }
 }

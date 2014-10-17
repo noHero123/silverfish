@@ -1,18 +1,13 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_119.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_119.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_119.
-    /// </summary>
-    internal class Sim_CS2_119 : SimTemplate
-    {
-        // oasissnapjaw
-    }
+	class Sim_CS2_119 : SimTemplate //oasissnapjaw
+	{
+
+//
+
+	}
 }

@@ -1,43 +1,17 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_593.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_593.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_593.
-    /// </summary>
-    internal class Sim_EX1_593 : SimTemplate
+    class Sim_EX1_593 : SimTemplate //nightblade
     {
-        // nightblade
 
-        // kampfschrei: /fügt dem feindlichen helden 3 schaden zu.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The get battlecry effect.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
+        //    kampfschrei: /fügt dem feindlichen helden 3 schaden zu.
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
             p.minionGetDamageOrHeal(own.own ? p.enemyHero : p.ownHero, 3);
         }
 
-        #endregion
     }
 }

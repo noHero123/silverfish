@@ -1,128 +1,33 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Settings.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The settings.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The settings.
-    /// </summary>
     internal class Settings
     {
-        #region Static Fields
+        public float firstweight = 0.5f;
+        public float secondweight = 0.5f;
 
-        /// <summary>
-        ///     The instance.
-        /// </summary>
-        private static Settings instance;
-
-        #endregion
-
-        #region Fields
-
-        /// <summary>
-        ///     The enemy second turn max wide.
-        /// </summary>
-        public int enemySecondTurnMaxWide = 20;
-
-        /// <summary>
-        ///     The enemy turn max wide.
-        /// </summary>
-        public int enemyTurnMaxWide = 20;
-
-        /// <summary>
-        ///     The logfile.
-        /// </summary>
-        public string logfile = "Logg.txt";
-
-        /// <summary>
-        ///     The logpath.
-        /// </summary>
-        public string logpath = string.Empty;
-
-        /// <summary>
-        ///     The next turn deep.
-        /// </summary>
-        public int nextTurnDeep = 6;
-
-        /// <summary>
-        ///     The next turn max wide.
-        /// </summary>
-        public int nextTurnMaxWide = 20;
-
-        /// <summary>
-        ///     The next turn total boards.
-        /// </summary>
-        public int nextTurnTotalBoards = 50;
-
-        /// <summary>
-        ///     The number of threads.
-        /// </summary>
         public int numberOfThreads = 32;
-
-        /// <summary>
-        ///     The path.
-        /// </summary>
-        public string path = string.Empty;
-
-        /// <summary>
-        ///     The playaroundprob.
-        /// </summary>
-        public int playaroundprob = 50;
-
-        /// <summary>
-        ///     The playaroundprob 2.
-        /// </summary>
-        public int playaroundprob2 = 80;
-
-        /// <summary>
-        ///     The playarround.
-        /// </summary>
-        public bool playarround = false;
-
-        /// <summary>
-        ///     The second turn amount.
-        /// </summary>
-        public int secondTurnAmount = 256;
-
-        /// <summary>
-        ///     The sim enemy second turn.
-        /// </summary>
-        public bool simEnemySecondTurn = true;
-
-        /// <summary>
-        ///     The simulate enemys turn.
-        /// </summary>
-        public bool simulateEnemysTurn = true;
-
-        /// <summary>
-        ///     The use secrets play arround.
-        /// </summary>
         public bool useSecretsPlayArround = false;
 
-        #endregion
+        public bool simulateEnemysTurn = true;
+        public int enemyTurnMaxWide = 20;
 
-        #region Constructors and Destructors
+        public int secondTurnAmount = 256;
+        public bool simEnemySecondTurn = true;
+        public int enemySecondTurnMaxWide = 20;
 
-        /// <summary>
-        /// Verhindert, dass eine Standardinstanz der <see cref="Settings"/> Klasse erstellt wird. 
-        ///     Prevents a default instance of the <see cref="Settings"/> class from being created.
-        /// </summary>
-        private Settings()
-        {
-        }
+        public int nextTurnDeep = 6;
+        public int nextTurnMaxWide = 20;
+        public int nextTurnTotalBoards = 50;
 
-        #endregion
+        public bool playarround = false;
+        public int playaroundprob = 50;
+        public int playaroundprob2 = 80;
 
-        #region Public Properties
+        public string path = "";
+        public string logpath = "";
+        public string logfile = "Logg.txt";
+        private static Settings instance;
 
-        /// <summary>
-        ///     Gets the instance.
-        /// </summary>
         public static Settings Instance
         {
             get
@@ -131,43 +36,32 @@ namespace HREngine.Bots
             }
         }
 
-        #endregion
 
-        #region Public Methods and Operators
+        private Settings()
+        {
+        }
 
-        /// <summary>
-        /// The set file path.
-        /// </summary>
-        /// <param name="path">
-        /// The path.
-        /// </param>
+        public void setWeights(int a)
+        {
+            float alpha = ((float)a) / 100f;
+            this.firstweight = 1f - alpha;
+            this.secondweight = alpha;
+            Helpfunctions.Instance.ErrorLog("current alpha is " + this.secondweight);
+        }
+
         public void setFilePath(string path)
         {
             this.path = path;
         }
-
-        /// <summary>
-        /// The set logg file.
-        /// </summary>
-        /// <param name="path">
-        /// The path.
-        /// </param>
-        public void setLoggFile(string path)
-        {
-            this.logfile = path;
-        }
-
-        /// <summary>
-        /// The set logg path.
-        /// </summary>
-        /// <param name="path">
-        /// The path.
-        /// </param>
         public void setLoggPath(string path)
         {
             this.logpath = path;
         }
 
-        #endregion
+        public void setLoggFile(string path)
+        {
+            this.logfile = path;
+        }
     }
+
 }

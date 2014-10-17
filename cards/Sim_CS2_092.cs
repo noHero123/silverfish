@@ -1,41 +1,16 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_092.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_092.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_092.
-    /// </summary>
-    internal class Sim_CS2_092 : SimTemplate
+    class Sim_CS2_092 : SimTemplate//blessing of kings
     {
-        // blessing of kings
-        #region Public Methods and Operators
 
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             p.minionGetBuffed(target, 4, 4);
         }
 
-        #endregion
     }
 }

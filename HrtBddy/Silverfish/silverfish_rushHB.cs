@@ -62,6 +62,8 @@ namespace SilverfishRush
             int nexttunsimMaxBoards = 50;
 
             bool secrets = false; // playing arround enemys secrets
+
+            int alpha = 50; // weight of the second turn in calculation (0<= alpha <= 100)
             //###########################################################
 
 
@@ -103,6 +105,9 @@ namespace SilverfishRush
             }
 
             if (writeToSingleFile) Helpfunctions.Instance.ErrorLog("write to log to single file");
+
+
+            Settings.Instance.setWeights(alpha);
 
 
             bool teststuff = false;
@@ -647,7 +652,7 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "113.3";
+        public string versionnumber = "113.4";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1224,11 +1229,17 @@ namespace SilverfishRush
 
                     if (ent.GetTag(GAME_TAG.CONTROLLER) == owncontroler)
                     {
-                        ownCards.Add(cardid);
+                        if (ent.GetTag(GAME_TAG.ZONE) == 4) // 4 == graveyard
+                        {
+                            ownCards.Add(cardid);
+                        }
                     }
                     else
                     {
-                        enemyCards.Add(cardid);
+                        if (ent.GetTag(GAME_TAG.ZONE) == 4) // 4 == graveyard
+                        {
+                            enemyCards.Add(cardid);
+                        }
                     }
                 }
 
@@ -1281,6 +1292,10 @@ namespace SilverfishRush
                 this.botbehave += " secret";
             }
 
+            if (Settings.Instance.secondweight != 0.5f)
+            {
+                this.botbehave += " weight " + (int)(Settings.Instance.secondweight * 100f);
+            }
 
 
 
@@ -1619,13 +1634,11 @@ namespace SilverfishRush
 
                 this.own = null;
 
-                this.card = new Handmanager.Handcard();
-                this.card.entity = cardEnt;
+                this.card = new Handmanager.Handcard { entity = cardEnt };
 
                 if (targetEnt >= 0)
                 {
-                    Minion m = new Minion();
-                    m.entitiyID = targetEnt;
+                    Minion m = new Minion { entitiyID = targetEnt };
                     this.target = m;
                 }
                 else
@@ -1650,8 +1663,7 @@ namespace SilverfishRush
 
                 this.card = null;
 
-                Minion m = new Minion();
-                m.entitiyID = targetEnt;
+                Minion m = new Minion { entitiyID = targetEnt };
                 this.target = m;
 
                 Minion o = new Minion();
@@ -1670,8 +1682,7 @@ namespace SilverfishRush
 
                 this.card = null;
 
-                Minion m = new Minion();
-                m.entitiyID = targetEnt;
+                Minion m = new Minion { entitiyID = targetEnt };
                 this.target = m;
 
                 this.own = p.ownHero;
@@ -1689,8 +1700,7 @@ namespace SilverfishRush
 
                 this.card = null;
 
-                Minion m = new Minion();
-                m.entitiyID = targetEnt;
+                Minion m = new Minion { entitiyID = targetEnt };
                 this.target = m;
 
                 this.own = null;
@@ -3140,9 +3150,6 @@ namespace SilverfishRush
             foreach (Minion m in this.ownMinions)
             {
                 if (m.handcard.card.name == CardDB.cardName.warsongcommander) commander = true;
-            }
-            foreach (Minion m in this.ownMinions)
-            {
                 if (m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.direwolfalpha) placebuff = true;
             }
             //attackmaxing :D
@@ -3156,6 +3163,11 @@ namespace SilverfishRush
                     cval = card.Attack;
                     if (card.windfury) cval = card.Attack;
                 }
+                if (card.name == CardDB.cardName.nerubianegg)
+                {
+                    cval += 1;
+                }
+                cval++;
                 i = 0;
                 int[] buffplaces = new int[this.ownMinions.Count];
                 int[] whirlwindplaces = new int[this.ownMinions.Count];
@@ -3928,8 +3940,7 @@ namespace SilverfishRush
                 }
                 if (aa.actionType == actionEnum.useHeroPower)
                 {
-                    if (this.isOwnTurn) ha = this.ownHeroAblility;
-                    else ha = this.enemyHeroAblility;
+                    ha = this.isOwnTurn ? this.ownHeroAblility : this.enemyHeroAblility;
                 }
             }
             // create and execute the action------------------------------------------------------------------------
@@ -5673,25 +5684,11 @@ namespace SilverfishRush
 
             hero.Angr += c.Attack;
 
-            if (c.name == CardDB.cardName.doomhammer)
-            {
-                hero.windfury = true;
+            hero.windfury = (c.name == CardDB.cardName.doomhammer);
 
-            }
-            else
-            {
-                hero.windfury = false;
-            }
             hero.updateReadyness();
 
-            if (c.name == CardDB.cardName.gladiatorslongbow)
-            {
-                hero.immuneWhileAttacking = true;
-            }
-            else
-            {
-                hero.immuneWhileAttacking = false;
-            }
+            hero.immuneWhileAttacking = (c.name == CardDB.cardName.gladiatorslongbow);
 
             List<Minion> temp = (own) ? this.ownMinions : this.enemyMinions;
             foreach (Minion m in temp)
@@ -5730,8 +5727,7 @@ namespace SilverfishRush
             int mobplace = zonepos + 1;//todo check this?
 
             //create minion (+triggers)
-            Handmanager.Handcard hc = new Handmanager.Handcard(c);
-            hc.entity = this.nextEntity;
+            Handmanager.Handcard hc = new Handmanager.Handcard(c) { entity = this.nextEntity };
             this.nextEntity++;
             Minion m = createNewMinion(hc, mobplace, own);
             //put it on battle field (+triggers)
@@ -5835,24 +5831,15 @@ namespace SilverfishRush
 
             if (s == CardDB.cardName.unknown)
             {
-                CardDB.Card plchldr = new CardDB.Card();
-                plchldr.name = CardDB.cardName.unknown;
-                Handmanager.Handcard hc = new Handmanager.Handcard();
-                hc.card = plchldr;
-                hc.position = this.owncards.Count + 1;
-                hc.manacost = 1000;
-                hc.entity = this.nextEntity;
+                CardDB.Card plchldr = new CardDB.Card { name = CardDB.cardName.unknown };
+                Handmanager.Handcard hc = new Handmanager.Handcard { card = plchldr, position = this.owncards.Count + 1, manacost = 1000, entity = this.nextEntity };
                 this.nextEntity++;
                 this.owncards.Add(hc);
             }
             else
             {
                 CardDB.Card c = CardDB.Instance.getCardData(s);
-                Handmanager.Handcard hc = new Handmanager.Handcard();
-                hc.card = c;
-                hc.position = this.owncards.Count + 1;
-                hc.manacost = c.calculateManaCost(this);
-                hc.entity = this.nextEntity;
+                Handmanager.Handcard hc = new Handmanager.Handcard { card = c, position = this.owncards.Count + 1, manacost = c.calculateManaCost(this), entity = this.nextEntity };
                 this.nextEntity++;
                 this.owncards.Add(hc);
             }
@@ -5937,24 +5924,16 @@ namespace SilverfishRush
 
             if (s == CardDB.cardIDEnum.None)
             {
-                CardDB.Card plchldr = new CardDB.Card();
-                plchldr.name = CardDB.cardName.unknown;
-                Handmanager.Handcard hc = new Handmanager.Handcard();
-                hc.card = plchldr;
-                hc.position = this.owncards.Count + 1;
-                hc.manacost = 1000;
-                hc.entity = this.nextEntity;
+                CardDB.Card plchldr = new CardDB.Card { name = CardDB.cardName.unknown };
+                Handmanager.Handcard hc = new Handmanager.Handcard { card = plchldr, position = this.owncards.Count + 1, manacost = 1000, entity = this.nextEntity };
+
                 this.nextEntity++;
                 this.owncards.Add(hc);
             }
             else
             {
                 CardDB.Card c = CardDB.Instance.getCardDataFromID(s);
-                Handmanager.Handcard hc = new Handmanager.Handcard();
-                hc.card = c;
-                hc.position = this.owncards.Count + 1;
-                hc.manacost = c.calculateManaCost(this);
-                hc.entity = this.nextEntity;
+                Handmanager.Handcard hc = new Handmanager.Handcard { card = c, position = this.owncards.Count + 1, manacost = c.calculateManaCost(this), entity = this.nextEntity };
                 this.nextEntity++;
                 this.owncards.Add(hc);
             }
@@ -6026,11 +6005,7 @@ namespace SilverfishRush
             if (own)
             {
                 CardDB.Card c = m.handcard.card;
-                Handmanager.Handcard hc = new Handmanager.Handcard();
-                hc.card = c;
-                hc.position = this.owncards.Count + 1;
-                hc.entity = m.entitiyID;
-                hc.manacost = c.calculateManaCost(this) + manachange;
+                Handmanager.Handcard hc = new Handmanager.Handcard { card = c, position = this.owncards.Count + 1, entity = m.entitiyID, manacost = c.calculateManaCost(this) + manachange };
                 if (this.owncards.Count < 10)
                 {
                     this.owncards.Add(hc);
@@ -6053,8 +6028,7 @@ namespace SilverfishRush
         {
             m.handcard.card.sim_card.onAuraEnds(this, m);//end aura of the minion
 
-            Handmanager.Handcard hc = new Handmanager.Handcard(c);
-            hc.entity = m.entitiyID;
+            Handmanager.Handcard hc = new Handmanager.Handcard(c) { entity = m.entitiyID };
             int ancestral = m.ancestralspirit;
             if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || ancestral >= 1)
             {
@@ -6177,14 +6151,7 @@ namespace SilverfishRush
             }
 
 
-            if (m.maxHp == m.Hp)
-            {
-                m.wounded = false;
-            }
-            else
-            {
-                m.wounded = true;
-            }
+            m.wounded = (m.maxHp != m.Hp);
 
             if (m.name == CardDB.cardName.lightspawn && !m.silenced)
             {
@@ -6263,8 +6230,8 @@ namespace SilverfishRush
             {
                 minionGetDamageOrHeal(m, damages, true);
             }
-            if (own) minionGetDamageOrHeal(this.ownHero, damages);
-            else minionGetDamageOrHeal(this.enemyHero, damages);
+
+            this.minionGetDamageOrHeal(own ? this.ownHero : this.enemyHero, damages);
         }
 
         public void allCharsGetDamage(int damages)
@@ -6536,18 +6503,13 @@ namespace SilverfishRush
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Ai();
-                }
-                return instance;
+                return instance ?? (instance = new Ai());
             }
         }
 
         private Ai()
         {
-            this.nextMoveGuess = new Playfield();
-            this.nextMoveGuess.mana = -100;
+            this.nextMoveGuess = new Playfield { mana = -100 };
 
             this.mainTurnSimulator = new MiniSimulator(maxdeep, maxwide, 0); // 0 for unlimited
             this.mainTurnSimulator.setPrintingstuff(true);
@@ -7106,7 +7068,7 @@ namespace SilverfishRush
                     List<Action> actions = movegen.getMoveList(p, isLethalCheck, usePenalityManager, useCutingTargets);
                     foreach (Action a in actions)
                     {
-                        //if (deep == 0 && a.actionType == actionEnum.playcard) Helpfunctions.Instance.ErrorLog("play " + a.card.card.name);
+                        //if (deep == 0 && a.actionType == actionEnum.attackWithMinion) Helpfunctions.Instance.ErrorLog("play " + a.own.entitiyID + " -> " + a.target.entitiyID);
                         havedonesomething = true;
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
@@ -7247,6 +7209,10 @@ namespace SilverfishRush
                         p.prepareNextTurn(p.isOwnTurn);
                         Ai.Instance.enemyTurnSim[thread].simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
                     }
+                    else
+                    {
+                        p.value = -10000;
+                    }
                     //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
                     this.posmoves.Add(p);
                 }
@@ -7310,6 +7276,10 @@ namespace SilverfishRush
                         //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                         p.prepareNextTurn(p.isOwnTurn);
                         Ai.Instance.enemyTurnSim[threadnumber].simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
+                    }
+                    else
+                    {
+                        p.value = -10000;
                     }
                     //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
 
@@ -7705,9 +7675,8 @@ namespace SilverfishRush
             if (simulateTwoTurns && bestplay.value > -1000)
             {
                 bestplay.prepareNextTurn(true);
-                rootfield.value = 0.5f * bestval + 0.5f * Ai.Instance.nextTurnSimulator[this.thread].doallmoves(bestplay, false, print);
+                rootfield.value = Settings.Instance.firstweight * bestval + Settings.Instance.secondweight * Ai.Instance.nextTurnSimulator[this.thread].doallmoves(bestplay, false, print);
             }
-
 
 
         }
@@ -8228,11 +8197,7 @@ namespace SilverfishRush
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Movegenerator();
-                }
-                return instance;
+                return instance ?? (instance = new Movegenerator());
             }
         }
 
@@ -8963,7 +8928,7 @@ namespace SilverfishRush
 
                         if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                         {
-                            if (mnn.Angr == m.Angr && mnn.Hp <= m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp <= m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && m.handcard.card.isToken == mnn.handcard.card.isToken) goingtoadd = false;
                             continue;
                         }
 
@@ -8974,7 +8939,7 @@ namespace SilverfishRush
                                 continue;
                             }
                             // same name -> test whether they are equal
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && m.handcard.card.isToken == mnn.handcard.card.isToken) goingtoadd = false;
                             continue;
                         }
 
@@ -9126,11 +9091,7 @@ namespace SilverfishRush
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Handmanager();
-                }
-                return instance;
+                return instance ?? (instance = new Handmanager());
             }
         }
 
@@ -9363,11 +9324,7 @@ namespace SilverfishRush
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Hrtprozis();
-                }
-                return instance;
+                return instance ?? (instance = new Hrtprozis());
             }
         }
 
@@ -9648,16 +9605,18 @@ namespace SilverfishRush
 
         private Minion createNewMinion(Handmanager.Handcard hc, int id)
         {
-            Minion m = new Minion();
-            m.handcard = new Handmanager.Handcard(hc);
-            m.zonepos = id + 1;
-            m.entitiyID = hc.entity;
-            m.Angr = hc.card.Attack;
-            m.Hp = hc.card.Health;
-            m.maxHp = hc.card.Health;
-            m.name = hc.card.name;
-            m.playedThisTurn = true;
-            m.numAttacksThisTurn = 0;
+            Minion m = new Minion
+            {
+                handcard = new Handmanager.Handcard(hc),
+                zonepos = id + 1,
+                entitiyID = hc.entity,
+                Angr = hc.card.Attack,
+                Hp = hc.card.Health,
+                maxHp = hc.card.Health,
+                name = hc.card.name,
+                playedThisTurn = true,
+                numAttacksThisTurn = 0
+            };
 
 
             if (hc.card.windfury) m.windfury = true;
@@ -9871,11 +9830,7 @@ namespace SilverfishRush
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new PenalityManager();
-                }
-                return instance;
+                return instance ?? (instance = new PenalityManager());
             }
         }
 
@@ -9983,6 +9938,7 @@ namespace SilverfishRush
             retval += getSilencePenality(name, target, p, choice, lethal);
             retval += getDamagePenality(name, target, p, choice, lethal);
             retval += getHealPenality(name, target, p, choice, lethal);
+            //if(retval < 500) 
             retval += getCardDrawPenality(name, target, p, choice, lethal);
             retval += getCardDrawofEffectMinions(card, p);
             retval += getCardDiscardPenality(name, p);
@@ -9998,7 +9954,7 @@ namespace SilverfishRush
                 retval += cb.getPenalityForDestroyingCombo(card, p);
                 retval += cb.getPlayValue(card.cardIDenum);
             }
-
+            //Helpfunctions.Instance.ErrorLog("retval " + retval);
             return retval;
         }
 
@@ -10309,15 +10265,8 @@ namespace SilverfishRush
                     }
 
                     // no pen if we have battlerage for example
-                    int dmg = 0;
-                    if (DamageTargetDatabase.ContainsKey(name))
-                    {
-                        dmg = DamageTargetDatabase[name];
-                    }
-                    else
-                    {
-                        dmg = HealTargetDatabase[name];
-                    }
+                    int dmg = this.DamageTargetDatabase.ContainsKey(name) ? this.DamageTargetDatabase[name] : this.HealTargetDatabase[name];
+
                     if (m.name == CardDB.cardName.madscientist && p.ownHeroName == HeroEnum.hunter) return 500;
                     if (m.handcard.card.deathrattle) return 10;
                     if (m.Hp > dmg)
@@ -10424,9 +10373,10 @@ namespace SilverfishRush
             if (HealTargetDatabase.ContainsKey(name))
             {
                 if (target == null) return 10;
-
+                //Helpfunctions.Instance.ErrorLog("pencheck for " + name + " " + target.entitiyID + " " + target.isHero  + " " + target.own);
                 heal = HealTargetDatabase[name];
-                if (target.isHero && !target.own) return 500; // dont heal enemy
+                if (target.isHero && !target.own) return 510; // dont heal enemy
+                //Helpfunctions.Instance.ErrorLog("pencheck for " + name + " " + target.entitiyID + " " + target.isHero + " " + target.own);
                 if ((target.isHero && target.own) && p.ownHero.Hp == 30) return 150;
                 if ((target.isHero && target.own) && p.ownHero.Hp + heal - 1 > 30) pen = p.ownHero.Hp + heal - 30;
                 Minion m = new Minion();
@@ -10541,6 +10491,7 @@ namespace SilverfishRush
                     {
                         minmana = hc.manacost;
                     }
+                    //if (hc.getManaCost(p) == p.ownMaxMana)
                     int manac = hc.getManaCost(p);
                     if (manac > p.ownMaxMana - 2 && manac <= p.ownMaxMana)
                     {
@@ -10595,31 +10546,63 @@ namespace SilverfishRush
 
         private int getRandomPenaltiy(CardDB.Card card, Playfield p, Minion target)
         {
-            if (p.turnCounter >= 1) return 0;
-            if (!this.randomEffects.ContainsKey(card.name) && !this.cardDrawBattleCryDatabase.ContainsKey(card.name)) return 0;
-            if (card.name == CardDB.cardName.brawl) return 0;
-            if ((card.name == CardDB.cardName.cleave || card.name == CardDB.cardName.multishot) && p.enemyMinions.Count == 2) return 0;
-            if ((card.name == CardDB.cardName.deadlyshot) && p.enemyMinions.Count == 1) return 0;
-            if ((card.name == CardDB.cardName.arcanemissiles || card.name == CardDB.cardName.avengingwrath) && p.enemyMinions.Count == 0) return 0;
+            if (p.turnCounter >= 1)
+            {
+                return 0;
+            }
+
+            if (!this.randomEffects.ContainsKey(card.name) && !this.cardDrawBattleCryDatabase.ContainsKey(card.name))
+            {
+                return 0;
+            }
+
+            if (card.name == CardDB.cardName.brawl)
+            {
+                return 0;
+            }
+
+            if ((card.name == CardDB.cardName.cleave || card.name == CardDB.cardName.multishot)
+                && p.enemyMinions.Count == 2)
+            {
+                return 0;
+            }
+
+            if ((card.name == CardDB.cardName.deadlyshot) && p.enemyMinions.Count == 1)
+            {
+                return 0;
+            }
+
+            if ((card.name == CardDB.cardName.arcanemissiles || card.name == CardDB.cardName.avengingwrath)
+                && p.enemyMinions.Count == 0)
+            {
+                return 0;
+            }
+
             int cards = 0;
-            if (this.randomEffects.ContainsKey(card.name))
-            {
-                cards = randomEffects[card.name];
-            }
-            else
-            {
-                cards = cardDrawBattleCryDatabase[card.name];
-            }
+            cards = this.randomEffects.ContainsKey(card.name) ? this.randomEffects[card.name] : this.cardDrawBattleCryDatabase[card.name];
+
             bool first = true;
             bool hasgadget = false;
             bool hasstarving = false;
             bool hasknife = false;
             foreach (Minion mnn in p.ownMinions)
             {
-                if (mnn.name == CardDB.cardName.gadgetzanauctioneer) hasgadget = true;
-                if (mnn.name == CardDB.cardName.starvingbuzzard) hasstarving = true;
-                if (mnn.name == CardDB.cardName.knifejuggler) hasknife = true;
+                if (mnn.name == CardDB.cardName.gadgetzanauctioneer)
+                {
+                    hasgadget = true;
+                }
+
+                if (mnn.name == CardDB.cardName.starvingbuzzard)
+                {
+                    hasstarving = true;
+                }
+
+                if (mnn.name == CardDB.cardName.knifejuggler)
+                {
+                    hasknife = true;
+                }
             }
+
             foreach (Action a in p.playactions)
             {
                 if (a.actionType == actionEnum.attackWithHero)
@@ -10627,32 +10610,55 @@ namespace SilverfishRush
                     first = false;
                     continue;
                 }
-                if (a.actionType == actionEnum.useHeroPower && (p.ownHeroName != HeroEnum.shaman && p.ownHeroName != HeroEnum.warlock))
+
+                if (a.actionType == actionEnum.useHeroPower
+                    && (p.ownHeroName != HeroEnum.shaman && p.ownHeroName != HeroEnum.warlock))
                 {
                     first = false;
                     continue;
                 }
+
                 if (a.actionType == actionEnum.attackWithMinion)
                 {
                     first = false;
                     continue;
                 }
+
                 if (a.actionType == actionEnum.playcard)
                 {
                     if (card.name == CardDB.cardName.knifejuggler && card.type == CardDB.cardtype.MOB)
                     {
                         continue;
                     }
-                    if (cardDrawBattleCryDatabase.ContainsKey(a.card.card.name)) continue;
-                    if (hasgadget && card.type == CardDB.cardtype.SPELL) continue;
-                    if (hasstarving && (TAG_RACE)card.race == TAG_RACE.PET) continue;
-                    if (hasknife && card.type == CardDB.cardtype.MOB) continue;
+
+                    if (this.cardDrawBattleCryDatabase.ContainsKey(a.card.card.name))
+                    {
+                        continue;
+                    }
+
+                    if (hasgadget && card.type == CardDB.cardtype.SPELL)
+                    {
+                        continue;
+                    }
+
+                    if (hasstarving && (TAG_RACE)card.race == TAG_RACE.PET)
+                    {
+                        continue;
+                    }
+
+                    if (hasknife && card.type == CardDB.cardtype.MOB)
+                    {
+                        continue;
+                    }
 
                     first = false;
-                    continue;
                 }
             }
-            if (first == false) return cards;
+
+            if (first == false)
+            {
+                return cards + p.playactions.Count + 1;
+            }
 
             return 0;
         }
@@ -10865,6 +10871,18 @@ namespace SilverfishRush
                     return 16;
                 }
             }
+
+            //rule for coin on early game
+            if (p.ownMaxMana < 3 && card.name == CardDB.cardName.thecoin)
+            {
+                foreach (Handmanager.Handcard hc in p.owncards)
+                {
+                    if (hc.manacost <= p.ownMaxMana && hc.card.type == CardDB.cardtype.MOB) return 10;
+                }
+
+            }
+
+
 
             //some effects, which are bad :D
             int pen = 0;
@@ -11350,16 +11368,24 @@ namespace SilverfishRush
                 return 0;
             }
 
-            if (c.name == CardDB.cardName.flare) return 0;
+            if (c.name == CardDB.cardName.flare)
+            {
+                return 0;
+            }
 
             int attackedbefore = 0;
 
             foreach (Minion mnn in p.ownMinions)
             {
-                if (mnn.numAttacksThisTurn >= 1) attackedbefore++;
+                if (mnn.numAttacksThisTurn >= 1)
+                {
+                    attackedbefore++;
+                }
             }
 
-            if (c.name == CardDB.cardName.acidicswampooze && (p.enemyHeroName == HeroEnum.warrior || p.enemyHeroName == HeroEnum.thief || p.enemyHeroName == HeroEnum.pala))
+            if (c.name == CardDB.cardName.acidicswampooze
+                && (p.enemyHeroName == HeroEnum.warrior || p.enemyHeroName == HeroEnum.thief
+                    || p.enemyHeroName == HeroEnum.pala))
             {
                 if (p.enemyHeroName == HeroEnum.thief && p.enemyWeaponAttack <= 2)
                 {
@@ -11376,7 +11402,9 @@ namespace SilverfishRush
 
             if (p.enemyHeroName == HeroEnum.hunter)
             {
-                if (c.type == CardDB.cardtype.MOB && (attackedbefore == 0 || c.Health <= 4 || (p.enemyHero.Hp >= p.enemyHeroHpStarted && attackedbefore >= 1)))
+                if (c.type == CardDB.cardtype.MOB
+                    && (attackedbefore == 0 || c.Health <= 4
+                        || (p.enemyHero.Hp >= p.enemyHeroHpStarted && attackedbefore >= 1)))
                 {
                     pen += 10;
                 }
@@ -11386,40 +11414,47 @@ namespace SilverfishRush
             {
                 if (c.type == CardDB.cardtype.MOB)
                 {
-                    Minion m = new Minion();
-                    m.Hp = c.Health;
-                    m.maxHp = c.Health;
-                    m.Angr = c.Attack;
-                    m.taunt = c.tank;
-                    m.name = c.name;
-                    //play first the small minion:
-                    if ((!isOwnLowestInHand(m, p) && p.mobsplayedThisTurn == 0) || (p.mobsplayedThisTurn == 0 && attackedbefore >= 1)) pen += 10;
+                    Minion m = new Minion
+                    {
+                        Hp = c.Health,
+                        maxHp = c.Health,
+                        Angr = c.Attack,
+                        taunt = c.tank,
+                        name = c.name
+                    };
+
+                    // play first the small minion:
+                    if ((!this.isOwnLowestInHand(m, p) && p.mobsplayedThisTurn == 0)
+                        || (p.mobsplayedThisTurn == 0 && attackedbefore >= 1))
+                    {
+                        pen += 10;
+                    }
                 }
 
                 if (c.type == CardDB.cardtype.SPELL && p.cardsPlayedThisTurn == p.mobsplayedThisTurn)
                 {
                     pen += 10;
                 }
-
             }
 
             if (p.enemyHeroName == HeroEnum.pala)
             {
                 if (c.type == CardDB.cardtype.MOB)
                 {
-                    Minion m = new Minion();
-                    m.Hp = c.Health;
-                    m.maxHp = c.Health;
-                    m.Angr = c.Attack;
-                    m.taunt = c.tank;
-                    m.name = c.name;
-                    if ((!isOwnLowestInHand(m, p) && p.mobsplayedThisTurn == 0) || attackedbefore == 0) pen += 10;
+                    Minion m = new Minion
+                    {
+                        Hp = c.Health,
+                        maxHp = c.Health,
+                        Angr = c.Attack,
+                        taunt = c.tank,
+                        name = c.name
+                    };
+                    if ((!this.isOwnLowestInHand(m, p) && p.mobsplayedThisTurn == 0) || attackedbefore == 0)
+                    {
+                        pen += 10;
+                    }
                 }
-
-
             }
-
-
 
             return pen;
         }
@@ -12272,26 +12307,30 @@ namespace SilverfishRush
             this.entityId = Convert.ToInt32(secdata.Split('.')[0]);
 
             string canbe = secdata.Split('.')[1];
-            if (canbe.Length < 17) Helpfunctions.Instance.ErrorLog("cant read secret " + secdata + " " + canbe.Length);
-            this.canBe_snaketrap = (canbe[0] == '1') ? true : false;
-            this.canBe_snipe = (canbe[1] == '1') ? true : false;
-            this.canBe_explosive = (canbe[2] == '1') ? true : false;
-            this.canBe_freezing = (canbe[3] == '1') ? true : false;
-            this.canBe_missdirection = (canbe[4] == '1') ? true : false;
+            if (canbe.Length < 17)
+            {
+                Helpfunctions.Instance.ErrorLog("cant read secret " + secdata + " " + canbe.Length);
+            }
 
-            this.canBe_counterspell = (canbe[5] == '1') ? true : false;
-            this.canBe_icebarrier = (canbe[6] == '1') ? true : false;
-            this.canBe_iceblock = (canbe[7] == '1') ? true : false;
-            this.canBe_mirrorentity = (canbe[8] == '1') ? true : false;
-            this.canBe_spellbender = (canbe[9] == '1') ? true : false;
-            this.canBe_vaporize = (canbe[10] == '1') ? true : false;
-            this.canBe_duplicate = (canbe[11] == '1') ? true : false;
+            this.canBe_snaketrap = (canbe[0] == '1');
+            this.canBe_snipe = (canbe[1] == '1');
+            this.canBe_explosive = (canbe[2] == '1');
+            this.canBe_freezing = (canbe[3] == '1');
+            this.canBe_missdirection = (canbe[4] == '1');
 
-            this.canBe_eyeforaneye = (canbe[12] == '1') ? true : false;
-            this.canBe_noblesacrifice = (canbe[13] == '1') ? true : false;
-            this.canBe_redemption = (canbe[14] == '1') ? true : false;
-            this.canBe_repentance = (canbe[15] == '1') ? true : false;
-            this.canBe_avenge = (canbe[16] == '1') ? true : false;
+            this.canBe_counterspell = (canbe[5] == '1');
+            this.canBe_icebarrier = (canbe[6] == '1');
+            this.canBe_iceblock = (canbe[7] == '1');
+            this.canBe_mirrorentity = (canbe[8] == '1');
+            this.canBe_spellbender = (canbe[9] == '1');
+            this.canBe_vaporize = (canbe[10] == '1');
+            this.canBe_duplicate = (canbe[11] == '1');
+
+            this.canBe_eyeforaneye = (canbe[12] == '1');
+            this.canBe_noblesacrifice = (canbe[13] == '1');
+            this.canBe_redemption = (canbe[14] == '1');
+            this.canBe_repentance = (canbe[15] == '1');
+            this.canBe_avenge = (canbe[16] == '1');
 
             this.updateCanBeTriggered();
         }
@@ -12421,11 +12460,7 @@ namespace SilverfishRush
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Probabilitymaker();
-                }
-                return instance;
+                return instance ?? (instance = new Probabilitymaker());
             }
         }
 
@@ -12511,8 +12546,15 @@ namespace SilverfishRush
 
             foreach (GraveYardItem en in list)
             {
-                if (en.cardid == CardDB.cardIDEnum.FP1_015) this.feugenDead = true;
-                if (en.cardid == CardDB.cardIDEnum.FP1_014) this.stalaggDead = true;
+                if (en.cardid == CardDB.cardIDEnum.FP1_015)
+                {
+                    this.feugenDead = true;
+                }
+
+                if (en.cardid == CardDB.cardIDEnum.FP1_014)
+                {
+                    this.stalaggDead = true;
+                }
 
                 bool found = false;
 
@@ -12640,7 +12682,10 @@ namespace SilverfishRush
                 string anz = s.Split(',')[1];
                 CardDB.cardIDEnum cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
                 this.ownCardsPlayed.Add(cdbe, Convert.ToInt32(anz));
-                if (cdbe == CardDB.cardIDEnum.FP1_015) this.feugenDead = true;
+                if (cdbe == CardDB.cardIDEnum.FP1_015)
+                {
+                    this.feugenDead = true;
+                }
                 if (cdbe == CardDB.cardIDEnum.FP1_014) this.stalaggDead = true;
             }
             temp = enemygrave.Replace("eg: ", "");
@@ -12714,8 +12759,7 @@ namespace SilverfishRush
                 if (si.entityId == entityid && entityid < 1000) return si;
             }
 
-            SecretItem sec = new SecretItem();
-            sec.entityId = entityid;
+            SecretItem sec = new SecretItem { entityId = entityid };
             if (enemyHeroName == HeroEnum.hunter)
             {
 
@@ -12906,14 +12950,7 @@ namespace SilverfishRush
                     }
                 }
 
-                if (add)
-                {
-                    temp.Add(new SecretItem(seit));
-                }
-                else
-                {
-                    temp.Add(new SecretItem(si));
-                }
+                temp.Add(add ? new SecretItem(seit) : new SecretItem(si));
             }
 
             this.enemySecrets.Clear();
@@ -13415,11 +13452,7 @@ namespace SilverfishRush
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new ComboBreaker();
-                }
-                return instance;
+                return instance ?? (instance = new ComboBreaker());
             }
         }
 
@@ -14911,889 +14944,1775 @@ namespace SilverfishRush
 
         public cardIDEnum cardIdstringToEnum(string s)
         {
-            if (s == "XXX_040") return CardDB.cardIDEnum.XXX_040;
-            if (s == "NAX5_01H") return CardDB.cardIDEnum.NAX5_01H;
-            if (s == "CS2_188o") return CardDB.cardIDEnum.CS2_188o;
-            if (s == "NAX6_02H") return CardDB.cardIDEnum.NAX6_02H;
-            if (s == "NEW1_007b") return CardDB.cardIDEnum.NEW1_007b;
-            if (s == "NAX6_02e") return CardDB.cardIDEnum.NAX6_02e;
-            if (s == "TU4c_003") return CardDB.cardIDEnum.TU4c_003;
-            if (s == "XXX_024") return CardDB.cardIDEnum.XXX_024;
-            if (s == "EX1_613") return CardDB.cardIDEnum.EX1_613;
-            if (s == "NAX8_01") return CardDB.cardIDEnum.NAX8_01;
-            if (s == "EX1_295o") return CardDB.cardIDEnum.EX1_295o;
-            if (s == "CS2_059o") return CardDB.cardIDEnum.CS2_059o;
-            if (s == "EX1_133") return CardDB.cardIDEnum.EX1_133;
-            if (s == "NEW1_018") return CardDB.cardIDEnum.NEW1_018;
-            if (s == "NAX15_03t") return CardDB.cardIDEnum.NAX15_03t;
-            if (s == "EX1_012") return CardDB.cardIDEnum.EX1_012;
-            if (s == "EX1_178a") return CardDB.cardIDEnum.EX1_178a;
-            if (s == "CS2_231") return CardDB.cardIDEnum.CS2_231;
-            if (s == "EX1_019e") return CardDB.cardIDEnum.EX1_019e;
-            if (s == "CRED_12") return CardDB.cardIDEnum.CRED_12;
-            if (s == "CS2_179") return CardDB.cardIDEnum.CS2_179;
-            if (s == "CS2_045e") return CardDB.cardIDEnum.CS2_045e;
-            if (s == "EX1_244") return CardDB.cardIDEnum.EX1_244;
-            if (s == "EX1_178b") return CardDB.cardIDEnum.EX1_178b;
-            if (s == "XXX_030") return CardDB.cardIDEnum.XXX_030;
-            if (s == "NAX8_05") return CardDB.cardIDEnum.NAX8_05;
-            if (s == "EX1_573b") return CardDB.cardIDEnum.EX1_573b;
-            if (s == "TU4d_001") return CardDB.cardIDEnum.TU4d_001;
-            if (s == "NEW1_007a") return CardDB.cardIDEnum.NEW1_007a;
-            if (s == "NAX12_02H") return CardDB.cardIDEnum.NAX12_02H;
-            if (s == "EX1_345t") return CardDB.cardIDEnum.EX1_345t;
-            if (s == "FP1_007t") return CardDB.cardIDEnum.FP1_007t;
-            if (s == "EX1_025") return CardDB.cardIDEnum.EX1_025;
-            if (s == "EX1_396") return CardDB.cardIDEnum.EX1_396;
-            if (s == "NAX9_03") return CardDB.cardIDEnum.NAX9_03;
-            if (s == "NEW1_017") return CardDB.cardIDEnum.NEW1_017;
-            if (s == "NEW1_008a") return CardDB.cardIDEnum.NEW1_008a;
-            if (s == "EX1_587e") return CardDB.cardIDEnum.EX1_587e;
-            if (s == "EX1_533") return CardDB.cardIDEnum.EX1_533;
-            if (s == "EX1_522") return CardDB.cardIDEnum.EX1_522;
-            if (s == "NAX11_04") return CardDB.cardIDEnum.NAX11_04;
-            if (s == "NEW1_026") return CardDB.cardIDEnum.NEW1_026;
-            if (s == "EX1_398") return CardDB.cardIDEnum.EX1_398;
-            if (s == "NAX4_04") return CardDB.cardIDEnum.NAX4_04;
-            if (s == "EX1_007") return CardDB.cardIDEnum.EX1_007;
-            if (s == "CS1_112") return CardDB.cardIDEnum.CS1_112;
-            if (s == "CRED_17") return CardDB.cardIDEnum.CRED_17;
-            if (s == "NEW1_036") return CardDB.cardIDEnum.NEW1_036;
-            if (s == "NAX3_03") return CardDB.cardIDEnum.NAX3_03;
-            if (s == "EX1_355e") return CardDB.cardIDEnum.EX1_355e;
-            if (s == "EX1_258") return CardDB.cardIDEnum.EX1_258;
-            if (s == "HERO_01") return CardDB.cardIDEnum.HERO_01;
-            if (s == "XXX_009") return CardDB.cardIDEnum.XXX_009;
-            if (s == "NAX6_01H") return CardDB.cardIDEnum.NAX6_01H;
-            if (s == "NAX12_04e") return CardDB.cardIDEnum.NAX12_04e;
-            if (s == "CS2_087") return CardDB.cardIDEnum.CS2_087;
-            if (s == "DREAM_05") return CardDB.cardIDEnum.DREAM_05;
-            if (s == "NEW1_036e") return CardDB.cardIDEnum.NEW1_036e;
-            if (s == "CS2_092") return CardDB.cardIDEnum.CS2_092;
-            if (s == "CS2_022") return CardDB.cardIDEnum.CS2_022;
-            if (s == "EX1_046") return CardDB.cardIDEnum.EX1_046;
-            if (s == "XXX_005") return CardDB.cardIDEnum.XXX_005;
-            if (s == "PRO_001b") return CardDB.cardIDEnum.PRO_001b;
-            if (s == "XXX_022") return CardDB.cardIDEnum.XXX_022;
-            if (s == "PRO_001a") return CardDB.cardIDEnum.PRO_001a;
-            if (s == "NAX6_04") return CardDB.cardIDEnum.NAX6_04;
-            if (s == "NAX7_05") return CardDB.cardIDEnum.NAX7_05;
-            if (s == "CS2_103") return CardDB.cardIDEnum.CS2_103;
-            if (s == "NEW1_041") return CardDB.cardIDEnum.NEW1_041;
-            if (s == "EX1_360") return CardDB.cardIDEnum.EX1_360;
-            if (s == "FP1_023") return CardDB.cardIDEnum.FP1_023;
-            if (s == "NEW1_038") return CardDB.cardIDEnum.NEW1_038;
-            if (s == "CS2_009") return CardDB.cardIDEnum.CS2_009;
-            if (s == "NAX10_01H") return CardDB.cardIDEnum.NAX10_01H;
-            if (s == "EX1_010") return CardDB.cardIDEnum.EX1_010;
-            if (s == "CS2_024") return CardDB.cardIDEnum.CS2_024;
-            if (s == "NAX9_05") return CardDB.cardIDEnum.NAX9_05;
-            if (s == "EX1_565") return CardDB.cardIDEnum.EX1_565;
-            if (s == "CS2_076") return CardDB.cardIDEnum.CS2_076;
-            if (s == "FP1_004") return CardDB.cardIDEnum.FP1_004;
-            if (s == "CS2_046e") return CardDB.cardIDEnum.CS2_046e;
-            if (s == "CS2_162") return CardDB.cardIDEnum.CS2_162;
-            if (s == "EX1_110t") return CardDB.cardIDEnum.EX1_110t;
-            if (s == "CS2_104e") return CardDB.cardIDEnum.CS2_104e;
-            if (s == "CS2_181") return CardDB.cardIDEnum.CS2_181;
-            if (s == "EX1_309") return CardDB.cardIDEnum.EX1_309;
-            if (s == "EX1_354") return CardDB.cardIDEnum.EX1_354;
-            if (s == "NAX10_02H") return CardDB.cardIDEnum.NAX10_02H;
-            if (s == "NAX7_04H") return CardDB.cardIDEnum.NAX7_04H;
-            if (s == "TU4f_001") return CardDB.cardIDEnum.TU4f_001;
-            if (s == "XXX_018") return CardDB.cardIDEnum.XXX_018;
-            if (s == "EX1_023") return CardDB.cardIDEnum.EX1_023;
-            if (s == "XXX_048") return CardDB.cardIDEnum.XXX_048;
-            if (s == "XXX_049") return CardDB.cardIDEnum.XXX_049;
-            if (s == "NEW1_034") return CardDB.cardIDEnum.NEW1_034;
-            if (s == "CS2_003") return CardDB.cardIDEnum.CS2_003;
-            if (s == "HERO_06") return CardDB.cardIDEnum.HERO_06;
-            if (s == "CS2_201") return CardDB.cardIDEnum.CS2_201;
-            if (s == "EX1_508") return CardDB.cardIDEnum.EX1_508;
-            if (s == "EX1_259") return CardDB.cardIDEnum.EX1_259;
-            if (s == "EX1_341") return CardDB.cardIDEnum.EX1_341;
-            if (s == "DREAM_05e") return CardDB.cardIDEnum.DREAM_05e;
-            if (s == "CRED_09") return CardDB.cardIDEnum.CRED_09;
-            if (s == "EX1_103") return CardDB.cardIDEnum.EX1_103;
-            if (s == "FP1_021") return CardDB.cardIDEnum.FP1_021;
-            if (s == "EX1_411") return CardDB.cardIDEnum.EX1_411;
-            if (s == "NAX1_04") return CardDB.cardIDEnum.NAX1_04;
-            if (s == "CS2_053") return CardDB.cardIDEnum.CS2_053;
-            if (s == "CS2_182") return CardDB.cardIDEnum.CS2_182;
-            if (s == "CS2_008") return CardDB.cardIDEnum.CS2_008;
-            if (s == "CS2_233") return CardDB.cardIDEnum.CS2_233;
-            if (s == "EX1_626") return CardDB.cardIDEnum.EX1_626;
-            if (s == "EX1_059") return CardDB.cardIDEnum.EX1_059;
-            if (s == "EX1_334") return CardDB.cardIDEnum.EX1_334;
-            if (s == "EX1_619") return CardDB.cardIDEnum.EX1_619;
-            if (s == "NEW1_032") return CardDB.cardIDEnum.NEW1_032;
-            if (s == "EX1_158t") return CardDB.cardIDEnum.EX1_158t;
-            if (s == "EX1_006") return CardDB.cardIDEnum.EX1_006;
-            if (s == "NEW1_031") return CardDB.cardIDEnum.NEW1_031;
-            if (s == "NAX10_03") return CardDB.cardIDEnum.NAX10_03;
-            if (s == "DREAM_04") return CardDB.cardIDEnum.DREAM_04;
-            if (s == "NAX1h_01") return CardDB.cardIDEnum.NAX1h_01;
-            if (s == "CS2_022e") return CardDB.cardIDEnum.CS2_022e;
-            if (s == "EX1_611e") return CardDB.cardIDEnum.EX1_611e;
-            if (s == "EX1_004") return CardDB.cardIDEnum.EX1_004;
-            if (s == "EX1_014te") return CardDB.cardIDEnum.EX1_014te;
-            if (s == "FP1_005e") return CardDB.cardIDEnum.FP1_005e;
-            if (s == "NAX12_03e") return CardDB.cardIDEnum.NAX12_03e;
-            if (s == "EX1_095") return CardDB.cardIDEnum.EX1_095;
-            if (s == "NEW1_007") return CardDB.cardIDEnum.NEW1_007;
-            if (s == "EX1_275") return CardDB.cardIDEnum.EX1_275;
-            if (s == "EX1_245") return CardDB.cardIDEnum.EX1_245;
-            if (s == "EX1_383") return CardDB.cardIDEnum.EX1_383;
-            if (s == "FP1_016") return CardDB.cardIDEnum.FP1_016;
-            if (s == "EX1_016t") return CardDB.cardIDEnum.EX1_016t;
-            if (s == "CS2_125") return CardDB.cardIDEnum.CS2_125;
-            if (s == "EX1_137") return CardDB.cardIDEnum.EX1_137;
-            if (s == "EX1_178ae") return CardDB.cardIDEnum.EX1_178ae;
-            if (s == "DS1_185") return CardDB.cardIDEnum.DS1_185;
-            if (s == "FP1_010") return CardDB.cardIDEnum.FP1_010;
-            if (s == "EX1_598") return CardDB.cardIDEnum.EX1_598;
-            if (s == "NAX9_07") return CardDB.cardIDEnum.NAX9_07;
-            if (s == "EX1_304") return CardDB.cardIDEnum.EX1_304;
-            if (s == "EX1_302") return CardDB.cardIDEnum.EX1_302;
-            if (s == "XXX_017") return CardDB.cardIDEnum.XXX_017;
-            if (s == "CS2_011o") return CardDB.cardIDEnum.CS2_011o;
-            if (s == "EX1_614t") return CardDB.cardIDEnum.EX1_614t;
-            if (s == "TU4a_006") return CardDB.cardIDEnum.TU4a_006;
-            if (s == "Mekka3e") return CardDB.cardIDEnum.Mekka3e;
-            if (s == "CS2_108") return CardDB.cardIDEnum.CS2_108;
-            if (s == "CS2_046") return CardDB.cardIDEnum.CS2_046;
-            if (s == "EX1_014t") return CardDB.cardIDEnum.EX1_014t;
-            if (s == "NEW1_005") return CardDB.cardIDEnum.NEW1_005;
-            if (s == "EX1_062") return CardDB.cardIDEnum.EX1_062;
-            if (s == "EX1_366e") return CardDB.cardIDEnum.EX1_366e;
-            if (s == "Mekka1") return CardDB.cardIDEnum.Mekka1;
-            if (s == "XXX_007") return CardDB.cardIDEnum.XXX_007;
-            if (s == "tt_010a") return CardDB.cardIDEnum.tt_010a;
-            if (s == "CS2_017o") return CardDB.cardIDEnum.CS2_017o;
-            if (s == "CS2_072") return CardDB.cardIDEnum.CS2_072;
-            if (s == "EX1_tk28") return CardDB.cardIDEnum.EX1_tk28;
-            if (s == "EX1_604o") return CardDB.cardIDEnum.EX1_604o;
-            if (s == "FP1_014") return CardDB.cardIDEnum.FP1_014;
-            if (s == "EX1_084e") return CardDB.cardIDEnum.EX1_084e;
-            if (s == "NAX3_01H") return CardDB.cardIDEnum.NAX3_01H;
-            if (s == "NAX2_01") return CardDB.cardIDEnum.NAX2_01;
-            if (s == "EX1_409t") return CardDB.cardIDEnum.EX1_409t;
-            if (s == "CRED_07") return CardDB.cardIDEnum.CRED_07;
-            if (s == "NAX3_02H") return CardDB.cardIDEnum.NAX3_02H;
-            if (s == "TU4e_002") return CardDB.cardIDEnum.TU4e_002;
-            if (s == "EX1_507") return CardDB.cardIDEnum.EX1_507;
-            if (s == "EX1_144") return CardDB.cardIDEnum.EX1_144;
-            if (s == "CS2_038") return CardDB.cardIDEnum.CS2_038;
-            if (s == "EX1_093") return CardDB.cardIDEnum.EX1_093;
-            if (s == "CS2_080") return CardDB.cardIDEnum.CS2_080;
-            if (s == "CS1_129e") return CardDB.cardIDEnum.CS1_129e;
-            if (s == "XXX_013") return CardDB.cardIDEnum.XXX_013;
-            if (s == "EX1_005") return CardDB.cardIDEnum.EX1_005;
-            if (s == "EX1_382") return CardDB.cardIDEnum.EX1_382;
-            if (s == "NAX13_02e") return CardDB.cardIDEnum.NAX13_02e;
-            if (s == "FP1_020e") return CardDB.cardIDEnum.FP1_020e;
-            if (s == "EX1_603e") return CardDB.cardIDEnum.EX1_603e;
-            if (s == "CS2_028") return CardDB.cardIDEnum.CS2_028;
-            if (s == "TU4f_002") return CardDB.cardIDEnum.TU4f_002;
-            if (s == "EX1_538") return CardDB.cardIDEnum.EX1_538;
-            if (s == "GAME_003e") return CardDB.cardIDEnum.GAME_003e;
-            if (s == "DREAM_02") return CardDB.cardIDEnum.DREAM_02;
-            if (s == "EX1_581") return CardDB.cardIDEnum.EX1_581;
-            if (s == "NAX15_01H") return CardDB.cardIDEnum.NAX15_01H;
-            if (s == "EX1_131t") return CardDB.cardIDEnum.EX1_131t;
-            if (s == "CS2_147") return CardDB.cardIDEnum.CS2_147;
-            if (s == "CS1_113") return CardDB.cardIDEnum.CS1_113;
-            if (s == "CS2_161") return CardDB.cardIDEnum.CS2_161;
-            if (s == "CS2_031") return CardDB.cardIDEnum.CS2_031;
-            if (s == "EX1_166b") return CardDB.cardIDEnum.EX1_166b;
-            if (s == "EX1_066") return CardDB.cardIDEnum.EX1_066;
-            if (s == "TU4c_007") return CardDB.cardIDEnum.TU4c_007;
-            if (s == "EX1_355") return CardDB.cardIDEnum.EX1_355;
-            if (s == "EX1_507e") return CardDB.cardIDEnum.EX1_507e;
-            if (s == "EX1_534") return CardDB.cardIDEnum.EX1_534;
-            if (s == "EX1_162") return CardDB.cardIDEnum.EX1_162;
-            if (s == "TU4a_004") return CardDB.cardIDEnum.TU4a_004;
-            if (s == "EX1_363") return CardDB.cardIDEnum.EX1_363;
-            if (s == "EX1_164a") return CardDB.cardIDEnum.EX1_164a;
-            if (s == "CS2_188") return CardDB.cardIDEnum.CS2_188;
-            if (s == "EX1_016") return CardDB.cardIDEnum.EX1_016;
-            if (s == "NAX6_03t") return CardDB.cardIDEnum.NAX6_03t;
-            if (s == "EX1_tk31") return CardDB.cardIDEnum.EX1_tk31;
-            if (s == "EX1_603") return CardDB.cardIDEnum.EX1_603;
-            if (s == "EX1_238") return CardDB.cardIDEnum.EX1_238;
-            if (s == "EX1_166") return CardDB.cardIDEnum.EX1_166;
-            if (s == "DS1h_292") return CardDB.cardIDEnum.DS1h_292;
-            if (s == "DS1_183") return CardDB.cardIDEnum.DS1_183;
-            if (s == "NAX15_03n") return CardDB.cardIDEnum.NAX15_03n;
-            if (s == "NAX8_02H") return CardDB.cardIDEnum.NAX8_02H;
-            if (s == "NAX7_01H") return CardDB.cardIDEnum.NAX7_01H;
-            if (s == "NAX9_02H") return CardDB.cardIDEnum.NAX9_02H;
-            if (s == "CRED_11") return CardDB.cardIDEnum.CRED_11;
-            if (s == "XXX_019") return CardDB.cardIDEnum.XXX_019;
-            if (s == "EX1_076") return CardDB.cardIDEnum.EX1_076;
-            if (s == "EX1_048") return CardDB.cardIDEnum.EX1_048;
-            if (s == "CS2_038e") return CardDB.cardIDEnum.CS2_038e;
-            if (s == "FP1_026") return CardDB.cardIDEnum.FP1_026;
-            if (s == "CS2_074") return CardDB.cardIDEnum.CS2_074;
-            if (s == "FP1_027") return CardDB.cardIDEnum.FP1_027;
-            if (s == "EX1_323w") return CardDB.cardIDEnum.EX1_323w;
-            if (s == "EX1_129") return CardDB.cardIDEnum.EX1_129;
-            if (s == "NEW1_024o") return CardDB.cardIDEnum.NEW1_024o;
-            if (s == "NAX11_02") return CardDB.cardIDEnum.NAX11_02;
-            if (s == "EX1_405") return CardDB.cardIDEnum.EX1_405;
-            if (s == "EX1_317") return CardDB.cardIDEnum.EX1_317;
-            if (s == "EX1_606") return CardDB.cardIDEnum.EX1_606;
-            if (s == "EX1_590e") return CardDB.cardIDEnum.EX1_590e;
-            if (s == "XXX_044") return CardDB.cardIDEnum.XXX_044;
-            if (s == "CS2_074e") return CardDB.cardIDEnum.CS2_074e;
-            if (s == "TU4a_005") return CardDB.cardIDEnum.TU4a_005;
-            if (s == "FP1_006") return CardDB.cardIDEnum.FP1_006;
-            if (s == "EX1_258e") return CardDB.cardIDEnum.EX1_258e;
-            if (s == "TU4f_004o") return CardDB.cardIDEnum.TU4f_004o;
-            if (s == "NEW1_008") return CardDB.cardIDEnum.NEW1_008;
-            if (s == "CS2_119") return CardDB.cardIDEnum.CS2_119;
-            if (s == "NEW1_017e") return CardDB.cardIDEnum.NEW1_017e;
-            if (s == "EX1_334e") return CardDB.cardIDEnum.EX1_334e;
-            if (s == "TU4e_001") return CardDB.cardIDEnum.TU4e_001;
-            if (s == "CS2_121") return CardDB.cardIDEnum.CS2_121;
-            if (s == "CS1h_001") return CardDB.cardIDEnum.CS1h_001;
-            if (s == "EX1_tk34") return CardDB.cardIDEnum.EX1_tk34;
-            if (s == "NEW1_020") return CardDB.cardIDEnum.NEW1_020;
-            if (s == "CS2_196") return CardDB.cardIDEnum.CS2_196;
-            if (s == "EX1_312") return CardDB.cardIDEnum.EX1_312;
-            if (s == "NAX1_01") return CardDB.cardIDEnum.NAX1_01;
-            if (s == "FP1_022") return CardDB.cardIDEnum.FP1_022;
-            if (s == "EX1_160b") return CardDB.cardIDEnum.EX1_160b;
-            if (s == "EX1_563") return CardDB.cardIDEnum.EX1_563;
-            if (s == "XXX_039") return CardDB.cardIDEnum.XXX_039;
-            if (s == "FP1_031") return CardDB.cardIDEnum.FP1_031;
-            if (s == "CS2_087e") return CardDB.cardIDEnum.CS2_087e;
-            if (s == "EX1_613e") return CardDB.cardIDEnum.EX1_613e;
-            if (s == "NAX9_02") return CardDB.cardIDEnum.NAX9_02;
-            if (s == "NEW1_029") return CardDB.cardIDEnum.NEW1_029;
-            if (s == "CS1_129") return CardDB.cardIDEnum.CS1_129;
-            if (s == "HERO_03") return CardDB.cardIDEnum.HERO_03;
-            if (s == "Mekka4t") return CardDB.cardIDEnum.Mekka4t;
-            if (s == "EX1_158") return CardDB.cardIDEnum.EX1_158;
-            if (s == "XXX_010") return CardDB.cardIDEnum.XXX_010;
-            if (s == "NEW1_025") return CardDB.cardIDEnum.NEW1_025;
-            if (s == "FP1_012t") return CardDB.cardIDEnum.FP1_012t;
-            if (s == "EX1_083") return CardDB.cardIDEnum.EX1_083;
-            if (s == "EX1_295") return CardDB.cardIDEnum.EX1_295;
-            if (s == "EX1_407") return CardDB.cardIDEnum.EX1_407;
-            if (s == "NEW1_004") return CardDB.cardIDEnum.NEW1_004;
-            if (s == "FP1_019") return CardDB.cardIDEnum.FP1_019;
-            if (s == "PRO_001at") return CardDB.cardIDEnum.PRO_001at;
-            if (s == "NAX13_03e") return CardDB.cardIDEnum.NAX13_03e;
-            if (s == "EX1_625t") return CardDB.cardIDEnum.EX1_625t;
-            if (s == "EX1_014") return CardDB.cardIDEnum.EX1_014;
-            if (s == "CRED_04") return CardDB.cardIDEnum.CRED_04;
-            if (s == "NAX12_01H") return CardDB.cardIDEnum.NAX12_01H;
-            if (s == "CS2_097") return CardDB.cardIDEnum.CS2_097;
-            if (s == "EX1_558") return CardDB.cardIDEnum.EX1_558;
-            if (s == "XXX_047") return CardDB.cardIDEnum.XXX_047;
-            if (s == "EX1_tk29") return CardDB.cardIDEnum.EX1_tk29;
-            if (s == "CS2_186") return CardDB.cardIDEnum.CS2_186;
-            if (s == "EX1_084") return CardDB.cardIDEnum.EX1_084;
-            if (s == "NEW1_012") return CardDB.cardIDEnum.NEW1_012;
-            if (s == "FP1_014t") return CardDB.cardIDEnum.FP1_014t;
-            if (s == "NAX1_03") return CardDB.cardIDEnum.NAX1_03;
-            if (s == "EX1_623e") return CardDB.cardIDEnum.EX1_623e;
-            if (s == "EX1_578") return CardDB.cardIDEnum.EX1_578;
-            if (s == "CS2_073e2") return CardDB.cardIDEnum.CS2_073e2;
-            if (s == "CS2_221") return CardDB.cardIDEnum.CS2_221;
-            if (s == "EX1_019") return CardDB.cardIDEnum.EX1_019;
-            if (s == "NAX15_04a") return CardDB.cardIDEnum.NAX15_04a;
-            if (s == "FP1_019t") return CardDB.cardIDEnum.FP1_019t;
-            if (s == "EX1_132") return CardDB.cardIDEnum.EX1_132;
-            if (s == "EX1_284") return CardDB.cardIDEnum.EX1_284;
-            if (s == "EX1_105") return CardDB.cardIDEnum.EX1_105;
-            if (s == "NEW1_011") return CardDB.cardIDEnum.NEW1_011;
-            if (s == "NAX9_07e") return CardDB.cardIDEnum.NAX9_07e;
-            if (s == "EX1_017") return CardDB.cardIDEnum.EX1_017;
-            if (s == "EX1_249") return CardDB.cardIDEnum.EX1_249;
-            if (s == "EX1_162o") return CardDB.cardIDEnum.EX1_162o;
-            if (s == "FP1_002t") return CardDB.cardIDEnum.FP1_002t;
-            if (s == "NAX3_02") return CardDB.cardIDEnum.NAX3_02;
-            if (s == "EX1_313") return CardDB.cardIDEnum.EX1_313;
-            if (s == "EX1_549o") return CardDB.cardIDEnum.EX1_549o;
-            if (s == "EX1_091o") return CardDB.cardIDEnum.EX1_091o;
-            if (s == "CS2_084e") return CardDB.cardIDEnum.CS2_084e;
-            if (s == "EX1_155b") return CardDB.cardIDEnum.EX1_155b;
-            if (s == "NAX11_01") return CardDB.cardIDEnum.NAX11_01;
-            if (s == "NEW1_033") return CardDB.cardIDEnum.NEW1_033;
-            if (s == "CS2_106") return CardDB.cardIDEnum.CS2_106;
-            if (s == "XXX_002") return CardDB.cardIDEnum.XXX_002;
-            if (s == "FP1_018") return CardDB.cardIDEnum.FP1_018;
-            if (s == "NEW1_036e2") return CardDB.cardIDEnum.NEW1_036e2;
-            if (s == "XXX_004") return CardDB.cardIDEnum.XXX_004;
-            if (s == "NAX11_02H") return CardDB.cardIDEnum.NAX11_02H;
-            if (s == "CS2_122e") return CardDB.cardIDEnum.CS2_122e;
-            if (s == "DS1_233") return CardDB.cardIDEnum.DS1_233;
-            if (s == "DS1_175") return CardDB.cardIDEnum.DS1_175;
-            if (s == "NEW1_024") return CardDB.cardIDEnum.NEW1_024;
-            if (s == "CS2_189") return CardDB.cardIDEnum.CS2_189;
-            if (s == "CRED_10") return CardDB.cardIDEnum.CRED_10;
-            if (s == "NEW1_037") return CardDB.cardIDEnum.NEW1_037;
-            if (s == "EX1_414") return CardDB.cardIDEnum.EX1_414;
-            if (s == "EX1_538t") return CardDB.cardIDEnum.EX1_538t;
-            if (s == "FP1_030e") return CardDB.cardIDEnum.FP1_030e;
-            if (s == "EX1_586") return CardDB.cardIDEnum.EX1_586;
-            if (s == "EX1_310") return CardDB.cardIDEnum.EX1_310;
-            if (s == "NEW1_010") return CardDB.cardIDEnum.NEW1_010;
-            if (s == "CS2_103e") return CardDB.cardIDEnum.CS2_103e;
-            if (s == "EX1_080o") return CardDB.cardIDEnum.EX1_080o;
-            if (s == "CS2_005o") return CardDB.cardIDEnum.CS2_005o;
-            if (s == "EX1_363e2") return CardDB.cardIDEnum.EX1_363e2;
-            if (s == "EX1_534t") return CardDB.cardIDEnum.EX1_534t;
-            if (s == "FP1_028") return CardDB.cardIDEnum.FP1_028;
-            if (s == "EX1_604") return CardDB.cardIDEnum.EX1_604;
-            if (s == "EX1_160") return CardDB.cardIDEnum.EX1_160;
-            if (s == "EX1_165t1") return CardDB.cardIDEnum.EX1_165t1;
-            if (s == "CS2_062") return CardDB.cardIDEnum.CS2_062;
-            if (s == "CS2_155") return CardDB.cardIDEnum.CS2_155;
-            if (s == "CS2_213") return CardDB.cardIDEnum.CS2_213;
-            if (s == "TU4f_007") return CardDB.cardIDEnum.TU4f_007;
-            if (s == "GAME_004") return CardDB.cardIDEnum.GAME_004;
-            if (s == "NAX5_01") return CardDB.cardIDEnum.NAX5_01;
-            if (s == "XXX_020") return CardDB.cardIDEnum.XXX_020;
-            if (s == "NAX15_02H") return CardDB.cardIDEnum.NAX15_02H;
-            if (s == "CS2_004") return CardDB.cardIDEnum.CS2_004;
-            if (s == "NAX2_03H") return CardDB.cardIDEnum.NAX2_03H;
-            if (s == "EX1_561e") return CardDB.cardIDEnum.EX1_561e;
-            if (s == "CS2_023") return CardDB.cardIDEnum.CS2_023;
-            if (s == "EX1_164") return CardDB.cardIDEnum.EX1_164;
-            if (s == "EX1_009") return CardDB.cardIDEnum.EX1_009;
-            if (s == "NAX6_01") return CardDB.cardIDEnum.NAX6_01;
-            if (s == "FP1_007") return CardDB.cardIDEnum.FP1_007;
-            if (s == "NAX1h_04") return CardDB.cardIDEnum.NAX1h_04;
-            if (s == "NAX2_05H") return CardDB.cardIDEnum.NAX2_05H;
-            if (s == "NAX10_02") return CardDB.cardIDEnum.NAX10_02;
-            if (s == "EX1_345") return CardDB.cardIDEnum.EX1_345;
-            if (s == "EX1_116") return CardDB.cardIDEnum.EX1_116;
-            if (s == "EX1_399") return CardDB.cardIDEnum.EX1_399;
-            if (s == "EX1_587") return CardDB.cardIDEnum.EX1_587;
-            if (s == "XXX_026") return CardDB.cardIDEnum.XXX_026;
-            if (s == "EX1_571") return CardDB.cardIDEnum.EX1_571;
-            if (s == "EX1_335") return CardDB.cardIDEnum.EX1_335;
-            if (s == "XXX_050") return CardDB.cardIDEnum.XXX_050;
-            if (s == "TU4e_004") return CardDB.cardIDEnum.TU4e_004;
-            if (s == "HERO_08") return CardDB.cardIDEnum.HERO_08;
-            if (s == "EX1_166a") return CardDB.cardIDEnum.EX1_166a;
-            if (s == "NAX2_03") return CardDB.cardIDEnum.NAX2_03;
-            if (s == "EX1_finkle") return CardDB.cardIDEnum.EX1_finkle;
-            if (s == "NAX4_03H") return CardDB.cardIDEnum.NAX4_03H;
-            if (s == "EX1_164b") return CardDB.cardIDEnum.EX1_164b;
-            if (s == "EX1_283") return CardDB.cardIDEnum.EX1_283;
-            if (s == "EX1_339") return CardDB.cardIDEnum.EX1_339;
-            if (s == "CRED_13") return CardDB.cardIDEnum.CRED_13;
-            if (s == "EX1_178be") return CardDB.cardIDEnum.EX1_178be;
-            if (s == "EX1_531") return CardDB.cardIDEnum.EX1_531;
-            if (s == "EX1_134") return CardDB.cardIDEnum.EX1_134;
-            if (s == "EX1_350") return CardDB.cardIDEnum.EX1_350;
-            if (s == "EX1_308") return CardDB.cardIDEnum.EX1_308;
-            if (s == "CS2_197") return CardDB.cardIDEnum.CS2_197;
-            if (s == "skele21") return CardDB.cardIDEnum.skele21;
-            if (s == "CS2_222o") return CardDB.cardIDEnum.CS2_222o;
-            if (s == "XXX_015") return CardDB.cardIDEnum.XXX_015;
-            if (s == "FP1_013") return CardDB.cardIDEnum.FP1_013;
-            if (s == "NEW1_006") return CardDB.cardIDEnum.NEW1_006;
-            if (s == "EX1_399e") return CardDB.cardIDEnum.EX1_399e;
-            if (s == "EX1_509") return CardDB.cardIDEnum.EX1_509;
-            if (s == "EX1_612") return CardDB.cardIDEnum.EX1_612;
-            if (s == "NAX8_05t") return CardDB.cardIDEnum.NAX8_05t;
-            if (s == "NAX9_05H") return CardDB.cardIDEnum.NAX9_05H;
-            if (s == "EX1_021") return CardDB.cardIDEnum.EX1_021;
-            if (s == "CS2_041e") return CardDB.cardIDEnum.CS2_041e;
-            if (s == "CS2_226") return CardDB.cardIDEnum.CS2_226;
-            if (s == "EX1_608") return CardDB.cardIDEnum.EX1_608;
-            if (s == "NAX13_05H") return CardDB.cardIDEnum.NAX13_05H;
-            if (s == "NAX13_04H") return CardDB.cardIDEnum.NAX13_04H;
-            if (s == "TU4c_008") return CardDB.cardIDEnum.TU4c_008;
-            if (s == "EX1_624") return CardDB.cardIDEnum.EX1_624;
-            if (s == "EX1_616") return CardDB.cardIDEnum.EX1_616;
-            if (s == "EX1_008") return CardDB.cardIDEnum.EX1_008;
-            if (s == "PlaceholderCard") return CardDB.cardIDEnum.PlaceholderCard;
-            if (s == "XXX_016") return CardDB.cardIDEnum.XXX_016;
-            if (s == "EX1_045") return CardDB.cardIDEnum.EX1_045;
-            if (s == "EX1_015") return CardDB.cardIDEnum.EX1_015;
-            if (s == "GAME_003") return CardDB.cardIDEnum.GAME_003;
-            if (s == "CS2_171") return CardDB.cardIDEnum.CS2_171;
-            if (s == "CS2_041") return CardDB.cardIDEnum.CS2_041;
-            if (s == "EX1_128") return CardDB.cardIDEnum.EX1_128;
-            if (s == "CS2_112") return CardDB.cardIDEnum.CS2_112;
-            if (s == "HERO_07") return CardDB.cardIDEnum.HERO_07;
-            if (s == "EX1_412") return CardDB.cardIDEnum.EX1_412;
-            if (s == "EX1_612o") return CardDB.cardIDEnum.EX1_612o;
-            if (s == "CS2_117") return CardDB.cardIDEnum.CS2_117;
-            if (s == "XXX_009e") return CardDB.cardIDEnum.XXX_009e;
-            if (s == "EX1_562") return CardDB.cardIDEnum.EX1_562;
-            if (s == "EX1_055") return CardDB.cardIDEnum.EX1_055;
-            if (s == "NAX9_06") return CardDB.cardIDEnum.NAX9_06;
-            if (s == "TU4e_007") return CardDB.cardIDEnum.TU4e_007;
-            if (s == "FP1_012") return CardDB.cardIDEnum.FP1_012;
-            if (s == "EX1_317t") return CardDB.cardIDEnum.EX1_317t;
-            if (s == "EX1_004e") return CardDB.cardIDEnum.EX1_004e;
-            if (s == "EX1_278") return CardDB.cardIDEnum.EX1_278;
-            if (s == "CS2_tk1") return CardDB.cardIDEnum.CS2_tk1;
-            if (s == "EX1_590") return CardDB.cardIDEnum.EX1_590;
-            if (s == "CS1_130") return CardDB.cardIDEnum.CS1_130;
-            if (s == "NEW1_008b") return CardDB.cardIDEnum.NEW1_008b;
-            if (s == "EX1_365") return CardDB.cardIDEnum.EX1_365;
-            if (s == "CS2_141") return CardDB.cardIDEnum.CS2_141;
-            if (s == "PRO_001") return CardDB.cardIDEnum.PRO_001;
-            if (s == "NAX8_04t") return CardDB.cardIDEnum.NAX8_04t;
-            if (s == "CS2_173") return CardDB.cardIDEnum.CS2_173;
-            if (s == "CS2_017") return CardDB.cardIDEnum.CS2_017;
-            if (s == "CRED_16") return CardDB.cardIDEnum.CRED_16;
-            if (s == "EX1_392") return CardDB.cardIDEnum.EX1_392;
-            if (s == "EX1_593") return CardDB.cardIDEnum.EX1_593;
-            if (s == "FP1_023e") return CardDB.cardIDEnum.FP1_023e;
-            if (s == "NAX1_05") return CardDB.cardIDEnum.NAX1_05;
-            if (s == "TU4d_002") return CardDB.cardIDEnum.TU4d_002;
-            if (s == "CRED_15") return CardDB.cardIDEnum.CRED_15;
-            if (s == "EX1_049") return CardDB.cardIDEnum.EX1_049;
-            if (s == "EX1_002") return CardDB.cardIDEnum.EX1_002;
-            if (s == "TU4f_005") return CardDB.cardIDEnum.TU4f_005;
-            if (s == "NEW1_029t") return CardDB.cardIDEnum.NEW1_029t;
-            if (s == "TU4a_001") return CardDB.cardIDEnum.TU4a_001;
-            if (s == "CS2_056") return CardDB.cardIDEnum.CS2_056;
-            if (s == "EX1_596") return CardDB.cardIDEnum.EX1_596;
-            if (s == "EX1_136") return CardDB.cardIDEnum.EX1_136;
-            if (s == "EX1_323") return CardDB.cardIDEnum.EX1_323;
-            if (s == "CS2_073") return CardDB.cardIDEnum.CS2_073;
-            if (s == "EX1_246e") return CardDB.cardIDEnum.EX1_246e;
-            if (s == "NAX12_01") return CardDB.cardIDEnum.NAX12_01;
-            if (s == "EX1_244e") return CardDB.cardIDEnum.EX1_244e;
-            if (s == "EX1_001") return CardDB.cardIDEnum.EX1_001;
-            if (s == "EX1_607e") return CardDB.cardIDEnum.EX1_607e;
-            if (s == "EX1_044") return CardDB.cardIDEnum.EX1_044;
-            if (s == "EX1_573ae") return CardDB.cardIDEnum.EX1_573ae;
-            if (s == "XXX_025") return CardDB.cardIDEnum.XXX_025;
-            if (s == "CRED_06") return CardDB.cardIDEnum.CRED_06;
-            if (s == "Mekka4") return CardDB.cardIDEnum.Mekka4;
-            if (s == "CS2_142") return CardDB.cardIDEnum.CS2_142;
-            if (s == "TU4f_004") return CardDB.cardIDEnum.TU4f_004;
-            if (s == "NAX5_02H") return CardDB.cardIDEnum.NAX5_02H;
-            if (s == "EX1_411e2") return CardDB.cardIDEnum.EX1_411e2;
-            if (s == "EX1_573") return CardDB.cardIDEnum.EX1_573;
-            if (s == "FP1_009") return CardDB.cardIDEnum.FP1_009;
-            if (s == "CS2_050") return CardDB.cardIDEnum.CS2_050;
-            if (s == "NAX4_03") return CardDB.cardIDEnum.NAX4_03;
-            if (s == "CS2_063e") return CardDB.cardIDEnum.CS2_063e;
-            if (s == "NAX2_05") return CardDB.cardIDEnum.NAX2_05;
-            if (s == "EX1_390") return CardDB.cardIDEnum.EX1_390;
-            if (s == "EX1_610") return CardDB.cardIDEnum.EX1_610;
-            if (s == "hexfrog") return CardDB.cardIDEnum.hexfrog;
-            if (s == "CS2_181e") return CardDB.cardIDEnum.CS2_181e;
-            if (s == "NAX6_02") return CardDB.cardIDEnum.NAX6_02;
-            if (s == "XXX_027") return CardDB.cardIDEnum.XXX_027;
-            if (s == "CS2_082") return CardDB.cardIDEnum.CS2_082;
-            if (s == "NEW1_040") return CardDB.cardIDEnum.NEW1_040;
-            if (s == "DREAM_01") return CardDB.cardIDEnum.DREAM_01;
-            if (s == "EX1_595") return CardDB.cardIDEnum.EX1_595;
-            if (s == "CS2_013") return CardDB.cardIDEnum.CS2_013;
-            if (s == "CS2_077") return CardDB.cardIDEnum.CS2_077;
-            if (s == "NEW1_014") return CardDB.cardIDEnum.NEW1_014;
-            if (s == "CRED_05") return CardDB.cardIDEnum.CRED_05;
-            if (s == "GAME_002") return CardDB.cardIDEnum.GAME_002;
-            if (s == "EX1_165") return CardDB.cardIDEnum.EX1_165;
-            if (s == "CS2_013t") return CardDB.cardIDEnum.CS2_013t;
-            if (s == "NAX4_04H") return CardDB.cardIDEnum.NAX4_04H;
-            if (s == "EX1_tk11") return CardDB.cardIDEnum.EX1_tk11;
-            if (s == "EX1_591") return CardDB.cardIDEnum.EX1_591;
-            if (s == "EX1_549") return CardDB.cardIDEnum.EX1_549;
-            if (s == "CS2_045") return CardDB.cardIDEnum.CS2_045;
-            if (s == "CS2_237") return CardDB.cardIDEnum.CS2_237;
-            if (s == "CS2_027") return CardDB.cardIDEnum.CS2_027;
-            if (s == "EX1_508o") return CardDB.cardIDEnum.EX1_508o;
-            if (s == "NAX14_03") return CardDB.cardIDEnum.NAX14_03;
-            if (s == "CS2_101t") return CardDB.cardIDEnum.CS2_101t;
-            if (s == "CS2_063") return CardDB.cardIDEnum.CS2_063;
-            if (s == "EX1_145") return CardDB.cardIDEnum.EX1_145;
-            if (s == "NAX1h_03") return CardDB.cardIDEnum.NAX1h_03;
-            if (s == "EX1_110") return CardDB.cardIDEnum.EX1_110;
-            if (s == "EX1_408") return CardDB.cardIDEnum.EX1_408;
-            if (s == "EX1_544") return CardDB.cardIDEnum.EX1_544;
-            if (s == "TU4c_006") return CardDB.cardIDEnum.TU4c_006;
-            if (s == "NAXM_001") return CardDB.cardIDEnum.NAXM_001;
-            if (s == "CS2_151") return CardDB.cardIDEnum.CS2_151;
-            if (s == "CS2_073e") return CardDB.cardIDEnum.CS2_073e;
-            if (s == "XXX_006") return CardDB.cardIDEnum.XXX_006;
-            if (s == "CS2_088") return CardDB.cardIDEnum.CS2_088;
-            if (s == "EX1_057") return CardDB.cardIDEnum.EX1_057;
-            if (s == "FP1_020") return CardDB.cardIDEnum.FP1_020;
-            if (s == "CS2_169") return CardDB.cardIDEnum.CS2_169;
-            if (s == "EX1_573t") return CardDB.cardIDEnum.EX1_573t;
-            if (s == "EX1_323h") return CardDB.cardIDEnum.EX1_323h;
-            if (s == "EX1_tk9") return CardDB.cardIDEnum.EX1_tk9;
-            if (s == "NEW1_018e") return CardDB.cardIDEnum.NEW1_018e;
-            if (s == "CS2_037") return CardDB.cardIDEnum.CS2_037;
-            if (s == "CS2_007") return CardDB.cardIDEnum.CS2_007;
-            if (s == "EX1_059e2") return CardDB.cardIDEnum.EX1_059e2;
-            if (s == "CS2_227") return CardDB.cardIDEnum.CS2_227;
-            if (s == "NAX7_03H") return CardDB.cardIDEnum.NAX7_03H;
-            if (s == "NAX9_01H") return CardDB.cardIDEnum.NAX9_01H;
-            if (s == "EX1_570e") return CardDB.cardIDEnum.EX1_570e;
-            if (s == "NEW1_003") return CardDB.cardIDEnum.NEW1_003;
-            if (s == "GAME_006") return CardDB.cardIDEnum.GAME_006;
-            if (s == "EX1_320") return CardDB.cardIDEnum.EX1_320;
-            if (s == "EX1_097") return CardDB.cardIDEnum.EX1_097;
-            if (s == "tt_004") return CardDB.cardIDEnum.tt_004;
-            if (s == "EX1_360e") return CardDB.cardIDEnum.EX1_360e;
-            if (s == "EX1_096") return CardDB.cardIDEnum.EX1_096;
-            if (s == "DS1_175o") return CardDB.cardIDEnum.DS1_175o;
-            if (s == "EX1_596e") return CardDB.cardIDEnum.EX1_596e;
-            if (s == "XXX_014") return CardDB.cardIDEnum.XXX_014;
-            if (s == "EX1_158e") return CardDB.cardIDEnum.EX1_158e;
-            if (s == "NAX14_01") return CardDB.cardIDEnum.NAX14_01;
-            if (s == "CRED_01") return CardDB.cardIDEnum.CRED_01;
-            if (s == "CRED_08") return CardDB.cardIDEnum.CRED_08;
-            if (s == "EX1_126") return CardDB.cardIDEnum.EX1_126;
-            if (s == "EX1_577") return CardDB.cardIDEnum.EX1_577;
-            if (s == "EX1_319") return CardDB.cardIDEnum.EX1_319;
-            if (s == "EX1_611") return CardDB.cardIDEnum.EX1_611;
-            if (s == "CS2_146") return CardDB.cardIDEnum.CS2_146;
-            if (s == "EX1_154b") return CardDB.cardIDEnum.EX1_154b;
-            if (s == "skele11") return CardDB.cardIDEnum.skele11;
-            if (s == "EX1_165t2") return CardDB.cardIDEnum.EX1_165t2;
-            if (s == "CS2_172") return CardDB.cardIDEnum.CS2_172;
-            if (s == "CS2_114") return CardDB.cardIDEnum.CS2_114;
-            if (s == "CS1_069") return CardDB.cardIDEnum.CS1_069;
-            if (s == "XXX_003") return CardDB.cardIDEnum.XXX_003;
-            if (s == "XXX_042") return CardDB.cardIDEnum.XXX_042;
-            if (s == "NAX8_02") return CardDB.cardIDEnum.NAX8_02;
-            if (s == "EX1_173") return CardDB.cardIDEnum.EX1_173;
-            if (s == "CS1_042") return CardDB.cardIDEnum.CS1_042;
-            if (s == "NAX8_03") return CardDB.cardIDEnum.NAX8_03;
-            if (s == "EX1_506a") return CardDB.cardIDEnum.EX1_506a;
-            if (s == "EX1_298") return CardDB.cardIDEnum.EX1_298;
-            if (s == "CS2_104") return CardDB.cardIDEnum.CS2_104;
-            if (s == "FP1_001") return CardDB.cardIDEnum.FP1_001;
-            if (s == "HERO_02") return CardDB.cardIDEnum.HERO_02;
-            if (s == "EX1_316e") return CardDB.cardIDEnum.EX1_316e;
-            if (s == "NAX7_01") return CardDB.cardIDEnum.NAX7_01;
-            if (s == "EX1_044e") return CardDB.cardIDEnum.EX1_044e;
-            if (s == "CS2_051") return CardDB.cardIDEnum.CS2_051;
-            if (s == "NEW1_016") return CardDB.cardIDEnum.NEW1_016;
-            if (s == "EX1_304e") return CardDB.cardIDEnum.EX1_304e;
-            if (s == "EX1_033") return CardDB.cardIDEnum.EX1_033;
-            if (s == "NAX8_04") return CardDB.cardIDEnum.NAX8_04;
-            if (s == "EX1_028") return CardDB.cardIDEnum.EX1_028;
-            if (s == "XXX_011") return CardDB.cardIDEnum.XXX_011;
-            if (s == "EX1_621") return CardDB.cardIDEnum.EX1_621;
-            if (s == "EX1_554") return CardDB.cardIDEnum.EX1_554;
-            if (s == "EX1_091") return CardDB.cardIDEnum.EX1_091;
-            if (s == "FP1_017") return CardDB.cardIDEnum.FP1_017;
-            if (s == "EX1_409") return CardDB.cardIDEnum.EX1_409;
-            if (s == "EX1_363e") return CardDB.cardIDEnum.EX1_363e;
-            if (s == "EX1_410") return CardDB.cardIDEnum.EX1_410;
-            if (s == "TU4e_005") return CardDB.cardIDEnum.TU4e_005;
-            if (s == "CS2_039") return CardDB.cardIDEnum.CS2_039;
-            if (s == "NAX12_04") return CardDB.cardIDEnum.NAX12_04;
-            if (s == "EX1_557") return CardDB.cardIDEnum.EX1_557;
-            if (s == "CS2_105e") return CardDB.cardIDEnum.CS2_105e;
-            if (s == "EX1_128e") return CardDB.cardIDEnum.EX1_128e;
-            if (s == "XXX_021") return CardDB.cardIDEnum.XXX_021;
-            if (s == "DS1_070") return CardDB.cardIDEnum.DS1_070;
-            if (s == "CS2_033") return CardDB.cardIDEnum.CS2_033;
-            if (s == "EX1_536") return CardDB.cardIDEnum.EX1_536;
-            if (s == "TU4a_003") return CardDB.cardIDEnum.TU4a_003;
-            if (s == "EX1_559") return CardDB.cardIDEnum.EX1_559;
-            if (s == "XXX_023") return CardDB.cardIDEnum.XXX_023;
-            if (s == "NEW1_033o") return CardDB.cardIDEnum.NEW1_033o;
-            if (s == "NAX15_04H") return CardDB.cardIDEnum.NAX15_04H;
-            if (s == "CS2_004e") return CardDB.cardIDEnum.CS2_004e;
-            if (s == "CS2_052") return CardDB.cardIDEnum.CS2_052;
-            if (s == "EX1_539") return CardDB.cardIDEnum.EX1_539;
-            if (s == "EX1_575") return CardDB.cardIDEnum.EX1_575;
-            if (s == "CS2_083b") return CardDB.cardIDEnum.CS2_083b;
-            if (s == "CS2_061") return CardDB.cardIDEnum.CS2_061;
-            if (s == "NEW1_021") return CardDB.cardIDEnum.NEW1_021;
-            if (s == "DS1_055") return CardDB.cardIDEnum.DS1_055;
-            if (s == "EX1_625") return CardDB.cardIDEnum.EX1_625;
-            if (s == "EX1_382e") return CardDB.cardIDEnum.EX1_382e;
-            if (s == "CS2_092e") return CardDB.cardIDEnum.CS2_092e;
-            if (s == "CS2_026") return CardDB.cardIDEnum.CS2_026;
-            if (s == "NAX14_04") return CardDB.cardIDEnum.NAX14_04;
-            if (s == "NEW1_012o") return CardDB.cardIDEnum.NEW1_012o;
-            if (s == "EX1_619e") return CardDB.cardIDEnum.EX1_619e;
-            if (s == "EX1_294") return CardDB.cardIDEnum.EX1_294;
-            if (s == "EX1_287") return CardDB.cardIDEnum.EX1_287;
-            if (s == "EX1_509e") return CardDB.cardIDEnum.EX1_509e;
-            if (s == "EX1_625t2") return CardDB.cardIDEnum.EX1_625t2;
-            if (s == "CS2_118") return CardDB.cardIDEnum.CS2_118;
-            if (s == "CS2_124") return CardDB.cardIDEnum.CS2_124;
-            if (s == "Mekka3") return CardDB.cardIDEnum.Mekka3;
-            if (s == "NAX13_02") return CardDB.cardIDEnum.NAX13_02;
-            if (s == "EX1_112") return CardDB.cardIDEnum.EX1_112;
-            if (s == "FP1_011") return CardDB.cardIDEnum.FP1_011;
-            if (s == "CS2_009e") return CardDB.cardIDEnum.CS2_009e;
-            if (s == "HERO_04") return CardDB.cardIDEnum.HERO_04;
-            if (s == "EX1_607") return CardDB.cardIDEnum.EX1_607;
-            if (s == "DREAM_03") return CardDB.cardIDEnum.DREAM_03;
-            if (s == "NAX11_04e") return CardDB.cardIDEnum.NAX11_04e;
-            if (s == "EX1_103e") return CardDB.cardIDEnum.EX1_103e;
-            if (s == "XXX_046") return CardDB.cardIDEnum.XXX_046;
-            if (s == "FP1_003") return CardDB.cardIDEnum.FP1_003;
-            if (s == "CS2_105") return CardDB.cardIDEnum.CS2_105;
-            if (s == "FP1_002") return CardDB.cardIDEnum.FP1_002;
-            if (s == "TU4c_002") return CardDB.cardIDEnum.TU4c_002;
-            if (s == "CRED_14") return CardDB.cardIDEnum.CRED_14;
-            if (s == "EX1_567") return CardDB.cardIDEnum.EX1_567;
-            if (s == "TU4c_004") return CardDB.cardIDEnum.TU4c_004;
-            if (s == "NAX10_03H") return CardDB.cardIDEnum.NAX10_03H;
-            if (s == "FP1_008") return CardDB.cardIDEnum.FP1_008;
-            if (s == "DS1_184") return CardDB.cardIDEnum.DS1_184;
-            if (s == "CS2_029") return CardDB.cardIDEnum.CS2_029;
-            if (s == "GAME_005") return CardDB.cardIDEnum.GAME_005;
-            if (s == "CS2_187") return CardDB.cardIDEnum.CS2_187;
-            if (s == "EX1_020") return CardDB.cardIDEnum.EX1_020;
-            if (s == "NAX15_01He") return CardDB.cardIDEnum.NAX15_01He;
-            if (s == "EX1_011") return CardDB.cardIDEnum.EX1_011;
-            if (s == "CS2_057") return CardDB.cardIDEnum.CS2_057;
-            if (s == "EX1_274") return CardDB.cardIDEnum.EX1_274;
-            if (s == "EX1_306") return CardDB.cardIDEnum.EX1_306;
-            if (s == "NEW1_038o") return CardDB.cardIDEnum.NEW1_038o;
-            if (s == "EX1_170") return CardDB.cardIDEnum.EX1_170;
-            if (s == "EX1_617") return CardDB.cardIDEnum.EX1_617;
-            if (s == "CS1_113e") return CardDB.cardIDEnum.CS1_113e;
-            if (s == "CS2_101") return CardDB.cardIDEnum.CS2_101;
-            if (s == "FP1_015") return CardDB.cardIDEnum.FP1_015;
-            if (s == "NAX13_03") return CardDB.cardIDEnum.NAX13_03;
-            if (s == "CS2_005") return CardDB.cardIDEnum.CS2_005;
-            if (s == "EX1_537") return CardDB.cardIDEnum.EX1_537;
-            if (s == "EX1_384") return CardDB.cardIDEnum.EX1_384;
-            if (s == "TU4a_002") return CardDB.cardIDEnum.TU4a_002;
-            if (s == "NAX9_04") return CardDB.cardIDEnum.NAX9_04;
-            if (s == "EX1_362") return CardDB.cardIDEnum.EX1_362;
-            if (s == "NAX12_02") return CardDB.cardIDEnum.NAX12_02;
-            if (s == "FP1_028e") return CardDB.cardIDEnum.FP1_028e;
-            if (s == "TU4c_005") return CardDB.cardIDEnum.TU4c_005;
-            if (s == "EX1_301") return CardDB.cardIDEnum.EX1_301;
-            if (s == "CS2_235") return CardDB.cardIDEnum.CS2_235;
-            if (s == "NAX4_05") return CardDB.cardIDEnum.NAX4_05;
-            if (s == "EX1_029") return CardDB.cardIDEnum.EX1_029;
-            if (s == "CS2_042") return CardDB.cardIDEnum.CS2_042;
-            if (s == "EX1_155a") return CardDB.cardIDEnum.EX1_155a;
-            if (s == "CS2_102") return CardDB.cardIDEnum.CS2_102;
-            if (s == "EX1_609") return CardDB.cardIDEnum.EX1_609;
-            if (s == "NEW1_027") return CardDB.cardIDEnum.NEW1_027;
-            if (s == "CS2_236e") return CardDB.cardIDEnum.CS2_236e;
-            if (s == "CS2_083e") return CardDB.cardIDEnum.CS2_083e;
-            if (s == "NAX6_03te") return CardDB.cardIDEnum.NAX6_03te;
-            if (s == "EX1_165a") return CardDB.cardIDEnum.EX1_165a;
-            if (s == "EX1_570") return CardDB.cardIDEnum.EX1_570;
-            if (s == "EX1_131") return CardDB.cardIDEnum.EX1_131;
-            if (s == "EX1_556") return CardDB.cardIDEnum.EX1_556;
-            if (s == "EX1_543") return CardDB.cardIDEnum.EX1_543;
-            if (s == "XXX_096") return CardDB.cardIDEnum.XXX_096;
-            if (s == "TU4c_008e") return CardDB.cardIDEnum.TU4c_008e;
-            if (s == "EX1_379e") return CardDB.cardIDEnum.EX1_379e;
-            if (s == "NEW1_009") return CardDB.cardIDEnum.NEW1_009;
-            if (s == "EX1_100") return CardDB.cardIDEnum.EX1_100;
-            if (s == "EX1_274e") return CardDB.cardIDEnum.EX1_274e;
-            if (s == "CRED_02") return CardDB.cardIDEnum.CRED_02;
-            if (s == "EX1_573a") return CardDB.cardIDEnum.EX1_573a;
-            if (s == "CS2_084") return CardDB.cardIDEnum.CS2_084;
-            if (s == "EX1_582") return CardDB.cardIDEnum.EX1_582;
-            if (s == "EX1_043") return CardDB.cardIDEnum.EX1_043;
-            if (s == "EX1_050") return CardDB.cardIDEnum.EX1_050;
-            if (s == "TU4b_001") return CardDB.cardIDEnum.TU4b_001;
-            if (s == "FP1_005") return CardDB.cardIDEnum.FP1_005;
-            if (s == "EX1_620") return CardDB.cardIDEnum.EX1_620;
-            if (s == "NAX15_01") return CardDB.cardIDEnum.NAX15_01;
-            if (s == "NAX6_03") return CardDB.cardIDEnum.NAX6_03;
-            if (s == "EX1_303") return CardDB.cardIDEnum.EX1_303;
-            if (s == "HERO_09") return CardDB.cardIDEnum.HERO_09;
-            if (s == "EX1_067") return CardDB.cardIDEnum.EX1_067;
-            if (s == "XXX_028") return CardDB.cardIDEnum.XXX_028;
-            if (s == "EX1_277") return CardDB.cardIDEnum.EX1_277;
-            if (s == "Mekka2") return CardDB.cardIDEnum.Mekka2;
-            if (s == "NAX14_01H") return CardDB.cardIDEnum.NAX14_01H;
-            if (s == "NAX15_04") return CardDB.cardIDEnum.NAX15_04;
-            if (s == "FP1_024") return CardDB.cardIDEnum.FP1_024;
-            if (s == "FP1_030") return CardDB.cardIDEnum.FP1_030;
-            if (s == "CS2_221e") return CardDB.cardIDEnum.CS2_221e;
-            if (s == "EX1_178") return CardDB.cardIDEnum.EX1_178;
-            if (s == "CS2_222") return CardDB.cardIDEnum.CS2_222;
-            if (s == "EX1_409e") return CardDB.cardIDEnum.EX1_409e;
-            if (s == "tt_004o") return CardDB.cardIDEnum.tt_004o;
-            if (s == "EX1_155ae") return CardDB.cardIDEnum.EX1_155ae;
-            if (s == "NAX11_01H") return CardDB.cardIDEnum.NAX11_01H;
-            if (s == "EX1_160a") return CardDB.cardIDEnum.EX1_160a;
-            if (s == "NAX15_02") return CardDB.cardIDEnum.NAX15_02;
-            if (s == "NAX15_05") return CardDB.cardIDEnum.NAX15_05;
-            if (s == "NEW1_025e") return CardDB.cardIDEnum.NEW1_025e;
-            if (s == "CS2_012") return CardDB.cardIDEnum.CS2_012;
-            if (s == "XXX_099") return CardDB.cardIDEnum.XXX_099;
-            if (s == "EX1_246") return CardDB.cardIDEnum.EX1_246;
-            if (s == "EX1_572") return CardDB.cardIDEnum.EX1_572;
-            if (s == "EX1_089") return CardDB.cardIDEnum.EX1_089;
-            if (s == "CS2_059") return CardDB.cardIDEnum.CS2_059;
-            if (s == "EX1_279") return CardDB.cardIDEnum.EX1_279;
-            if (s == "NAX12_02e") return CardDB.cardIDEnum.NAX12_02e;
-            if (s == "CS2_168") return CardDB.cardIDEnum.CS2_168;
-            if (s == "tt_010") return CardDB.cardIDEnum.tt_010;
-            if (s == "NEW1_023") return CardDB.cardIDEnum.NEW1_023;
-            if (s == "CS2_075") return CardDB.cardIDEnum.CS2_075;
-            if (s == "EX1_316") return CardDB.cardIDEnum.EX1_316;
-            if (s == "CS2_025") return CardDB.cardIDEnum.CS2_025;
-            if (s == "CS2_234") return CardDB.cardIDEnum.CS2_234;
-            if (s == "XXX_043") return CardDB.cardIDEnum.XXX_043;
-            if (s == "GAME_001") return CardDB.cardIDEnum.GAME_001;
-            if (s == "NAX5_02") return CardDB.cardIDEnum.NAX5_02;
-            if (s == "EX1_130") return CardDB.cardIDEnum.EX1_130;
-            if (s == "EX1_584e") return CardDB.cardIDEnum.EX1_584e;
-            if (s == "CS2_064") return CardDB.cardIDEnum.CS2_064;
-            if (s == "EX1_161") return CardDB.cardIDEnum.EX1_161;
-            if (s == "CS2_049") return CardDB.cardIDEnum.CS2_049;
-            if (s == "NAX13_01") return CardDB.cardIDEnum.NAX13_01;
-            if (s == "EX1_154") return CardDB.cardIDEnum.EX1_154;
-            if (s == "EX1_080") return CardDB.cardIDEnum.EX1_080;
-            if (s == "NEW1_022") return CardDB.cardIDEnum.NEW1_022;
-            if (s == "NAX2_01H") return CardDB.cardIDEnum.NAX2_01H;
-            if (s == "EX1_160be") return CardDB.cardIDEnum.EX1_160be;
-            if (s == "NAX12_03") return CardDB.cardIDEnum.NAX12_03;
-            if (s == "EX1_251") return CardDB.cardIDEnum.EX1_251;
-            if (s == "FP1_025") return CardDB.cardIDEnum.FP1_025;
-            if (s == "EX1_371") return CardDB.cardIDEnum.EX1_371;
-            if (s == "CS2_mirror") return CardDB.cardIDEnum.CS2_mirror;
-            if (s == "NAX4_01H") return CardDB.cardIDEnum.NAX4_01H;
-            if (s == "EX1_594") return CardDB.cardIDEnum.EX1_594;
-            if (s == "NAX14_02") return CardDB.cardIDEnum.NAX14_02;
-            if (s == "TU4c_006e") return CardDB.cardIDEnum.TU4c_006e;
-            if (s == "EX1_560") return CardDB.cardIDEnum.EX1_560;
-            if (s == "CS2_236") return CardDB.cardIDEnum.CS2_236;
-            if (s == "TU4f_006") return CardDB.cardIDEnum.TU4f_006;
-            if (s == "EX1_402") return CardDB.cardIDEnum.EX1_402;
-            if (s == "NAX3_01") return CardDB.cardIDEnum.NAX3_01;
-            if (s == "EX1_506") return CardDB.cardIDEnum.EX1_506;
-            if (s == "NEW1_027e") return CardDB.cardIDEnum.NEW1_027e;
-            if (s == "DS1_070o") return CardDB.cardIDEnum.DS1_070o;
-            if (s == "XXX_045") return CardDB.cardIDEnum.XXX_045;
-            if (s == "XXX_029") return CardDB.cardIDEnum.XXX_029;
-            if (s == "DS1_178") return CardDB.cardIDEnum.DS1_178;
-            if (s == "XXX_098") return CardDB.cardIDEnum.XXX_098;
-            if (s == "EX1_315") return CardDB.cardIDEnum.EX1_315;
-            if (s == "CS2_094") return CardDB.cardIDEnum.CS2_094;
-            if (s == "NAX13_01H") return CardDB.cardIDEnum.NAX13_01H;
-            if (s == "TU4e_002t") return CardDB.cardIDEnum.TU4e_002t;
-            if (s == "EX1_046e") return CardDB.cardIDEnum.EX1_046e;
-            if (s == "NEW1_040t") return CardDB.cardIDEnum.NEW1_040t;
-            if (s == "GAME_005e") return CardDB.cardIDEnum.GAME_005e;
-            if (s == "CS2_131") return CardDB.cardIDEnum.CS2_131;
-            if (s == "XXX_008") return CardDB.cardIDEnum.XXX_008;
-            if (s == "EX1_531e") return CardDB.cardIDEnum.EX1_531e;
-            if (s == "CS2_226e") return CardDB.cardIDEnum.CS2_226e;
-            if (s == "XXX_022e") return CardDB.cardIDEnum.XXX_022e;
-            if (s == "DS1_178e") return CardDB.cardIDEnum.DS1_178e;
-            if (s == "CS2_226o") return CardDB.cardIDEnum.CS2_226o;
-            if (s == "NAX9_04H") return CardDB.cardIDEnum.NAX9_04H;
-            if (s == "Mekka4e") return CardDB.cardIDEnum.Mekka4e;
-            if (s == "EX1_082") return CardDB.cardIDEnum.EX1_082;
-            if (s == "CS2_093") return CardDB.cardIDEnum.CS2_093;
-            if (s == "EX1_411e") return CardDB.cardIDEnum.EX1_411e;
-            if (s == "NAX8_03t") return CardDB.cardIDEnum.NAX8_03t;
-            if (s == "EX1_145o") return CardDB.cardIDEnum.EX1_145o;
-            if (s == "NAX7_04") return CardDB.cardIDEnum.NAX7_04;
-            if (s == "CS2_boar") return CardDB.cardIDEnum.CS2_boar;
-            if (s == "NEW1_019") return CardDB.cardIDEnum.NEW1_019;
-            if (s == "EX1_289") return CardDB.cardIDEnum.EX1_289;
-            if (s == "EX1_025t") return CardDB.cardIDEnum.EX1_025t;
-            if (s == "EX1_398t") return CardDB.cardIDEnum.EX1_398t;
-            if (s == "NAX12_03H") return CardDB.cardIDEnum.NAX12_03H;
-            if (s == "EX1_055o") return CardDB.cardIDEnum.EX1_055o;
-            if (s == "CS2_091") return CardDB.cardIDEnum.CS2_091;
-            if (s == "EX1_241") return CardDB.cardIDEnum.EX1_241;
-            if (s == "EX1_085") return CardDB.cardIDEnum.EX1_085;
-            if (s == "CS2_200") return CardDB.cardIDEnum.CS2_200;
-            if (s == "CS2_034") return CardDB.cardIDEnum.CS2_034;
-            if (s == "EX1_583") return CardDB.cardIDEnum.EX1_583;
-            if (s == "EX1_584") return CardDB.cardIDEnum.EX1_584;
-            if (s == "EX1_155") return CardDB.cardIDEnum.EX1_155;
-            if (s == "EX1_622") return CardDB.cardIDEnum.EX1_622;
-            if (s == "CS2_203") return CardDB.cardIDEnum.CS2_203;
-            if (s == "EX1_124") return CardDB.cardIDEnum.EX1_124;
-            if (s == "EX1_379") return CardDB.cardIDEnum.EX1_379;
-            if (s == "NAX7_02") return CardDB.cardIDEnum.NAX7_02;
-            if (s == "CS2_053e") return CardDB.cardIDEnum.CS2_053e;
-            if (s == "EX1_032") return CardDB.cardIDEnum.EX1_032;
-            if (s == "NAX9_01") return CardDB.cardIDEnum.NAX9_01;
-            if (s == "TU4e_003") return CardDB.cardIDEnum.TU4e_003;
-            if (s == "CS2_146o") return CardDB.cardIDEnum.CS2_146o;
-            if (s == "NAX8_01H") return CardDB.cardIDEnum.NAX8_01H;
-            if (s == "XXX_041") return CardDB.cardIDEnum.XXX_041;
-            if (s == "NAXM_002") return CardDB.cardIDEnum.NAXM_002;
-            if (s == "EX1_391") return CardDB.cardIDEnum.EX1_391;
-            if (s == "EX1_366") return CardDB.cardIDEnum.EX1_366;
-            if (s == "EX1_059e") return CardDB.cardIDEnum.EX1_059e;
-            if (s == "XXX_012") return CardDB.cardIDEnum.XXX_012;
-            if (s == "EX1_565o") return CardDB.cardIDEnum.EX1_565o;
-            if (s == "EX1_001e") return CardDB.cardIDEnum.EX1_001e;
-            if (s == "TU4f_003") return CardDB.cardIDEnum.TU4f_003;
-            if (s == "EX1_400") return CardDB.cardIDEnum.EX1_400;
-            if (s == "EX1_614") return CardDB.cardIDEnum.EX1_614;
-            if (s == "EX1_561") return CardDB.cardIDEnum.EX1_561;
-            if (s == "EX1_332") return CardDB.cardIDEnum.EX1_332;
-            if (s == "HERO_05") return CardDB.cardIDEnum.HERO_05;
-            if (s == "CS2_065") return CardDB.cardIDEnum.CS2_065;
-            if (s == "ds1_whelptoken") return CardDB.cardIDEnum.ds1_whelptoken;
-            if (s == "EX1_536e") return CardDB.cardIDEnum.EX1_536e;
-            if (s == "CS2_032") return CardDB.cardIDEnum.CS2_032;
-            if (s == "CS2_120") return CardDB.cardIDEnum.CS2_120;
-            if (s == "EX1_155be") return CardDB.cardIDEnum.EX1_155be;
-            if (s == "EX1_247") return CardDB.cardIDEnum.EX1_247;
-            if (s == "EX1_154a") return CardDB.cardIDEnum.EX1_154a;
-            if (s == "EX1_554t") return CardDB.cardIDEnum.EX1_554t;
-            if (s == "CS2_103e2") return CardDB.cardIDEnum.CS2_103e2;
-            if (s == "TU4d_003") return CardDB.cardIDEnum.TU4d_003;
-            if (s == "NEW1_026t") return CardDB.cardIDEnum.NEW1_026t;
-            if (s == "EX1_623") return CardDB.cardIDEnum.EX1_623;
-            if (s == "EX1_383t") return CardDB.cardIDEnum.EX1_383t;
-            if (s == "NAX7_03") return CardDB.cardIDEnum.NAX7_03;
-            if (s == "EX1_597") return CardDB.cardIDEnum.EX1_597;
-            if (s == "TU4f_006o") return CardDB.cardIDEnum.TU4f_006o;
-            if (s == "EX1_130a") return CardDB.cardIDEnum.EX1_130a;
-            if (s == "CS2_011") return CardDB.cardIDEnum.CS2_011;
-            if (s == "EX1_169") return CardDB.cardIDEnum.EX1_169;
-            if (s == "EX1_tk33") return CardDB.cardIDEnum.EX1_tk33;
-            if (s == "NAX11_03") return CardDB.cardIDEnum.NAX11_03;
-            if (s == "NAX4_01") return CardDB.cardIDEnum.NAX4_01;
-            if (s == "NAX10_01") return CardDB.cardIDEnum.NAX10_01;
-            if (s == "EX1_250") return CardDB.cardIDEnum.EX1_250;
-            if (s == "EX1_564") return CardDB.cardIDEnum.EX1_564;
-            if (s == "NAX5_03") return CardDB.cardIDEnum.NAX5_03;
-            if (s == "EX1_043e") return CardDB.cardIDEnum.EX1_043e;
-            if (s == "EX1_349") return CardDB.cardIDEnum.EX1_349;
-            if (s == "XXX_097") return CardDB.cardIDEnum.XXX_097;
-            if (s == "EX1_102") return CardDB.cardIDEnum.EX1_102;
-            if (s == "EX1_058") return CardDB.cardIDEnum.EX1_058;
-            if (s == "EX1_243") return CardDB.cardIDEnum.EX1_243;
-            if (s == "PRO_001c") return CardDB.cardIDEnum.PRO_001c;
-            if (s == "EX1_116t") return CardDB.cardIDEnum.EX1_116t;
-            if (s == "NAX15_01e") return CardDB.cardIDEnum.NAX15_01e;
-            if (s == "FP1_029") return CardDB.cardIDEnum.FP1_029;
-            if (s == "CS2_089") return CardDB.cardIDEnum.CS2_089;
-            if (s == "TU4c_001") return CardDB.cardIDEnum.TU4c_001;
-            if (s == "EX1_248") return CardDB.cardIDEnum.EX1_248;
-            if (s == "NEW1_037e") return CardDB.cardIDEnum.NEW1_037e;
-            if (s == "CS2_122") return CardDB.cardIDEnum.CS2_122;
-            if (s == "EX1_393") return CardDB.cardIDEnum.EX1_393;
-            if (s == "CS2_232") return CardDB.cardIDEnum.CS2_232;
-            if (s == "EX1_165b") return CardDB.cardIDEnum.EX1_165b;
-            if (s == "NEW1_030") return CardDB.cardIDEnum.NEW1_030;
-            if (s == "EX1_161o") return CardDB.cardIDEnum.EX1_161o;
-            if (s == "EX1_093e") return CardDB.cardIDEnum.EX1_093e;
-            if (s == "CS2_150") return CardDB.cardIDEnum.CS2_150;
-            if (s == "CS2_152") return CardDB.cardIDEnum.CS2_152;
-            if (s == "NAX9_03H") return CardDB.cardIDEnum.NAX9_03H;
-            if (s == "EX1_160t") return CardDB.cardIDEnum.EX1_160t;
-            if (s == "CS2_127") return CardDB.cardIDEnum.CS2_127;
-            if (s == "CRED_03") return CardDB.cardIDEnum.CRED_03;
-            if (s == "DS1_188") return CardDB.cardIDEnum.DS1_188;
-            if (s == "XXX_001") return CardDB.cardIDEnum.XXX_001;
-            return CardDB.cardIDEnum.None;
+            switch (s)
+            {
+                case "XXX_040":
+                    return cardIDEnum.XXX_040;
+                case "NAX5_01H":
+                    return cardIDEnum.NAX5_01H;
+                case "CS2_188o":
+                    return cardIDEnum.CS2_188o;
+                case "NAX6_02H":
+                    return cardIDEnum.NAX6_02H;
+                case "NEW1_007b":
+                    return cardIDEnum.NEW1_007b;
+                case "NAX6_02e":
+                    return cardIDEnum.NAX6_02e;
+                case "TU4c_003":
+                    return cardIDEnum.TU4c_003;
+                case "XXX_024":
+                    return cardIDEnum.XXX_024;
+                case "EX1_613":
+                    return cardIDEnum.EX1_613;
+                case "NAX8_01":
+                    return cardIDEnum.NAX8_01;
+                case "EX1_295o":
+                    return cardIDEnum.EX1_295o;
+                case "CS2_059o":
+                    return cardIDEnum.CS2_059o;
+                case "EX1_133":
+                    return cardIDEnum.EX1_133;
+                case "NEW1_018":
+                    return cardIDEnum.NEW1_018;
+                case "NAX15_03t":
+                    return cardIDEnum.NAX15_03t;
+                case "EX1_012":
+                    return cardIDEnum.EX1_012;
+                case "EX1_178a":
+                    return cardIDEnum.EX1_178a;
+                case "CS2_231":
+                    return cardIDEnum.CS2_231;
+                case "EX1_019e":
+                    return cardIDEnum.EX1_019e;
+                case "CRED_12":
+                    return cardIDEnum.CRED_12;
+                case "CS2_179":
+                    return cardIDEnum.CS2_179;
+                case "CS2_045e":
+                    return cardIDEnum.CS2_045e;
+                case "EX1_244":
+                    return cardIDEnum.EX1_244;
+                case "EX1_178b":
+                    return cardIDEnum.EX1_178b;
+                case "XXX_030":
+                    return cardIDEnum.XXX_030;
+                case "NAX8_05":
+                    return cardIDEnum.NAX8_05;
+                case "EX1_573b":
+                    return cardIDEnum.EX1_573b;
+                case "TU4d_001":
+                    return cardIDEnum.TU4d_001;
+                case "NEW1_007a":
+                    return cardIDEnum.NEW1_007a;
+                case "NAX12_02H":
+                    return cardIDEnum.NAX12_02H;
+                case "EX1_345t":
+                    return cardIDEnum.EX1_345t;
+                case "FP1_007t":
+                    return cardIDEnum.FP1_007t;
+                case "EX1_025":
+                    return cardIDEnum.EX1_025;
+                case "EX1_396":
+                    return cardIDEnum.EX1_396;
+                case "NAX9_03":
+                    return cardIDEnum.NAX9_03;
+                case "NEW1_017":
+                    return cardIDEnum.NEW1_017;
+                case "NEW1_008a":
+                    return cardIDEnum.NEW1_008a;
+                case "EX1_587e":
+                    return cardIDEnum.EX1_587e;
+                case "EX1_533":
+                    return cardIDEnum.EX1_533;
+                case "EX1_522":
+                    return cardIDEnum.EX1_522;
+                case "NAX11_04":
+                    return cardIDEnum.NAX11_04;
+                case "NEW1_026":
+                    return cardIDEnum.NEW1_026;
+                case "EX1_398":
+                    return cardIDEnum.EX1_398;
+                case "NAX4_04":
+                    return cardIDEnum.NAX4_04;
+                case "EX1_007":
+                    return cardIDEnum.EX1_007;
+                case "CS1_112":
+                    return cardIDEnum.CS1_112;
+                case "CRED_17":
+                    return cardIDEnum.CRED_17;
+                case "NEW1_036":
+                    return cardIDEnum.NEW1_036;
+                case "NAX3_03":
+                    return cardIDEnum.NAX3_03;
+                case "EX1_355e":
+                    return cardIDEnum.EX1_355e;
+                case "EX1_258":
+                    return cardIDEnum.EX1_258;
+                case "HERO_01":
+                    return cardIDEnum.HERO_01;
+                case "XXX_009":
+                    return cardIDEnum.XXX_009;
+                case "NAX6_01H":
+                    return cardIDEnum.NAX6_01H;
+                case "NAX12_04e":
+                    return cardIDEnum.NAX12_04e;
+                case "CS2_087":
+                    return cardIDEnum.CS2_087;
+                case "DREAM_05":
+                    return cardIDEnum.DREAM_05;
+                case "NEW1_036e":
+                    return cardIDEnum.NEW1_036e;
+                case "CS2_092":
+                    return cardIDEnum.CS2_092;
+                case "CS2_022":
+                    return cardIDEnum.CS2_022;
+                case "EX1_046":
+                    return cardIDEnum.EX1_046;
+                case "XXX_005":
+                    return cardIDEnum.XXX_005;
+                case "PRO_001b":
+                    return cardIDEnum.PRO_001b;
+                case "XXX_022":
+                    return cardIDEnum.XXX_022;
+                case "PRO_001a":
+                    return cardIDEnum.PRO_001a;
+                case "NAX6_04":
+                    return cardIDEnum.NAX6_04;
+                case "NAX7_05":
+                    return cardIDEnum.NAX7_05;
+                case "CS2_103":
+                    return cardIDEnum.CS2_103;
+                case "NEW1_041":
+                    return cardIDEnum.NEW1_041;
+                case "EX1_360":
+                    return cardIDEnum.EX1_360;
+                case "FP1_023":
+                    return cardIDEnum.FP1_023;
+                case "NEW1_038":
+                    return cardIDEnum.NEW1_038;
+                case "CS2_009":
+                    return cardIDEnum.CS2_009;
+                case "NAX10_01H":
+                    return cardIDEnum.NAX10_01H;
+                case "EX1_010":
+                    return cardIDEnum.EX1_010;
+                case "CS2_024":
+                    return cardIDEnum.CS2_024;
+                case "NAX9_05":
+                    return cardIDEnum.NAX9_05;
+                case "EX1_565":
+                    return cardIDEnum.EX1_565;
+                case "CS2_076":
+                    return cardIDEnum.CS2_076;
+                case "FP1_004":
+                    return cardIDEnum.FP1_004;
+                case "CS2_046e":
+                    return cardIDEnum.CS2_046e;
+                case "CS2_162":
+                    return cardIDEnum.CS2_162;
+                case "EX1_110t":
+                    return cardIDEnum.EX1_110t;
+                case "CS2_104e":
+                    return cardIDEnum.CS2_104e;
+                case "CS2_181":
+                    return cardIDEnum.CS2_181;
+                case "EX1_309":
+                    return cardIDEnum.EX1_309;
+                case "EX1_354":
+                    return cardIDEnum.EX1_354;
+                case "NAX10_02H":
+                    return cardIDEnum.NAX10_02H;
+                case "NAX7_04H":
+                    return cardIDEnum.NAX7_04H;
+                case "TU4f_001":
+                    return cardIDEnum.TU4f_001;
+                case "XXX_018":
+                    return cardIDEnum.XXX_018;
+                case "EX1_023":
+                    return cardIDEnum.EX1_023;
+                case "XXX_048":
+                    return cardIDEnum.XXX_048;
+                case "XXX_049":
+                    return cardIDEnum.XXX_049;
+                case "NEW1_034":
+                    return cardIDEnum.NEW1_034;
+                case "CS2_003":
+                    return cardIDEnum.CS2_003;
+                case "HERO_06":
+                    return cardIDEnum.HERO_06;
+                case "CS2_201":
+                    return cardIDEnum.CS2_201;
+                case "EX1_508":
+                    return cardIDEnum.EX1_508;
+                case "EX1_259":
+                    return cardIDEnum.EX1_259;
+                case "EX1_341":
+                    return cardIDEnum.EX1_341;
+                case "DREAM_05e":
+                    return cardIDEnum.DREAM_05e;
+                case "CRED_09":
+                    return cardIDEnum.CRED_09;
+                case "EX1_103":
+                    return cardIDEnum.EX1_103;
+                case "FP1_021":
+                    return cardIDEnum.FP1_021;
+                case "EX1_411":
+                    return cardIDEnum.EX1_411;
+                case "NAX1_04":
+                    return cardIDEnum.NAX1_04;
+                case "CS2_053":
+                    return cardIDEnum.CS2_053;
+                case "CS2_182":
+                    return cardIDEnum.CS2_182;
+                case "CS2_008":
+                    return cardIDEnum.CS2_008;
+                case "CS2_233":
+                    return cardIDEnum.CS2_233;
+                case "EX1_626":
+                    return cardIDEnum.EX1_626;
+                case "EX1_059":
+                    return cardIDEnum.EX1_059;
+                case "EX1_334":
+                    return cardIDEnum.EX1_334;
+                case "EX1_619":
+                    return cardIDEnum.EX1_619;
+                case "NEW1_032":
+                    return cardIDEnum.NEW1_032;
+                case "EX1_158t":
+                    return cardIDEnum.EX1_158t;
+                case "EX1_006":
+                    return cardIDEnum.EX1_006;
+                case "NEW1_031":
+                    return cardIDEnum.NEW1_031;
+                case "NAX10_03":
+                    return cardIDEnum.NAX10_03;
+                case "DREAM_04":
+                    return cardIDEnum.DREAM_04;
+                case "NAX1h_01":
+                    return cardIDEnum.NAX1h_01;
+                case "CS2_022e":
+                    return cardIDEnum.CS2_022e;
+                case "EX1_611e":
+                    return cardIDEnum.EX1_611e;
+                case "EX1_004":
+                    return cardIDEnum.EX1_004;
+                case "EX1_014te":
+                    return cardIDEnum.EX1_014te;
+                case "FP1_005e":
+                    return cardIDEnum.FP1_005e;
+                case "NAX12_03e":
+                    return cardIDEnum.NAX12_03e;
+                case "EX1_095":
+                    return cardIDEnum.EX1_095;
+                case "NEW1_007":
+                    return cardIDEnum.NEW1_007;
+                case "EX1_275":
+                    return cardIDEnum.EX1_275;
+                case "EX1_245":
+                    return cardIDEnum.EX1_245;
+                case "EX1_383":
+                    return cardIDEnum.EX1_383;
+                case "FP1_016":
+                    return cardIDEnum.FP1_016;
+                case "EX1_016t":
+                    return cardIDEnum.EX1_016t;
+                case "CS2_125":
+                    return cardIDEnum.CS2_125;
+                case "EX1_137":
+                    return cardIDEnum.EX1_137;
+                case "EX1_178ae":
+                    return cardIDEnum.EX1_178ae;
+                case "DS1_185":
+                    return cardIDEnum.DS1_185;
+                case "FP1_010":
+                    return cardIDEnum.FP1_010;
+                case "EX1_598":
+                    return cardIDEnum.EX1_598;
+                case "NAX9_07":
+                    return cardIDEnum.NAX9_07;
+                case "EX1_304":
+                    return cardIDEnum.EX1_304;
+                case "EX1_302":
+                    return cardIDEnum.EX1_302;
+                case "XXX_017":
+                    return cardIDEnum.XXX_017;
+                case "CS2_011o":
+                    return cardIDEnum.CS2_011o;
+                case "EX1_614t":
+                    return cardIDEnum.EX1_614t;
+                case "TU4a_006":
+                    return cardIDEnum.TU4a_006;
+                case "Mekka3e":
+                    return cardIDEnum.Mekka3e;
+                case "CS2_108":
+                    return cardIDEnum.CS2_108;
+                case "CS2_046":
+                    return cardIDEnum.CS2_046;
+                case "EX1_014t":
+                    return cardIDEnum.EX1_014t;
+                case "NEW1_005":
+                    return cardIDEnum.NEW1_005;
+                case "EX1_062":
+                    return cardIDEnum.EX1_062;
+                case "EX1_366e":
+                    return cardIDEnum.EX1_366e;
+                case "Mekka1":
+                    return cardIDEnum.Mekka1;
+                case "XXX_007":
+                    return cardIDEnum.XXX_007;
+                case "tt_010a":
+                    return cardIDEnum.tt_010a;
+                case "CS2_017o":
+                    return cardIDEnum.CS2_017o;
+                case "CS2_072":
+                    return cardIDEnum.CS2_072;
+                case "EX1_tk28":
+                    return cardIDEnum.EX1_tk28;
+                case "EX1_604o":
+                    return cardIDEnum.EX1_604o;
+                case "FP1_014":
+                    return cardIDEnum.FP1_014;
+                case "EX1_084e":
+                    return cardIDEnum.EX1_084e;
+                case "NAX3_01H":
+                    return cardIDEnum.NAX3_01H;
+                case "NAX2_01":
+                    return cardIDEnum.NAX2_01;
+                case "EX1_409t":
+                    return cardIDEnum.EX1_409t;
+                case "CRED_07":
+                    return cardIDEnum.CRED_07;
+                case "NAX3_02H":
+                    return cardIDEnum.NAX3_02H;
+                case "TU4e_002":
+                    return cardIDEnum.TU4e_002;
+                case "EX1_507":
+                    return cardIDEnum.EX1_507;
+                case "EX1_144":
+                    return cardIDEnum.EX1_144;
+                case "CS2_038":
+                    return cardIDEnum.CS2_038;
+                case "EX1_093":
+                    return cardIDEnum.EX1_093;
+                case "CS2_080":
+                    return cardIDEnum.CS2_080;
+                case "CS1_129e":
+                    return cardIDEnum.CS1_129e;
+                case "XXX_013":
+                    return cardIDEnum.XXX_013;
+                case "EX1_005":
+                    return cardIDEnum.EX1_005;
+                case "EX1_382":
+                    return cardIDEnum.EX1_382;
+                case "NAX13_02e":
+                    return cardIDEnum.NAX13_02e;
+                case "FP1_020e":
+                    return cardIDEnum.FP1_020e;
+                case "EX1_603e":
+                    return cardIDEnum.EX1_603e;
+                case "CS2_028":
+                    return cardIDEnum.CS2_028;
+                case "TU4f_002":
+                    return cardIDEnum.TU4f_002;
+                case "EX1_538":
+                    return cardIDEnum.EX1_538;
+                case "GAME_003e":
+                    return cardIDEnum.GAME_003e;
+                case "DREAM_02":
+                    return cardIDEnum.DREAM_02;
+                case "EX1_581":
+                    return cardIDEnum.EX1_581;
+                case "NAX15_01H":
+                    return cardIDEnum.NAX15_01H;
+                case "EX1_131t":
+                    return cardIDEnum.EX1_131t;
+                case "CS2_147":
+                    return cardIDEnum.CS2_147;
+                case "CS1_113":
+                    return cardIDEnum.CS1_113;
+                case "CS2_161":
+                    return cardIDEnum.CS2_161;
+                case "CS2_031":
+                    return cardIDEnum.CS2_031;
+                case "EX1_166b":
+                    return cardIDEnum.EX1_166b;
+                case "EX1_066":
+                    return cardIDEnum.EX1_066;
+                case "TU4c_007":
+                    return cardIDEnum.TU4c_007;
+                case "EX1_355":
+                    return cardIDEnum.EX1_355;
+                case "EX1_507e":
+                    return cardIDEnum.EX1_507e;
+                case "EX1_534":
+                    return cardIDEnum.EX1_534;
+                case "EX1_162":
+                    return cardIDEnum.EX1_162;
+                case "TU4a_004":
+                    return cardIDEnum.TU4a_004;
+                case "EX1_363":
+                    return cardIDEnum.EX1_363;
+                case "EX1_164a":
+                    return cardIDEnum.EX1_164a;
+                case "CS2_188":
+                    return cardIDEnum.CS2_188;
+                case "EX1_016":
+                    return cardIDEnum.EX1_016;
+                case "NAX6_03t":
+                    return cardIDEnum.NAX6_03t;
+                case "EX1_tk31":
+                    return cardIDEnum.EX1_tk31;
+                case "EX1_603":
+                    return cardIDEnum.EX1_603;
+                case "EX1_238":
+                    return cardIDEnum.EX1_238;
+                case "EX1_166":
+                    return cardIDEnum.EX1_166;
+                case "DS1h_292":
+                    return cardIDEnum.DS1h_292;
+                case "DS1_183":
+                    return cardIDEnum.DS1_183;
+                case "NAX15_03n":
+                    return cardIDEnum.NAX15_03n;
+                case "NAX8_02H":
+                    return cardIDEnum.NAX8_02H;
+                case "NAX7_01H":
+                    return cardIDEnum.NAX7_01H;
+                case "NAX9_02H":
+                    return cardIDEnum.NAX9_02H;
+                case "CRED_11":
+                    return cardIDEnum.CRED_11;
+                case "XXX_019":
+                    return cardIDEnum.XXX_019;
+                case "EX1_076":
+                    return cardIDEnum.EX1_076;
+                case "EX1_048":
+                    return cardIDEnum.EX1_048;
+                case "CS2_038e":
+                    return cardIDEnum.CS2_038e;
+                case "FP1_026":
+                    return cardIDEnum.FP1_026;
+                case "CS2_074":
+                    return cardIDEnum.CS2_074;
+                case "FP1_027":
+                    return cardIDEnum.FP1_027;
+                case "EX1_323w":
+                    return cardIDEnum.EX1_323w;
+                case "EX1_129":
+                    return cardIDEnum.EX1_129;
+                case "NEW1_024o":
+                    return cardIDEnum.NEW1_024o;
+                case "NAX11_02":
+                    return cardIDEnum.NAX11_02;
+                case "EX1_405":
+                    return cardIDEnum.EX1_405;
+                case "EX1_317":
+                    return cardIDEnum.EX1_317;
+                case "EX1_606":
+                    return cardIDEnum.EX1_606;
+                case "EX1_590e":
+                    return cardIDEnum.EX1_590e;
+                case "XXX_044":
+                    return cardIDEnum.XXX_044;
+                case "CS2_074e":
+                    return cardIDEnum.CS2_074e;
+                case "TU4a_005":
+                    return cardIDEnum.TU4a_005;
+                case "FP1_006":
+                    return cardIDEnum.FP1_006;
+                case "EX1_258e":
+                    return cardIDEnum.EX1_258e;
+                case "TU4f_004o":
+                    return cardIDEnum.TU4f_004o;
+                case "NEW1_008":
+                    return cardIDEnum.NEW1_008;
+                case "CS2_119":
+                    return cardIDEnum.CS2_119;
+                case "NEW1_017e":
+                    return cardIDEnum.NEW1_017e;
+                case "EX1_334e":
+                    return cardIDEnum.EX1_334e;
+                case "TU4e_001":
+                    return cardIDEnum.TU4e_001;
+                case "CS2_121":
+                    return cardIDEnum.CS2_121;
+                case "CS1h_001":
+                    return cardIDEnum.CS1h_001;
+                case "EX1_tk34":
+                    return cardIDEnum.EX1_tk34;
+                case "NEW1_020":
+                    return cardIDEnum.NEW1_020;
+                case "CS2_196":
+                    return cardIDEnum.CS2_196;
+                case "EX1_312":
+                    return cardIDEnum.EX1_312;
+                case "NAX1_01":
+                    return cardIDEnum.NAX1_01;
+                case "FP1_022":
+                    return cardIDEnum.FP1_022;
+                case "EX1_160b":
+                    return cardIDEnum.EX1_160b;
+                case "EX1_563":
+                    return cardIDEnum.EX1_563;
+                case "XXX_039":
+                    return cardIDEnum.XXX_039;
+                case "FP1_031":
+                    return cardIDEnum.FP1_031;
+                case "CS2_087e":
+                    return cardIDEnum.CS2_087e;
+                case "EX1_613e":
+                    return cardIDEnum.EX1_613e;
+                case "NAX9_02":
+                    return cardIDEnum.NAX9_02;
+                case "NEW1_029":
+                    return cardIDEnum.NEW1_029;
+                case "CS1_129":
+                    return cardIDEnum.CS1_129;
+                case "HERO_03":
+                    return cardIDEnum.HERO_03;
+                case "Mekka4t":
+                    return cardIDEnum.Mekka4t;
+                case "EX1_158":
+                    return cardIDEnum.EX1_158;
+                case "XXX_010":
+                    return cardIDEnum.XXX_010;
+                case "NEW1_025":
+                    return cardIDEnum.NEW1_025;
+                case "FP1_012t":
+                    return cardIDEnum.FP1_012t;
+                case "EX1_083":
+                    return cardIDEnum.EX1_083;
+                case "EX1_295":
+                    return cardIDEnum.EX1_295;
+                case "EX1_407":
+                    return cardIDEnum.EX1_407;
+                case "NEW1_004":
+                    return cardIDEnum.NEW1_004;
+                case "FP1_019":
+                    return cardIDEnum.FP1_019;
+                case "PRO_001at":
+                    return cardIDEnum.PRO_001at;
+                case "NAX13_03e":
+                    return cardIDEnum.NAX13_03e;
+                case "EX1_625t":
+                    return cardIDEnum.EX1_625t;
+                case "EX1_014":
+                    return cardIDEnum.EX1_014;
+                case "CRED_04":
+                    return cardIDEnum.CRED_04;
+                case "NAX12_01H":
+                    return cardIDEnum.NAX12_01H;
+                case "CS2_097":
+                    return cardIDEnum.CS2_097;
+                case "EX1_558":
+                    return cardIDEnum.EX1_558;
+                case "XXX_047":
+                    return cardIDEnum.XXX_047;
+                case "EX1_tk29":
+                    return cardIDEnum.EX1_tk29;
+                case "CS2_186":
+                    return cardIDEnum.CS2_186;
+                case "EX1_084":
+                    return cardIDEnum.EX1_084;
+                case "NEW1_012":
+                    return cardIDEnum.NEW1_012;
+                case "FP1_014t":
+                    return cardIDEnum.FP1_014t;
+                case "NAX1_03":
+                    return cardIDEnum.NAX1_03;
+                case "EX1_623e":
+                    return cardIDEnum.EX1_623e;
+                case "EX1_578":
+                    return cardIDEnum.EX1_578;
+                case "CS2_073e2":
+                    return cardIDEnum.CS2_073e2;
+                case "CS2_221":
+                    return cardIDEnum.CS2_221;
+                case "EX1_019":
+                    return cardIDEnum.EX1_019;
+                case "NAX15_04a":
+                    return cardIDEnum.NAX15_04a;
+                case "FP1_019t":
+                    return cardIDEnum.FP1_019t;
+                case "EX1_132":
+                    return cardIDEnum.EX1_132;
+                case "EX1_284":
+                    return cardIDEnum.EX1_284;
+                case "EX1_105":
+                    return cardIDEnum.EX1_105;
+                case "NEW1_011":
+                    return cardIDEnum.NEW1_011;
+                case "NAX9_07e":
+                    return cardIDEnum.NAX9_07e;
+                case "EX1_017":
+                    return cardIDEnum.EX1_017;
+                case "EX1_249":
+                    return cardIDEnum.EX1_249;
+                case "EX1_162o":
+                    return cardIDEnum.EX1_162o;
+                case "FP1_002t":
+                    return cardIDEnum.FP1_002t;
+                case "NAX3_02":
+                    return cardIDEnum.NAX3_02;
+                case "EX1_313":
+                    return cardIDEnum.EX1_313;
+                case "EX1_549o":
+                    return cardIDEnum.EX1_549o;
+                case "EX1_091o":
+                    return cardIDEnum.EX1_091o;
+                case "CS2_084e":
+                    return cardIDEnum.CS2_084e;
+                case "EX1_155b":
+                    return cardIDEnum.EX1_155b;
+                case "NAX11_01":
+                    return cardIDEnum.NAX11_01;
+                case "NEW1_033":
+                    return cardIDEnum.NEW1_033;
+                case "CS2_106":
+                    return cardIDEnum.CS2_106;
+                case "XXX_002":
+                    return cardIDEnum.XXX_002;
+                case "FP1_018":
+                    return cardIDEnum.FP1_018;
+                case "NEW1_036e2":
+                    return cardIDEnum.NEW1_036e2;
+                case "XXX_004":
+                    return cardIDEnum.XXX_004;
+                case "NAX11_02H":
+                    return cardIDEnum.NAX11_02H;
+                case "CS2_122e":
+                    return cardIDEnum.CS2_122e;
+                case "DS1_233":
+                    return cardIDEnum.DS1_233;
+                case "DS1_175":
+                    return cardIDEnum.DS1_175;
+                case "NEW1_024":
+                    return cardIDEnum.NEW1_024;
+                case "CS2_189":
+                    return cardIDEnum.CS2_189;
+                case "CRED_10":
+                    return cardIDEnum.CRED_10;
+                case "NEW1_037":
+                    return cardIDEnum.NEW1_037;
+                case "EX1_414":
+                    return cardIDEnum.EX1_414;
+                case "EX1_538t":
+                    return cardIDEnum.EX1_538t;
+                case "FP1_030e":
+                    return cardIDEnum.FP1_030e;
+                case "EX1_586":
+                    return cardIDEnum.EX1_586;
+                case "EX1_310":
+                    return cardIDEnum.EX1_310;
+                case "NEW1_010":
+                    return cardIDEnum.NEW1_010;
+                case "CS2_103e":
+                    return cardIDEnum.CS2_103e;
+                case "EX1_080o":
+                    return cardIDEnum.EX1_080o;
+                case "CS2_005o":
+                    return cardIDEnum.CS2_005o;
+                case "EX1_363e2":
+                    return cardIDEnum.EX1_363e2;
+                case "EX1_534t":
+                    return cardIDEnum.EX1_534t;
+                case "FP1_028":
+                    return cardIDEnum.FP1_028;
+                case "EX1_604":
+                    return cardIDEnum.EX1_604;
+                case "EX1_160":
+                    return cardIDEnum.EX1_160;
+                case "EX1_165t1":
+                    return cardIDEnum.EX1_165t1;
+                case "CS2_062":
+                    return cardIDEnum.CS2_062;
+                case "CS2_155":
+                    return cardIDEnum.CS2_155;
+                case "CS2_213":
+                    return cardIDEnum.CS2_213;
+                case "TU4f_007":
+                    return cardIDEnum.TU4f_007;
+                case "GAME_004":
+                    return cardIDEnum.GAME_004;
+                case "NAX5_01":
+                    return cardIDEnum.NAX5_01;
+                case "XXX_020":
+                    return cardIDEnum.XXX_020;
+                case "NAX15_02H":
+                    return cardIDEnum.NAX15_02H;
+                case "CS2_004":
+                    return cardIDEnum.CS2_004;
+                case "NAX2_03H":
+                    return cardIDEnum.NAX2_03H;
+                case "EX1_561e":
+                    return cardIDEnum.EX1_561e;
+                case "CS2_023":
+                    return cardIDEnum.CS2_023;
+                case "EX1_164":
+                    return cardIDEnum.EX1_164;
+                case "EX1_009":
+                    return cardIDEnum.EX1_009;
+                case "NAX6_01":
+                    return cardIDEnum.NAX6_01;
+                case "FP1_007":
+                    return cardIDEnum.FP1_007;
+                case "NAX1h_04":
+                    return cardIDEnum.NAX1h_04;
+                case "NAX2_05H":
+                    return cardIDEnum.NAX2_05H;
+                case "NAX10_02":
+                    return cardIDEnum.NAX10_02;
+                case "EX1_345":
+                    return cardIDEnum.EX1_345;
+                case "EX1_116":
+                    return cardIDEnum.EX1_116;
+                case "EX1_399":
+                    return cardIDEnum.EX1_399;
+                case "EX1_587":
+                    return cardIDEnum.EX1_587;
+                case "XXX_026":
+                    return cardIDEnum.XXX_026;
+                case "EX1_571":
+                    return cardIDEnum.EX1_571;
+                case "EX1_335":
+                    return cardIDEnum.EX1_335;
+                case "XXX_050":
+                    return cardIDEnum.XXX_050;
+                case "TU4e_004":
+                    return cardIDEnum.TU4e_004;
+                case "HERO_08":
+                    return cardIDEnum.HERO_08;
+                case "EX1_166a":
+                    return cardIDEnum.EX1_166a;
+                case "NAX2_03":
+                    return cardIDEnum.NAX2_03;
+                case "EX1_finkle":
+                    return cardIDEnum.EX1_finkle;
+                case "NAX4_03H":
+                    return cardIDEnum.NAX4_03H;
+                case "EX1_164b":
+                    return cardIDEnum.EX1_164b;
+                case "EX1_283":
+                    return cardIDEnum.EX1_283;
+                case "EX1_339":
+                    return cardIDEnum.EX1_339;
+                case "CRED_13":
+                    return cardIDEnum.CRED_13;
+                case "EX1_178be":
+                    return cardIDEnum.EX1_178be;
+                case "EX1_531":
+                    return cardIDEnum.EX1_531;
+                case "EX1_134":
+                    return cardIDEnum.EX1_134;
+                case "EX1_350":
+                    return cardIDEnum.EX1_350;
+                case "EX1_308":
+                    return cardIDEnum.EX1_308;
+                case "CS2_197":
+                    return cardIDEnum.CS2_197;
+                case "skele21":
+                    return cardIDEnum.skele21;
+                case "CS2_222o":
+                    return cardIDEnum.CS2_222o;
+                case "XXX_015":
+                    return cardIDEnum.XXX_015;
+                case "FP1_013":
+                    return cardIDEnum.FP1_013;
+                case "NEW1_006":
+                    return cardIDEnum.NEW1_006;
+                case "EX1_399e":
+                    return cardIDEnum.EX1_399e;
+                case "EX1_509":
+                    return cardIDEnum.EX1_509;
+                case "EX1_612":
+                    return cardIDEnum.EX1_612;
+                case "NAX8_05t":
+                    return cardIDEnum.NAX8_05t;
+                case "NAX9_05H":
+                    return cardIDEnum.NAX9_05H;
+                case "EX1_021":
+                    return cardIDEnum.EX1_021;
+                case "CS2_041e":
+                    return cardIDEnum.CS2_041e;
+                case "CS2_226":
+                    return cardIDEnum.CS2_226;
+                case "EX1_608":
+                    return cardIDEnum.EX1_608;
+                case "NAX13_05H":
+                    return cardIDEnum.NAX13_05H;
+                case "NAX13_04H":
+                    return cardIDEnum.NAX13_04H;
+                case "TU4c_008":
+                    return cardIDEnum.TU4c_008;
+                case "EX1_624":
+                    return cardIDEnum.EX1_624;
+                case "EX1_616":
+                    return cardIDEnum.EX1_616;
+                case "EX1_008":
+                    return cardIDEnum.EX1_008;
+                case "PlaceholderCard":
+                    return cardIDEnum.PlaceholderCard;
+                case "XXX_016":
+                    return cardIDEnum.XXX_016;
+                case "EX1_045":
+                    return cardIDEnum.EX1_045;
+                case "EX1_015":
+                    return cardIDEnum.EX1_015;
+                case "GAME_003":
+                    return cardIDEnum.GAME_003;
+                case "CS2_171":
+                    return cardIDEnum.CS2_171;
+                case "CS2_041":
+                    return cardIDEnum.CS2_041;
+                case "EX1_128":
+                    return cardIDEnum.EX1_128;
+                case "CS2_112":
+                    return cardIDEnum.CS2_112;
+                case "HERO_07":
+                    return cardIDEnum.HERO_07;
+                case "EX1_412":
+                    return cardIDEnum.EX1_412;
+                case "EX1_612o":
+                    return cardIDEnum.EX1_612o;
+                case "CS2_117":
+                    return cardIDEnum.CS2_117;
+                case "XXX_009e":
+                    return cardIDEnum.XXX_009e;
+                case "EX1_562":
+                    return cardIDEnum.EX1_562;
+                case "EX1_055":
+                    return cardIDEnum.EX1_055;
+                case "NAX9_06":
+                    return cardIDEnum.NAX9_06;
+                case "TU4e_007":
+                    return cardIDEnum.TU4e_007;
+                case "FP1_012":
+                    return cardIDEnum.FP1_012;
+                case "EX1_317t":
+                    return cardIDEnum.EX1_317t;
+                case "EX1_004e":
+                    return cardIDEnum.EX1_004e;
+                case "EX1_278":
+                    return cardIDEnum.EX1_278;
+                case "CS2_tk1":
+                    return cardIDEnum.CS2_tk1;
+                case "EX1_590":
+                    return cardIDEnum.EX1_590;
+                case "CS1_130":
+                    return cardIDEnum.CS1_130;
+                case "NEW1_008b":
+                    return cardIDEnum.NEW1_008b;
+                case "EX1_365":
+                    return cardIDEnum.EX1_365;
+                case "CS2_141":
+                    return cardIDEnum.CS2_141;
+                case "PRO_001":
+                    return cardIDEnum.PRO_001;
+                case "NAX8_04t":
+                    return cardIDEnum.NAX8_04t;
+                case "CS2_173":
+                    return cardIDEnum.CS2_173;
+                case "CS2_017":
+                    return cardIDEnum.CS2_017;
+                case "CRED_16":
+                    return cardIDEnum.CRED_16;
+                case "EX1_392":
+                    return cardIDEnum.EX1_392;
+                case "EX1_593":
+                    return cardIDEnum.EX1_593;
+                case "FP1_023e":
+                    return cardIDEnum.FP1_023e;
+                case "NAX1_05":
+                    return cardIDEnum.NAX1_05;
+                case "TU4d_002":
+                    return cardIDEnum.TU4d_002;
+                case "CRED_15":
+                    return cardIDEnum.CRED_15;
+                case "EX1_049":
+                    return cardIDEnum.EX1_049;
+                case "EX1_002":
+                    return cardIDEnum.EX1_002;
+                case "TU4f_005":
+                    return cardIDEnum.TU4f_005;
+                case "NEW1_029t":
+                    return cardIDEnum.NEW1_029t;
+                case "TU4a_001":
+                    return cardIDEnum.TU4a_001;
+                case "CS2_056":
+                    return cardIDEnum.CS2_056;
+                case "EX1_596":
+                    return cardIDEnum.EX1_596;
+                case "EX1_136":
+                    return cardIDEnum.EX1_136;
+                case "EX1_323":
+                    return cardIDEnum.EX1_323;
+                case "CS2_073":
+                    return cardIDEnum.CS2_073;
+                case "EX1_246e":
+                    return cardIDEnum.EX1_246e;
+                case "NAX12_01":
+                    return cardIDEnum.NAX12_01;
+                case "EX1_244e":
+                    return cardIDEnum.EX1_244e;
+                case "EX1_001":
+                    return cardIDEnum.EX1_001;
+                case "EX1_607e":
+                    return cardIDEnum.EX1_607e;
+                case "EX1_044":
+                    return cardIDEnum.EX1_044;
+                case "EX1_573ae":
+                    return cardIDEnum.EX1_573ae;
+                case "XXX_025":
+                    return cardIDEnum.XXX_025;
+                case "CRED_06":
+                    return cardIDEnum.CRED_06;
+                case "Mekka4":
+                    return cardIDEnum.Mekka4;
+                case "CS2_142":
+                    return cardIDEnum.CS2_142;
+                case "TU4f_004":
+                    return cardIDEnum.TU4f_004;
+                case "NAX5_02H":
+                    return cardIDEnum.NAX5_02H;
+                case "EX1_411e2":
+                    return cardIDEnum.EX1_411e2;
+                case "EX1_573":
+                    return cardIDEnum.EX1_573;
+                case "FP1_009":
+                    return cardIDEnum.FP1_009;
+                case "CS2_050":
+                    return cardIDEnum.CS2_050;
+                case "NAX4_03":
+                    return cardIDEnum.NAX4_03;
+                case "CS2_063e":
+                    return cardIDEnum.CS2_063e;
+                case "NAX2_05":
+                    return cardIDEnum.NAX2_05;
+                case "EX1_390":
+                    return cardIDEnum.EX1_390;
+                case "EX1_610":
+                    return cardIDEnum.EX1_610;
+                case "hexfrog":
+                    return cardIDEnum.hexfrog;
+                case "CS2_181e":
+                    return cardIDEnum.CS2_181e;
+                case "NAX6_02":
+                    return cardIDEnum.NAX6_02;
+                case "XXX_027":
+                    return cardIDEnum.XXX_027;
+                case "CS2_082":
+                    return cardIDEnum.CS2_082;
+                case "NEW1_040":
+                    return cardIDEnum.NEW1_040;
+                case "DREAM_01":
+                    return cardIDEnum.DREAM_01;
+                case "EX1_595":
+                    return cardIDEnum.EX1_595;
+                case "CS2_013":
+                    return cardIDEnum.CS2_013;
+                case "CS2_077":
+                    return cardIDEnum.CS2_077;
+                case "NEW1_014":
+                    return cardIDEnum.NEW1_014;
+                case "CRED_05":
+                    return cardIDEnum.CRED_05;
+                case "GAME_002":
+                    return cardIDEnum.GAME_002;
+                case "EX1_165":
+                    return cardIDEnum.EX1_165;
+                case "CS2_013t":
+                    return cardIDEnum.CS2_013t;
+                case "NAX4_04H":
+                    return cardIDEnum.NAX4_04H;
+                case "EX1_tk11":
+                    return cardIDEnum.EX1_tk11;
+                case "EX1_591":
+                    return cardIDEnum.EX1_591;
+                case "EX1_549":
+                    return cardIDEnum.EX1_549;
+                case "CS2_045":
+                    return cardIDEnum.CS2_045;
+                case "CS2_237":
+                    return cardIDEnum.CS2_237;
+                case "CS2_027":
+                    return cardIDEnum.CS2_027;
+                case "EX1_508o":
+                    return cardIDEnum.EX1_508o;
+                case "NAX14_03":
+                    return cardIDEnum.NAX14_03;
+                case "CS2_101t":
+                    return cardIDEnum.CS2_101t;
+                case "CS2_063":
+                    return cardIDEnum.CS2_063;
+                case "EX1_145":
+                    return cardIDEnum.EX1_145;
+                case "NAX1h_03":
+                    return cardIDEnum.NAX1h_03;
+                case "EX1_110":
+                    return cardIDEnum.EX1_110;
+                case "EX1_408":
+                    return cardIDEnum.EX1_408;
+                case "EX1_544":
+                    return cardIDEnum.EX1_544;
+                case "TU4c_006":
+                    return cardIDEnum.TU4c_006;
+                case "NAXM_001":
+                    return cardIDEnum.NAXM_001;
+                case "CS2_151":
+                    return cardIDEnum.CS2_151;
+                case "CS2_073e":
+                    return cardIDEnum.CS2_073e;
+                case "XXX_006":
+                    return cardIDEnum.XXX_006;
+                case "CS2_088":
+                    return cardIDEnum.CS2_088;
+                case "EX1_057":
+                    return cardIDEnum.EX1_057;
+                case "FP1_020":
+                    return cardIDEnum.FP1_020;
+                case "CS2_169":
+                    return cardIDEnum.CS2_169;
+                case "EX1_573t":
+                    return cardIDEnum.EX1_573t;
+                case "EX1_323h":
+                    return cardIDEnum.EX1_323h;
+                case "EX1_tk9":
+                    return cardIDEnum.EX1_tk9;
+                case "NEW1_018e":
+                    return cardIDEnum.NEW1_018e;
+                case "CS2_037":
+                    return cardIDEnum.CS2_037;
+                case "CS2_007":
+                    return cardIDEnum.CS2_007;
+                case "EX1_059e2":
+                    return cardIDEnum.EX1_059e2;
+                case "CS2_227":
+                    return cardIDEnum.CS2_227;
+                case "NAX7_03H":
+                    return cardIDEnum.NAX7_03H;
+                case "NAX9_01H":
+                    return cardIDEnum.NAX9_01H;
+                case "EX1_570e":
+                    return cardIDEnum.EX1_570e;
+                case "NEW1_003":
+                    return cardIDEnum.NEW1_003;
+                case "GAME_006":
+                    return cardIDEnum.GAME_006;
+                case "EX1_320":
+                    return cardIDEnum.EX1_320;
+                case "EX1_097":
+                    return cardIDEnum.EX1_097;
+                case "tt_004":
+                    return cardIDEnum.tt_004;
+                case "EX1_360e":
+                    return cardIDEnum.EX1_360e;
+                case "EX1_096":
+                    return cardIDEnum.EX1_096;
+                case "DS1_175o":
+                    return cardIDEnum.DS1_175o;
+                case "EX1_596e":
+                    return cardIDEnum.EX1_596e;
+                case "XXX_014":
+                    return cardIDEnum.XXX_014;
+                case "EX1_158e":
+                    return cardIDEnum.EX1_158e;
+                case "NAX14_01":
+                    return cardIDEnum.NAX14_01;
+                case "CRED_01":
+                    return cardIDEnum.CRED_01;
+                case "CRED_08":
+                    return cardIDEnum.CRED_08;
+                case "EX1_126":
+                    return cardIDEnum.EX1_126;
+                case "EX1_577":
+                    return cardIDEnum.EX1_577;
+                case "EX1_319":
+                    return cardIDEnum.EX1_319;
+                case "EX1_611":
+                    return cardIDEnum.EX1_611;
+                case "CS2_146":
+                    return cardIDEnum.CS2_146;
+                case "EX1_154b":
+                    return cardIDEnum.EX1_154b;
+                case "skele11":
+                    return cardIDEnum.skele11;
+                case "EX1_165t2":
+                    return cardIDEnum.EX1_165t2;
+                case "CS2_172":
+                    return cardIDEnum.CS2_172;
+                case "CS2_114":
+                    return cardIDEnum.CS2_114;
+                case "CS1_069":
+                    return cardIDEnum.CS1_069;
+                case "XXX_003":
+                    return cardIDEnum.XXX_003;
+                case "XXX_042":
+                    return cardIDEnum.XXX_042;
+                case "NAX8_02":
+                    return cardIDEnum.NAX8_02;
+                case "EX1_173":
+                    return cardIDEnum.EX1_173;
+                case "CS1_042":
+                    return cardIDEnum.CS1_042;
+                case "NAX8_03":
+                    return cardIDEnum.NAX8_03;
+                case "EX1_506a":
+                    return cardIDEnum.EX1_506a;
+                case "EX1_298":
+                    return cardIDEnum.EX1_298;
+                case "CS2_104":
+                    return cardIDEnum.CS2_104;
+                case "FP1_001":
+                    return cardIDEnum.FP1_001;
+                case "HERO_02":
+                    return cardIDEnum.HERO_02;
+                case "EX1_316e":
+                    return cardIDEnum.EX1_316e;
+                case "NAX7_01":
+                    return cardIDEnum.NAX7_01;
+                case "EX1_044e":
+                    return cardIDEnum.EX1_044e;
+                case "CS2_051":
+                    return cardIDEnum.CS2_051;
+                case "NEW1_016":
+                    return cardIDEnum.NEW1_016;
+                case "EX1_304e":
+                    return cardIDEnum.EX1_304e;
+                case "EX1_033":
+                    return cardIDEnum.EX1_033;
+                case "NAX8_04":
+                    return cardIDEnum.NAX8_04;
+                case "EX1_028":
+                    return cardIDEnum.EX1_028;
+                case "XXX_011":
+                    return cardIDEnum.XXX_011;
+                case "EX1_621":
+                    return cardIDEnum.EX1_621;
+                case "EX1_554":
+                    return cardIDEnum.EX1_554;
+                case "EX1_091":
+                    return cardIDEnum.EX1_091;
+                case "FP1_017":
+                    return cardIDEnum.FP1_017;
+                case "EX1_409":
+                    return cardIDEnum.EX1_409;
+                case "EX1_363e":
+                    return cardIDEnum.EX1_363e;
+                case "EX1_410":
+                    return cardIDEnum.EX1_410;
+                case "TU4e_005":
+                    return cardIDEnum.TU4e_005;
+                case "CS2_039":
+                    return cardIDEnum.CS2_039;
+                case "NAX12_04":
+                    return cardIDEnum.NAX12_04;
+                case "EX1_557":
+                    return cardIDEnum.EX1_557;
+                case "CS2_105e":
+                    return cardIDEnum.CS2_105e;
+                case "EX1_128e":
+                    return cardIDEnum.EX1_128e;
+                case "XXX_021":
+                    return cardIDEnum.XXX_021;
+                case "DS1_070":
+                    return cardIDEnum.DS1_070;
+                case "CS2_033":
+                    return cardIDEnum.CS2_033;
+                case "EX1_536":
+                    return cardIDEnum.EX1_536;
+                case "TU4a_003":
+                    return cardIDEnum.TU4a_003;
+                case "EX1_559":
+                    return cardIDEnum.EX1_559;
+                case "XXX_023":
+                    return cardIDEnum.XXX_023;
+                case "NEW1_033o":
+                    return cardIDEnum.NEW1_033o;
+                case "NAX15_04H":
+                    return cardIDEnum.NAX15_04H;
+                case "CS2_004e":
+                    return cardIDEnum.CS2_004e;
+                case "CS2_052":
+                    return cardIDEnum.CS2_052;
+                case "EX1_539":
+                    return cardIDEnum.EX1_539;
+                case "EX1_575":
+                    return cardIDEnum.EX1_575;
+                case "CS2_083b":
+                    return cardIDEnum.CS2_083b;
+                case "CS2_061":
+                    return cardIDEnum.CS2_061;
+                case "NEW1_021":
+                    return cardIDEnum.NEW1_021;
+                case "DS1_055":
+                    return cardIDEnum.DS1_055;
+                case "EX1_625":
+                    return cardIDEnum.EX1_625;
+                case "EX1_382e":
+                    return cardIDEnum.EX1_382e;
+                case "CS2_092e":
+                    return cardIDEnum.CS2_092e;
+                case "CS2_026":
+                    return cardIDEnum.CS2_026;
+                case "NAX14_04":
+                    return cardIDEnum.NAX14_04;
+                case "NEW1_012o":
+                    return cardIDEnum.NEW1_012o;
+                case "EX1_619e":
+                    return cardIDEnum.EX1_619e;
+                case "EX1_294":
+                    return cardIDEnum.EX1_294;
+                case "EX1_287":
+                    return cardIDEnum.EX1_287;
+                case "EX1_509e":
+                    return cardIDEnum.EX1_509e;
+                case "EX1_625t2":
+                    return cardIDEnum.EX1_625t2;
+                case "CS2_118":
+                    return cardIDEnum.CS2_118;
+                case "CS2_124":
+                    return cardIDEnum.CS2_124;
+                case "Mekka3":
+                    return cardIDEnum.Mekka3;
+                case "NAX13_02":
+                    return cardIDEnum.NAX13_02;
+                case "EX1_112":
+                    return cardIDEnum.EX1_112;
+                case "FP1_011":
+                    return cardIDEnum.FP1_011;
+                case "CS2_009e":
+                    return cardIDEnum.CS2_009e;
+                case "HERO_04":
+                    return cardIDEnum.HERO_04;
+                case "EX1_607":
+                    return cardIDEnum.EX1_607;
+                case "DREAM_03":
+                    return cardIDEnum.DREAM_03;
+                case "NAX11_04e":
+                    return cardIDEnum.NAX11_04e;
+                case "EX1_103e":
+                    return cardIDEnum.EX1_103e;
+                case "XXX_046":
+                    return cardIDEnum.XXX_046;
+                case "FP1_003":
+                    return cardIDEnum.FP1_003;
+                case "CS2_105":
+                    return cardIDEnum.CS2_105;
+                case "FP1_002":
+                    return cardIDEnum.FP1_002;
+                case "TU4c_002":
+                    return cardIDEnum.TU4c_002;
+                case "CRED_14":
+                    return cardIDEnum.CRED_14;
+                case "EX1_567":
+                    return cardIDEnum.EX1_567;
+                case "TU4c_004":
+                    return cardIDEnum.TU4c_004;
+                case "NAX10_03H":
+                    return cardIDEnum.NAX10_03H;
+                case "FP1_008":
+                    return cardIDEnum.FP1_008;
+                case "DS1_184":
+                    return cardIDEnum.DS1_184;
+                case "CS2_029":
+                    return cardIDEnum.CS2_029;
+                case "GAME_005":
+                    return cardIDEnum.GAME_005;
+                case "CS2_187":
+                    return cardIDEnum.CS2_187;
+                case "EX1_020":
+                    return cardIDEnum.EX1_020;
+                case "NAX15_01He":
+                    return cardIDEnum.NAX15_01He;
+                case "EX1_011":
+                    return cardIDEnum.EX1_011;
+                case "CS2_057":
+                    return cardIDEnum.CS2_057;
+                case "EX1_274":
+                    return cardIDEnum.EX1_274;
+                case "EX1_306":
+                    return cardIDEnum.EX1_306;
+                case "NEW1_038o":
+                    return cardIDEnum.NEW1_038o;
+                case "EX1_170":
+                    return cardIDEnum.EX1_170;
+                case "EX1_617":
+                    return cardIDEnum.EX1_617;
+                case "CS1_113e":
+                    return cardIDEnum.CS1_113e;
+                case "CS2_101":
+                    return cardIDEnum.CS2_101;
+                case "FP1_015":
+                    return cardIDEnum.FP1_015;
+                case "NAX13_03":
+                    return cardIDEnum.NAX13_03;
+                case "CS2_005":
+                    return cardIDEnum.CS2_005;
+                case "EX1_537":
+                    return cardIDEnum.EX1_537;
+                case "EX1_384":
+                    return cardIDEnum.EX1_384;
+                case "TU4a_002":
+                    return cardIDEnum.TU4a_002;
+                case "NAX9_04":
+                    return cardIDEnum.NAX9_04;
+                case "EX1_362":
+                    return cardIDEnum.EX1_362;
+                case "NAX12_02":
+                    return cardIDEnum.NAX12_02;
+                case "FP1_028e":
+                    return cardIDEnum.FP1_028e;
+                case "TU4c_005":
+                    return cardIDEnum.TU4c_005;
+                case "EX1_301":
+                    return cardIDEnum.EX1_301;
+                case "CS2_235":
+                    return cardIDEnum.CS2_235;
+                case "NAX4_05":
+                    return cardIDEnum.NAX4_05;
+                case "EX1_029":
+                    return cardIDEnum.EX1_029;
+                case "CS2_042":
+                    return cardIDEnum.CS2_042;
+                case "EX1_155a":
+                    return cardIDEnum.EX1_155a;
+                case "CS2_102":
+                    return cardIDEnum.CS2_102;
+                case "EX1_609":
+                    return cardIDEnum.EX1_609;
+                case "NEW1_027":
+                    return cardIDEnum.NEW1_027;
+                case "CS2_236e":
+                    return cardIDEnum.CS2_236e;
+                case "CS2_083e":
+                    return cardIDEnum.CS2_083e;
+                case "NAX6_03te":
+                    return cardIDEnum.NAX6_03te;
+                case "EX1_165a":
+                    return cardIDEnum.EX1_165a;
+                case "EX1_570":
+                    return cardIDEnum.EX1_570;
+                case "EX1_131":
+                    return cardIDEnum.EX1_131;
+                case "EX1_556":
+                    return cardIDEnum.EX1_556;
+                case "EX1_543":
+                    return cardIDEnum.EX1_543;
+                case "XXX_096":
+                    return cardIDEnum.XXX_096;
+                case "TU4c_008e":
+                    return cardIDEnum.TU4c_008e;
+                case "EX1_379e":
+                    return cardIDEnum.EX1_379e;
+                case "NEW1_009":
+                    return cardIDEnum.NEW1_009;
+                case "EX1_100":
+                    return cardIDEnum.EX1_100;
+                case "EX1_274e":
+                    return cardIDEnum.EX1_274e;
+                case "CRED_02":
+                    return cardIDEnum.CRED_02;
+                case "EX1_573a":
+                    return cardIDEnum.EX1_573a;
+                case "CS2_084":
+                    return cardIDEnum.CS2_084;
+                case "EX1_582":
+                    return cardIDEnum.EX1_582;
+                case "EX1_043":
+                    return cardIDEnum.EX1_043;
+                case "EX1_050":
+                    return cardIDEnum.EX1_050;
+                case "TU4b_001":
+                    return cardIDEnum.TU4b_001;
+                case "FP1_005":
+                    return cardIDEnum.FP1_005;
+                case "EX1_620":
+                    return cardIDEnum.EX1_620;
+                case "NAX15_01":
+                    return cardIDEnum.NAX15_01;
+                case "NAX6_03":
+                    return cardIDEnum.NAX6_03;
+                case "EX1_303":
+                    return cardIDEnum.EX1_303;
+                case "HERO_09":
+                    return cardIDEnum.HERO_09;
+                case "EX1_067":
+                    return cardIDEnum.EX1_067;
+                case "XXX_028":
+                    return cardIDEnum.XXX_028;
+                case "EX1_277":
+                    return cardIDEnum.EX1_277;
+                case "Mekka2":
+                    return cardIDEnum.Mekka2;
+                case "NAX14_01H":
+                    return cardIDEnum.NAX14_01H;
+                case "NAX15_04":
+                    return cardIDEnum.NAX15_04;
+                case "FP1_024":
+                    return cardIDEnum.FP1_024;
+                case "FP1_030":
+                    return cardIDEnum.FP1_030;
+                case "CS2_221e":
+                    return cardIDEnum.CS2_221e;
+                case "EX1_178":
+                    return cardIDEnum.EX1_178;
+                case "CS2_222":
+                    return cardIDEnum.CS2_222;
+                case "EX1_409e":
+                    return cardIDEnum.EX1_409e;
+                case "tt_004o":
+                    return cardIDEnum.tt_004o;
+                case "EX1_155ae":
+                    return cardIDEnum.EX1_155ae;
+                case "NAX11_01H":
+                    return cardIDEnum.NAX11_01H;
+                case "EX1_160a":
+                    return cardIDEnum.EX1_160a;
+                case "NAX15_02":
+                    return cardIDEnum.NAX15_02;
+                case "NAX15_05":
+                    return cardIDEnum.NAX15_05;
+                case "NEW1_025e":
+                    return cardIDEnum.NEW1_025e;
+                case "CS2_012":
+                    return cardIDEnum.CS2_012;
+                case "XXX_099":
+                    return cardIDEnum.XXX_099;
+                case "EX1_246":
+                    return cardIDEnum.EX1_246;
+                case "EX1_572":
+                    return cardIDEnum.EX1_572;
+                case "EX1_089":
+                    return cardIDEnum.EX1_089;
+                case "CS2_059":
+                    return cardIDEnum.CS2_059;
+                case "EX1_279":
+                    return cardIDEnum.EX1_279;
+                case "NAX12_02e":
+                    return cardIDEnum.NAX12_02e;
+                case "CS2_168":
+                    return cardIDEnum.CS2_168;
+                case "tt_010":
+                    return cardIDEnum.tt_010;
+                case "NEW1_023":
+                    return cardIDEnum.NEW1_023;
+                case "CS2_075":
+                    return cardIDEnum.CS2_075;
+                case "EX1_316":
+                    return cardIDEnum.EX1_316;
+                case "CS2_025":
+                    return cardIDEnum.CS2_025;
+                case "CS2_234":
+                    return cardIDEnum.CS2_234;
+                case "XXX_043":
+                    return cardIDEnum.XXX_043;
+                case "GAME_001":
+                    return cardIDEnum.GAME_001;
+                case "NAX5_02":
+                    return cardIDEnum.NAX5_02;
+                case "EX1_130":
+                    return cardIDEnum.EX1_130;
+                case "EX1_584e":
+                    return cardIDEnum.EX1_584e;
+                case "CS2_064":
+                    return cardIDEnum.CS2_064;
+                case "EX1_161":
+                    return cardIDEnum.EX1_161;
+                case "CS2_049":
+                    return cardIDEnum.CS2_049;
+                case "NAX13_01":
+                    return cardIDEnum.NAX13_01;
+                case "EX1_154":
+                    return cardIDEnum.EX1_154;
+                case "EX1_080":
+                    return cardIDEnum.EX1_080;
+                case "NEW1_022":
+                    return cardIDEnum.NEW1_022;
+                case "NAX2_01H":
+                    return cardIDEnum.NAX2_01H;
+                case "EX1_160be":
+                    return cardIDEnum.EX1_160be;
+                case "NAX12_03":
+                    return cardIDEnum.NAX12_03;
+                case "EX1_251":
+                    return cardIDEnum.EX1_251;
+                case "FP1_025":
+                    return cardIDEnum.FP1_025;
+                case "EX1_371":
+                    return cardIDEnum.EX1_371;
+                case "CS2_mirror":
+                    return cardIDEnum.CS2_mirror;
+                case "NAX4_01H":
+                    return cardIDEnum.NAX4_01H;
+                case "EX1_594":
+                    return cardIDEnum.EX1_594;
+                case "NAX14_02":
+                    return cardIDEnum.NAX14_02;
+                case "TU4c_006e":
+                    return cardIDEnum.TU4c_006e;
+                case "EX1_560":
+                    return cardIDEnum.EX1_560;
+                case "CS2_236":
+                    return cardIDEnum.CS2_236;
+                case "TU4f_006":
+                    return cardIDEnum.TU4f_006;
+                case "EX1_402":
+                    return cardIDEnum.EX1_402;
+                case "NAX3_01":
+                    return cardIDEnum.NAX3_01;
+                case "EX1_506":
+                    return cardIDEnum.EX1_506;
+                case "NEW1_027e":
+                    return cardIDEnum.NEW1_027e;
+                case "DS1_070o":
+                    return cardIDEnum.DS1_070o;
+                case "XXX_045":
+                    return cardIDEnum.XXX_045;
+                case "XXX_029":
+                    return cardIDEnum.XXX_029;
+                case "DS1_178":
+                    return cardIDEnum.DS1_178;
+                case "XXX_098":
+                    return cardIDEnum.XXX_098;
+                case "EX1_315":
+                    return cardIDEnum.EX1_315;
+                case "CS2_094":
+                    return cardIDEnum.CS2_094;
+                case "NAX13_01H":
+                    return cardIDEnum.NAX13_01H;
+                case "TU4e_002t":
+                    return cardIDEnum.TU4e_002t;
+                case "EX1_046e":
+                    return cardIDEnum.EX1_046e;
+                case "NEW1_040t":
+                    return cardIDEnum.NEW1_040t;
+                case "GAME_005e":
+                    return cardIDEnum.GAME_005e;
+                case "CS2_131":
+                    return cardIDEnum.CS2_131;
+                case "XXX_008":
+                    return cardIDEnum.XXX_008;
+                case "EX1_531e":
+                    return cardIDEnum.EX1_531e;
+                case "CS2_226e":
+                    return cardIDEnum.CS2_226e;
+                case "XXX_022e":
+                    return cardIDEnum.XXX_022e;
+                case "DS1_178e":
+                    return cardIDEnum.DS1_178e;
+                case "CS2_226o":
+                    return cardIDEnum.CS2_226o;
+                case "NAX9_04H":
+                    return cardIDEnum.NAX9_04H;
+                case "Mekka4e":
+                    return cardIDEnum.Mekka4e;
+                case "EX1_082":
+                    return cardIDEnum.EX1_082;
+                case "CS2_093":
+                    return cardIDEnum.CS2_093;
+                case "EX1_411e":
+                    return cardIDEnum.EX1_411e;
+                case "NAX8_03t":
+                    return cardIDEnum.NAX8_03t;
+                case "EX1_145o":
+                    return cardIDEnum.EX1_145o;
+                case "NAX7_04":
+                    return cardIDEnum.NAX7_04;
+                case "CS2_boar":
+                    return cardIDEnum.CS2_boar;
+                case "NEW1_019":
+                    return cardIDEnum.NEW1_019;
+                case "EX1_289":
+                    return cardIDEnum.EX1_289;
+                case "EX1_025t":
+                    return cardIDEnum.EX1_025t;
+                case "EX1_398t":
+                    return cardIDEnum.EX1_398t;
+                case "NAX12_03H":
+                    return cardIDEnum.NAX12_03H;
+                case "EX1_055o":
+                    return cardIDEnum.EX1_055o;
+                case "CS2_091":
+                    return cardIDEnum.CS2_091;
+                case "EX1_241":
+                    return cardIDEnum.EX1_241;
+                case "EX1_085":
+                    return cardIDEnum.EX1_085;
+                case "CS2_200":
+                    return cardIDEnum.CS2_200;
+                case "CS2_034":
+                    return cardIDEnum.CS2_034;
+                case "EX1_583":
+                    return cardIDEnum.EX1_583;
+                case "EX1_584":
+                    return cardIDEnum.EX1_584;
+                case "EX1_155":
+                    return cardIDEnum.EX1_155;
+                case "EX1_622":
+                    return cardIDEnum.EX1_622;
+                case "CS2_203":
+                    return cardIDEnum.CS2_203;
+                case "EX1_124":
+                    return cardIDEnum.EX1_124;
+                case "EX1_379":
+                    return cardIDEnum.EX1_379;
+                case "NAX7_02":
+                    return cardIDEnum.NAX7_02;
+                case "CS2_053e":
+                    return cardIDEnum.CS2_053e;
+                case "EX1_032":
+                    return cardIDEnum.EX1_032;
+                case "NAX9_01":
+                    return cardIDEnum.NAX9_01;
+                case "TU4e_003":
+                    return cardIDEnum.TU4e_003;
+                case "CS2_146o":
+                    return cardIDEnum.CS2_146o;
+                case "NAX8_01H":
+                    return cardIDEnum.NAX8_01H;
+                case "XXX_041":
+                    return cardIDEnum.XXX_041;
+                case "NAXM_002":
+                    return cardIDEnum.NAXM_002;
+                case "EX1_391":
+                    return cardIDEnum.EX1_391;
+                case "EX1_366":
+                    return cardIDEnum.EX1_366;
+                case "EX1_059e":
+                    return cardIDEnum.EX1_059e;
+                case "XXX_012":
+                    return cardIDEnum.XXX_012;
+                case "EX1_565o":
+                    return cardIDEnum.EX1_565o;
+                case "EX1_001e":
+                    return cardIDEnum.EX1_001e;
+                case "TU4f_003":
+                    return cardIDEnum.TU4f_003;
+                case "EX1_400":
+                    return cardIDEnum.EX1_400;
+                case "EX1_614":
+                    return cardIDEnum.EX1_614;
+                case "EX1_561":
+                    return cardIDEnum.EX1_561;
+                case "EX1_332":
+                    return cardIDEnum.EX1_332;
+                case "HERO_05":
+                    return cardIDEnum.HERO_05;
+                case "CS2_065":
+                    return cardIDEnum.CS2_065;
+                case "ds1_whelptoken":
+                    return cardIDEnum.ds1_whelptoken;
+                case "EX1_536e":
+                    return cardIDEnum.EX1_536e;
+                case "CS2_032":
+                    return cardIDEnum.CS2_032;
+                case "CS2_120":
+                    return cardIDEnum.CS2_120;
+                case "EX1_155be":
+                    return cardIDEnum.EX1_155be;
+                case "EX1_247":
+                    return cardIDEnum.EX1_247;
+                case "EX1_154a":
+                    return cardIDEnum.EX1_154a;
+                case "EX1_554t":
+                    return cardIDEnum.EX1_554t;
+                case "CS2_103e2":
+                    return cardIDEnum.CS2_103e2;
+                case "TU4d_003":
+                    return cardIDEnum.TU4d_003;
+                case "NEW1_026t":
+                    return cardIDEnum.NEW1_026t;
+                case "EX1_623":
+                    return cardIDEnum.EX1_623;
+                case "EX1_383t":
+                    return cardIDEnum.EX1_383t;
+                case "NAX7_03":
+                    return cardIDEnum.NAX7_03;
+                case "EX1_597":
+                    return cardIDEnum.EX1_597;
+                case "TU4f_006o":
+                    return cardIDEnum.TU4f_006o;
+                case "EX1_130a":
+                    return cardIDEnum.EX1_130a;
+                case "CS2_011":
+                    return cardIDEnum.CS2_011;
+                case "EX1_169":
+                    return cardIDEnum.EX1_169;
+                case "EX1_tk33":
+                    return cardIDEnum.EX1_tk33;
+                case "NAX11_03":
+                    return cardIDEnum.NAX11_03;
+                case "NAX4_01":
+                    return cardIDEnum.NAX4_01;
+                case "NAX10_01":
+                    return cardIDEnum.NAX10_01;
+                case "EX1_250":
+                    return cardIDEnum.EX1_250;
+                case "EX1_564":
+                    return cardIDEnum.EX1_564;
+                case "NAX5_03":
+                    return cardIDEnum.NAX5_03;
+                case "EX1_043e":
+                    return cardIDEnum.EX1_043e;
+                case "EX1_349":
+                    return cardIDEnum.EX1_349;
+                case "XXX_097":
+                    return cardIDEnum.XXX_097;
+                case "EX1_102":
+                    return cardIDEnum.EX1_102;
+                case "EX1_058":
+                    return cardIDEnum.EX1_058;
+                case "EX1_243":
+                    return cardIDEnum.EX1_243;
+                case "PRO_001c":
+                    return cardIDEnum.PRO_001c;
+                case "EX1_116t":
+                    return cardIDEnum.EX1_116t;
+                case "NAX15_01e":
+                    return cardIDEnum.NAX15_01e;
+                case "FP1_029":
+                    return cardIDEnum.FP1_029;
+                case "CS2_089":
+                    return cardIDEnum.CS2_089;
+                case "TU4c_001":
+                    return cardIDEnum.TU4c_001;
+                case "EX1_248":
+                    return cardIDEnum.EX1_248;
+                case "NEW1_037e":
+                    return cardIDEnum.NEW1_037e;
+                case "CS2_122":
+                    return cardIDEnum.CS2_122;
+                case "EX1_393":
+                    return cardIDEnum.EX1_393;
+                case "CS2_232":
+                    return cardIDEnum.CS2_232;
+                case "EX1_165b":
+                    return cardIDEnum.EX1_165b;
+                case "NEW1_030":
+                    return cardIDEnum.NEW1_030;
+                case "EX1_161o":
+                    return cardIDEnum.EX1_161o;
+                case "EX1_093e":
+                    return cardIDEnum.EX1_093e;
+                case "CS2_150":
+                    return cardIDEnum.CS2_150;
+                case "CS2_152":
+                    return cardIDEnum.CS2_152;
+                case "NAX9_03H":
+                    return cardIDEnum.NAX9_03H;
+                case "EX1_160t":
+                    return cardIDEnum.EX1_160t;
+                case "CS2_127":
+                    return cardIDEnum.CS2_127;
+                case "CRED_03":
+                    return cardIDEnum.CRED_03;
+                case "DS1_188":
+                    return cardIDEnum.DS1_188;
+                case "XXX_001":
+                    return cardIDEnum.XXX_001;
+            }
+
+            return cardIDEnum.None;
         }
 
         public enum cardName
@@ -16457,662 +17376,1952 @@ namespace SilverfishRush
 
         public cardName cardNamestringToEnum(string s)
         {
-            if (s == "unknown") return CardDB.cardName.unknown;
-            if (s == "hogger") return CardDB.cardName.hogger;
-            if (s == "heigantheunclean") return CardDB.cardName.heigantheunclean;
-            if (s == "necroticaura") return CardDB.cardName.necroticaura;
-            if (s == "starfall") return CardDB.cardName.starfall;
-            if (s == "barrel") return CardDB.cardName.barrel;
-            if (s == "damagereflector") return CardDB.cardName.damagereflector;
-            if (s == "edwinvancleef") return CardDB.cardName.edwinvancleef;
-            if (s == "gothiktheharvester") return CardDB.cardName.gothiktheharvester;
-            if (s == "perditionsblade") return CardDB.cardName.perditionsblade;
-            if (s == "bloodsailraider") return CardDB.cardName.bloodsailraider;
-            if (s == "guardianoficecrown") return CardDB.cardName.guardianoficecrown;
-            if (s == "bloodmagethalnos") return CardDB.cardName.bloodmagethalnos;
-            if (s == "rooted") return CardDB.cardName.rooted;
-            if (s == "wisp") return CardDB.cardName.wisp;
-            if (s == "rachelledavis") return CardDB.cardName.rachelledavis;
-            if (s == "senjinshieldmasta") return CardDB.cardName.senjinshieldmasta;
-            if (s == "totemicmight") return CardDB.cardName.totemicmight;
-            if (s == "uproot") return CardDB.cardName.uproot;
-            if (s == "opponentdisconnect") return CardDB.cardName.opponentdisconnect;
-            if (s == "unrelentingrider") return CardDB.cardName.unrelentingrider;
-            if (s == "shandoslesson") return CardDB.cardName.shandoslesson;
-            if (s == "hemetnesingwary") return CardDB.cardName.hemetnesingwary;
-            if (s == "decimate") return CardDB.cardName.decimate;
-            if (s == "shadowofnothing") return CardDB.cardName.shadowofnothing;
-            if (s == "nerubian") return CardDB.cardName.nerubian;
-            if (s == "dragonlingmechanic") return CardDB.cardName.dragonlingmechanic;
-            if (s == "mogushanwarden") return CardDB.cardName.mogushanwarden;
-            if (s == "thanekorthazz") return CardDB.cardName.thanekorthazz;
-            if (s == "hungrycrab") return CardDB.cardName.hungrycrab;
-            if (s == "ancientteachings") return CardDB.cardName.ancientteachings;
-            if (s == "misdirection") return CardDB.cardName.misdirection;
-            if (s == "patientassassin") return CardDB.cardName.patientassassin;
-            if (s == "mutatinginjection") return CardDB.cardName.mutatinginjection;
-            if (s == "violetteacher") return CardDB.cardName.violetteacher;
-            if (s == "arathiweaponsmith") return CardDB.cardName.arathiweaponsmith;
-            if (s == "raisedead") return CardDB.cardName.raisedead;
-            if (s == "acolyteofpain") return CardDB.cardName.acolyteofpain;
-            if (s == "holynova") return CardDB.cardName.holynova;
-            if (s == "robpardo") return CardDB.cardName.robpardo;
-            if (s == "commandingshout") return CardDB.cardName.commandingshout;
-            if (s == "necroticpoison") return CardDB.cardName.necroticpoison;
-            if (s == "unboundelemental") return CardDB.cardName.unboundelemental;
-            if (s == "garroshhellscream") return CardDB.cardName.garroshhellscream;
-            if (s == "enchant") return CardDB.cardName.enchant;
-            if (s == "loatheb") return CardDB.cardName.loatheb;
-            if (s == "blessingofmight") return CardDB.cardName.blessingofmight;
-            if (s == "nightmare") return CardDB.cardName.nightmare;
-            if (s == "blessingofkings") return CardDB.cardName.blessingofkings;
-            if (s == "polymorph") return CardDB.cardName.polymorph;
-            if (s == "darkirondwarf") return CardDB.cardName.darkirondwarf;
-            if (s == "destroy") return CardDB.cardName.destroy;
-            if (s == "roguesdoit") return CardDB.cardName.roguesdoit;
-            if (s == "freecards") return CardDB.cardName.freecards;
-            if (s == "iammurloc") return CardDB.cardName.iammurloc;
-            if (s == "sporeburst") return CardDB.cardName.sporeburst;
-            if (s == "mindcontrolcrystal") return CardDB.cardName.mindcontrolcrystal;
-            if (s == "charge") return CardDB.cardName.charge;
-            if (s == "stampedingkodo") return CardDB.cardName.stampedingkodo;
-            if (s == "humility") return CardDB.cardName.humility;
-            if (s == "darkcultist") return CardDB.cardName.darkcultist;
-            if (s == "gruul") return CardDB.cardName.gruul;
-            if (s == "markofthewild") return CardDB.cardName.markofthewild;
-            if (s == "patchwerk") return CardDB.cardName.patchwerk;
-            if (s == "worgeninfiltrator") return CardDB.cardName.worgeninfiltrator;
-            if (s == "frostbolt") return CardDB.cardName.frostbolt;
-            if (s == "runeblade") return CardDB.cardName.runeblade;
-            if (s == "flametonguetotem") return CardDB.cardName.flametonguetotem;
-            if (s == "assassinate") return CardDB.cardName.assassinate;
-            if (s == "madscientist") return CardDB.cardName.madscientist;
-            if (s == "lordofthearena") return CardDB.cardName.lordofthearena;
-            if (s == "bainebloodhoof") return CardDB.cardName.bainebloodhoof;
-            if (s == "injuredblademaster") return CardDB.cardName.injuredblademaster;
-            if (s == "siphonsoul") return CardDB.cardName.siphonsoul;
-            if (s == "layonhands") return CardDB.cardName.layonhands;
-            if (s == "hook") return CardDB.cardName.hook;
-            if (s == "massiveruneblade") return CardDB.cardName.massiveruneblade;
-            if (s == "lorewalkercho") return CardDB.cardName.lorewalkercho;
-            if (s == "destroyallminions") return CardDB.cardName.destroyallminions;
-            if (s == "silvermoonguardian") return CardDB.cardName.silvermoonguardian;
-            if (s == "destroyallmana") return CardDB.cardName.destroyallmana;
-            if (s == "huffer") return CardDB.cardName.huffer;
-            if (s == "mindvision") return CardDB.cardName.mindvision;
-            if (s == "malfurionstormrage") return CardDB.cardName.malfurionstormrage;
-            if (s == "corehound") return CardDB.cardName.corehound;
-            if (s == "grimscaleoracle") return CardDB.cardName.grimscaleoracle;
-            if (s == "lightningstorm") return CardDB.cardName.lightningstorm;
-            if (s == "lightwell") return CardDB.cardName.lightwell;
-            if (s == "benthompson") return CardDB.cardName.benthompson;
-            if (s == "coldlightseer") return CardDB.cardName.coldlightseer;
-            if (s == "deathsbite") return CardDB.cardName.deathsbite;
-            if (s == "gorehowl") return CardDB.cardName.gorehowl;
-            if (s == "skitter") return CardDB.cardName.skitter;
-            if (s == "farsight") return CardDB.cardName.farsight;
-            if (s == "chillwindyeti") return CardDB.cardName.chillwindyeti;
-            if (s == "moonfire") return CardDB.cardName.moonfire;
-            if (s == "bladeflurry") return CardDB.cardName.bladeflurry;
-            if (s == "massdispel") return CardDB.cardName.massdispel;
-            if (s == "crazedalchemist") return CardDB.cardName.crazedalchemist;
-            if (s == "shadowmadness") return CardDB.cardName.shadowmadness;
-            if (s == "equality") return CardDB.cardName.equality;
-            if (s == "misha") return CardDB.cardName.misha;
-            if (s == "treant") return CardDB.cardName.treant;
-            if (s == "alarmobot") return CardDB.cardName.alarmobot;
-            if (s == "animalcompanion") return CardDB.cardName.animalcompanion;
-            if (s == "hatefulstrike") return CardDB.cardName.hatefulstrike;
-            if (s == "dream") return CardDB.cardName.dream;
-            if (s == "anubrekhan") return CardDB.cardName.anubrekhan;
-            if (s == "youngpriestess") return CardDB.cardName.youngpriestess;
-            if (s == "gadgetzanauctioneer") return CardDB.cardName.gadgetzanauctioneer;
-            if (s == "coneofcold") return CardDB.cardName.coneofcold;
-            if (s == "earthshock") return CardDB.cardName.earthshock;
-            if (s == "tirionfordring") return CardDB.cardName.tirionfordring;
-            if (s == "wailingsoul") return CardDB.cardName.wailingsoul;
-            if (s == "skeleton") return CardDB.cardName.skeleton;
-            if (s == "ironfurgrizzly") return CardDB.cardName.ironfurgrizzly;
-            if (s == "headcrack") return CardDB.cardName.headcrack;
-            if (s == "arcaneshot") return CardDB.cardName.arcaneshot;
-            if (s == "maexxna") return CardDB.cardName.maexxna;
-            if (s == "imp") return CardDB.cardName.imp;
-            if (s == "markofthehorsemen") return CardDB.cardName.markofthehorsemen;
-            if (s == "voidterror") return CardDB.cardName.voidterror;
-            if (s == "mortalcoil") return CardDB.cardName.mortalcoil;
-            if (s == "draw3cards") return CardDB.cardName.draw3cards;
-            if (s == "flameofazzinoth") return CardDB.cardName.flameofazzinoth;
-            if (s == "jainaproudmoore") return CardDB.cardName.jainaproudmoore;
-            if (s == "execute") return CardDB.cardName.execute;
-            if (s == "bloodlust") return CardDB.cardName.bloodlust;
-            if (s == "bananas") return CardDB.cardName.bananas;
-            if (s == "kidnapper") return CardDB.cardName.kidnapper;
-            if (s == "oldmurkeye") return CardDB.cardName.oldmurkeye;
-            if (s == "homingchicken") return CardDB.cardName.homingchicken;
-            if (s == "enableforattack") return CardDB.cardName.enableforattack;
-            if (s == "spellbender") return CardDB.cardName.spellbender;
-            if (s == "backstab") return CardDB.cardName.backstab;
-            if (s == "squirrel") return CardDB.cardName.squirrel;
-            if (s == "stalagg") return CardDB.cardName.stalagg;
-            if (s == "grandwidowfaerlina") return CardDB.cardName.grandwidowfaerlina;
-            if (s == "heavyaxe") return CardDB.cardName.heavyaxe;
-            if (s == "zwick") return CardDB.cardName.zwick;
-            if (s == "webwrap") return CardDB.cardName.webwrap;
-            if (s == "flamesofazzinoth") return CardDB.cardName.flamesofazzinoth;
-            if (s == "murlocwarleader") return CardDB.cardName.murlocwarleader;
-            if (s == "shadowstep") return CardDB.cardName.shadowstep;
-            if (s == "ancestralspirit") return CardDB.cardName.ancestralspirit;
-            if (s == "defenderofargus") return CardDB.cardName.defenderofargus;
-            if (s == "assassinsblade") return CardDB.cardName.assassinsblade;
-            if (s == "discard") return CardDB.cardName.discard;
-            if (s == "biggamehunter") return CardDB.cardName.biggamehunter;
-            if (s == "aldorpeacekeeper") return CardDB.cardName.aldorpeacekeeper;
-            if (s == "blizzard") return CardDB.cardName.blizzard;
-            if (s == "pandarenscout") return CardDB.cardName.pandarenscout;
-            if (s == "unleashthehounds") return CardDB.cardName.unleashthehounds;
-            if (s == "yseraawakens") return CardDB.cardName.yseraawakens;
-            if (s == "sap") return CardDB.cardName.sap;
-            if (s == "kelthuzad") return CardDB.cardName.kelthuzad;
-            if (s == "defiasbandit") return CardDB.cardName.defiasbandit;
-            if (s == "gnomishinventor") return CardDB.cardName.gnomishinventor;
-            if (s == "mindcontrol") return CardDB.cardName.mindcontrol;
-            if (s == "ravenholdtassassin") return CardDB.cardName.ravenholdtassassin;
-            if (s == "icelance") return CardDB.cardName.icelance;
-            if (s == "dispel") return CardDB.cardName.dispel;
-            if (s == "acidicswampooze") return CardDB.cardName.acidicswampooze;
-            if (s == "muklasbigbrother") return CardDB.cardName.muklasbigbrother;
-            if (s == "blessedchampion") return CardDB.cardName.blessedchampion;
-            if (s == "savannahhighmane") return CardDB.cardName.savannahhighmane;
-            if (s == "direwolfalpha") return CardDB.cardName.direwolfalpha;
-            if (s == "hoggersmash") return CardDB.cardName.hoggersmash;
-            if (s == "blessingofwisdom") return CardDB.cardName.blessingofwisdom;
-            if (s == "nourish") return CardDB.cardName.nourish;
-            if (s == "abusivesergeant") return CardDB.cardName.abusivesergeant;
-            if (s == "sylvanaswindrunner") return CardDB.cardName.sylvanaswindrunner;
-            if (s == "spore") return CardDB.cardName.spore;
-            if (s == "crueltaskmaster") return CardDB.cardName.crueltaskmaster;
-            if (s == "lightningbolt") return CardDB.cardName.lightningbolt;
-            if (s == "keeperofthegrove") return CardDB.cardName.keeperofthegrove;
-            if (s == "steadyshot") return CardDB.cardName.steadyshot;
-            if (s == "multishot") return CardDB.cardName.multishot;
-            if (s == "harvest") return CardDB.cardName.harvest;
-            if (s == "instructorrazuvious") return CardDB.cardName.instructorrazuvious;
-            if (s == "ladyblaumeux") return CardDB.cardName.ladyblaumeux;
-            if (s == "jaybaxter") return CardDB.cardName.jaybaxter;
-            if (s == "molasses") return CardDB.cardName.molasses;
-            if (s == "pintsizedsummoner") return CardDB.cardName.pintsizedsummoner;
-            if (s == "spellbreaker") return CardDB.cardName.spellbreaker;
-            if (s == "anubarambusher") return CardDB.cardName.anubarambusher;
-            if (s == "deadlypoison") return CardDB.cardName.deadlypoison;
-            if (s == "stoneskingargoyle") return CardDB.cardName.stoneskingargoyle;
-            if (s == "bloodfury") return CardDB.cardName.bloodfury;
-            if (s == "fanofknives") return CardDB.cardName.fanofknives;
-            if (s == "poisoncloud") return CardDB.cardName.poisoncloud;
-            if (s == "shieldbearer") return CardDB.cardName.shieldbearer;
-            if (s == "sensedemons") return CardDB.cardName.sensedemons;
-            if (s == "shieldblock") return CardDB.cardName.shieldblock;
-            if (s == "handswapperminion") return CardDB.cardName.handswapperminion;
-            if (s == "massivegnoll") return CardDB.cardName.massivegnoll;
-            if (s == "deathcharger") return CardDB.cardName.deathcharger;
-            if (s == "ancientoflore") return CardDB.cardName.ancientoflore;
-            if (s == "oasissnapjaw") return CardDB.cardName.oasissnapjaw;
-            if (s == "illidanstormrage") return CardDB.cardName.illidanstormrage;
-            if (s == "frostwolfgrunt") return CardDB.cardName.frostwolfgrunt;
-            if (s == "lesserheal") return CardDB.cardName.lesserheal;
-            if (s == "infernal") return CardDB.cardName.infernal;
-            if (s == "wildpyromancer") return CardDB.cardName.wildpyromancer;
-            if (s == "razorfenhunter") return CardDB.cardName.razorfenhunter;
-            if (s == "twistingnether") return CardDB.cardName.twistingnether;
-            if (s == "voidcaller") return CardDB.cardName.voidcaller;
-            if (s == "leaderofthepack") return CardDB.cardName.leaderofthepack;
-            if (s == "malygos") return CardDB.cardName.malygos;
-            if (s == "becomehogger") return CardDB.cardName.becomehogger;
-            if (s == "baronrivendare") return CardDB.cardName.baronrivendare;
-            if (s == "millhousemanastorm") return CardDB.cardName.millhousemanastorm;
-            if (s == "innerfire") return CardDB.cardName.innerfire;
-            if (s == "valeerasanguinar") return CardDB.cardName.valeerasanguinar;
-            if (s == "chicken") return CardDB.cardName.chicken;
-            if (s == "souloftheforest") return CardDB.cardName.souloftheforest;
-            if (s == "silencedebug") return CardDB.cardName.silencedebug;
-            if (s == "bloodsailcorsair") return CardDB.cardName.bloodsailcorsair;
-            if (s == "slime") return CardDB.cardName.slime;
-            if (s == "tinkmasteroverspark") return CardDB.cardName.tinkmasteroverspark;
-            if (s == "iceblock") return CardDB.cardName.iceblock;
-            if (s == "brawl") return CardDB.cardName.brawl;
-            if (s == "vanish") return CardDB.cardName.vanish;
-            if (s == "poisonseeds") return CardDB.cardName.poisonseeds;
-            if (s == "murloc") return CardDB.cardName.murloc;
-            if (s == "mindspike") return CardDB.cardName.mindspike;
-            if (s == "kingmukla") return CardDB.cardName.kingmukla;
-            if (s == "stevengabriel") return CardDB.cardName.stevengabriel;
-            if (s == "gluth") return CardDB.cardName.gluth;
-            if (s == "truesilverchampion") return CardDB.cardName.truesilverchampion;
-            if (s == "harrisonjones") return CardDB.cardName.harrisonjones;
-            if (s == "destroydeck") return CardDB.cardName.destroydeck;
-            if (s == "devilsaur") return CardDB.cardName.devilsaur;
-            if (s == "wargolem") return CardDB.cardName.wargolem;
-            if (s == "warsongcommander") return CardDB.cardName.warsongcommander;
-            if (s == "manawyrm") return CardDB.cardName.manawyrm;
-            if (s == "thaddius") return CardDB.cardName.thaddius;
-            if (s == "savagery") return CardDB.cardName.savagery;
-            if (s == "spitefulsmith") return CardDB.cardName.spitefulsmith;
-            if (s == "shatteredsuncleric") return CardDB.cardName.shatteredsuncleric;
-            if (s == "eyeforaneye") return CardDB.cardName.eyeforaneye;
-            if (s == "azuredrake") return CardDB.cardName.azuredrake;
-            if (s == "mountaingiant") return CardDB.cardName.mountaingiant;
-            if (s == "korkronelite") return CardDB.cardName.korkronelite;
-            if (s == "junglepanther") return CardDB.cardName.junglepanther;
-            if (s == "barongeddon") return CardDB.cardName.barongeddon;
-            if (s == "spectralspider") return CardDB.cardName.spectralspider;
-            if (s == "pitlord") return CardDB.cardName.pitlord;
-            if (s == "markofnature") return CardDB.cardName.markofnature;
-            if (s == "grobbulus") return CardDB.cardName.grobbulus;
-            if (s == "leokk") return CardDB.cardName.leokk;
-            if (s == "fierywaraxe") return CardDB.cardName.fierywaraxe;
-            if (s == "damage5") return CardDB.cardName.damage5;
-            if (s == "duplicate") return CardDB.cardName.duplicate;
-            if (s == "restore5") return CardDB.cardName.restore5;
-            if (s == "mindblast") return CardDB.cardName.mindblast;
-            if (s == "timberwolf") return CardDB.cardName.timberwolf;
-            if (s == "captaingreenskin") return CardDB.cardName.captaingreenskin;
-            if (s == "elvenarcher") return CardDB.cardName.elvenarcher;
-            if (s == "michaelschweitzer") return CardDB.cardName.michaelschweitzer;
-            if (s == "masterswordsmith") return CardDB.cardName.masterswordsmith;
-            if (s == "grommashhellscream") return CardDB.cardName.grommashhellscream;
-            if (s == "hound") return CardDB.cardName.hound;
-            if (s == "seagiant") return CardDB.cardName.seagiant;
-            if (s == "doomguard") return CardDB.cardName.doomguard;
-            if (s == "alakirthewindlord") return CardDB.cardName.alakirthewindlord;
-            if (s == "hyena") return CardDB.cardName.hyena;
-            if (s == "undertaker") return CardDB.cardName.undertaker;
-            if (s == "frothingberserker") return CardDB.cardName.frothingberserker;
-            if (s == "powerofthewild") return CardDB.cardName.powerofthewild;
-            if (s == "druidoftheclaw") return CardDB.cardName.druidoftheclaw;
-            if (s == "hellfire") return CardDB.cardName.hellfire;
-            if (s == "archmage") return CardDB.cardName.archmage;
-            if (s == "recklessrocketeer") return CardDB.cardName.recklessrocketeer;
-            if (s == "crazymonkey") return CardDB.cardName.crazymonkey;
-            if (s == "damageallbut1") return CardDB.cardName.damageallbut1;
-            if (s == "frostblast") return CardDB.cardName.frostblast;
-            if (s == "powerwordshield") return CardDB.cardName.powerwordshield;
-            if (s == "rainoffire") return CardDB.cardName.rainoffire;
-            if (s == "arcaneintellect") return CardDB.cardName.arcaneintellect;
-            if (s == "angrychicken") return CardDB.cardName.angrychicken;
-            if (s == "nerubianegg") return CardDB.cardName.nerubianegg;
-            if (s == "worshipper") return CardDB.cardName.worshipper;
-            if (s == "mindgames") return CardDB.cardName.mindgames;
-            if (s == "leeroyjenkins") return CardDB.cardName.leeroyjenkins;
-            if (s == "gurubashiberserker") return CardDB.cardName.gurubashiberserker;
-            if (s == "windspeaker") return CardDB.cardName.windspeaker;
-            if (s == "enableemotes") return CardDB.cardName.enableemotes;
-            if (s == "forceofnature") return CardDB.cardName.forceofnature;
-            if (s == "lightspawn") return CardDB.cardName.lightspawn;
-            if (s == "destroyamanacrystal") return CardDB.cardName.destroyamanacrystal;
-            if (s == "warglaiveofazzinoth") return CardDB.cardName.warglaiveofazzinoth;
-            if (s == "finkleeinhorn") return CardDB.cardName.finkleeinhorn;
-            if (s == "frostelemental") return CardDB.cardName.frostelemental;
-            if (s == "thoughtsteal") return CardDB.cardName.thoughtsteal;
-            if (s == "brianschwab") return CardDB.cardName.brianschwab;
-            if (s == "scavenginghyena") return CardDB.cardName.scavenginghyena;
-            if (s == "si7agent") return CardDB.cardName.si7agent;
-            if (s == "prophetvelen") return CardDB.cardName.prophetvelen;
-            if (s == "soulfire") return CardDB.cardName.soulfire;
-            if (s == "ogremagi") return CardDB.cardName.ogremagi;
-            if (s == "damagedgolem") return CardDB.cardName.damagedgolem;
-            if (s == "crash") return CardDB.cardName.crash;
-            if (s == "adrenalinerush") return CardDB.cardName.adrenalinerush;
-            if (s == "murloctidecaller") return CardDB.cardName.murloctidecaller;
-            if (s == "kirintormage") return CardDB.cardName.kirintormage;
-            if (s == "spectralrider") return CardDB.cardName.spectralrider;
-            if (s == "thrallmarfarseer") return CardDB.cardName.thrallmarfarseer;
-            if (s == "frostwolfwarlord") return CardDB.cardName.frostwolfwarlord;
-            if (s == "sorcerersapprentice") return CardDB.cardName.sorcerersapprentice;
-            if (s == "feugen") return CardDB.cardName.feugen;
-            if (s == "willofmukla") return CardDB.cardName.willofmukla;
-            if (s == "holyfire") return CardDB.cardName.holyfire;
-            if (s == "manawraith") return CardDB.cardName.manawraith;
-            if (s == "argentsquire") return CardDB.cardName.argentsquire;
-            if (s == "placeholdercard") return CardDB.cardName.placeholdercard;
-            if (s == "snakeball") return CardDB.cardName.snakeball;
-            if (s == "ancientwatcher") return CardDB.cardName.ancientwatcher;
-            if (s == "noviceengineer") return CardDB.cardName.noviceengineer;
-            if (s == "stonetuskboar") return CardDB.cardName.stonetuskboar;
-            if (s == "ancestralhealing") return CardDB.cardName.ancestralhealing;
-            if (s == "conceal") return CardDB.cardName.conceal;
-            if (s == "arcanitereaper") return CardDB.cardName.arcanitereaper;
-            if (s == "guldan") return CardDB.cardName.guldan;
-            if (s == "ragingworgen") return CardDB.cardName.ragingworgen;
-            if (s == "earthenringfarseer") return CardDB.cardName.earthenringfarseer;
-            if (s == "onyxia") return CardDB.cardName.onyxia;
-            if (s == "manaaddict") return CardDB.cardName.manaaddict;
-            if (s == "unholyshadow") return CardDB.cardName.unholyshadow;
-            if (s == "dualwarglaives") return CardDB.cardName.dualwarglaives;
-            if (s == "sludgebelcher") return CardDB.cardName.sludgebelcher;
-            if (s == "worthlessimp") return CardDB.cardName.worthlessimp;
-            if (s == "shiv") return CardDB.cardName.shiv;
-            if (s == "sheep") return CardDB.cardName.sheep;
-            if (s == "bloodknight") return CardDB.cardName.bloodknight;
-            if (s == "holysmite") return CardDB.cardName.holysmite;
-            if (s == "ancientsecrets") return CardDB.cardName.ancientsecrets;
-            if (s == "holywrath") return CardDB.cardName.holywrath;
-            if (s == "ironforgerifleman") return CardDB.cardName.ironforgerifleman;
-            if (s == "elitetaurenchieftain") return CardDB.cardName.elitetaurenchieftain;
-            if (s == "spectralwarrior") return CardDB.cardName.spectralwarrior;
-            if (s == "bluegillwarrior") return CardDB.cardName.bluegillwarrior;
-            if (s == "shapeshift") return CardDB.cardName.shapeshift;
-            if (s == "hamiltonchu") return CardDB.cardName.hamiltonchu;
-            if (s == "battlerage") return CardDB.cardName.battlerage;
-            if (s == "nightblade") return CardDB.cardName.nightblade;
-            if (s == "locustswarm") return CardDB.cardName.locustswarm;
-            if (s == "crazedhunter") return CardDB.cardName.crazedhunter;
-            if (s == "andybrock") return CardDB.cardName.andybrock;
-            if (s == "youthfulbrewmaster") return CardDB.cardName.youthfulbrewmaster;
-            if (s == "theblackknight") return CardDB.cardName.theblackknight;
-            if (s == "brewmaster") return CardDB.cardName.brewmaster;
-            if (s == "lifetap") return CardDB.cardName.lifetap;
-            if (s == "demonfire") return CardDB.cardName.demonfire;
-            if (s == "redemption") return CardDB.cardName.redemption;
-            if (s == "lordjaraxxus") return CardDB.cardName.lordjaraxxus;
-            if (s == "coldblood") return CardDB.cardName.coldblood;
-            if (s == "lightwarden") return CardDB.cardName.lightwarden;
-            if (s == "questingadventurer") return CardDB.cardName.questingadventurer;
-            if (s == "donothing") return CardDB.cardName.donothing;
-            if (s == "dereksakamoto") return CardDB.cardName.dereksakamoto;
-            if (s == "poultryizer") return CardDB.cardName.poultryizer;
-            if (s == "koboldgeomancer") return CardDB.cardName.koboldgeomancer;
-            if (s == "legacyoftheemperor") return CardDB.cardName.legacyoftheemperor;
-            if (s == "eruption") return CardDB.cardName.eruption;
-            if (s == "cenarius") return CardDB.cardName.cenarius;
-            if (s == "deathlord") return CardDB.cardName.deathlord;
-            if (s == "searingtotem") return CardDB.cardName.searingtotem;
-            if (s == "taurenwarrior") return CardDB.cardName.taurenwarrior;
-            if (s == "explosivetrap") return CardDB.cardName.explosivetrap;
-            if (s == "frog") return CardDB.cardName.frog;
-            if (s == "servercrash") return CardDB.cardName.servercrash;
-            if (s == "wickedknife") return CardDB.cardName.wickedknife;
-            if (s == "laughingsister") return CardDB.cardName.laughingsister;
-            if (s == "cultmaster") return CardDB.cardName.cultmaster;
-            if (s == "wildgrowth") return CardDB.cardName.wildgrowth;
-            if (s == "sprint") return CardDB.cardName.sprint;
-            if (s == "masterofdisguise") return CardDB.cardName.masterofdisguise;
-            if (s == "kyleharrison") return CardDB.cardName.kyleharrison;
-            if (s == "avatarofthecoin") return CardDB.cardName.avatarofthecoin;
-            if (s == "excessmana") return CardDB.cardName.excessmana;
-            if (s == "spiritwolf") return CardDB.cardName.spiritwolf;
-            if (s == "auchenaisoulpriest") return CardDB.cardName.auchenaisoulpriest;
-            if (s == "bestialwrath") return CardDB.cardName.bestialwrath;
-            if (s == "rockbiterweapon") return CardDB.cardName.rockbiterweapon;
-            if (s == "starvingbuzzard") return CardDB.cardName.starvingbuzzard;
-            if (s == "mirrorimage") return CardDB.cardName.mirrorimage;
-            if (s == "frozenchampion") return CardDB.cardName.frozenchampion;
-            if (s == "silverhandrecruit") return CardDB.cardName.silverhandrecruit;
-            if (s == "corruption") return CardDB.cardName.corruption;
-            if (s == "preparation") return CardDB.cardName.preparation;
-            if (s == "cairnebloodhoof") return CardDB.cardName.cairnebloodhoof;
-            if (s == "mortalstrike") return CardDB.cardName.mortalstrike;
-            if (s == "flare") return CardDB.cardName.flare;
-            if (s == "necroknight") return CardDB.cardName.necroknight;
-            if (s == "silverhandknight") return CardDB.cardName.silverhandknight;
-            if (s == "breakweapon") return CardDB.cardName.breakweapon;
-            if (s == "guardianofkings") return CardDB.cardName.guardianofkings;
-            if (s == "ancientbrewmaster") return CardDB.cardName.ancientbrewmaster;
-            if (s == "avenge") return CardDB.cardName.avenge;
-            if (s == "youngdragonhawk") return CardDB.cardName.youngdragonhawk;
-            if (s == "frostshock") return CardDB.cardName.frostshock;
-            if (s == "healingtouch") return CardDB.cardName.healingtouch;
-            if (s == "venturecomercenary") return CardDB.cardName.venturecomercenary;
-            if (s == "unbalancingstrike") return CardDB.cardName.unbalancingstrike;
-            if (s == "sacrificialpact") return CardDB.cardName.sacrificialpact;
-            if (s == "noooooooooooo") return CardDB.cardName.noooooooooooo;
-            if (s == "baneofdoom") return CardDB.cardName.baneofdoom;
-            if (s == "abomination") return CardDB.cardName.abomination;
-            if (s == "flesheatingghoul") return CardDB.cardName.flesheatingghoul;
-            if (s == "loothoarder") return CardDB.cardName.loothoarder;
-            if (s == "mill10") return CardDB.cardName.mill10;
-            if (s == "sapphiron") return CardDB.cardName.sapphiron;
-            if (s == "jasonchayes") return CardDB.cardName.jasonchayes;
-            if (s == "benbrode") return CardDB.cardName.benbrode;
-            if (s == "betrayal") return CardDB.cardName.betrayal;
-            if (s == "thebeast") return CardDB.cardName.thebeast;
-            if (s == "flameimp") return CardDB.cardName.flameimp;
-            if (s == "freezingtrap") return CardDB.cardName.freezingtrap;
-            if (s == "southseadeckhand") return CardDB.cardName.southseadeckhand;
-            if (s == "wrath") return CardDB.cardName.wrath;
-            if (s == "bloodfenraptor") return CardDB.cardName.bloodfenraptor;
-            if (s == "cleave") return CardDB.cardName.cleave;
-            if (s == "fencreeper") return CardDB.cardName.fencreeper;
-            if (s == "restore1") return CardDB.cardName.restore1;
-            if (s == "handtodeck") return CardDB.cardName.handtodeck;
-            if (s == "starfire") return CardDB.cardName.starfire;
-            if (s == "goldshirefootman") return CardDB.cardName.goldshirefootman;
-            if (s == "unrelentingtrainee") return CardDB.cardName.unrelentingtrainee;
-            if (s == "murlocscout") return CardDB.cardName.murlocscout;
-            if (s == "ragnarosthefirelord") return CardDB.cardName.ragnarosthefirelord;
-            if (s == "rampage") return CardDB.cardName.rampage;
-            if (s == "zombiechow") return CardDB.cardName.zombiechow;
-            if (s == "thrall") return CardDB.cardName.thrall;
-            if (s == "stoneclawtotem") return CardDB.cardName.stoneclawtotem;
-            if (s == "captainsparrot") return CardDB.cardName.captainsparrot;
-            if (s == "windfuryharpy") return CardDB.cardName.windfuryharpy;
-            if (s == "unrelentingwarrior") return CardDB.cardName.unrelentingwarrior;
-            if (s == "stranglethorntiger") return CardDB.cardName.stranglethorntiger;
-            if (s == "summonarandomsecret") return CardDB.cardName.summonarandomsecret;
-            if (s == "circleofhealing") return CardDB.cardName.circleofhealing;
-            if (s == "snaketrap") return CardDB.cardName.snaketrap;
-            if (s == "cabalshadowpriest") return CardDB.cardName.cabalshadowpriest;
-            if (s == "nerubarweblord") return CardDB.cardName.nerubarweblord;
-            if (s == "upgrade") return CardDB.cardName.upgrade;
-            if (s == "shieldslam") return CardDB.cardName.shieldslam;
-            if (s == "flameburst") return CardDB.cardName.flameburst;
-            if (s == "windfury") return CardDB.cardName.windfury;
-            if (s == "enrage") return CardDB.cardName.enrage;
-            if (s == "natpagle") return CardDB.cardName.natpagle;
-            if (s == "restoreallhealth") return CardDB.cardName.restoreallhealth;
-            if (s == "houndmaster") return CardDB.cardName.houndmaster;
-            if (s == "waterelemental") return CardDB.cardName.waterelemental;
-            if (s == "eaglehornbow") return CardDB.cardName.eaglehornbow;
-            if (s == "gnoll") return CardDB.cardName.gnoll;
-            if (s == "archmageantonidas") return CardDB.cardName.archmageantonidas;
-            if (s == "destroyallheroes") return CardDB.cardName.destroyallheroes;
-            if (s == "chains") return CardDB.cardName.chains;
-            if (s == "wrathofairtotem") return CardDB.cardName.wrathofairtotem;
-            if (s == "killcommand") return CardDB.cardName.killcommand;
-            if (s == "manatidetotem") return CardDB.cardName.manatidetotem;
-            if (s == "daggermastery") return CardDB.cardName.daggermastery;
-            if (s == "drainlife") return CardDB.cardName.drainlife;
-            if (s == "doomsayer") return CardDB.cardName.doomsayer;
-            if (s == "darkscalehealer") return CardDB.cardName.darkscalehealer;
-            if (s == "shadowform") return CardDB.cardName.shadowform;
-            if (s == "frostnova") return CardDB.cardName.frostnova;
-            if (s == "purecold") return CardDB.cardName.purecold;
-            if (s == "mirrorentity") return CardDB.cardName.mirrorentity;
-            if (s == "counterspell") return CardDB.cardName.counterspell;
-            if (s == "mindshatter") return CardDB.cardName.mindshatter;
-            if (s == "magmarager") return CardDB.cardName.magmarager;
-            if (s == "wolfrider") return CardDB.cardName.wolfrider;
-            if (s == "emboldener3000") return CardDB.cardName.emboldener3000;
-            if (s == "polarityshift") return CardDB.cardName.polarityshift;
-            if (s == "gelbinmekkatorque") return CardDB.cardName.gelbinmekkatorque;
-            if (s == "webspinner") return CardDB.cardName.webspinner;
-            if (s == "utherlightbringer") return CardDB.cardName.utherlightbringer;
-            if (s == "innerrage") return CardDB.cardName.innerrage;
-            if (s == "emeralddrake") return CardDB.cardName.emeralddrake;
-            if (s == "forceaitouseheropower") return CardDB.cardName.forceaitouseheropower;
-            if (s == "echoingooze") return CardDB.cardName.echoingooze;
-            if (s == "heroicstrike") return CardDB.cardName.heroicstrike;
-            if (s == "hauntedcreeper") return CardDB.cardName.hauntedcreeper;
-            if (s == "barreltoss") return CardDB.cardName.barreltoss;
-            if (s == "yongwoo") return CardDB.cardName.yongwoo;
-            if (s == "doomhammer") return CardDB.cardName.doomhammer;
-            if (s == "stomp") return CardDB.cardName.stomp;
-            if (s == "spectralknight") return CardDB.cardName.spectralknight;
-            if (s == "tracking") return CardDB.cardName.tracking;
-            if (s == "fireball") return CardDB.cardName.fireball;
-            if (s == "thecoin") return CardDB.cardName.thecoin;
-            if (s == "bootybaybodyguard") return CardDB.cardName.bootybaybodyguard;
-            if (s == "scarletcrusader") return CardDB.cardName.scarletcrusader;
-            if (s == "voodoodoctor") return CardDB.cardName.voodoodoctor;
-            if (s == "shadowbolt") return CardDB.cardName.shadowbolt;
-            if (s == "etherealarcanist") return CardDB.cardName.etherealarcanist;
-            if (s == "succubus") return CardDB.cardName.succubus;
-            if (s == "emperorcobra") return CardDB.cardName.emperorcobra;
-            if (s == "deadlyshot") return CardDB.cardName.deadlyshot;
-            if (s == "reinforce") return CardDB.cardName.reinforce;
-            if (s == "supercharge") return CardDB.cardName.supercharge;
-            if (s == "claw") return CardDB.cardName.claw;
-            if (s == "explosiveshot") return CardDB.cardName.explosiveshot;
-            if (s == "avengingwrath") return CardDB.cardName.avengingwrath;
-            if (s == "riverpawgnoll") return CardDB.cardName.riverpawgnoll;
-            if (s == "sirzeliek") return CardDB.cardName.sirzeliek;
-            if (s == "argentprotector") return CardDB.cardName.argentprotector;
-            if (s == "hiddengnome") return CardDB.cardName.hiddengnome;
-            if (s == "felguard") return CardDB.cardName.felguard;
-            if (s == "northshirecleric") return CardDB.cardName.northshirecleric;
-            if (s == "plague") return CardDB.cardName.plague;
-            if (s == "lepergnome") return CardDB.cardName.lepergnome;
-            if (s == "fireelemental") return CardDB.cardName.fireelemental;
-            if (s == "armorup") return CardDB.cardName.armorup;
-            if (s == "snipe") return CardDB.cardName.snipe;
-            if (s == "southseacaptain") return CardDB.cardName.southseacaptain;
-            if (s == "catform") return CardDB.cardName.catform;
-            if (s == "bite") return CardDB.cardName.bite;
-            if (s == "defiasringleader") return CardDB.cardName.defiasringleader;
-            if (s == "harvestgolem") return CardDB.cardName.harvestgolem;
-            if (s == "kingkrush") return CardDB.cardName.kingkrush;
-            if (s == "aibuddydamageownhero5") return CardDB.cardName.aibuddydamageownhero5;
-            if (s == "healingtotem") return CardDB.cardName.healingtotem;
-            if (s == "ericdodds") return CardDB.cardName.ericdodds;
-            if (s == "demigodsfavor") return CardDB.cardName.demigodsfavor;
-            if (s == "huntersmark") return CardDB.cardName.huntersmark;
-            if (s == "dalaranmage") return CardDB.cardName.dalaranmage;
-            if (s == "twilightdrake") return CardDB.cardName.twilightdrake;
-            if (s == "coldlightoracle") return CardDB.cardName.coldlightoracle;
-            if (s == "shadeofnaxxramas") return CardDB.cardName.shadeofnaxxramas;
-            if (s == "moltengiant") return CardDB.cardName.moltengiant;
-            if (s == "deathbloom") return CardDB.cardName.deathbloom;
-            if (s == "shadowflame") return CardDB.cardName.shadowflame;
-            if (s == "anduinwrynn") return CardDB.cardName.anduinwrynn;
-            if (s == "argentcommander") return CardDB.cardName.argentcommander;
-            if (s == "revealhand") return CardDB.cardName.revealhand;
-            if (s == "arcanemissiles") return CardDB.cardName.arcanemissiles;
-            if (s == "repairbot") return CardDB.cardName.repairbot;
-            if (s == "unstableghoul") return CardDB.cardName.unstableghoul;
-            if (s == "ancientofwar") return CardDB.cardName.ancientofwar;
-            if (s == "stormwindchampion") return CardDB.cardName.stormwindchampion;
-            if (s == "summonapanther") return CardDB.cardName.summonapanther;
-            if (s == "mrbigglesworth") return CardDB.cardName.mrbigglesworth;
-            if (s == "swipe") return CardDB.cardName.swipe;
-            if (s == "aihelperbuddy") return CardDB.cardName.aihelperbuddy;
-            if (s == "hex") return CardDB.cardName.hex;
-            if (s == "ysera") return CardDB.cardName.ysera;
-            if (s == "arcanegolem") return CardDB.cardName.arcanegolem;
-            if (s == "bloodimp") return CardDB.cardName.bloodimp;
-            if (s == "pyroblast") return CardDB.cardName.pyroblast;
-            if (s == "murlocraider") return CardDB.cardName.murlocraider;
-            if (s == "faeriedragon") return CardDB.cardName.faeriedragon;
-            if (s == "sinisterstrike") return CardDB.cardName.sinisterstrike;
-            if (s == "poweroverwhelming") return CardDB.cardName.poweroverwhelming;
-            if (s == "arcaneexplosion") return CardDB.cardName.arcaneexplosion;
-            if (s == "shadowwordpain") return CardDB.cardName.shadowwordpain;
-            if (s == "mill30") return CardDB.cardName.mill30;
-            if (s == "noblesacrifice") return CardDB.cardName.noblesacrifice;
-            if (s == "dreadinfernal") return CardDB.cardName.dreadinfernal;
-            if (s == "naturalize") return CardDB.cardName.naturalize;
-            if (s == "totemiccall") return CardDB.cardName.totemiccall;
-            if (s == "secretkeeper") return CardDB.cardName.secretkeeper;
-            if (s == "dreadcorsair") return CardDB.cardName.dreadcorsair;
-            if (s == "jaws") return CardDB.cardName.jaws;
-            if (s == "forkedlightning") return CardDB.cardName.forkedlightning;
-            if (s == "reincarnate") return CardDB.cardName.reincarnate;
-            if (s == "handofprotection") return CardDB.cardName.handofprotection;
-            if (s == "noththeplaguebringer") return CardDB.cardName.noththeplaguebringer;
-            if (s == "vaporize") return CardDB.cardName.vaporize;
-            if (s == "frostbreath") return CardDB.cardName.frostbreath;
-            if (s == "nozdormu") return CardDB.cardName.nozdormu;
-            if (s == "divinespirit") return CardDB.cardName.divinespirit;
-            if (s == "transcendence") return CardDB.cardName.transcendence;
-            if (s == "armorsmith") return CardDB.cardName.armorsmith;
-            if (s == "murloctidehunter") return CardDB.cardName.murloctidehunter;
-            if (s == "stealcard") return CardDB.cardName.stealcard;
-            if (s == "opponentconcede") return CardDB.cardName.opponentconcede;
-            if (s == "tundrarhino") return CardDB.cardName.tundrarhino;
-            if (s == "summoningportal") return CardDB.cardName.summoningportal;
-            if (s == "hammerofwrath") return CardDB.cardName.hammerofwrath;
-            if (s == "stormwindknight") return CardDB.cardName.stormwindknight;
-            if (s == "freeze") return CardDB.cardName.freeze;
-            if (s == "madbomber") return CardDB.cardName.madbomber;
-            if (s == "consecration") return CardDB.cardName.consecration;
-            if (s == "spectraltrainee") return CardDB.cardName.spectraltrainee;
-            if (s == "boar") return CardDB.cardName.boar;
-            if (s == "knifejuggler") return CardDB.cardName.knifejuggler;
-            if (s == "icebarrier") return CardDB.cardName.icebarrier;
-            if (s == "mechanicaldragonling") return CardDB.cardName.mechanicaldragonling;
-            if (s == "battleaxe") return CardDB.cardName.battleaxe;
-            if (s == "lightsjustice") return CardDB.cardName.lightsjustice;
-            if (s == "lavaburst") return CardDB.cardName.lavaburst;
-            if (s == "mindcontroltech") return CardDB.cardName.mindcontroltech;
-            if (s == "boulderfistogre") return CardDB.cardName.boulderfistogre;
-            if (s == "fireblast") return CardDB.cardName.fireblast;
-            if (s == "priestessofelune") return CardDB.cardName.priestessofelune;
-            if (s == "ancientmage") return CardDB.cardName.ancientmage;
-            if (s == "shadowworddeath") return CardDB.cardName.shadowworddeath;
-            if (s == "ironbeakowl") return CardDB.cardName.ironbeakowl;
-            if (s == "eviscerate") return CardDB.cardName.eviscerate;
-            if (s == "repentance") return CardDB.cardName.repentance;
-            if (s == "understudy") return CardDB.cardName.understudy;
-            if (s == "sunwalker") return CardDB.cardName.sunwalker;
-            if (s == "nagamyrmidon") return CardDB.cardName.nagamyrmidon;
-            if (s == "destroyheropower") return CardDB.cardName.destroyheropower;
-            if (s == "skeletalsmith") return CardDB.cardName.skeletalsmith;
-            if (s == "slam") return CardDB.cardName.slam;
-            if (s == "swordofjustice") return CardDB.cardName.swordofjustice;
-            if (s == "bounce") return CardDB.cardName.bounce;
-            if (s == "shadopanmonk") return CardDB.cardName.shadopanmonk;
-            if (s == "whirlwind") return CardDB.cardName.whirlwind;
-            if (s == "alexstrasza") return CardDB.cardName.alexstrasza;
-            if (s == "silence") return CardDB.cardName.silence;
-            if (s == "rexxar") return CardDB.cardName.rexxar;
-            if (s == "voidwalker") return CardDB.cardName.voidwalker;
-            if (s == "whelp") return CardDB.cardName.whelp;
-            if (s == "flamestrike") return CardDB.cardName.flamestrike;
-            if (s == "rivercrocolisk") return CardDB.cardName.rivercrocolisk;
-            if (s == "stormforgedaxe") return CardDB.cardName.stormforgedaxe;
-            if (s == "snake") return CardDB.cardName.snake;
-            if (s == "shotgunblast") return CardDB.cardName.shotgunblast;
-            if (s == "violetapprentice") return CardDB.cardName.violetapprentice;
-            if (s == "templeenforcer") return CardDB.cardName.templeenforcer;
-            if (s == "ashbringer") return CardDB.cardName.ashbringer;
-            if (s == "impmaster") return CardDB.cardName.impmaster;
-            if (s == "defender") return CardDB.cardName.defender;
-            if (s == "savageroar") return CardDB.cardName.savageroar;
-            if (s == "innervate") return CardDB.cardName.innervate;
-            if (s == "inferno") return CardDB.cardName.inferno;
-            if (s == "falloutslime") return CardDB.cardName.falloutslime;
-            if (s == "earthelemental") return CardDB.cardName.earthelemental;
-            if (s == "facelessmanipulator") return CardDB.cardName.facelessmanipulator;
-            if (s == "mindpocalypse") return CardDB.cardName.mindpocalypse;
-            if (s == "divinefavor") return CardDB.cardName.divinefavor;
-            if (s == "aibuddydestroyminions") return CardDB.cardName.aibuddydestroyminions;
-            if (s == "demolisher") return CardDB.cardName.demolisher;
-            if (s == "sunfuryprotector") return CardDB.cardName.sunfuryprotector;
-            if (s == "dustdevil") return CardDB.cardName.dustdevil;
-            if (s == "powerofthehorde") return CardDB.cardName.powerofthehorde;
-            if (s == "dancingswords") return CardDB.cardName.dancingswords;
-            if (s == "holylight") return CardDB.cardName.holylight;
-            if (s == "feralspirit") return CardDB.cardName.feralspirit;
-            if (s == "raidleader") return CardDB.cardName.raidleader;
-            if (s == "amaniberserker") return CardDB.cardName.amaniberserker;
-            if (s == "ironbarkprotector") return CardDB.cardName.ironbarkprotector;
-            if (s == "bearform") return CardDB.cardName.bearform;
-            if (s == "deathwing") return CardDB.cardName.deathwing;
-            if (s == "stormpikecommando") return CardDB.cardName.stormpikecommando;
-            if (s == "squire") return CardDB.cardName.squire;
-            if (s == "panther") return CardDB.cardName.panther;
-            if (s == "silverbackpatriarch") return CardDB.cardName.silverbackpatriarch;
-            if (s == "bobfitch") return CardDB.cardName.bobfitch;
-            if (s == "gladiatorslongbow") return CardDB.cardName.gladiatorslongbow;
-            if (s == "damage1") return CardDB.cardName.damage1;
-            return CardDB.cardName.unknown;
+            switch (s)
+            {
+                case "unknown":
+                    return cardName.unknown;
+                case "hogger":
+                    return cardName.hogger;
+                case "heigantheunclean":
+                    return cardName.heigantheunclean;
+                case "necroticaura":
+                    return cardName.necroticaura;
+                case "starfall":
+                    return cardName.starfall;
+                case "barrel":
+                    return cardName.barrel;
+                case "damagereflector":
+                    return cardName.damagereflector;
+                case "edwinvancleef":
+                    return cardName.edwinvancleef;
+                case "gothiktheharvester":
+                    return cardName.gothiktheharvester;
+                case "perditionsblade":
+                    return cardName.perditionsblade;
+                case "bloodsailraider":
+                    return cardName.bloodsailraider;
+                case "guardianoficecrown":
+                    return cardName.guardianoficecrown;
+                case "bloodmagethalnos":
+                    return cardName.bloodmagethalnos;
+                case "rooted":
+                    return cardName.rooted;
+                case "wisp":
+                    return cardName.wisp;
+                case "rachelledavis":
+                    return cardName.rachelledavis;
+                case "senjinshieldmasta":
+                    return cardName.senjinshieldmasta;
+                case "totemicmight":
+                    return cardName.totemicmight;
+                case "uproot":
+                    return cardName.uproot;
+                case "opponentdisconnect":
+                    return cardName.opponentdisconnect;
+                case "unrelentingrider":
+                    return cardName.unrelentingrider;
+                case "shandoslesson":
+                    return cardName.shandoslesson;
+                case "hemetnesingwary":
+                    return cardName.hemetnesingwary;
+                case "decimate":
+                    return cardName.decimate;
+
+                case "shadowofnothing":
+                    return cardName.shadowofnothing;
+
+                case "nerubian":
+                    return cardName.nerubian;
+
+                case "dragonlingmechanic":
+                    return cardName.dragonlingmechanic;
+
+                case "mogushanwarden":
+                    return cardName.mogushanwarden;
+
+                case "thanekorthazz":
+                    return cardName.thanekorthazz;
+
+                case "hungrycrab":
+                    return cardName.hungrycrab;
+
+                case "ancientteachings":
+                    return cardName.ancientteachings;
+
+                case "misdirection":
+                    return cardName.misdirection;
+
+                case "patientassassin":
+                    return cardName.patientassassin;
+
+                case "mutatinginjection":
+                    return cardName.mutatinginjection;
+
+                case "violetteacher":
+                    return cardName.violetteacher;
+
+                case "arathiweaponsmith":
+                    return cardName.arathiweaponsmith;
+
+                case "raisedead":
+                    return cardName.raisedead;
+
+                case "acolyteofpain":
+                    return cardName.acolyteofpain;
+
+                case "holynova":
+                    return cardName.holynova;
+
+                case "robpardo":
+                    return cardName.robpardo;
+
+                case "commandingshout":
+                    return cardName.commandingshout;
+
+                case "necroticpoison":
+                    return cardName.necroticpoison;
+
+                case "unboundelemental":
+                    return cardName.unboundelemental;
+
+                case "garroshhellscream":
+                    return cardName.garroshhellscream;
+
+                case "enchant":
+                    return cardName.enchant;
+
+                case "loatheb":
+                    return cardName.loatheb;
+
+                case "blessingofmight":
+                    return cardName.blessingofmight;
+
+                case "nightmare":
+                    return cardName.nightmare;
+
+                case "blessingofkings":
+                    return cardName.blessingofkings;
+
+                case "polymorph":
+                    return cardName.polymorph;
+
+                case "darkirondwarf":
+                    return cardName.darkirondwarf;
+
+                case "destroy":
+                    return cardName.destroy;
+
+                case "roguesdoit":
+                    return cardName.roguesdoit;
+
+                case "freecards":
+                    return cardName.freecards;
+
+                case "iammurloc":
+                    return cardName.iammurloc;
+
+                case "sporeburst":
+                    return cardName.sporeburst;
+
+                case "mindcontrolcrystal":
+                    return cardName.mindcontrolcrystal;
+
+                case "charge":
+                    return cardName.charge;
+
+                case "stampedingkodo":
+                    return cardName.stampedingkodo;
+
+                case "humility":
+                    return cardName.humility;
+
+                case "darkcultist":
+                    return cardName.darkcultist;
+
+                case "gruul":
+                    return cardName.gruul;
+
+                case "markofthewild":
+                    return cardName.markofthewild;
+
+                case "patchwerk":
+                    return cardName.patchwerk;
+
+                case "worgeninfiltrator":
+                    return cardName.worgeninfiltrator;
+
+                case "frostbolt":
+                    return cardName.frostbolt;
+
+                case "runeblade":
+                    return cardName.runeblade;
+
+                case "flametonguetotem":
+                    return cardName.flametonguetotem;
+
+                case "assassinate":
+                    return cardName.assassinate;
+
+                case "madscientist":
+                    return cardName.madscientist;
+
+                case "lordofthearena":
+                    return cardName.lordofthearena;
+
+                case "bainebloodhoof":
+                    return cardName.bainebloodhoof;
+
+                case "injuredblademaster":
+                    return cardName.injuredblademaster;
+
+                case "siphonsoul":
+                    return cardName.siphonsoul;
+
+                case "layonhands":
+                    return cardName.layonhands;
+
+                case "hook":
+                    return cardName.hook;
+
+                case "massiveruneblade":
+                    return cardName.massiveruneblade;
+
+                case "lorewalkercho":
+                    return cardName.lorewalkercho;
+
+                case "destroyallminions":
+                    return cardName.destroyallminions;
+
+                case "silvermoonguardian":
+                    return cardName.silvermoonguardian;
+
+                case "destroyallmana":
+                    return cardName.destroyallmana;
+
+                case "huffer":
+                    return cardName.huffer;
+
+                case "mindvision":
+                    return cardName.mindvision;
+
+                case "malfurionstormrage":
+                    return cardName.malfurionstormrage;
+
+                case "corehound":
+                    return cardName.corehound;
+
+                case "grimscaleoracle":
+                    return cardName.grimscaleoracle;
+
+                case "lightningstorm":
+                    return cardName.lightningstorm;
+
+                case "lightwell":
+                    return cardName.lightwell;
+
+                case "benthompson":
+                    return cardName.benthompson;
+
+                case "coldlightseer":
+                    return cardName.coldlightseer;
+
+                case "deathsbite":
+                    return cardName.deathsbite;
+
+                case "gorehowl":
+                    return cardName.gorehowl;
+
+                case "skitter":
+                    return cardName.skitter;
+
+                case "farsight":
+                    return cardName.farsight;
+
+                case "chillwindyeti":
+                    return cardName.chillwindyeti;
+
+                case "moonfire":
+                    return cardName.moonfire;
+
+                case "bladeflurry":
+                    return cardName.bladeflurry;
+
+                case "massdispel":
+                    return cardName.massdispel;
+
+                case "crazedalchemist":
+                    return cardName.crazedalchemist;
+
+                case "shadowmadness":
+                    return cardName.shadowmadness;
+
+                case "equality":
+                    return cardName.equality;
+
+                case "misha":
+                    return cardName.misha;
+
+                case "treant":
+                    return cardName.treant;
+
+                case "alarmobot":
+                    return cardName.alarmobot;
+
+                case "animalcompanion":
+                    return cardName.animalcompanion;
+
+                case "hatefulstrike":
+                    return cardName.hatefulstrike;
+
+                case "dream":
+                    return cardName.dream;
+
+                case "anubrekhan":
+                    return cardName.anubrekhan;
+
+                case "youngpriestess":
+                    return cardName.youngpriestess;
+
+                case "gadgetzanauctioneer":
+                    return cardName.gadgetzanauctioneer;
+
+                case "coneofcold":
+                    return cardName.coneofcold;
+
+                case "earthshock":
+                    return cardName.earthshock;
+
+                case "tirionfordring":
+                    return cardName.tirionfordring;
+
+                case "wailingsoul":
+                    return cardName.wailingsoul;
+
+                case "skeleton":
+                    return cardName.skeleton;
+
+                case "ironfurgrizzly":
+                    return cardName.ironfurgrizzly;
+
+                case "headcrack":
+                    return cardName.headcrack;
+
+                case "arcaneshot":
+                    return cardName.arcaneshot;
+
+                case "maexxna":
+                    return cardName.maexxna;
+
+                case "imp":
+                    return cardName.imp;
+
+                case "markofthehorsemen":
+                    return cardName.markofthehorsemen;
+
+                case "voidterror":
+                    return cardName.voidterror;
+
+                case "mortalcoil":
+                    return cardName.mortalcoil;
+
+                case "draw3cards":
+                    return cardName.draw3cards;
+
+                case "flameofazzinoth":
+                    return cardName.flameofazzinoth;
+
+                case "jainaproudmoore":
+                    return cardName.jainaproudmoore;
+
+                case "execute":
+                    return cardName.execute;
+
+                case "bloodlust":
+                    return cardName.bloodlust;
+
+                case "bananas":
+                    return cardName.bananas;
+
+                case "kidnapper":
+                    return cardName.kidnapper;
+
+                case "oldmurkeye":
+                    return cardName.oldmurkeye;
+
+                case "homingchicken":
+                    return cardName.homingchicken;
+
+                case "enableforattack":
+                    return cardName.enableforattack;
+
+                case "spellbender":
+                    return cardName.spellbender;
+
+                case "backstab":
+                    return cardName.backstab;
+
+                case "squirrel":
+                    return cardName.squirrel;
+
+                case "stalagg":
+                    return cardName.stalagg;
+
+                case "grandwidowfaerlina":
+                    return cardName.grandwidowfaerlina;
+
+                case "heavyaxe":
+                    return cardName.heavyaxe;
+
+                case "zwick":
+                    return cardName.zwick;
+
+                case "webwrap":
+                    return cardName.webwrap;
+
+                case "flamesofazzinoth":
+                    return cardName.flamesofazzinoth;
+
+                case "murlocwarleader":
+                    return cardName.murlocwarleader;
+
+                case "shadowstep":
+                    return cardName.shadowstep;
+
+                case "ancestralspirit":
+                    return cardName.ancestralspirit;
+
+                case "defenderofargus":
+                    return cardName.defenderofargus;
+
+                case "assassinsblade":
+                    return cardName.assassinsblade;
+
+                case "discard":
+                    return cardName.discard;
+
+                case "biggamehunter":
+                    return cardName.biggamehunter;
+
+                case "aldorpeacekeeper":
+                    return cardName.aldorpeacekeeper;
+
+                case "blizzard":
+                    return cardName.blizzard;
+
+                case "pandarenscout":
+                    return cardName.pandarenscout;
+
+                case "unleashthehounds":
+                    return cardName.unleashthehounds;
+
+                case "yseraawakens":
+                    return cardName.yseraawakens;
+
+                case "sap":
+                    return cardName.sap;
+
+                case "kelthuzad":
+                    return cardName.kelthuzad;
+
+                case "defiasbandit":
+                    return cardName.defiasbandit;
+
+                case "gnomishinventor":
+                    return cardName.gnomishinventor;
+
+                case "mindcontrol":
+                    return cardName.mindcontrol;
+
+                case "ravenholdtassassin":
+                    return cardName.ravenholdtassassin;
+
+                case "icelance":
+                    return cardName.icelance;
+
+                case "dispel":
+                    return cardName.dispel;
+
+                case "acidicswampooze":
+                    return cardName.acidicswampooze;
+
+                case "muklasbigbrother":
+                    return cardName.muklasbigbrother;
+
+                case "blessedchampion":
+                    return cardName.blessedchampion;
+
+                case "savannahhighmane":
+                    return cardName.savannahhighmane;
+
+                case "direwolfalpha":
+                    return cardName.direwolfalpha;
+
+                case "hoggersmash":
+                    return cardName.hoggersmash;
+
+                case "blessingofwisdom":
+                    return cardName.blessingofwisdom;
+
+                case "nourish":
+                    return cardName.nourish;
+
+                case "abusivesergeant":
+                    return cardName.abusivesergeant;
+
+                case "sylvanaswindrunner":
+                    return cardName.sylvanaswindrunner;
+
+                case "spore":
+                    return cardName.spore;
+
+                case "crueltaskmaster":
+                    return cardName.crueltaskmaster;
+
+                case "lightningbolt":
+                    return cardName.lightningbolt;
+
+                case "keeperofthegrove":
+                    return cardName.keeperofthegrove;
+
+                case "steadyshot":
+                    return cardName.steadyshot;
+
+                case "multishot":
+                    return cardName.multishot;
+
+                case "harvest":
+                    return cardName.harvest;
+
+                case "instructorrazuvious":
+                    return cardName.instructorrazuvious;
+
+                case "ladyblaumeux":
+                    return cardName.ladyblaumeux;
+
+                case "jaybaxter":
+                    return cardName.jaybaxter;
+
+                case "molasses":
+                    return cardName.molasses;
+
+                case "pintsizedsummoner":
+                    return cardName.pintsizedsummoner;
+
+                case "spellbreaker":
+                    return cardName.spellbreaker;
+
+                case "anubarambusher":
+                    return cardName.anubarambusher;
+
+                case "deadlypoison":
+                    return cardName.deadlypoison;
+
+                case "stoneskingargoyle":
+                    return cardName.stoneskingargoyle;
+
+                case "bloodfury":
+                    return cardName.bloodfury;
+
+                case "fanofknives":
+                    return cardName.fanofknives;
+
+                case "poisoncloud":
+                    return cardName.poisoncloud;
+
+                case "shieldbearer":
+                    return cardName.shieldbearer;
+
+                case "sensedemons":
+                    return cardName.sensedemons;
+
+                case "shieldblock":
+                    return cardName.shieldblock;
+
+                case "handswapperminion":
+                    return cardName.handswapperminion;
+
+                case "massivegnoll":
+                    return cardName.massivegnoll;
+
+                case "deathcharger":
+                    return cardName.deathcharger;
+
+                case "ancientoflore":
+                    return cardName.ancientoflore;
+
+                case "oasissnapjaw":
+                    return cardName.oasissnapjaw;
+
+                case "illidanstormrage":
+                    return cardName.illidanstormrage;
+
+                case "frostwolfgrunt":
+                    return cardName.frostwolfgrunt;
+
+                case "lesserheal":
+                    return cardName.lesserheal;
+
+                case "infernal":
+                    return cardName.infernal;
+
+                case "wildpyromancer":
+                    return cardName.wildpyromancer;
+
+                case "razorfenhunter":
+                    return cardName.razorfenhunter;
+
+                case "twistingnether":
+                    return cardName.twistingnether;
+
+                case "voidcaller":
+                    return cardName.voidcaller;
+
+                case "leaderofthepack":
+                    return cardName.leaderofthepack;
+
+                case "malygos":
+                    return cardName.malygos;
+
+                case "becomehogger":
+                    return cardName.becomehogger;
+
+                case "baronrivendare":
+                    return cardName.baronrivendare;
+
+                case "millhousemanastorm":
+                    return cardName.millhousemanastorm;
+
+                case "innerfire":
+                    return cardName.innerfire;
+
+                case "valeerasanguinar":
+                    return cardName.valeerasanguinar;
+
+                case "chicken":
+                    return cardName.chicken;
+
+                case "souloftheforest":
+                    return cardName.souloftheforest;
+
+                case "silencedebug":
+                    return cardName.silencedebug;
+
+                case "bloodsailcorsair":
+                    return cardName.bloodsailcorsair;
+
+                case "slime":
+                    return cardName.slime;
+
+                case "tinkmasteroverspark":
+                    return cardName.tinkmasteroverspark;
+
+                case "iceblock":
+                    return cardName.iceblock;
+
+                case "brawl":
+                    return cardName.brawl;
+
+                case "vanish":
+                    return cardName.vanish;
+
+                case "poisonseeds":
+                    return cardName.poisonseeds;
+
+                case "murloc":
+                    return cardName.murloc;
+
+                case "mindspike":
+                    return cardName.mindspike;
+
+                case "kingmukla":
+                    return cardName.kingmukla;
+
+                case "stevengabriel":
+                    return cardName.stevengabriel;
+
+                case "gluth":
+                    return cardName.gluth;
+
+                case "truesilverchampion":
+                    return cardName.truesilverchampion;
+
+                case "harrisonjones":
+                    return cardName.harrisonjones;
+
+                case "destroydeck":
+                    return cardName.destroydeck;
+
+                case "devilsaur":
+                    return cardName.devilsaur;
+
+                case "wargolem":
+                    return cardName.wargolem;
+
+                case "warsongcommander":
+                    return cardName.warsongcommander;
+
+                case "manawyrm":
+                    return cardName.manawyrm;
+
+                case "thaddius":
+                    return cardName.thaddius;
+
+                case "savagery":
+                    return cardName.savagery;
+
+                case "spitefulsmith":
+                    return cardName.spitefulsmith;
+
+                case "shatteredsuncleric":
+                    return cardName.shatteredsuncleric;
+
+                case "eyeforaneye":
+                    return cardName.eyeforaneye;
+
+                case "azuredrake":
+                    return cardName.azuredrake;
+
+                case "mountaingiant":
+                    return cardName.mountaingiant;
+
+                case "korkronelite":
+                    return cardName.korkronelite;
+
+                case "junglepanther":
+                    return cardName.junglepanther;
+
+                case "barongeddon":
+                    return cardName.barongeddon;
+
+                case "spectralspider":
+                    return cardName.spectralspider;
+
+                case "pitlord":
+                    return cardName.pitlord;
+
+                case "markofnature":
+                    return cardName.markofnature;
+
+                case "grobbulus":
+                    return cardName.grobbulus;
+
+                case "leokk":
+                    return cardName.leokk;
+
+                case "fierywaraxe":
+                    return cardName.fierywaraxe;
+
+                case "damage5":
+                    return cardName.damage5;
+
+                case "duplicate":
+                    return cardName.duplicate;
+
+                case "restore5":
+                    return cardName.restore5;
+
+                case "mindblast":
+                    return cardName.mindblast;
+
+                case "timberwolf":
+                    return cardName.timberwolf;
+
+                case "captaingreenskin":
+                    return cardName.captaingreenskin;
+
+                case "elvenarcher":
+                    return cardName.elvenarcher;
+
+                case "michaelschweitzer":
+                    return cardName.michaelschweitzer;
+
+                case "masterswordsmith":
+                    return cardName.masterswordsmith;
+
+                case "grommashhellscream":
+                    return cardName.grommashhellscream;
+
+                case "hound":
+                    return cardName.hound;
+
+                case "seagiant":
+                    return cardName.seagiant;
+
+                case "doomguard":
+                    return cardName.doomguard;
+
+                case "alakirthewindlord":
+                    return cardName.alakirthewindlord;
+
+                case "hyena":
+                    return cardName.hyena;
+
+                case "undertaker":
+                    return cardName.undertaker;
+
+                case "frothingberserker":
+                    return cardName.frothingberserker;
+
+                case "powerofthewild":
+                    return cardName.powerofthewild;
+
+                case "druidoftheclaw":
+                    return cardName.druidoftheclaw;
+
+                case "hellfire":
+                    return cardName.hellfire;
+
+                case "archmage":
+                    return cardName.archmage;
+
+                case "recklessrocketeer":
+                    return cardName.recklessrocketeer;
+
+                case "crazymonkey":
+                    return cardName.crazymonkey;
+
+                case "damageallbut1":
+                    return cardName.damageallbut1;
+
+                case "frostblast":
+                    return cardName.frostblast;
+
+                case "powerwordshield":
+                    return cardName.powerwordshield;
+
+                case "rainoffire":
+                    return cardName.rainoffire;
+
+                case "arcaneintellect":
+                    return cardName.arcaneintellect;
+
+                case "angrychicken":
+                    return cardName.angrychicken;
+
+                case "nerubianegg":
+                    return cardName.nerubianegg;
+
+                case "worshipper":
+                    return cardName.worshipper;
+
+                case "mindgames":
+                    return cardName.mindgames;
+
+                case "leeroyjenkins":
+                    return cardName.leeroyjenkins;
+
+                case "gurubashiberserker":
+                    return cardName.gurubashiberserker;
+
+                case "windspeaker":
+                    return cardName.windspeaker;
+
+                case "enableemotes":
+                    return cardName.enableemotes;
+
+                case "forceofnature":
+                    return cardName.forceofnature;
+
+                case "lightspawn":
+                    return cardName.lightspawn;
+
+                case "destroyamanacrystal":
+                    return cardName.destroyamanacrystal;
+
+                case "warglaiveofazzinoth":
+                    return cardName.warglaiveofazzinoth;
+
+                case "finkleeinhorn":
+                    return cardName.finkleeinhorn;
+
+                case "frostelemental":
+                    return cardName.frostelemental;
+
+                case "thoughtsteal":
+                    return cardName.thoughtsteal;
+
+                case "brianschwab":
+                    return cardName.brianschwab;
+
+                case "scavenginghyena":
+                    return cardName.scavenginghyena;
+
+                case "si7agent":
+                    return cardName.si7agent;
+
+                case "prophetvelen":
+                    return cardName.prophetvelen;
+
+                case "soulfire":
+                    return cardName.soulfire;
+
+                case "ogremagi":
+                    return cardName.ogremagi;
+
+                case "damagedgolem":
+                    return cardName.damagedgolem;
+
+                case "crash":
+                    return cardName.crash;
+
+                case "adrenalinerush":
+                    return cardName.adrenalinerush;
+
+                case "murloctidecaller":
+                    return cardName.murloctidecaller;
+
+                case "kirintormage":
+                    return cardName.kirintormage;
+
+                case "spectralrider":
+                    return cardName.spectralrider;
+
+                case "thrallmarfarseer":
+                    return cardName.thrallmarfarseer;
+
+                case "frostwolfwarlord":
+                    return cardName.frostwolfwarlord;
+
+                case "sorcerersapprentice":
+                    return cardName.sorcerersapprentice;
+
+                case "feugen":
+                    return cardName.feugen;
+
+                case "willofmukla":
+                    return cardName.willofmukla;
+
+                case "holyfire":
+                    return cardName.holyfire;
+
+                case "manawraith":
+                    return cardName.manawraith;
+
+                case "argentsquire":
+                    return cardName.argentsquire;
+
+                case "placeholdercard":
+                    return cardName.placeholdercard;
+
+                case "snakeball":
+                    return cardName.snakeball;
+
+                case "ancientwatcher":
+                    return cardName.ancientwatcher;
+
+                case "noviceengineer":
+                    return cardName.noviceengineer;
+
+                case "stonetuskboar":
+                    return cardName.stonetuskboar;
+
+                case "ancestralhealing":
+                    return cardName.ancestralhealing;
+
+                case "conceal":
+                    return cardName.conceal;
+
+                case "arcanitereaper":
+                    return cardName.arcanitereaper;
+
+                case "guldan":
+                    return cardName.guldan;
+
+                case "ragingworgen":
+                    return cardName.ragingworgen;
+
+                case "earthenringfarseer":
+                    return cardName.earthenringfarseer;
+
+                case "onyxia":
+                    return cardName.onyxia;
+
+                case "manaaddict":
+                    return cardName.manaaddict;
+
+                case "unholyshadow":
+                    return cardName.unholyshadow;
+
+                case "dualwarglaives":
+                    return cardName.dualwarglaives;
+
+                case "sludgebelcher":
+                    return cardName.sludgebelcher;
+
+                case "worthlessimp":
+                    return cardName.worthlessimp;
+
+                case "shiv":
+                    return cardName.shiv;
+
+                case "sheep":
+                    return cardName.sheep;
+
+                case "bloodknight":
+                    return cardName.bloodknight;
+
+                case "holysmite":
+                    return cardName.holysmite;
+
+                case "ancientsecrets":
+                    return cardName.ancientsecrets;
+
+                case "holywrath":
+                    return cardName.holywrath;
+
+                case "ironforgerifleman":
+                    return cardName.ironforgerifleman;
+
+                case "elitetaurenchieftain":
+                    return cardName.elitetaurenchieftain;
+
+                case "spectralwarrior":
+                    return cardName.spectralwarrior;
+
+                case "bluegillwarrior":
+                    return cardName.bluegillwarrior;
+
+                case "shapeshift":
+                    return cardName.shapeshift;
+
+                case "hamiltonchu":
+                    return cardName.hamiltonchu;
+
+                case "battlerage":
+                    return cardName.battlerage;
+
+                case "nightblade":
+                    return cardName.nightblade;
+
+                case "locustswarm":
+                    return cardName.locustswarm;
+
+                case "crazedhunter":
+                    return cardName.crazedhunter;
+
+                case "andybrock":
+                    return cardName.andybrock;
+
+                case "youthfulbrewmaster":
+                    return cardName.youthfulbrewmaster;
+
+                case "theblackknight":
+                    return cardName.theblackknight;
+
+                case "brewmaster":
+                    return cardName.brewmaster;
+
+                case "lifetap":
+                    return cardName.lifetap;
+
+                case "demonfire":
+                    return cardName.demonfire;
+
+                case "redemption":
+                    return cardName.redemption;
+
+                case "lordjaraxxus":
+                    return cardName.lordjaraxxus;
+
+                case "coldblood":
+                    return cardName.coldblood;
+
+                case "lightwarden":
+                    return cardName.lightwarden;
+
+                case "questingadventurer":
+                    return cardName.questingadventurer;
+
+                case "donothing":
+                    return cardName.donothing;
+
+                case "dereksakamoto":
+                    return cardName.dereksakamoto;
+
+                case "poultryizer":
+                    return cardName.poultryizer;
+
+                case "koboldgeomancer":
+                    return cardName.koboldgeomancer;
+
+                case "legacyoftheemperor":
+                    return cardName.legacyoftheemperor;
+
+                case "eruption":
+                    return cardName.eruption;
+
+                case "cenarius":
+                    return cardName.cenarius;
+
+                case "deathlord":
+                    return cardName.deathlord;
+
+                case "searingtotem":
+                    return cardName.searingtotem;
+
+                case "taurenwarrior":
+                    return cardName.taurenwarrior;
+
+                case "explosivetrap":
+                    return cardName.explosivetrap;
+
+                case "frog":
+                    return cardName.frog;
+
+                case "servercrash":
+                    return cardName.servercrash;
+
+                case "wickedknife":
+                    return cardName.wickedknife;
+
+                case "laughingsister":
+                    return cardName.laughingsister;
+
+                case "cultmaster":
+                    return cardName.cultmaster;
+
+                case "wildgrowth":
+                    return cardName.wildgrowth;
+
+                case "sprint":
+                    return cardName.sprint;
+
+                case "masterofdisguise":
+                    return cardName.masterofdisguise;
+
+                case "kyleharrison":
+                    return cardName.kyleharrison;
+
+                case "avatarofthecoin":
+                    return cardName.avatarofthecoin;
+
+                case "excessmana":
+                    return cardName.excessmana;
+
+                case "spiritwolf":
+                    return cardName.spiritwolf;
+
+                case "auchenaisoulpriest":
+                    return cardName.auchenaisoulpriest;
+
+                case "bestialwrath":
+                    return cardName.bestialwrath;
+
+                case "rockbiterweapon":
+                    return cardName.rockbiterweapon;
+
+                case "starvingbuzzard":
+                    return cardName.starvingbuzzard;
+
+                case "mirrorimage":
+                    return cardName.mirrorimage;
+
+                case "frozenchampion":
+                    return cardName.frozenchampion;
+
+                case "silverhandrecruit":
+                    return cardName.silverhandrecruit;
+
+                case "corruption":
+                    return cardName.corruption;
+
+                case "preparation":
+                    return cardName.preparation;
+
+                case "cairnebloodhoof":
+                    return cardName.cairnebloodhoof;
+
+                case "mortalstrike":
+                    return cardName.mortalstrike;
+
+                case "flare":
+                    return cardName.flare;
+
+                case "necroknight":
+                    return cardName.necroknight;
+
+                case "silverhandknight":
+                    return cardName.silverhandknight;
+
+                case "breakweapon":
+                    return cardName.breakweapon;
+
+                case "guardianofkings":
+                    return cardName.guardianofkings;
+
+                case "ancientbrewmaster":
+                    return cardName.ancientbrewmaster;
+
+                case "avenge":
+                    return cardName.avenge;
+
+                case "youngdragonhawk":
+                    return cardName.youngdragonhawk;
+
+                case "frostshock":
+                    return cardName.frostshock;
+
+                case "healingtouch":
+                    return cardName.healingtouch;
+
+                case "venturecomercenary":
+                    return cardName.venturecomercenary;
+
+                case "unbalancingstrike":
+                    return cardName.unbalancingstrike;
+
+                case "sacrificialpact":
+                    return cardName.sacrificialpact;
+
+                case "noooooooooooo":
+                    return cardName.noooooooooooo;
+
+                case "baneofdoom":
+                    return cardName.baneofdoom;
+
+                case "abomination":
+                    return cardName.abomination;
+
+                case "flesheatingghoul":
+                    return cardName.flesheatingghoul;
+
+                case "loothoarder":
+                    return cardName.loothoarder;
+
+                case "mill10":
+                    return cardName.mill10;
+
+                case "sapphiron":
+                    return cardName.sapphiron;
+
+                case "jasonchayes":
+                    return cardName.jasonchayes;
+
+                case "benbrode":
+                    return cardName.benbrode;
+
+                case "betrayal":
+                    return cardName.betrayal;
+
+                case "thebeast":
+                    return cardName.thebeast;
+
+                case "flameimp":
+                    return cardName.flameimp;
+
+                case "freezingtrap":
+                    return cardName.freezingtrap;
+
+                case "southseadeckhand":
+                    return cardName.southseadeckhand;
+
+                case "wrath":
+                    return cardName.wrath;
+
+                case "bloodfenraptor":
+                    return cardName.bloodfenraptor;
+
+                case "cleave":
+                    return cardName.cleave;
+
+                case "fencreeper":
+                    return cardName.fencreeper;
+
+                case "restore1":
+                    return cardName.restore1;
+
+                case "handtodeck":
+                    return cardName.handtodeck;
+
+                case "starfire":
+                    return cardName.starfire;
+
+                case "goldshirefootman":
+                    return cardName.goldshirefootman;
+
+                case "unrelentingtrainee":
+                    return cardName.unrelentingtrainee;
+
+                case "murlocscout":
+                    return cardName.murlocscout;
+
+                case "ragnarosthefirelord":
+                    return cardName.ragnarosthefirelord;
+
+                case "rampage":
+                    return cardName.rampage;
+
+                case "zombiechow":
+                    return cardName.zombiechow;
+
+                case "thrall":
+                    return cardName.thrall;
+
+                case "stoneclawtotem":
+                    return cardName.stoneclawtotem;
+
+                case "captainsparrot":
+                    return cardName.captainsparrot;
+
+                case "windfuryharpy":
+                    return cardName.windfuryharpy;
+
+                case "unrelentingwarrior":
+                    return cardName.unrelentingwarrior;
+
+                case "stranglethorntiger":
+                    return cardName.stranglethorntiger;
+
+                case "summonarandomsecret":
+                    return cardName.summonarandomsecret;
+
+                case "circleofhealing":
+                    return cardName.circleofhealing;
+
+                case "snaketrap":
+                    return cardName.snaketrap;
+
+                case "cabalshadowpriest":
+                    return cardName.cabalshadowpriest;
+
+                case "nerubarweblord":
+                    return cardName.nerubarweblord;
+
+                case "upgrade":
+                    return cardName.upgrade;
+
+                case "shieldslam":
+                    return cardName.shieldslam;
+
+                case "flameburst":
+                    return cardName.flameburst;
+
+                case "windfury":
+                    return cardName.windfury;
+
+                case "enrage":
+                    return cardName.enrage;
+
+                case "natpagle":
+                    return cardName.natpagle;
+
+                case "restoreallhealth":
+                    return cardName.restoreallhealth;
+
+                case "houndmaster":
+                    return cardName.houndmaster;
+
+                case "waterelemental":
+                    return cardName.waterelemental;
+
+                case "eaglehornbow":
+                    return cardName.eaglehornbow;
+
+                case "gnoll":
+                    return cardName.gnoll;
+
+                case "archmageantonidas":
+                    return cardName.archmageantonidas;
+
+                case "destroyallheroes":
+                    return cardName.destroyallheroes;
+
+                case "chains":
+                    return cardName.chains;
+
+                case "wrathofairtotem":
+                    return cardName.wrathofairtotem;
+
+                case "killcommand":
+                    return cardName.killcommand;
+
+                case "manatidetotem":
+                    return cardName.manatidetotem;
+
+                case "daggermastery":
+                    return cardName.daggermastery;
+
+                case "drainlife":
+                    return cardName.drainlife;
+
+                case "doomsayer":
+                    return cardName.doomsayer;
+
+                case "darkscalehealer":
+                    return cardName.darkscalehealer;
+
+                case "shadowform":
+                    return cardName.shadowform;
+
+                case "frostnova":
+                    return cardName.frostnova;
+
+                case "purecold":
+                    return cardName.purecold;
+
+                case "mirrorentity":
+                    return cardName.mirrorentity;
+
+                case "counterspell":
+                    return cardName.counterspell;
+
+                case "mindshatter":
+                    return cardName.mindshatter;
+
+                case "magmarager":
+                    return cardName.magmarager;
+
+                case "wolfrider":
+                    return cardName.wolfrider;
+
+                case "emboldener3000":
+                    return cardName.emboldener3000;
+
+                case "polarityshift":
+                    return cardName.polarityshift;
+
+                case "gelbinmekkatorque":
+                    return cardName.gelbinmekkatorque;
+
+                case "webspinner":
+                    return cardName.webspinner;
+
+                case "utherlightbringer":
+                    return cardName.utherlightbringer;
+
+                case "innerrage":
+                    return cardName.innerrage;
+
+                case "emeralddrake":
+                    return cardName.emeralddrake;
+
+                case "forceaitouseheropower":
+                    return cardName.forceaitouseheropower;
+
+                case "echoingooze":
+                    return cardName.echoingooze;
+
+                case "heroicstrike":
+                    return cardName.heroicstrike;
+
+                case "hauntedcreeper":
+                    return cardName.hauntedcreeper;
+
+                case "barreltoss":
+                    return cardName.barreltoss;
+
+                case "yongwoo":
+                    return cardName.yongwoo;
+
+                case "doomhammer":
+                    return cardName.doomhammer;
+
+                case "stomp":
+                    return cardName.stomp;
+
+                case "spectralknight":
+                    return cardName.spectralknight;
+
+                case "tracking":
+                    return cardName.tracking;
+
+                case "fireball":
+                    return cardName.fireball;
+
+                case "thecoin":
+                    return cardName.thecoin;
+
+                case "bootybaybodyguard":
+                    return cardName.bootybaybodyguard;
+
+                case "scarletcrusader":
+                    return cardName.scarletcrusader;
+
+                case "voodoodoctor":
+                    return cardName.voodoodoctor;
+
+                case "shadowbolt":
+                    return cardName.shadowbolt;
+
+                case "etherealarcanist":
+                    return cardName.etherealarcanist;
+
+                case "succubus":
+                    return cardName.succubus;
+
+                case "emperorcobra":
+                    return cardName.emperorcobra;
+
+                case "deadlyshot":
+                    return cardName.deadlyshot;
+
+                case "reinforce":
+                    return cardName.reinforce;
+
+                case "supercharge":
+                    return cardName.supercharge;
+
+                case "claw":
+                    return cardName.claw;
+
+                case "explosiveshot":
+                    return cardName.explosiveshot;
+
+                case "avengingwrath":
+                    return cardName.avengingwrath;
+
+                case "riverpawgnoll":
+                    return cardName.riverpawgnoll;
+
+                case "sirzeliek":
+                    return cardName.sirzeliek;
+
+                case "argentprotector":
+                    return cardName.argentprotector;
+
+                case "hiddengnome":
+                    return cardName.hiddengnome;
+
+                case "felguard":
+                    return cardName.felguard;
+
+                case "northshirecleric":
+                    return cardName.northshirecleric;
+
+                case "plague":
+                    return cardName.plague;
+
+                case "lepergnome":
+                    return cardName.lepergnome;
+
+                case "fireelemental":
+                    return cardName.fireelemental;
+
+                case "armorup":
+                    return cardName.armorup;
+
+                case "snipe":
+                    return cardName.snipe;
+
+                case "southseacaptain":
+                    return cardName.southseacaptain;
+
+                case "catform":
+                    return cardName.catform;
+
+                case "bite":
+                    return cardName.bite;
+
+                case "defiasringleader":
+                    return cardName.defiasringleader;
+
+                case "harvestgolem":
+                    return cardName.harvestgolem;
+
+                case "kingkrush":
+                    return cardName.kingkrush;
+
+                case "aibuddydamageownhero5":
+                    return cardName.aibuddydamageownhero5;
+
+                case "healingtotem":
+                    return cardName.healingtotem;
+
+                case "ericdodds":
+                    return cardName.ericdodds;
+
+                case "demigodsfavor":
+                    return cardName.demigodsfavor;
+
+                case "huntersmark":
+                    return cardName.huntersmark;
+
+                case "dalaranmage":
+                    return cardName.dalaranmage;
+
+                case "twilightdrake":
+                    return cardName.twilightdrake;
+
+                case "coldlightoracle":
+                    return cardName.coldlightoracle;
+
+                case "shadeofnaxxramas":
+                    return cardName.shadeofnaxxramas;
+
+                case "moltengiant":
+                    return cardName.moltengiant;
+
+                case "deathbloom":
+                    return cardName.deathbloom;
+
+                case "shadowflame":
+                    return cardName.shadowflame;
+
+                case "anduinwrynn":
+                    return cardName.anduinwrynn;
+
+                case "argentcommander":
+                    return cardName.argentcommander;
+
+                case "revealhand":
+                    return cardName.revealhand;
+
+                case "arcanemissiles":
+                    return cardName.arcanemissiles;
+
+                case "repairbot":
+                    return cardName.repairbot;
+
+                case "unstableghoul":
+                    return cardName.unstableghoul;
+
+                case "ancientofwar":
+                    return cardName.ancientofwar;
+
+                case "stormwindchampion":
+                    return cardName.stormwindchampion;
+
+                case "summonapanther":
+                    return cardName.summonapanther;
+
+                case "mrbigglesworth":
+                    return cardName.mrbigglesworth;
+
+                case "swipe":
+                    return cardName.swipe;
+
+                case "aihelperbuddy":
+                    return cardName.aihelperbuddy;
+
+                case "hex":
+                    return cardName.hex;
+
+                case "ysera":
+                    return cardName.ysera;
+
+                case "arcanegolem":
+                    return cardName.arcanegolem;
+
+                case "bloodimp":
+                    return cardName.bloodimp;
+
+                case "pyroblast":
+                    return cardName.pyroblast;
+
+                case "murlocraider":
+                    return cardName.murlocraider;
+
+                case "faeriedragon":
+                    return cardName.faeriedragon;
+
+                case "sinisterstrike":
+                    return cardName.sinisterstrike;
+
+                case "poweroverwhelming":
+                    return cardName.poweroverwhelming;
+
+                case "arcaneexplosion":
+                    return cardName.arcaneexplosion;
+
+                case "shadowwordpain":
+                    return cardName.shadowwordpain;
+
+                case "mill30":
+                    return cardName.mill30;
+
+                case "noblesacrifice":
+                    return cardName.noblesacrifice;
+
+                case "dreadinfernal":
+                    return cardName.dreadinfernal;
+
+                case "naturalize":
+                    return cardName.naturalize;
+
+                case "totemiccall":
+                    return cardName.totemiccall;
+
+                case "secretkeeper":
+                    return cardName.secretkeeper;
+
+                case "dreadcorsair":
+                    return cardName.dreadcorsair;
+
+                case "jaws":
+                    return cardName.jaws;
+
+                case "forkedlightning":
+                    return cardName.forkedlightning;
+
+                case "reincarnate":
+                    return cardName.reincarnate;
+
+                case "handofprotection":
+                    return cardName.handofprotection;
+
+                case "noththeplaguebringer":
+                    return cardName.noththeplaguebringer;
+
+                case "vaporize":
+                    return cardName.vaporize;
+
+                case "frostbreath":
+                    return cardName.frostbreath;
+
+                case "nozdormu":
+                    return cardName.nozdormu;
+
+                case "divinespirit":
+                    return cardName.divinespirit;
+
+                case "transcendence":
+                    return cardName.transcendence;
+
+                case "armorsmith":
+                    return cardName.armorsmith;
+
+                case "murloctidehunter":
+                    return cardName.murloctidehunter;
+
+                case "stealcard":
+                    return cardName.stealcard;
+
+                case "opponentconcede":
+                    return cardName.opponentconcede;
+
+                case "tundrarhino":
+                    return cardName.tundrarhino;
+
+                case "summoningportal":
+                    return cardName.summoningportal;
+
+                case "hammerofwrath":
+                    return cardName.hammerofwrath;
+
+                case "stormwindknight":
+                    return cardName.stormwindknight;
+
+                case "freeze":
+                    return cardName.freeze;
+
+                case "madbomber":
+                    return cardName.madbomber;
+
+                case "consecration":
+                    return cardName.consecration;
+
+                case "spectraltrainee":
+                    return cardName.spectraltrainee;
+
+                case "boar":
+                    return cardName.boar;
+
+                case "knifejuggler":
+                    return cardName.knifejuggler;
+
+                case "icebarrier":
+                    return cardName.icebarrier;
+
+                case "mechanicaldragonling":
+                    return cardName.mechanicaldragonling;
+
+                case "battleaxe":
+                    return cardName.battleaxe;
+
+                case "lightsjustice":
+                    return cardName.lightsjustice;
+
+                case "lavaburst":
+                    return cardName.lavaburst;
+
+                case "mindcontroltech":
+                    return cardName.mindcontroltech;
+
+                case "boulderfistogre":
+                    return cardName.boulderfistogre;
+
+                case "fireblast":
+                    return cardName.fireblast;
+
+                case "priestessofelune":
+                    return cardName.priestessofelune;
+
+                case "ancientmage":
+                    return cardName.ancientmage;
+
+                case "shadowworddeath":
+                    return cardName.shadowworddeath;
+
+                case "ironbeakowl":
+                    return cardName.ironbeakowl;
+
+                case "eviscerate":
+                    return cardName.eviscerate;
+
+                case "repentance":
+                    return cardName.repentance;
+
+                case "understudy":
+                    return cardName.understudy;
+
+                case "sunwalker":
+                    return cardName.sunwalker;
+
+                case "nagamyrmidon":
+                    return cardName.nagamyrmidon;
+
+                case "destroyheropower":
+                    return cardName.destroyheropower;
+
+                case "skeletalsmith":
+                    return cardName.skeletalsmith;
+
+                case "slam":
+                    return cardName.slam;
+
+                case "swordofjustice":
+                    return cardName.swordofjustice;
+
+                case "bounce":
+                    return cardName.bounce;
+
+                case "shadopanmonk":
+                    return cardName.shadopanmonk;
+
+                case "whirlwind":
+                    return cardName.whirlwind;
+
+                case "alexstrasza":
+                    return cardName.alexstrasza;
+
+                case "silence":
+                    return cardName.silence;
+
+                case "rexxar":
+                    return cardName.rexxar;
+
+                case "voidwalker":
+                    return cardName.voidwalker;
+
+                case "whelp":
+                    return cardName.whelp;
+
+                case "flamestrike":
+                    return cardName.flamestrike;
+
+                case "rivercrocolisk":
+                    return cardName.rivercrocolisk;
+
+                case "stormforgedaxe":
+                    return cardName.stormforgedaxe;
+
+                case "snake":
+                    return cardName.snake;
+
+                case "shotgunblast":
+                    return cardName.shotgunblast;
+
+                case "violetapprentice":
+                    return cardName.violetapprentice;
+
+                case "templeenforcer":
+                    return cardName.templeenforcer;
+
+                case "ashbringer":
+                    return cardName.ashbringer;
+
+                case "impmaster":
+                    return cardName.impmaster;
+
+                case "defender":
+                    return cardName.defender;
+
+                case "savageroar":
+                    return cardName.savageroar;
+
+                case "innervate":
+                    return cardName.innervate;
+
+                case "inferno":
+                    return cardName.inferno;
+
+                case "falloutslime":
+                    return cardName.falloutslime;
+
+                case "earthelemental":
+                    return cardName.earthelemental;
+
+                case "facelessmanipulator":
+                    return cardName.facelessmanipulator;
+
+                case "mindpocalypse":
+                    return cardName.mindpocalypse;
+
+                case "divinefavor":
+                    return cardName.divinefavor;
+
+                case "aibuddydestroyminions":
+                    return cardName.aibuddydestroyminions;
+
+                case "demolisher":
+                    return cardName.demolisher;
+
+                case "sunfuryprotector":
+                    return cardName.sunfuryprotector;
+
+                case "dustdevil":
+                    return cardName.dustdevil;
+
+                case "powerofthehorde":
+                    return cardName.powerofthehorde;
+
+                case "dancingswords":
+                    return cardName.dancingswords;
+
+                case "holylight":
+                    return cardName.holylight;
+
+                case "feralspirit":
+                    return cardName.feralspirit;
+
+                case "raidleader":
+                    return cardName.raidleader;
+
+                case "amaniberserker":
+                    return cardName.amaniberserker;
+
+                case "ironbarkprotector":
+                    return cardName.ironbarkprotector;
+
+                case "bearform":
+                    return cardName.bearform;
+
+                case "deathwing":
+                    return cardName.deathwing;
+
+                case "stormpikecommando":
+                    return cardName.stormpikecommando;
+
+                case "squire":
+                    return cardName.squire;
+
+                case "panther":
+                    return cardName.panther;
+
+                case "silverbackpatriarch":
+                    return cardName.silverbackpatriarch;
+
+                case "bobfitch":
+                    return cardName.bobfitch;
+
+                case "gladiatorslongbow":
+                    return cardName.gladiatorslongbow;
+
+                case "damage1":
+                    return cardName.damage1;
+            }
+
+            return cardName.unknown;
         }
 
         public enum ErrorType2
@@ -17294,8 +19503,7 @@ namespace SilverfishRush
 
             public bool isRequirementInList(CardDB.ErrorType2 et)
             {
-                if (this.playrequires.Contains(et)) return true;
-                return false;
+                return this.playrequires.Contains(et);
             }
 
             public List<Minion> getTargetsForCard(Playfield p)
@@ -17461,13 +19669,13 @@ namespace SilverfishRush
                 {
                     addEnemyHero = false;
                     addOwnHero = false;
-                    if (p.ownHeroName == HeroEnum.lordjaraxxus && (TAG_RACE)this.needRaceForPlaying == TAG_RACE.DEMON) addOwnHero = true;
-                    if (p.enemyHeroName == HeroEnum.lordjaraxxus && (TAG_RACE)this.needRaceForPlaying == TAG_RACE.DEMON) addEnemyHero = true;
+                    addOwnHero = (p.ownHeroName == HeroEnum.lordjaraxxus && (TAG_RACE)this.needRaceForPlaying == TAG_RACE.DEMON);
+                    addEnemyHero = (p.enemyHeroName == HeroEnum.lordjaraxxus && (TAG_RACE)this.needRaceForPlaying == TAG_RACE.DEMON);
                     k = -1;
                     foreach (Minion m in p.ownMinions)
                     {
                         k++;
-                        if (!(m.handcard.card.race == this.needRaceForPlaying))
+                        if ((m.handcard.card.race != this.needRaceForPlaying))
                         {
                             ownMins[k] = false;
                         }
@@ -17476,7 +19684,7 @@ namespace SilverfishRush
                     foreach (Minion m in p.enemyMinions)
                     {
                         k++;
-                        if (!(m.handcard.card.race == this.needRaceForPlaying))
+                        if ((m.handcard.card.race != this.needRaceForPlaying))
                         {
                             enemyMins[k] = false;
                         }
@@ -17691,13 +19899,13 @@ namespace SilverfishRush
                 {
                     addEnemyHero = false;
                     addOwnHero = false;
-                    if (p.ownHeroName == HeroEnum.lordjaraxxus && (TAG_RACE)this.needRaceForPlaying == TAG_RACE.DEMON) addOwnHero = true;
-                    if (p.enemyHeroName == HeroEnum.lordjaraxxus && (TAG_RACE)this.needRaceForPlaying == TAG_RACE.DEMON) addEnemyHero = true;
+                    addOwnHero = (p.ownHeroName == HeroEnum.lordjaraxxus && (TAG_RACE)this.needRaceForPlaying == TAG_RACE.DEMON);
+                    addEnemyHero = (p.enemyHeroName == HeroEnum.lordjaraxxus && (TAG_RACE)this.needRaceForPlaying == TAG_RACE.DEMON);
                     k = -1;
                     foreach (Minion m in p.ownMinions)
                     {
                         k++;
-                        if (!(m.handcard.card.race == this.needRaceForPlaying))
+                        if ((m.handcard.card.race != this.needRaceForPlaying))
                         {
                             ownMins[k] = false;
                         }
@@ -17706,7 +19914,7 @@ namespace SilverfishRush
                     foreach (Minion m in p.enemyMinions)
                     {
                         k++;
-                        if (!(m.handcard.card.race == this.needRaceForPlaying))
+                        if ((m.handcard.card.race != this.needRaceForPlaying))
                         {
                             enemyMins[k] = false;
                         }
@@ -18049,9 +20257,7 @@ namespace SilverfishRush
             Card c = new Card();
             int de = 0;
             //placeholdercard
-            Card plchldr = new Card();
-            plchldr.name = CardDB.cardName.unknown;
-            plchldr.cost = 1000;
+            Card plchldr = new Card { name = cardName.unknown, cost = 1000 };
             this.namelist.Add("unknown");
             this.cardlist.Add(plchldr);
             this.unknownCard = cardlist[0];
@@ -18115,7 +20321,7 @@ namespace SilverfishRush
                     if (temp.Equals("EX1_finkle")) c.isToken = true;
                     if (temp.Equals("EX1_598")) c.isToken = true;
                     if (temp.Equals("EX1_tk34")) c.isToken = true;
-                    //if (c.isToken) Helpfunctions.Instance.ErrorLog(temp);
+                    //if (c.isToken) Helpfunctions.Instance.ErrorLog(temp +" is token");
 
                     continue;
                 }
@@ -18564,899 +20770,1079 @@ namespace SilverfishRush
 
         public Card getCardDataFromID(cardIDEnum id)
         {
-            if (this.cardidToCardList.ContainsKey(id))
-            {
-                return cardidToCardList[id];
-                //return new Card(cardidToCardList[id]);
-            }
-
-            return unknownCard;
+            return this.cardidToCardList.ContainsKey(id) ? this.cardidToCardList[id] : this.unknownCard;
         }
 
         public SimTemplate getSimCard(cardIDEnum id)
         {
-            //if (id == CardDB.cardIDEnum.XXX_040) return new Sim_XXX_040();
-            //if (id == CardDB.cardIDEnum.NAX5_01H) return new Sim_NAX5_01H();
-            //if (id == CardDB.cardIDEnum.CS2_188o) return new Sim_CS2_188o();
-            //if (id == CardDB.cardIDEnum.NAX6_02H) return new Sim_NAX6_02H();
-            if (id == CardDB.cardIDEnum.NEW1_007b) return new Sim_NEW1_007b();
-            //if (id == CardDB.cardIDEnum.NAX6_02e) return new Sim_NAX6_02e();
-            //if (id == CardDB.cardIDEnum.TU4c_003) return new Sim_TU4c_003();
-            //if (id == CardDB.cardIDEnum.XXX_024) return new Sim_XXX_024();
-            if (id == CardDB.cardIDEnum.EX1_613) return new Sim_EX1_613();
-            //if (id == CardDB.cardIDEnum.NAX8_01) return new Sim_NAX8_01();
-            //if (id == CardDB.cardIDEnum.EX1_295o) return new Sim_EX1_295o();
-            //if (id == CardDB.cardIDEnum.CS2_059o) return new Sim_CS2_059o();
-            if (id == CardDB.cardIDEnum.EX1_133) return new Sim_EX1_133();
-            if (id == CardDB.cardIDEnum.NEW1_018) return new Sim_NEW1_018();
-            //if (id == CardDB.cardIDEnum.NAX15_03t) return new Sim_NAX15_03t();
-            if (id == CardDB.cardIDEnum.EX1_012) return new Sim_EX1_012();
-            if (id == CardDB.cardIDEnum.EX1_178a) return new Sim_EX1_178a();
-            if (id == CardDB.cardIDEnum.CS2_231) return new Sim_CS2_231();
-            //if (id == CardDB.cardIDEnum.EX1_019e) return new Sim_EX1_019e();
-            //if (id == CardDB.cardIDEnum.CRED_12) return new Sim_CRED_12();
-            if (id == CardDB.cardIDEnum.CS2_179) return new Sim_CS2_179();
-            //if (id == CardDB.cardIDEnum.CS2_045e) return new Sim_CS2_045e();
-            if (id == CardDB.cardIDEnum.EX1_244) return new Sim_EX1_244();
-            if (id == CardDB.cardIDEnum.EX1_178b) return new Sim_EX1_178b();
-            //if (id == CardDB.cardIDEnum.XXX_030) return new Sim_XXX_030();
-            //if (id == CardDB.cardIDEnum.NAX8_05) return new Sim_NAX8_05();
-            if (id == CardDB.cardIDEnum.EX1_573b) return new Sim_EX1_573b();
-            //if (id == CardDB.cardIDEnum.TU4d_001) return new Sim_TU4d_001();
-            if (id == CardDB.cardIDEnum.NEW1_007a) return new Sim_NEW1_007a();
-            //if (id == CardDB.cardIDEnum.NAX12_02H) return new Sim_NAX12_02H();
-            if (id == CardDB.cardIDEnum.EX1_345t) return new Sim_EX1_345t();
-            if (id == CardDB.cardIDEnum.FP1_007t) return new Sim_FP1_007t();
-            if (id == CardDB.cardIDEnum.EX1_025) return new Sim_EX1_025();
-            if (id == CardDB.cardIDEnum.EX1_396) return new Sim_EX1_396();
-            //if (id == CardDB.cardIDEnum.NAX9_03) return new Sim_NAX9_03();
-            if (id == CardDB.cardIDEnum.NEW1_017) return new Sim_NEW1_017();
-            if (id == CardDB.cardIDEnum.NEW1_008a) return new Sim_NEW1_008a();
-            //if (id == CardDB.cardIDEnum.EX1_587e) return new Sim_EX1_587e();
-            if (id == CardDB.cardIDEnum.EX1_533) return new Sim_EX1_533();
-            if (id == CardDB.cardIDEnum.EX1_522) return new Sim_EX1_522();
-            //if (id == CardDB.cardIDEnum.NAX11_04) return new Sim_NAX11_04();
-            if (id == CardDB.cardIDEnum.NEW1_026) return new Sim_NEW1_026();
-            if (id == CardDB.cardIDEnum.EX1_398) return new Sim_EX1_398();
-            //if (id == CardDB.cardIDEnum.NAX4_04) return new Sim_NAX4_04();
-            if (id == CardDB.cardIDEnum.EX1_007) return new Sim_EX1_007();
-            if (id == CardDB.cardIDEnum.CS1_112) return new Sim_CS1_112();
-            //if (id == CardDB.cardIDEnum.CRED_17) return new Sim_CRED_17();
-            if (id == CardDB.cardIDEnum.NEW1_036) return new Sim_NEW1_036();
-            //if (id == CardDB.cardIDEnum.NAX3_03) return new Sim_NAX3_03();
-            //if (id == CardDB.cardIDEnum.EX1_355e) return new Sim_EX1_355e();
-            if (id == CardDB.cardIDEnum.EX1_258) return new Sim_EX1_258();
-            if (id == CardDB.cardIDEnum.HERO_01) return new Sim_HERO_01();
-            //if (id == CardDB.cardIDEnum.XXX_009) return new Sim_XXX_009();
-            //if (id == CardDB.cardIDEnum.NAX6_01H) return new Sim_NAX6_01H();
-            //if (id == CardDB.cardIDEnum.NAX12_04e) return new Sim_NAX12_04e();
-            if (id == CardDB.cardIDEnum.CS2_087) return new Sim_CS2_087();
-            if (id == CardDB.cardIDEnum.DREAM_05) return new Sim_DREAM_05();
-            //if (id == CardDB.cardIDEnum.NEW1_036e) return new Sim_NEW1_036e();
-            if (id == CardDB.cardIDEnum.CS2_092) return new Sim_CS2_092();
-            if (id == CardDB.cardIDEnum.CS2_022) return new Sim_CS2_022();
-            if (id == CardDB.cardIDEnum.EX1_046) return new Sim_EX1_046();
-            //if (id == CardDB.cardIDEnum.XXX_005) return new Sim_XXX_005();
-            if (id == CardDB.cardIDEnum.PRO_001b) return new Sim_PRO_001b();
-            //if (id == CardDB.cardIDEnum.XXX_022) return new Sim_XXX_022();
-            if (id == CardDB.cardIDEnum.PRO_001a) return new Sim_PRO_001a();
-            //if (id == CardDB.cardIDEnum.NAX6_04) return new Sim_NAX6_04();
-            //if (id == CardDB.cardIDEnum.NAX7_05) return new Sim_NAX7_05();
-            if (id == CardDB.cardIDEnum.CS2_103) return new Sim_CS2_103();
-            if (id == CardDB.cardIDEnum.NEW1_041) return new Sim_NEW1_041();
-            if (id == CardDB.cardIDEnum.EX1_360) return new Sim_EX1_360();
-            if (id == CardDB.cardIDEnum.FP1_023) return new Sim_FP1_023();
-            if (id == CardDB.cardIDEnum.NEW1_038) return new Sim_NEW1_038();
-            if (id == CardDB.cardIDEnum.CS2_009) return new Sim_CS2_009();
-            //if (id == CardDB.cardIDEnum.NAX10_01H) return new Sim_NAX10_01H();
-            if (id == CardDB.cardIDEnum.EX1_010) return new Sim_EX1_010();
-            if (id == CardDB.cardIDEnum.CS2_024) return new Sim_CS2_024();
-            //if (id == CardDB.cardIDEnum.NAX9_05) return new Sim_NAX9_05();
-            if (id == CardDB.cardIDEnum.EX1_565) return new Sim_EX1_565();
-            if (id == CardDB.cardIDEnum.CS2_076) return new Sim_CS2_076();
-            if (id == CardDB.cardIDEnum.FP1_004) return new Sim_FP1_004();
-            //if (id == CardDB.cardIDEnum.CS2_046e) return new Sim_CS2_046e();
-            if (id == CardDB.cardIDEnum.CS2_162) return new Sim_CS2_162();
-            if (id == CardDB.cardIDEnum.EX1_110t) return new Sim_EX1_110t();
-            //if (id == CardDB.cardIDEnum.CS2_104e) return new Sim_CS2_104e();
-            if (id == CardDB.cardIDEnum.CS2_181) return new Sim_CS2_181();
-            if (id == CardDB.cardIDEnum.EX1_309) return new Sim_EX1_309();
-            if (id == CardDB.cardIDEnum.EX1_354) return new Sim_EX1_354();
-            //if (id == CardDB.cardIDEnum.NAX10_02H) return new Sim_NAX10_02H();
-            //if (id == CardDB.cardIDEnum.NAX7_04H) return new Sim_NAX7_04H();
-            //if (id == CardDB.cardIDEnum.TU4f_001) return new Sim_TU4f_001();
-            //if (id == CardDB.cardIDEnum.XXX_018) return new Sim_XXX_018();
-            if (id == CardDB.cardIDEnum.EX1_023) return new Sim_EX1_023();
-            //if (id == CardDB.cardIDEnum.XXX_048) return new Sim_XXX_048();
-            //if (id == CardDB.cardIDEnum.XXX_049) return new Sim_XXX_049();
-            if (id == CardDB.cardIDEnum.NEW1_034) return new Sim_NEW1_034();
-            if (id == CardDB.cardIDEnum.CS2_003) return new Sim_CS2_003();
-            if (id == CardDB.cardIDEnum.HERO_06) return new Sim_HERO_06();
-            if (id == CardDB.cardIDEnum.CS2_201) return new Sim_CS2_201();
-            if (id == CardDB.cardIDEnum.EX1_508) return new Sim_EX1_508();
-            if (id == CardDB.cardIDEnum.EX1_259) return new Sim_EX1_259();
-            if (id == CardDB.cardIDEnum.EX1_341) return new Sim_EX1_341();
-            //if (id == CardDB.cardIDEnum.DREAM_05e) return new Sim_DREAM_05e();
-            //if (id == CardDB.cardIDEnum.CRED_09) return new Sim_CRED_09();
-            if (id == CardDB.cardIDEnum.EX1_103) return new Sim_EX1_103();
-            if (id == CardDB.cardIDEnum.FP1_021) return new Sim_FP1_021();
-            if (id == CardDB.cardIDEnum.EX1_411) return new Sim_EX1_411();
-            //if (id == CardDB.cardIDEnum.NAX1_04) return new Sim_NAX1_04();
-            if (id == CardDB.cardIDEnum.CS2_053) return new Sim_CS2_053();
-            if (id == CardDB.cardIDEnum.CS2_182) return new Sim_CS2_182();
-            if (id == CardDB.cardIDEnum.CS2_008) return new Sim_CS2_008();
-            if (id == CardDB.cardIDEnum.CS2_233) return new Sim_CS2_233();
-            if (id == CardDB.cardIDEnum.EX1_626) return new Sim_EX1_626();
-            if (id == CardDB.cardIDEnum.EX1_059) return new Sim_EX1_059();
-            if (id == CardDB.cardIDEnum.EX1_334) return new Sim_EX1_334();
-            if (id == CardDB.cardIDEnum.EX1_619) return new Sim_EX1_619();
-            if (id == CardDB.cardIDEnum.NEW1_032) return new Sim_NEW1_032();
-            if (id == CardDB.cardIDEnum.EX1_158t) return new Sim_EX1_158t();
-            if (id == CardDB.cardIDEnum.EX1_006) return new Sim_EX1_006();
-            if (id == CardDB.cardIDEnum.NEW1_031) return new Sim_NEW1_031();
-            //if (id == CardDB.cardIDEnum.NAX10_03) return new Sim_NAX10_03();
-            if (id == CardDB.cardIDEnum.DREAM_04) return new Sim_DREAM_04();
-            //if (id == CardDB.cardIDEnum.NAX1h_01) return new Sim_NAX1h_01();
-            //if (id == CardDB.cardIDEnum.CS2_022e) return new Sim_CS2_022e();
-            //if (id == CardDB.cardIDEnum.EX1_611e) return new Sim_EX1_611e();
-            if (id == CardDB.cardIDEnum.EX1_004) return new Sim_EX1_004();
-            //if (id == CardDB.cardIDEnum.EX1_014te) return new Sim_EX1_014te();
-            //if (id == CardDB.cardIDEnum.FP1_005e) return new Sim_FP1_005e();
-            //if (id == CardDB.cardIDEnum.NAX12_03e) return new Sim_NAX12_03e();
-            if (id == CardDB.cardIDEnum.EX1_095) return new Sim_EX1_095();
-            if (id == CardDB.cardIDEnum.NEW1_007) return new Sim_NEW1_007();
-            if (id == CardDB.cardIDEnum.EX1_275) return new Sim_EX1_275();
-            if (id == CardDB.cardIDEnum.EX1_245) return new Sim_EX1_245();
-            if (id == CardDB.cardIDEnum.EX1_383) return new Sim_EX1_383();
-            if (id == CardDB.cardIDEnum.FP1_016) return new Sim_FP1_016();
-            if (id == CardDB.cardIDEnum.EX1_016t) return new Sim_EX1_016t();
-            if (id == CardDB.cardIDEnum.CS2_125) return new Sim_CS2_125();
-            if (id == CardDB.cardIDEnum.EX1_137) return new Sim_EX1_137();
-            //if (id == CardDB.cardIDEnum.EX1_178ae) return new Sim_EX1_178ae();
-            if (id == CardDB.cardIDEnum.DS1_185) return new Sim_DS1_185();
-            if (id == CardDB.cardIDEnum.FP1_010) return new Sim_FP1_010();
-            if (id == CardDB.cardIDEnum.EX1_598) return new Sim_EX1_598();
-            //if (id == CardDB.cardIDEnum.NAX9_07) return new Sim_NAX9_07();
-            if (id == CardDB.cardIDEnum.EX1_304) return new Sim_EX1_304();
-            if (id == CardDB.cardIDEnum.EX1_302) return new Sim_EX1_302();
-            //if (id == CardDB.cardIDEnum.XXX_017) return new Sim_XXX_017();
-            //if (id == CardDB.cardIDEnum.CS2_011o) return new Sim_CS2_011o();
-            if (id == CardDB.cardIDEnum.EX1_614t) return new Sim_EX1_614t();
-            //if (id == CardDB.cardIDEnum.TU4a_006) return new Sim_TU4a_006();
-            //if (id == CardDB.cardIDEnum.Mekka3e) return new Sim_Mekka3e();
-            if (id == CardDB.cardIDEnum.CS2_108) return new Sim_CS2_108();
-            if (id == CardDB.cardIDEnum.CS2_046) return new Sim_CS2_046();
-            if (id == CardDB.cardIDEnum.EX1_014t) return new Sim_EX1_014t();
-            if (id == CardDB.cardIDEnum.NEW1_005) return new Sim_NEW1_005();
-            if (id == CardDB.cardIDEnum.EX1_062) return new Sim_EX1_062();
-            //if (id == CardDB.cardIDEnum.EX1_366e) return new Sim_EX1_366e();
-            if (id == CardDB.cardIDEnum.Mekka1) return new Sim_Mekka1();
-            //if (id == CardDB.cardIDEnum.XXX_007) return new Sim_XXX_007();
-            if (id == CardDB.cardIDEnum.tt_010a) return new Sim_tt_010a();
-            //if (id == CardDB.cardIDEnum.CS2_017o) return new Sim_CS2_017o();
-            if (id == CardDB.cardIDEnum.CS2_072) return new Sim_CS2_072();
-            if (id == CardDB.cardIDEnum.EX1_tk28) return new Sim_EX1_tk28();
-            //if (id == CardDB.cardIDEnum.EX1_604o) return new Sim_EX1_604o();
-            if (id == CardDB.cardIDEnum.FP1_014) return new Sim_FP1_014();
-            //if (id == CardDB.cardIDEnum.EX1_084e) return new Sim_EX1_084e();
-            //if (id == CardDB.cardIDEnum.NAX3_01H) return new Sim_NAX3_01H();
-            //if (id == CardDB.cardIDEnum.NAX2_01) return new Sim_NAX2_01();
-            if (id == CardDB.cardIDEnum.EX1_409t) return new Sim_EX1_409t();
-            //if (id == CardDB.cardIDEnum.CRED_07) return new Sim_CRED_07();
-            //if (id == CardDB.cardIDEnum.NAX3_02H) return new Sim_NAX3_02H();
-            //if (id == CardDB.cardIDEnum.TU4e_002) return new Sim_TU4e_002();
-            if (id == CardDB.cardIDEnum.EX1_507) return new Sim_EX1_507();
-            if (id == CardDB.cardIDEnum.EX1_144) return new Sim_EX1_144();
-            if (id == CardDB.cardIDEnum.CS2_038) return new Sim_CS2_038();
-            if (id == CardDB.cardIDEnum.EX1_093) return new Sim_EX1_093();
-            if (id == CardDB.cardIDEnum.CS2_080) return new Sim_CS2_080();
-            //if (id == CardDB.cardIDEnum.CS1_129e) return new Sim_CS1_129e();
-            //if (id == CardDB.cardIDEnum.XXX_013) return new Sim_XXX_013();
-            if (id == CardDB.cardIDEnum.EX1_005) return new Sim_EX1_005();
-            if (id == CardDB.cardIDEnum.EX1_382) return new Sim_EX1_382();
-            //if (id == CardDB.cardIDEnum.NAX13_02e) return new Sim_NAX13_02e();
-            //if (id == CardDB.cardIDEnum.FP1_020e) return new Sim_FP1_020e();
-            //if (id == CardDB.cardIDEnum.EX1_603e) return new Sim_EX1_603e();
-            if (id == CardDB.cardIDEnum.CS2_028) return new Sim_CS2_028();
-            //if (id == CardDB.cardIDEnum.TU4f_002) return new Sim_TU4f_002();
-            if (id == CardDB.cardIDEnum.EX1_538) return new Sim_EX1_538();
-            //if (id == CardDB.cardIDEnum.GAME_003e) return new Sim_GAME_003e();
-            if (id == CardDB.cardIDEnum.DREAM_02) return new Sim_DREAM_02();
-            if (id == CardDB.cardIDEnum.EX1_581) return new Sim_EX1_581();
-            //if (id == CardDB.cardIDEnum.NAX15_01H) return new Sim_NAX15_01H();
-            if (id == CardDB.cardIDEnum.EX1_131t) return new Sim_EX1_131t();
-            if (id == CardDB.cardIDEnum.CS2_147) return new Sim_CS2_147();
-            if (id == CardDB.cardIDEnum.CS1_113) return new Sim_CS1_113();
-            if (id == CardDB.cardIDEnum.CS2_161) return new Sim_CS2_161();
-            if (id == CardDB.cardIDEnum.CS2_031) return new Sim_CS2_031();
-            if (id == CardDB.cardIDEnum.EX1_166b) return new Sim_EX1_166b();
-            if (id == CardDB.cardIDEnum.EX1_066) return new Sim_EX1_066();
-            //if (id == CardDB.cardIDEnum.TU4c_007) return new Sim_TU4c_007();
-            if (id == CardDB.cardIDEnum.EX1_355) return new Sim_EX1_355();
-            //if (id == CardDB.cardIDEnum.EX1_507e) return new Sim_EX1_507e();
-            if (id == CardDB.cardIDEnum.EX1_534) return new Sim_EX1_534();
-            if (id == CardDB.cardIDEnum.EX1_162) return new Sim_EX1_162();
-            //if (id == CardDB.cardIDEnum.TU4a_004) return new Sim_TU4a_004();
-            if (id == CardDB.cardIDEnum.EX1_363) return new Sim_EX1_363();
-            if (id == CardDB.cardIDEnum.EX1_164a) return new Sim_EX1_164a();
-            if (id == CardDB.cardIDEnum.CS2_188) return new Sim_CS2_188();
-            if (id == CardDB.cardIDEnum.EX1_016) return new Sim_EX1_016();
-            //if (id == CardDB.cardIDEnum.NAX6_03t) return new Sim_NAX6_03t();
-            //if (id == CardDB.cardIDEnum.EX1_tk31) return new Sim_EX1_tk31();
-            if (id == CardDB.cardIDEnum.EX1_603) return new Sim_EX1_603();
-            if (id == CardDB.cardIDEnum.EX1_238) return new Sim_EX1_238();
-            if (id == CardDB.cardIDEnum.EX1_166) return new Sim_EX1_166();
-            if (id == CardDB.cardIDEnum.DS1h_292) return new Sim_DS1h_292();
-            if (id == CardDB.cardIDEnum.DS1_183) return new Sim_DS1_183();
-            //if (id == CardDB.cardIDEnum.NAX15_03n) return new Sim_NAX15_03n();
-            //if (id == CardDB.cardIDEnum.NAX8_02H) return new Sim_NAX8_02H();
-            //if (id == CardDB.cardIDEnum.NAX7_01H) return new Sim_NAX7_01H();
-            //if (id == CardDB.cardIDEnum.NAX9_02H) return new Sim_NAX9_02H();
-            //if (id == CardDB.cardIDEnum.CRED_11) return new Sim_CRED_11();
-            //if (id == CardDB.cardIDEnum.XXX_019) return new Sim_XXX_019();
-            if (id == CardDB.cardIDEnum.EX1_076) return new Sim_EX1_076();
-            if (id == CardDB.cardIDEnum.EX1_048) return new Sim_EX1_048();
-            //if (id == CardDB.cardIDEnum.CS2_038e) return new Sim_CS2_038e();
-            if (id == CardDB.cardIDEnum.FP1_026) return new Sim_FP1_026();
-            if (id == CardDB.cardIDEnum.CS2_074) return new Sim_CS2_074();
-            if (id == CardDB.cardIDEnum.FP1_027) return new Sim_FP1_027();
-            if (id == CardDB.cardIDEnum.EX1_323w) return new Sim_EX1_323w();
-            if (id == CardDB.cardIDEnum.EX1_129) return new Sim_EX1_129();
-            //if (id == CardDB.cardIDEnum.NEW1_024o) return new Sim_NEW1_024o();
-            //if (id == CardDB.cardIDEnum.NAX11_02) return new Sim_NAX11_02();
-            if (id == CardDB.cardIDEnum.EX1_405) return new Sim_EX1_405();
-            if (id == CardDB.cardIDEnum.EX1_317) return new Sim_EX1_317();
-            if (id == CardDB.cardIDEnum.EX1_606) return new Sim_EX1_606();
-            //if (id == CardDB.cardIDEnum.EX1_590e) return new Sim_EX1_590e();
-            //if (id == CardDB.cardIDEnum.XXX_044) return new Sim_XXX_044();
-            //if (id == CardDB.cardIDEnum.CS2_074e) return new Sim_CS2_074e();
-            //if (id == CardDB.cardIDEnum.TU4a_005) return new Sim_TU4a_005();
-            if (id == CardDB.cardIDEnum.FP1_006) return new Sim_FP1_006();
-            //if (id == CardDB.cardIDEnum.EX1_258e) return new Sim_EX1_258e();
-            //if (id == CardDB.cardIDEnum.TU4f_004o) return new Sim_TU4f_004o();
-            if (id == CardDB.cardIDEnum.NEW1_008) return new Sim_NEW1_008();
-            if (id == CardDB.cardIDEnum.CS2_119) return new Sim_CS2_119();
-            //if (id == CardDB.cardIDEnum.NEW1_017e) return new Sim_NEW1_017e();
-            //if (id == CardDB.cardIDEnum.EX1_334e) return new Sim_EX1_334e();
-            //if (id == CardDB.cardIDEnum.TU4e_001) return new Sim_TU4e_001();
-            if (id == CardDB.cardIDEnum.CS2_121) return new Sim_CS2_121();
-            if (id == CardDB.cardIDEnum.CS1h_001) return new Sim_CS1h_001();
-            if (id == CardDB.cardIDEnum.EX1_tk34) return new Sim_EX1_tk34();
-            if (id == CardDB.cardIDEnum.NEW1_020) return new Sim_NEW1_020();
-            if (id == CardDB.cardIDEnum.CS2_196) return new Sim_CS2_196();
-            if (id == CardDB.cardIDEnum.EX1_312) return new Sim_EX1_312();
-            //if (id == CardDB.cardIDEnum.NAX1_01) return new Sim_NAX1_01();
-            if (id == CardDB.cardIDEnum.FP1_022) return new Sim_FP1_022();
-            if (id == CardDB.cardIDEnum.EX1_160b) return new Sim_EX1_160b();
-            if (id == CardDB.cardIDEnum.EX1_563) return new Sim_EX1_563();
-            //if (id == CardDB.cardIDEnum.XXX_039) return new Sim_XXX_039();
-            if (id == CardDB.cardIDEnum.FP1_031) return new Sim_FP1_031();
-            //if (id == CardDB.cardIDEnum.CS2_087e) return new Sim_CS2_087e();
-            //if (id == CardDB.cardIDEnum.EX1_613e) return new Sim_EX1_613e();
-            //if (id == CardDB.cardIDEnum.NAX9_02) return new Sim_NAX9_02();
-            if (id == CardDB.cardIDEnum.NEW1_029) return new Sim_NEW1_029();
-            if (id == CardDB.cardIDEnum.CS1_129) return new Sim_CS1_129();
-            if (id == CardDB.cardIDEnum.HERO_03) return new Sim_HERO_03();
-            if (id == CardDB.cardIDEnum.Mekka4t) return new Sim_Mekka4t();
-            if (id == CardDB.cardIDEnum.EX1_158) return new Sim_EX1_158();
-            //if (id == CardDB.cardIDEnum.XXX_010) return new Sim_XXX_010();
-            if (id == CardDB.cardIDEnum.NEW1_025) return new Sim_NEW1_025();
-            if (id == CardDB.cardIDEnum.FP1_012t) return new Sim_FP1_012t();
-            if (id == CardDB.cardIDEnum.EX1_083) return new Sim_EX1_083();
-            if (id == CardDB.cardIDEnum.EX1_295) return new Sim_EX1_295();
-            if (id == CardDB.cardIDEnum.EX1_407) return new Sim_EX1_407();
-            if (id == CardDB.cardIDEnum.NEW1_004) return new Sim_NEW1_004();
-            if (id == CardDB.cardIDEnum.FP1_019) return new Sim_FP1_019();
-            if (id == CardDB.cardIDEnum.PRO_001at) return new Sim_PRO_001at();
-            //if (id == CardDB.cardIDEnum.NAX13_03e) return new Sim_NAX13_03e();
-            if (id == CardDB.cardIDEnum.EX1_625t) return new Sim_EX1_625t();
-            if (id == CardDB.cardIDEnum.EX1_014) return new Sim_EX1_014();
-            //if (id == CardDB.cardIDEnum.CRED_04) return new Sim_CRED_04();
-            //if (id == CardDB.cardIDEnum.NAX12_01H) return new Sim_NAX12_01H();
-            if (id == CardDB.cardIDEnum.CS2_097) return new Sim_CS2_097();
-            if (id == CardDB.cardIDEnum.EX1_558) return new Sim_EX1_558();
-            //if (id == CardDB.cardIDEnum.XXX_047) return new Sim_XXX_047();
-            if (id == CardDB.cardIDEnum.EX1_tk29) return new Sim_EX1_tk29();
-            if (id == CardDB.cardIDEnum.CS2_186) return new Sim_CS2_186();
-            if (id == CardDB.cardIDEnum.EX1_084) return new Sim_EX1_084();
-            if (id == CardDB.cardIDEnum.NEW1_012) return new Sim_NEW1_012();
-            if (id == CardDB.cardIDEnum.FP1_014t) return new Sim_FP1_014t();
-            //if (id == CardDB.cardIDEnum.NAX1_03) return new Sim_NAX1_03();
-            //if (id == CardDB.cardIDEnum.EX1_623e) return new Sim_EX1_623e();
-            if (id == CardDB.cardIDEnum.EX1_578) return new Sim_EX1_578();
-            //if (id == CardDB.cardIDEnum.CS2_073e2) return new Sim_CS2_073e2();
-            if (id == CardDB.cardIDEnum.CS2_221) return new Sim_CS2_221();
-            if (id == CardDB.cardIDEnum.EX1_019) return new Sim_EX1_019();
-            //if (id == CardDB.cardIDEnum.NAX15_04a) return new Sim_NAX15_04a();
-            if (id == CardDB.cardIDEnum.FP1_019t) return new Sim_FP1_019t();
-            if (id == CardDB.cardIDEnum.EX1_132) return new Sim_EX1_132();
-            if (id == CardDB.cardIDEnum.EX1_284) return new Sim_EX1_284();
-            if (id == CardDB.cardIDEnum.EX1_105) return new Sim_EX1_105();
-            if (id == CardDB.cardIDEnum.NEW1_011) return new Sim_NEW1_011();
-            //if (id == CardDB.cardIDEnum.NAX9_07e) return new Sim_NAX9_07e();
-            if (id == CardDB.cardIDEnum.EX1_017) return new Sim_EX1_017();
-            if (id == CardDB.cardIDEnum.EX1_249) return new Sim_EX1_249();
-            //if (id == CardDB.cardIDEnum.EX1_162o) return new Sim_EX1_162o();
-            if (id == CardDB.cardIDEnum.FP1_002t) return new Sim_FP1_002t();
-            //if (id == CardDB.cardIDEnum.NAX3_02) return new Sim_NAX3_02();
-            if (id == CardDB.cardIDEnum.EX1_313) return new Sim_EX1_313();
-            //if (id == CardDB.cardIDEnum.EX1_549o) return new Sim_EX1_549o();
-            //if (id == CardDB.cardIDEnum.EX1_091o) return new Sim_EX1_091o();
-            //if (id == CardDB.cardIDEnum.CS2_084e) return new Sim_CS2_084e();
-            if (id == CardDB.cardIDEnum.EX1_155b) return new Sim_EX1_155b();
-            // (id == CardDB.cardIDEnum.NAX11_01) return new Sim_NAX11_01();
-            if (id == CardDB.cardIDEnum.NEW1_033) return new Sim_NEW1_033();
-            if (id == CardDB.cardIDEnum.CS2_106) return new Sim_CS2_106();
-            //if (id == CardDB.cardIDEnum.XXX_002) return new Sim_XXX_002();
-            if (id == CardDB.cardIDEnum.FP1_018) return new Sim_FP1_018();
-            //if (id == CardDB.cardIDEnum.NEW1_036e2) return new Sim_NEW1_036e2();
-            //if (id == CardDB.cardIDEnum.XXX_004) return new Sim_XXX_004();
-            //if (id == CardDB.cardIDEnum.NAX11_02H) return new Sim_NAX11_02H();
-            //if (id == CardDB.cardIDEnum.CS2_122e) return new Sim_CS2_122e();
-            if (id == CardDB.cardIDEnum.DS1_233) return new Sim_DS1_233();
-            if (id == CardDB.cardIDEnum.DS1_175) return new Sim_DS1_175();
-            if (id == CardDB.cardIDEnum.NEW1_024) return new Sim_NEW1_024();
-            if (id == CardDB.cardIDEnum.CS2_189) return new Sim_CS2_189();
-            //if (id == CardDB.cardIDEnum.CRED_10) return new Sim_CRED_10();
-            if (id == CardDB.cardIDEnum.NEW1_037) return new Sim_NEW1_037();
-            if (id == CardDB.cardIDEnum.EX1_414) return new Sim_EX1_414();
-            if (id == CardDB.cardIDEnum.EX1_538t) return new Sim_EX1_538t();
-            //if (id == CardDB.cardIDEnum.FP1_030e) return new Sim_FP1_030e();
-            if (id == CardDB.cardIDEnum.EX1_586) return new Sim_EX1_586();
-            if (id == CardDB.cardIDEnum.EX1_310) return new Sim_EX1_310();
-            if (id == CardDB.cardIDEnum.NEW1_010) return new Sim_NEW1_010();
-            //if (id == CardDB.cardIDEnum.CS2_103e) return new Sim_CS2_103e();
-            //if (id == CardDB.cardIDEnum.EX1_080o) return new Sim_EX1_080o();
-            //if (id == CardDB.cardIDEnum.CS2_005o) return new Sim_CS2_005o();
-            //if (id == CardDB.cardIDEnum.EX1_363e2) return new Sim_EX1_363e2();
-            if (id == CardDB.cardIDEnum.EX1_534t) return new Sim_EX1_534t();
-            if (id == CardDB.cardIDEnum.FP1_028) return new Sim_FP1_028();
-            if (id == CardDB.cardIDEnum.EX1_604) return new Sim_EX1_604();
-            if (id == CardDB.cardIDEnum.EX1_160) return new Sim_EX1_160();
-            if (id == CardDB.cardIDEnum.EX1_165t1) return new Sim_EX1_165t1();
-            if (id == CardDB.cardIDEnum.CS2_062) return new Sim_CS2_062();
-            if (id == CardDB.cardIDEnum.CS2_155) return new Sim_CS2_155();
-            if (id == CardDB.cardIDEnum.CS2_213) return new Sim_CS2_213();
-            //if (id == CardDB.cardIDEnum.TU4f_007) return new Sim_TU4f_007();
-            //if (id == CardDB.cardIDEnum.GAME_004) return new Sim_GAME_004();
-            //if (id == CardDB.cardIDEnum.NAX5_01) return new Sim_NAX5_01();
-            //if (id == CardDB.cardIDEnum.XXX_020) return new Sim_XXX_020();
-            //if (id == CardDB.cardIDEnum.NAX15_02H) return new Sim_NAX15_02H();
-            if (id == CardDB.cardIDEnum.CS2_004) return new Sim_CS2_004();
-            //if (id == CardDB.cardIDEnum.NAX2_03H) return new Sim_NAX2_03H();
-            //if (id == CardDB.cardIDEnum.EX1_561e) return new Sim_EX1_561e();
-            if (id == CardDB.cardIDEnum.CS2_023) return new Sim_CS2_023();
-            if (id == CardDB.cardIDEnum.EX1_164) return new Sim_EX1_164();
-            if (id == CardDB.cardIDEnum.EX1_009) return new Sim_EX1_009();
-            //if (id == CardDB.cardIDEnum.NAX6_01) return new Sim_NAX6_01();
-            if (id == CardDB.cardIDEnum.FP1_007) return new Sim_FP1_007();
-            //if (id == CardDB.cardIDEnum.NAX1h_04) return new Sim_NAX1h_04();
-            //if (id == CardDB.cardIDEnum.NAX2_05H) return new Sim_NAX2_05H();
-            //if (id == CardDB.cardIDEnum.NAX10_02) return new Sim_NAX10_02();
-            if (id == CardDB.cardIDEnum.EX1_345) return new Sim_EX1_345();
-            if (id == CardDB.cardIDEnum.EX1_116) return new Sim_EX1_116();
-            if (id == CardDB.cardIDEnum.EX1_399) return new Sim_EX1_399();
-            if (id == CardDB.cardIDEnum.EX1_587) return new Sim_EX1_587();
-            //if (id == CardDB.cardIDEnum.XXX_026) return new Sim_XXX_026();
-            if (id == CardDB.cardIDEnum.EX1_571) return new Sim_EX1_571();
-            if (id == CardDB.cardIDEnum.EX1_335) return new Sim_EX1_335();
-            //if (id == CardDB.cardIDEnum.XXX_050) return new Sim_XXX_050();
-            //if (id == CardDB.cardIDEnum.TU4e_004) return new Sim_TU4e_004();
-            if (id == CardDB.cardIDEnum.HERO_08) return new Sim_HERO_08();
-            if (id == CardDB.cardIDEnum.EX1_166a) return new Sim_EX1_166a();
-            //if (id == CardDB.cardIDEnum.NAX2_03) return new Sim_NAX2_03();
-            if (id == CardDB.cardIDEnum.EX1_finkle) return new Sim_EX1_finkle();
-            //if (id == CardDB.cardIDEnum.NAX4_03H) return new Sim_NAX4_03H();
-            if (id == CardDB.cardIDEnum.EX1_164b) return new Sim_EX1_164b();
-            if (id == CardDB.cardIDEnum.EX1_283) return new Sim_EX1_283();
-            if (id == CardDB.cardIDEnum.EX1_339) return new Sim_EX1_339();
-            //if (id == CardDB.cardIDEnum.CRED_13) return new Sim_CRED_13();
-            //if (id == CardDB.cardIDEnum.EX1_178be) return new Sim_EX1_178be();
-            if (id == CardDB.cardIDEnum.EX1_531) return new Sim_EX1_531();
-            if (id == CardDB.cardIDEnum.EX1_134) return new Sim_EX1_134();
-            if (id == CardDB.cardIDEnum.EX1_350) return new Sim_EX1_350();
-            if (id == CardDB.cardIDEnum.EX1_308) return new Sim_EX1_308();
-            if (id == CardDB.cardIDEnum.CS2_197) return new Sim_CS2_197();
-            if (id == CardDB.cardIDEnum.skele21) return new Sim_skele21();
-            //if (id == CardDB.cardIDEnum.CS2_222o) return new Sim_CS2_222o();
-            //if (id == CardDB.cardIDEnum.XXX_015) return new Sim_XXX_015();
-            if (id == CardDB.cardIDEnum.FP1_013) return new Sim_FP1_013();
-            if (id == CardDB.cardIDEnum.NEW1_006) return new Sim_NEW1_006();
-            //if (id == CardDB.cardIDEnum.EX1_399e) return new Sim_EX1_399e();
-            if (id == CardDB.cardIDEnum.EX1_509) return new Sim_EX1_509();
-            if (id == CardDB.cardIDEnum.EX1_612) return new Sim_EX1_612();
-            //if (id == CardDB.cardIDEnum.NAX8_05t) return new Sim_NAX8_05t();
-            //if (id == CardDB.cardIDEnum.NAX9_05H) return new Sim_NAX9_05H();
-            if (id == CardDB.cardIDEnum.EX1_021) return new Sim_EX1_021();
-            //if (id == CardDB.cardIDEnum.CS2_041e) return new Sim_CS2_041e();
-            if (id == CardDB.cardIDEnum.CS2_226) return new Sim_CS2_226();
-            if (id == CardDB.cardIDEnum.EX1_608) return new Sim_EX1_608();
-            //if (id == CardDB.cardIDEnum.NAX13_05H) return new Sim_NAX13_05H();
-            //if (id == CardDB.cardIDEnum.NAX13_04H) return new Sim_NAX13_04H();
-            //if (id == CardDB.cardIDEnum.TU4c_008) return new Sim_TU4c_008();
-            if (id == CardDB.cardIDEnum.EX1_624) return new Sim_EX1_624();
-            if (id == CardDB.cardIDEnum.EX1_616) return new Sim_EX1_616();
-            if (id == CardDB.cardIDEnum.EX1_008) return new Sim_EX1_008();
-            if (id == CardDB.cardIDEnum.PlaceholderCard) return new Sim_PlaceholderCard();
-            //if (id == CardDB.cardIDEnum.XXX_016) return new Sim_XXX_016();
-            if (id == CardDB.cardIDEnum.EX1_045) return new Sim_EX1_045();
-            if (id == CardDB.cardIDEnum.EX1_015) return new Sim_EX1_015();
-            //if (id == CardDB.cardIDEnum.GAME_003) return new Sim_GAME_003();
-            if (id == CardDB.cardIDEnum.CS2_171) return new Sim_CS2_171();
-            if (id == CardDB.cardIDEnum.CS2_041) return new Sim_CS2_041();
-            if (id == CardDB.cardIDEnum.EX1_128) return new Sim_EX1_128();
-            if (id == CardDB.cardIDEnum.CS2_112) return new Sim_CS2_112();
-            if (id == CardDB.cardIDEnum.HERO_07) return new Sim_HERO_07();
-            if (id == CardDB.cardIDEnum.EX1_412) return new Sim_EX1_412();
-            //if (id == CardDB.cardIDEnum.EX1_612o) return new Sim_EX1_612o();
-            if (id == CardDB.cardIDEnum.CS2_117) return new Sim_CS2_117();
-            //if (id == CardDB.cardIDEnum.XXX_009e) return new Sim_XXX_009e();
-            if (id == CardDB.cardIDEnum.EX1_562) return new Sim_EX1_562();
-            if (id == CardDB.cardIDEnum.EX1_055) return new Sim_EX1_055();
-            //if (id == CardDB.cardIDEnum.NAX9_06) return new Sim_NAX9_06();
-            //if (id == CardDB.cardIDEnum.TU4e_007) return new Sim_TU4e_007();
-            if (id == CardDB.cardIDEnum.FP1_012) return new Sim_FP1_012();
-            if (id == CardDB.cardIDEnum.EX1_317t) return new Sim_EX1_317t();
-            //if (id == CardDB.cardIDEnum.EX1_004e) return new Sim_EX1_004e();
-            if (id == CardDB.cardIDEnum.EX1_278) return new Sim_EX1_278();
-            if (id == CardDB.cardIDEnum.CS2_tk1) return new Sim_CS2_tk1();
-            if (id == CardDB.cardIDEnum.EX1_590) return new Sim_EX1_590();
-            if (id == CardDB.cardIDEnum.CS1_130) return new Sim_CS1_130();
-            if (id == CardDB.cardIDEnum.NEW1_008b) return new Sim_NEW1_008b();
-            if (id == CardDB.cardIDEnum.EX1_365) return new Sim_EX1_365();
-            if (id == CardDB.cardIDEnum.CS2_141) return new Sim_CS2_141();
-            if (id == CardDB.cardIDEnum.PRO_001) return new Sim_PRO_001();
-            //if (id == CardDB.cardIDEnum.NAX8_04t) return new Sim_NAX8_04t();
-            if (id == CardDB.cardIDEnum.CS2_173) return new Sim_CS2_173();
-            if (id == CardDB.cardIDEnum.CS2_017) return new Sim_CS2_017();
-            //if (id == CardDB.cardIDEnum.CRED_16) return new Sim_CRED_16();
-            if (id == CardDB.cardIDEnum.EX1_392) return new Sim_EX1_392();
-            if (id == CardDB.cardIDEnum.EX1_593) return new Sim_EX1_593();
-            //if (id == CardDB.cardIDEnum.FP1_023e) return new Sim_FP1_023e();
-            //if (id == CardDB.cardIDEnum.NAX1_05) return new Sim_NAX1_05();
-            //if (id == CardDB.cardIDEnum.TU4d_002) return new Sim_TU4d_002();
-            //if (id == CardDB.cardIDEnum.CRED_15) return new Sim_CRED_15();
-            if (id == CardDB.cardIDEnum.EX1_049) return new Sim_EX1_049();
-            if (id == CardDB.cardIDEnum.EX1_002) return new Sim_EX1_002();
-            //if (id == CardDB.cardIDEnum.TU4f_005) return new Sim_TU4f_005();
-            //if (id == CardDB.cardIDEnum.NEW1_029t) return new Sim_NEW1_029t();
-            //if (id == CardDB.cardIDEnum.TU4a_001) return new Sim_TU4a_001();
-            if (id == CardDB.cardIDEnum.CS2_056) return new Sim_CS2_056();
-            if (id == CardDB.cardIDEnum.EX1_596) return new Sim_EX1_596();
-            if (id == CardDB.cardIDEnum.EX1_136) return new Sim_EX1_136();
-            if (id == CardDB.cardIDEnum.EX1_323) return new Sim_EX1_323();
-            if (id == CardDB.cardIDEnum.CS2_073) return new Sim_CS2_073();
-            //if (id == CardDB.cardIDEnum.EX1_246e) return new Sim_EX1_246e();
-            //if (id == CardDB.cardIDEnum.NAX12_01) return new Sim_NAX12_01();
-            //if (id == CardDB.cardIDEnum.EX1_244e) return new Sim_EX1_244e();
-            if (id == CardDB.cardIDEnum.EX1_001) return new Sim_EX1_001();
-            //if (id == CardDB.cardIDEnum.EX1_607e) return new Sim_EX1_607e();
-            if (id == CardDB.cardIDEnum.EX1_044) return new Sim_EX1_044();
-            //if (id == CardDB.cardIDEnum.EX1_573ae) return new Sim_EX1_573ae();
-            //if (id == CardDB.cardIDEnum.XXX_025) return new Sim_XXX_025();
-            //if (id == CardDB.cardIDEnum.CRED_06) return new Sim_CRED_06();
-            if (id == CardDB.cardIDEnum.Mekka4) return new Sim_Mekka4();
-            if (id == CardDB.cardIDEnum.CS2_142) return new Sim_CS2_142();
-            //if (id == CardDB.cardIDEnum.TU4f_004) return new Sim_TU4f_004();
-            //if (id == CardDB.cardIDEnum.NAX5_02H) return new Sim_NAX5_02H();
-            //if (id == CardDB.cardIDEnum.EX1_411e2) return new Sim_EX1_411e2();
-            if (id == CardDB.cardIDEnum.EX1_573) return new Sim_EX1_573();
-            if (id == CardDB.cardIDEnum.FP1_009) return new Sim_FP1_009();
-            if (id == CardDB.cardIDEnum.CS2_050) return new Sim_CS2_050();
-            //if (id == CardDB.cardIDEnum.NAX4_03) return new Sim_NAX4_03();
-            //if (id == CardDB.cardIDEnum.CS2_063e) return new Sim_CS2_063e();
-            //if (id == CardDB.cardIDEnum.NAX2_05) return new Sim_NAX2_05();
-            if (id == CardDB.cardIDEnum.EX1_390) return new Sim_EX1_390();
-            if (id == CardDB.cardIDEnum.EX1_610) return new Sim_EX1_610();
-            if (id == CardDB.cardIDEnum.hexfrog) return new Sim_hexfrog();
-            //if (id == CardDB.cardIDEnum.CS2_181e) return new Sim_CS2_181e();
-            //if (id == CardDB.cardIDEnum.NAX6_02) return new Sim_NAX6_02();
-            //if (id == CardDB.cardIDEnum.XXX_027) return new Sim_XXX_027();
-            if (id == CardDB.cardIDEnum.CS2_082) return new Sim_CS2_082();
-            if (id == CardDB.cardIDEnum.NEW1_040) return new Sim_NEW1_040();
-            if (id == CardDB.cardIDEnum.DREAM_01) return new Sim_DREAM_01();
-            if (id == CardDB.cardIDEnum.EX1_595) return new Sim_EX1_595();
-            if (id == CardDB.cardIDEnum.CS2_013) return new Sim_CS2_013();
-            if (id == CardDB.cardIDEnum.CS2_077) return new Sim_CS2_077();
-            if (id == CardDB.cardIDEnum.NEW1_014) return new Sim_NEW1_014();
-            //if (id == CardDB.cardIDEnum.CRED_05) return new Sim_CRED_05();
-            if (id == CardDB.cardIDEnum.GAME_002) return new Sim_GAME_002();
-            if (id == CardDB.cardIDEnum.EX1_165) return new Sim_EX1_165();
-            if (id == CardDB.cardIDEnum.CS2_013t) return new Sim_CS2_013t();
-            //if (id == CardDB.cardIDEnum.NAX4_04H) return new Sim_NAX4_04H();
-            if (id == CardDB.cardIDEnum.EX1_tk11) return new Sim_EX1_tk11();
-            if (id == CardDB.cardIDEnum.EX1_591) return new Sim_EX1_591();
-            if (id == CardDB.cardIDEnum.EX1_549) return new Sim_EX1_549();
-            if (id == CardDB.cardIDEnum.CS2_045) return new Sim_CS2_045();
-            if (id == CardDB.cardIDEnum.CS2_237) return new Sim_CS2_237();
-            if (id == CardDB.cardIDEnum.CS2_027) return new Sim_CS2_027();
-            //if (id == CardDB.cardIDEnum.EX1_508o) return new Sim_EX1_508o();
-            //if (id == CardDB.cardIDEnum.NAX14_03) return new Sim_NAX14_03();
-            if (id == CardDB.cardIDEnum.CS2_101t) return new Sim_CS2_101t();
-            if (id == CardDB.cardIDEnum.CS2_063) return new Sim_CS2_063();
-            if (id == CardDB.cardIDEnum.EX1_145) return new Sim_EX1_145();
-            //if (id == CardDB.cardIDEnum.NAX1h_03) return new Sim_NAX1h_03();
-            if (id == CardDB.cardIDEnum.EX1_110) return new Sim_EX1_110();
-            if (id == CardDB.cardIDEnum.EX1_408) return new Sim_EX1_408();
-            if (id == CardDB.cardIDEnum.EX1_544) return new Sim_EX1_544();
-            //if (id == CardDB.cardIDEnum.TU4c_006) return new Sim_TU4c_006();
-            //if (id == CardDB.cardIDEnum.NAXM_001) return new Sim_NAXM_001();
-            if (id == CardDB.cardIDEnum.CS2_151) return new Sim_CS2_151();
-            //if (id == CardDB.cardIDEnum.CS2_073e) return new Sim_CS2_073e();
-            //if (id == CardDB.cardIDEnum.XXX_006) return new Sim_XXX_006();
-            if (id == CardDB.cardIDEnum.CS2_088) return new Sim_CS2_088();
-            if (id == CardDB.cardIDEnum.EX1_057) return new Sim_EX1_057();
-            if (id == CardDB.cardIDEnum.FP1_020) return new Sim_FP1_020();
-            if (id == CardDB.cardIDEnum.CS2_169) return new Sim_CS2_169();
-            if (id == CardDB.cardIDEnum.EX1_573t) return new Sim_EX1_573t();
-            if (id == CardDB.cardIDEnum.EX1_323h) return new Sim_EX1_323h();
-            if (id == CardDB.cardIDEnum.EX1_tk9) return new Sim_EX1_tk9();
-            //if (id == CardDB.cardIDEnum.NEW1_018e) return new Sim_NEW1_018e();
-            if (id == CardDB.cardIDEnum.CS2_037) return new Sim_CS2_037();
-            if (id == CardDB.cardIDEnum.CS2_007) return new Sim_CS2_007();
-            //if (id == CardDB.cardIDEnum.EX1_059e2) return new Sim_EX1_059e2();
-            if (id == CardDB.cardIDEnum.CS2_227) return new Sim_CS2_227();
-            //if (id == CardDB.cardIDEnum.NAX7_03H) return new Sim_NAX7_03H();
-            //if (id == CardDB.cardIDEnum.NAX9_01H) return new Sim_NAX9_01H();
-            //if (id == CardDB.cardIDEnum.EX1_570e) return new Sim_EX1_570e();
-            if (id == CardDB.cardIDEnum.NEW1_003) return new Sim_NEW1_003();
-            if (id == CardDB.cardIDEnum.GAME_006) return new Sim_GAME_006();
-            if (id == CardDB.cardIDEnum.EX1_320) return new Sim_EX1_320();
-            if (id == CardDB.cardIDEnum.EX1_097) return new Sim_EX1_097();
-            if (id == CardDB.cardIDEnum.tt_004) return new Sim_tt_004();
-            //if (id == CardDB.cardIDEnum.EX1_360e) return new Sim_EX1_360e();
-            if (id == CardDB.cardIDEnum.EX1_096) return new Sim_EX1_096();
-            //if (id == CardDB.cardIDEnum.DS1_175o) return new Sim_DS1_175o();
-            //if (id == CardDB.cardIDEnum.EX1_596e) return new Sim_EX1_596e();
-            //if (id == CardDB.cardIDEnum.XXX_014) return new Sim_XXX_014();
-            //if (id == CardDB.cardIDEnum.EX1_158e) return new Sim_EX1_158e();
-            //if (id == CardDB.cardIDEnum.NAX14_01) return new Sim_NAX14_01();
-            //if (id == CardDB.cardIDEnum.CRED_01) return new Sim_CRED_01();
-            //if (id == CardDB.cardIDEnum.CRED_08) return new Sim_CRED_08();
-            if (id == CardDB.cardIDEnum.EX1_126) return new Sim_EX1_126();
-            if (id == CardDB.cardIDEnum.EX1_577) return new Sim_EX1_577();
-            if (id == CardDB.cardIDEnum.EX1_319) return new Sim_EX1_319();
-            if (id == CardDB.cardIDEnum.EX1_611) return new Sim_EX1_611();
-            if (id == CardDB.cardIDEnum.CS2_146) return new Sim_CS2_146();
-            if (id == CardDB.cardIDEnum.EX1_154b) return new Sim_EX1_154b();
-            if (id == CardDB.cardIDEnum.skele11) return new Sim_skele11();
-            if (id == CardDB.cardIDEnum.EX1_165t2) return new Sim_EX1_165t2();
-            if (id == CardDB.cardIDEnum.CS2_172) return new Sim_CS2_172();
-            if (id == CardDB.cardIDEnum.CS2_114) return new Sim_CS2_114();
-            if (id == CardDB.cardIDEnum.CS1_069) return new Sim_CS1_069();
-            //if (id == CardDB.cardIDEnum.XXX_003) return new Sim_XXX_003();
-            //if (id == CardDB.cardIDEnum.XXX_042) return new Sim_XXX_042();
-            //if (id == CardDB.cardIDEnum.NAX8_02) return new Sim_NAX8_02();
-            if (id == CardDB.cardIDEnum.EX1_173) return new Sim_EX1_173();
-            if (id == CardDB.cardIDEnum.CS1_042) return new Sim_CS1_042();
-            //if (id == CardDB.cardIDEnum.NAX8_03) return new Sim_NAX8_03();
-            if (id == CardDB.cardIDEnum.EX1_506a) return new Sim_EX1_506a();
-            if (id == CardDB.cardIDEnum.EX1_298) return new Sim_EX1_298();
-            if (id == CardDB.cardIDEnum.CS2_104) return new Sim_CS2_104();
-            if (id == CardDB.cardIDEnum.FP1_001) return new Sim_FP1_001();
-            if (id == CardDB.cardIDEnum.HERO_02) return new Sim_HERO_02();
-            //if (id == CardDB.cardIDEnum.EX1_316e) return new Sim_EX1_316e();
-            //if (id == CardDB.cardIDEnum.NAX7_01) return new Sim_NAX7_01();
-            //if (id == CardDB.cardIDEnum.EX1_044e) return new Sim_EX1_044e();
-            if (id == CardDB.cardIDEnum.CS2_051) return new Sim_CS2_051();
-            if (id == CardDB.cardIDEnum.NEW1_016) return new Sim_NEW1_016();
-            //if (id == CardDB.cardIDEnum.EX1_304e) return new Sim_EX1_304e();
-            if (id == CardDB.cardIDEnum.EX1_033) return new Sim_EX1_033();
-            //if (id == CardDB.cardIDEnum.NAX8_04) return new Sim_NAX8_04();
-            if (id == CardDB.cardIDEnum.EX1_028) return new Sim_EX1_028();
-            //if (id == CardDB.cardIDEnum.XXX_011) return new Sim_XXX_011();
-            if (id == CardDB.cardIDEnum.EX1_621) return new Sim_EX1_621();
-            if (id == CardDB.cardIDEnum.EX1_554) return new Sim_EX1_554();
-            if (id == CardDB.cardIDEnum.EX1_091) return new Sim_EX1_091();
-            if (id == CardDB.cardIDEnum.FP1_017) return new Sim_FP1_017();
-            if (id == CardDB.cardIDEnum.EX1_409) return new Sim_EX1_409();
-            //if (id == CardDB.cardIDEnum.EX1_363e) return new Sim_EX1_363e();
-            if (id == CardDB.cardIDEnum.EX1_410) return new Sim_EX1_410();
-            //if (id == CardDB.cardIDEnum.TU4e_005) return new Sim_TU4e_005();
-            if (id == CardDB.cardIDEnum.CS2_039) return new Sim_CS2_039();
-            //if (id == CardDB.cardIDEnum.NAX12_04) return new Sim_NAX12_04();
-            if (id == CardDB.cardIDEnum.EX1_557) return new Sim_EX1_557();
-            //if (id == CardDB.cardIDEnum.CS2_105e) return new Sim_CS2_105e();
-            //if (id == CardDB.cardIDEnum.EX1_128e) return new Sim_EX1_128e();
-            //if (id == CardDB.cardIDEnum.XXX_021) return new Sim_XXX_021();
-            if (id == CardDB.cardIDEnum.DS1_070) return new Sim_DS1_070();
-            if (id == CardDB.cardIDEnum.CS2_033) return new Sim_CS2_033();
-            if (id == CardDB.cardIDEnum.EX1_536) return new Sim_EX1_536();
-            //if (id == CardDB.cardIDEnum.TU4a_003) return new Sim_TU4a_003();
-            if (id == CardDB.cardIDEnum.EX1_559) return new Sim_EX1_559();
-            //if (id == CardDB.cardIDEnum.XXX_023) return new Sim_XXX_023();
-            //if (id == CardDB.cardIDEnum.NEW1_033o) return new Sim_NEW1_033o();
-            //if (id == CardDB.cardIDEnum.NAX15_04H) return new Sim_NAX15_04H();
-            //if (id == CardDB.cardIDEnum.CS2_004e) return new Sim_CS2_004e();
-            if (id == CardDB.cardIDEnum.CS2_052) return new Sim_CS2_052();
-            if (id == CardDB.cardIDEnum.EX1_539) return new Sim_EX1_539();
-            if (id == CardDB.cardIDEnum.EX1_575) return new Sim_EX1_575();
-            if (id == CardDB.cardIDEnum.CS2_083b) return new Sim_CS2_083b();
-            if (id == CardDB.cardIDEnum.CS2_061) return new Sim_CS2_061();
-            if (id == CardDB.cardIDEnum.NEW1_021) return new Sim_NEW1_021();
-            if (id == CardDB.cardIDEnum.DS1_055) return new Sim_DS1_055();
-            if (id == CardDB.cardIDEnum.EX1_625) return new Sim_EX1_625();
-            //if (id == CardDB.cardIDEnum.EX1_382e) return new Sim_EX1_382e();
-            //if (id == CardDB.cardIDEnum.CS2_092e) return new Sim_CS2_092e();
-            if (id == CardDB.cardIDEnum.CS2_026) return new Sim_CS2_026();
-            //if (id == CardDB.cardIDEnum.NAX14_04) return new Sim_NAX14_04();
-            //if (id == CardDB.cardIDEnum.NEW1_012o) return new Sim_NEW1_012o();
-            //if (id == CardDB.cardIDEnum.EX1_619e) return new Sim_EX1_619e();
-            if (id == CardDB.cardIDEnum.EX1_294) return new Sim_EX1_294();
-            if (id == CardDB.cardIDEnum.EX1_287) return new Sim_EX1_287();
-            //if (id == CardDB.cardIDEnum.EX1_509e) return new Sim_EX1_509e();
-            if (id == CardDB.cardIDEnum.EX1_625t2) return new Sim_EX1_625t2();
-            if (id == CardDB.cardIDEnum.CS2_118) return new Sim_CS2_118();
-            if (id == CardDB.cardIDEnum.CS2_124) return new Sim_CS2_124();
-            if (id == CardDB.cardIDEnum.Mekka3) return new Sim_Mekka3();
-            //if (id == CardDB.cardIDEnum.NAX13_02) return new Sim_NAX13_02();
-            if (id == CardDB.cardIDEnum.EX1_112) return new Sim_EX1_112();
-            if (id == CardDB.cardIDEnum.FP1_011) return new Sim_FP1_011();
-            //if (id == CardDB.cardIDEnum.CS2_009e) return new Sim_CS2_009e();
-            if (id == CardDB.cardIDEnum.HERO_04) return new Sim_HERO_04();
-            if (id == CardDB.cardIDEnum.EX1_607) return new Sim_EX1_607();
-            if (id == CardDB.cardIDEnum.DREAM_03) return new Sim_DREAM_03();
-            //if (id == CardDB.cardIDEnum.NAX11_04e) return new Sim_NAX11_04e();
-            //if (id == CardDB.cardIDEnum.EX1_103e) return new Sim_EX1_103e();
-            //if (id == CardDB.cardIDEnum.XXX_046) return new Sim_XXX_046();
-            if (id == CardDB.cardIDEnum.FP1_003) return new Sim_FP1_003();
-            if (id == CardDB.cardIDEnum.CS2_105) return new Sim_CS2_105();
-            if (id == CardDB.cardIDEnum.FP1_002) return new Sim_FP1_002();
-            //if (id == CardDB.cardIDEnum.TU4c_002) return new Sim_TU4c_002();
-            //if (id == CardDB.cardIDEnum.CRED_14) return new Sim_CRED_14();
-            if (id == CardDB.cardIDEnum.EX1_567) return new Sim_EX1_567();
-            //if (id == CardDB.cardIDEnum.TU4c_004) return new Sim_TU4c_004();
-            //if (id == CardDB.cardIDEnum.NAX10_03H) return new Sim_NAX10_03H();
-            if (id == CardDB.cardIDEnum.FP1_008) return new Sim_FP1_008();
-            if (id == CardDB.cardIDEnum.DS1_184) return new Sim_DS1_184();
-            if (id == CardDB.cardIDEnum.CS2_029) return new Sim_CS2_029();
-            if (id == CardDB.cardIDEnum.GAME_005) return new Sim_GAME_005();
-            if (id == CardDB.cardIDEnum.CS2_187) return new Sim_CS2_187();
-            if (id == CardDB.cardIDEnum.EX1_020) return new Sim_EX1_020();
-            //if (id == CardDB.cardIDEnum.NAX15_01He) return new Sim_NAX15_01He();
-            if (id == CardDB.cardIDEnum.EX1_011) return new Sim_EX1_011();
-            if (id == CardDB.cardIDEnum.CS2_057) return new Sim_CS2_057();
-            if (id == CardDB.cardIDEnum.EX1_274) return new Sim_EX1_274();
-            if (id == CardDB.cardIDEnum.EX1_306) return new Sim_EX1_306();
-            //if (id == CardDB.cardIDEnum.NEW1_038o) return new Sim_NEW1_038o();
-            if (id == CardDB.cardIDEnum.EX1_170) return new Sim_EX1_170();
-            if (id == CardDB.cardIDEnum.EX1_617) return new Sim_EX1_617();
-            //if (id == CardDB.cardIDEnum.CS1_113e) return new Sim_CS1_113e();
-            if (id == CardDB.cardIDEnum.CS2_101) return new Sim_CS2_101();
-            if (id == CardDB.cardIDEnum.FP1_015) return new Sim_FP1_015();
-            //if (id == CardDB.cardIDEnum.NAX13_03) return new Sim_NAX13_03();
-            if (id == CardDB.cardIDEnum.CS2_005) return new Sim_CS2_005();
-            if (id == CardDB.cardIDEnum.EX1_537) return new Sim_EX1_537();
-            if (id == CardDB.cardIDEnum.EX1_384) return new Sim_EX1_384();
-            //if (id == CardDB.cardIDEnum.TU4a_002) return new Sim_TU4a_002();
-            //if (id == CardDB.cardIDEnum.NAX9_04) return new Sim_NAX9_04();
-            if (id == CardDB.cardIDEnum.EX1_362) return new Sim_EX1_362();
-            //if (id == CardDB.cardIDEnum.NAX12_02) return new Sim_NAX12_02();
-            //if (id == CardDB.cardIDEnum.FP1_028e) return new Sim_FP1_028e();
-            //if (id == CardDB.cardIDEnum.TU4c_005) return new Sim_TU4c_005();
-            if (id == CardDB.cardIDEnum.EX1_301) return new Sim_EX1_301();
-            if (id == CardDB.cardIDEnum.CS2_235) return new Sim_CS2_235();
-            //if (id == CardDB.cardIDEnum.NAX4_05) return new Sim_NAX4_05();
-            if (id == CardDB.cardIDEnum.EX1_029) return new Sim_EX1_029();
-            if (id == CardDB.cardIDEnum.CS2_042) return new Sim_CS2_042();
-            if (id == CardDB.cardIDEnum.EX1_155a) return new Sim_EX1_155a();
-            if (id == CardDB.cardIDEnum.CS2_102) return new Sim_CS2_102();
-            if (id == CardDB.cardIDEnum.EX1_609) return new Sim_EX1_609();
-            if (id == CardDB.cardIDEnum.NEW1_027) return new Sim_NEW1_027();
-            //if (id == CardDB.cardIDEnum.CS2_236e) return new Sim_CS2_236e();
-            //if (id == CardDB.cardIDEnum.CS2_083e) return new Sim_CS2_083e();
-            //if (id == CardDB.cardIDEnum.NAX6_03te) return new Sim_NAX6_03te();
-            if (id == CardDB.cardIDEnum.EX1_165a) return new Sim_EX1_165a();
-            if (id == CardDB.cardIDEnum.EX1_570) return new Sim_EX1_570();
-            if (id == CardDB.cardIDEnum.EX1_131) return new Sim_EX1_131();
-            if (id == CardDB.cardIDEnum.EX1_556) return new Sim_EX1_556();
-            if (id == CardDB.cardIDEnum.EX1_543) return new Sim_EX1_543();
-            //if (id == CardDB.cardIDEnum.XXX_096) return new Sim_XXX_096();
-            //if (id == CardDB.cardIDEnum.TU4c_008e) return new Sim_TU4c_008e();
-            //if (id == CardDB.cardIDEnum.EX1_379e) return new Sim_EX1_379e();
-            if (id == CardDB.cardIDEnum.NEW1_009) return new Sim_NEW1_009();
-            if (id == CardDB.cardIDEnum.EX1_100) return new Sim_EX1_100();
-            //if (id == CardDB.cardIDEnum.EX1_274e) return new Sim_EX1_274e();
-            //if (id == CardDB.cardIDEnum.CRED_02) return new Sim_CRED_02();
-            if (id == CardDB.cardIDEnum.EX1_573a) return new Sim_EX1_573a();
-            if (id == CardDB.cardIDEnum.CS2_084) return new Sim_CS2_084();
-            if (id == CardDB.cardIDEnum.EX1_582) return new Sim_EX1_582();
-            if (id == CardDB.cardIDEnum.EX1_043) return new Sim_EX1_043();
-            if (id == CardDB.cardIDEnum.EX1_050) return new Sim_EX1_050();
-            //if (id == CardDB.cardIDEnum.TU4b_001) return new Sim_TU4b_001();
-            if (id == CardDB.cardIDEnum.FP1_005) return new Sim_FP1_005();
-            if (id == CardDB.cardIDEnum.EX1_620) return new Sim_EX1_620();
-            //if (id == CardDB.cardIDEnum.NAX15_01) return new Sim_NAX15_01();
-            //if (id == CardDB.cardIDEnum.NAX6_03) return new Sim_NAX6_03();
-            if (id == CardDB.cardIDEnum.EX1_303) return new Sim_EX1_303();
-            if (id == CardDB.cardIDEnum.HERO_09) return new Sim_HERO_09();
-            if (id == CardDB.cardIDEnum.EX1_067) return new Sim_EX1_067();
-            //if (id == CardDB.cardIDEnum.XXX_028) return new Sim_XXX_028();
-            if (id == CardDB.cardIDEnum.EX1_277) return new Sim_EX1_277();
-            if (id == CardDB.cardIDEnum.Mekka2) return new Sim_Mekka2();
-            //if (id == CardDB.cardIDEnum.NAX14_01H) return new Sim_NAX14_01H();
-            //if (id == CardDB.cardIDEnum.NAX15_04) return new Sim_NAX15_04();
-            if (id == CardDB.cardIDEnum.FP1_024) return new Sim_FP1_024();
-            if (id == CardDB.cardIDEnum.FP1_030) return new Sim_FP1_030();
-            //if (id == CardDB.cardIDEnum.CS2_221e) return new Sim_CS2_221e();
-            if (id == CardDB.cardIDEnum.EX1_178) return new Sim_EX1_178();
-            if (id == CardDB.cardIDEnum.CS2_222) return new Sim_CS2_222();
-            //if (id == CardDB.cardIDEnum.EX1_409e) return new Sim_EX1_409e();
-            //if (id == CardDB.cardIDEnum.tt_004o) return new Sim_tt_004o();
-            //if (id == CardDB.cardIDEnum.EX1_155ae) return new Sim_EX1_155ae();
-            //if (id == CardDB.cardIDEnum.NAX11_01H) return new Sim_NAX11_01H();
-            if (id == CardDB.cardIDEnum.EX1_160a) return new Sim_EX1_160a();
-            //if (id == CardDB.cardIDEnum.NAX15_02) return new Sim_NAX15_02();
-            //if (id == CardDB.cardIDEnum.NAX15_05) return new Sim_NAX15_05();
-            //if (id == CardDB.cardIDEnum.NEW1_025e) return new Sim_NEW1_025e();
-            if (id == CardDB.cardIDEnum.CS2_012) return new Sim_CS2_012();
-            //if (id == CardDB.cardIDEnum.XXX_099) return new Sim_XXX_099();
-            if (id == CardDB.cardIDEnum.EX1_246) return new Sim_EX1_246();
-            if (id == CardDB.cardIDEnum.EX1_572) return new Sim_EX1_572();
-            if (id == CardDB.cardIDEnum.EX1_089) return new Sim_EX1_089();
-            if (id == CardDB.cardIDEnum.CS2_059) return new Sim_CS2_059();
-            if (id == CardDB.cardIDEnum.EX1_279) return new Sim_EX1_279();
-            //if (id == CardDB.cardIDEnum.NAX12_02e) return new Sim_NAX12_02e();
-            if (id == CardDB.cardIDEnum.CS2_168) return new Sim_CS2_168();
-            if (id == CardDB.cardIDEnum.tt_010) return new Sim_tt_010();
-            if (id == CardDB.cardIDEnum.NEW1_023) return new Sim_NEW1_023();
-            if (id == CardDB.cardIDEnum.CS2_075) return new Sim_CS2_075();
-            if (id == CardDB.cardIDEnum.EX1_316) return new Sim_EX1_316();
-            if (id == CardDB.cardIDEnum.CS2_025) return new Sim_CS2_025();
-            if (id == CardDB.cardIDEnum.CS2_234) return new Sim_CS2_234();
-            //if (id == CardDB.cardIDEnum.XXX_043) return new Sim_XXX_043();
-            //if (id == CardDB.cardIDEnum.GAME_001) return new Sim_GAME_001();
-            //if (id == CardDB.cardIDEnum.NAX5_02) return new Sim_NAX5_02();
-            if (id == CardDB.cardIDEnum.EX1_130) return new Sim_EX1_130();
-            //if (id == CardDB.cardIDEnum.EX1_584e) return new Sim_EX1_584e();
-            if (id == CardDB.cardIDEnum.CS2_064) return new Sim_CS2_064();
-            if (id == CardDB.cardIDEnum.EX1_161) return new Sim_EX1_161();
-            if (id == CardDB.cardIDEnum.CS2_049) return new Sim_CS2_049();
-            //if (id == CardDB.cardIDEnum.NAX13_01) return new Sim_NAX13_01();
-            if (id == CardDB.cardIDEnum.EX1_154) return new Sim_EX1_154();
-            if (id == CardDB.cardIDEnum.EX1_080) return new Sim_EX1_080();
-            if (id == CardDB.cardIDEnum.NEW1_022) return new Sim_NEW1_022();
-            //if (id == CardDB.cardIDEnum.NAX2_01H) return new Sim_NAX2_01H();
-            //if (id == CardDB.cardIDEnum.EX1_160be) return new Sim_EX1_160be();
-            //if (id == CardDB.cardIDEnum.NAX12_03) return new Sim_NAX12_03();
-            if (id == CardDB.cardIDEnum.EX1_251) return new Sim_EX1_251();
-            if (id == CardDB.cardIDEnum.FP1_025) return new Sim_FP1_025();
-            if (id == CardDB.cardIDEnum.EX1_371) return new Sim_EX1_371();
-            if (id == CardDB.cardIDEnum.CS2_mirror) return new Sim_CS2_mirror();
-            //if (id == CardDB.cardIDEnum.NAX4_01H) return new Sim_NAX4_01H();
-            if (id == CardDB.cardIDEnum.EX1_594) return new Sim_EX1_594();
-            //if (id == CardDB.cardIDEnum.NAX14_02) return new Sim_NAX14_02();
-            //if (id == CardDB.cardIDEnum.TU4c_006e) return new Sim_TU4c_006e();
-            if (id == CardDB.cardIDEnum.EX1_560) return new Sim_EX1_560();
-            if (id == CardDB.cardIDEnum.CS2_236) return new Sim_CS2_236();
-            //if (id == CardDB.cardIDEnum.TU4f_006) return new Sim_TU4f_006();
-            if (id == CardDB.cardIDEnum.EX1_402) return new Sim_EX1_402();
-            //if (id == CardDB.cardIDEnum.NAX3_01) return new Sim_NAX3_01();
-            if (id == CardDB.cardIDEnum.EX1_506) return new Sim_EX1_506();
-            //if (id == CardDB.cardIDEnum.NEW1_027e) return new Sim_NEW1_027e();
-            //if (id == CardDB.cardIDEnum.DS1_070o) return new Sim_DS1_070o();
-            //if (id == CardDB.cardIDEnum.XXX_045) return new Sim_XXX_045();
-            //if (id == CardDB.cardIDEnum.XXX_029) return new Sim_XXX_029();
-            if (id == CardDB.cardIDEnum.DS1_178) return new Sim_DS1_178();
-            //if (id == CardDB.cardIDEnum.XXX_098) return new Sim_XXX_098();
-            if (id == CardDB.cardIDEnum.EX1_315) return new Sim_EX1_315();
-            if (id == CardDB.cardIDEnum.CS2_094) return new Sim_CS2_094();
-            //if (id == CardDB.cardIDEnum.NAX13_01H) return new Sim_NAX13_01H();
-            //if (id == CardDB.cardIDEnum.TU4e_002t) return new Sim_TU4e_002t();
-            //if (id == CardDB.cardIDEnum.EX1_046e) return new Sim_EX1_046e();
-            if (id == CardDB.cardIDEnum.NEW1_040t) return new Sim_NEW1_040t();
-            //if (id == CardDB.cardIDEnum.GAME_005e) return new Sim_GAME_005e();
-            if (id == CardDB.cardIDEnum.CS2_131) return new Sim_CS2_131();
-            //if (id == CardDB.cardIDEnum.XXX_008) return new Sim_XXX_008();
-            //if (id == CardDB.cardIDEnum.EX1_531e) return new Sim_EX1_531e();
-            //if (id == CardDB.cardIDEnum.CS2_226e) return new Sim_CS2_226e();
-            //if (id == CardDB.cardIDEnum.XXX_022e) return new Sim_XXX_022e();
-            //if (id == CardDB.cardIDEnum.DS1_178e) return new Sim_DS1_178e();
-            //if (id == CardDB.cardIDEnum.CS2_226o) return new Sim_CS2_226o();
-            //if (id == CardDB.cardIDEnum.NAX9_04H) return new Sim_NAX9_04H();
-            //if (id == CardDB.cardIDEnum.Mekka4e) return new Sim_Mekka4e();
-            if (id == CardDB.cardIDEnum.EX1_082) return new Sim_EX1_082();
-            if (id == CardDB.cardIDEnum.CS2_093) return new Sim_CS2_093();
-            //if (id == CardDB.cardIDEnum.EX1_411e) return new Sim_EX1_411e();
-            //if (id == CardDB.cardIDEnum.NAX8_03t) return new Sim_NAX8_03t();
-            //if (id == CardDB.cardIDEnum.EX1_145o) return new Sim_EX1_145o();
-            //if (id == CardDB.cardIDEnum.NAX7_04) return new Sim_NAX7_04();
-            if (id == CardDB.cardIDEnum.CS2_boar) return new Sim_CS2_boar();
-            if (id == CardDB.cardIDEnum.NEW1_019) return new Sim_NEW1_019();
-            if (id == CardDB.cardIDEnum.EX1_289) return new Sim_EX1_289();
-            if (id == CardDB.cardIDEnum.EX1_025t) return new Sim_EX1_025t();
-            if (id == CardDB.cardIDEnum.EX1_398t) return new Sim_EX1_398t();
-            //if (id == CardDB.cardIDEnum.NAX12_03H) return new Sim_NAX12_03H();
-            //if (id == CardDB.cardIDEnum.EX1_055o) return new Sim_EX1_055o();
-            if (id == CardDB.cardIDEnum.CS2_091) return new Sim_CS2_091();
-            if (id == CardDB.cardIDEnum.EX1_241) return new Sim_EX1_241();
-            if (id == CardDB.cardIDEnum.EX1_085) return new Sim_EX1_085();
-            if (id == CardDB.cardIDEnum.CS2_200) return new Sim_CS2_200();
-            if (id == CardDB.cardIDEnum.CS2_034) return new Sim_CS2_034();
-            if (id == CardDB.cardIDEnum.EX1_583) return new Sim_EX1_583();
-            if (id == CardDB.cardIDEnum.EX1_584) return new Sim_EX1_584();
-            if (id == CardDB.cardIDEnum.EX1_155) return new Sim_EX1_155();
-            if (id == CardDB.cardIDEnum.EX1_622) return new Sim_EX1_622();
-            if (id == CardDB.cardIDEnum.CS2_203) return new Sim_CS2_203();
-            if (id == CardDB.cardIDEnum.EX1_124) return new Sim_EX1_124();
-            if (id == CardDB.cardIDEnum.EX1_379) return new Sim_EX1_379();
-            //if (id == CardDB.cardIDEnum.NAX7_02) return new Sim_NAX7_02();
-            //if (id == CardDB.cardIDEnum.CS2_053e) return new Sim_CS2_053e();
-            if (id == CardDB.cardIDEnum.EX1_032) return new Sim_EX1_032();
-            //if (id == CardDB.cardIDEnum.NAX9_01) return new Sim_NAX9_01();
-            //if (id == CardDB.cardIDEnum.TU4e_003) return new Sim_TU4e_003();
-            //if (id == CardDB.cardIDEnum.CS2_146o) return new Sim_CS2_146o();
-            //if (id == CardDB.cardIDEnum.NAX8_01H) return new Sim_NAX8_01H();
-            //if (id == CardDB.cardIDEnum.XXX_041) return new Sim_XXX_041();
-            //if (id == CardDB.cardIDEnum.NAXM_002) return new Sim_NAXM_002();
-            if (id == CardDB.cardIDEnum.EX1_391) return new Sim_EX1_391();
-            if (id == CardDB.cardIDEnum.EX1_366) return new Sim_EX1_366();
-            //if (id == CardDB.cardIDEnum.EX1_059e) return new Sim_EX1_059e();
-            //if (id == CardDB.cardIDEnum.XXX_012) return new Sim_XXX_012();
-            //if (id == CardDB.cardIDEnum.EX1_565o) return new Sim_EX1_565o();
-            //if (id == CardDB.cardIDEnum.EX1_001e) return new Sim_EX1_001e();
-            //if (id == CardDB.cardIDEnum.TU4f_003) return new Sim_TU4f_003();
-            if (id == CardDB.cardIDEnum.EX1_400) return new Sim_EX1_400();
-            if (id == CardDB.cardIDEnum.EX1_614) return new Sim_EX1_614();
-            if (id == CardDB.cardIDEnum.EX1_561) return new Sim_EX1_561();
-            if (id == CardDB.cardIDEnum.EX1_332) return new Sim_EX1_332();
-            if (id == CardDB.cardIDEnum.HERO_05) return new Sim_HERO_05();
-            if (id == CardDB.cardIDEnum.CS2_065) return new Sim_CS2_065();
-            if (id == CardDB.cardIDEnum.ds1_whelptoken) return new Sim_ds1_whelptoken();
-            //if (id == CardDB.cardIDEnum.EX1_536e) return new Sim_EX1_536e();
-            if (id == CardDB.cardIDEnum.CS2_032) return new Sim_CS2_032();
-            if (id == CardDB.cardIDEnum.CS2_120) return new Sim_CS2_120();
-            //if (id == CardDB.cardIDEnum.EX1_155be) return new Sim_EX1_155be();
-            if (id == CardDB.cardIDEnum.EX1_247) return new Sim_EX1_247();
-            if (id == CardDB.cardIDEnum.EX1_154a) return new Sim_EX1_154a();
-            if (id == CardDB.cardIDEnum.EX1_554t) return new Sim_EX1_554t();
-            //if (id == CardDB.cardIDEnum.CS2_103e2) return new Sim_CS2_103e2();
-            //if (id == CardDB.cardIDEnum.TU4d_003) return new Sim_TU4d_003();
-            if (id == CardDB.cardIDEnum.NEW1_026t) return new Sim_NEW1_026t();
-            if (id == CardDB.cardIDEnum.EX1_623) return new Sim_EX1_623();
-            if (id == CardDB.cardIDEnum.EX1_383t) return new Sim_EX1_383t();
-            //if (id == CardDB.cardIDEnum.NAX7_03) return new Sim_NAX7_03();
-            if (id == CardDB.cardIDEnum.EX1_597) return new Sim_EX1_597();
-            //if (id == CardDB.cardIDEnum.TU4f_006o) return new Sim_TU4f_006o();
-            if (id == CardDB.cardIDEnum.EX1_130a) return new Sim_EX1_130a();
-            if (id == CardDB.cardIDEnum.CS2_011) return new Sim_CS2_011();
-            if (id == CardDB.cardIDEnum.EX1_169) return new Sim_EX1_169();
-            if (id == CardDB.cardIDEnum.EX1_tk33) return new Sim_EX1_tk33();
-            //if (id == CardDB.cardIDEnum.NAX11_03) return new Sim_NAX11_03();
-            //if (id == CardDB.cardIDEnum.NAX4_01) return new Sim_NAX4_01();
-            //if (id == CardDB.cardIDEnum.NAX10_01) return new Sim_NAX10_01();
-            if (id == CardDB.cardIDEnum.EX1_250) return new Sim_EX1_250();
-            if (id == CardDB.cardIDEnum.EX1_564) return new Sim_EX1_564();
-            //if (id == CardDB.cardIDEnum.NAX5_03) return new Sim_NAX5_03();
-            //if (id == CardDB.cardIDEnum.EX1_043e) return new Sim_EX1_043e();
-            if (id == CardDB.cardIDEnum.EX1_349) return new Sim_EX1_349();
-            //if (id == CardDB.cardIDEnum.XXX_097) return new Sim_XXX_097();
-            if (id == CardDB.cardIDEnum.EX1_102) return new Sim_EX1_102();
-            if (id == CardDB.cardIDEnum.EX1_058) return new Sim_EX1_058();
-            if (id == CardDB.cardIDEnum.EX1_243) return new Sim_EX1_243();
-            if (id == CardDB.cardIDEnum.PRO_001c) return new Sim_PRO_001c();
-            if (id == CardDB.cardIDEnum.EX1_116t) return new Sim_EX1_116t();
-            //if (id == CardDB.cardIDEnum.NAX15_01e) return new Sim_NAX15_01e();
-            if (id == CardDB.cardIDEnum.FP1_029) return new Sim_FP1_029();
-            if (id == CardDB.cardIDEnum.CS2_089) return new Sim_CS2_089();
-            //if (id == CardDB.cardIDEnum.TU4c_001) return new Sim_TU4c_001();
-            if (id == CardDB.cardIDEnum.EX1_248) return new Sim_EX1_248();
-            //if (id == CardDB.cardIDEnum.NEW1_037e) return new Sim_NEW1_037e();
-            if (id == CardDB.cardIDEnum.CS2_122) return new Sim_CS2_122();
-            if (id == CardDB.cardIDEnum.EX1_393) return new Sim_EX1_393();
-            if (id == CardDB.cardIDEnum.CS2_232) return new Sim_CS2_232();
-            if (id == CardDB.cardIDEnum.EX1_165b) return new Sim_EX1_165b();
-            if (id == CardDB.cardIDEnum.NEW1_030) return new Sim_NEW1_030();
-            //if (id == CardDB.cardIDEnum.EX1_161o) return new Sim_EX1_161o();
-            //if (id == CardDB.cardIDEnum.EX1_093e) return new Sim_EX1_093e();
-            if (id == CardDB.cardIDEnum.CS2_150) return new Sim_CS2_150();
-            if (id == CardDB.cardIDEnum.CS2_152) return new Sim_CS2_152();
-            //if (id == CardDB.cardIDEnum.NAX9_03H) return new Sim_NAX9_03H();
-            if (id == CardDB.cardIDEnum.EX1_160t) return new Sim_EX1_160t();
-            if (id == CardDB.cardIDEnum.CS2_127) return new Sim_CS2_127();
-            //if (id == CardDB.cardIDEnum.CRED_03) return new Sim_CRED_03();
-            if (id == CardDB.cardIDEnum.DS1_188) return new Sim_DS1_188();
-            //if (id == CardDB.cardIDEnum.XXX_001) return new Sim_XXX_001();
+            switch (id)
+            {
+                case cardIDEnum.NEW1_007b:
+                    return new Sim_NEW1_007b();
+                case cardIDEnum.EX1_613:
+                    return new Sim_EX1_613();
+                case cardIDEnum.EX1_133:
+                    return new Sim_EX1_133();
+                case cardIDEnum.NEW1_018:
+                    return new Sim_NEW1_018();
+                case cardIDEnum.EX1_012:
+                    return new Sim_EX1_012();
+                case cardIDEnum.EX1_178a:
+                    return new Sim_EX1_178a();
+                case cardIDEnum.CS2_231:
+                    return new Sim_CS2_231();
+                case cardIDEnum.CS2_179:
+                    return new Sim_CS2_179();
+                case cardIDEnum.EX1_244:
+                    return new Sim_EX1_244();
+                case cardIDEnum.EX1_178b:
+                    return new Sim_EX1_178b();
+                case cardIDEnum.EX1_573b:
+                    return new Sim_EX1_573b();
+                case cardIDEnum.NEW1_007a:
+                    return new Sim_NEW1_007a();
+                case cardIDEnum.EX1_345t:
+                    return new Sim_EX1_345t();
+                case cardIDEnum.FP1_007t:
+                    return new Sim_FP1_007t();
+                case cardIDEnum.EX1_025:
+                    return new Sim_EX1_025();
+                case cardIDEnum.EX1_396:
+                    return new Sim_EX1_396();
+                case cardIDEnum.NEW1_017:
+                    return new Sim_NEW1_017();
+                case cardIDEnum.NEW1_008a:
+                    return new Sim_NEW1_008a();
+                case cardIDEnum.EX1_533:
+                    return new Sim_EX1_533();
+                case cardIDEnum.EX1_522:
+                    return new Sim_EX1_522();
+
+                // case CardDB.cardIDEnum.NAX11_04: return new Sim_NAX11_04();
+                case cardIDEnum.NEW1_026:
+                    return new Sim_NEW1_026();
+                case cardIDEnum.EX1_398:
+                    return new Sim_EX1_398();
+
+                // case CardDB.cardIDEnum.NAX4_04: return new Sim_NAX4_04();
+                case cardIDEnum.EX1_007:
+                    return new Sim_EX1_007();
+                case cardIDEnum.CS1_112:
+                    return new Sim_CS1_112();
+                case cardIDEnum.NEW1_036:
+                    return new Sim_NEW1_036();
+                case cardIDEnum.EX1_258:
+                    return new Sim_EX1_258();
+                case cardIDEnum.HERO_01:
+                    return new Sim_HERO_01();
+                case cardIDEnum.CS2_087:
+                    return new Sim_CS2_087();
+                case cardIDEnum.DREAM_05:
+                    return new Sim_DREAM_05();
+                case cardIDEnum.CS2_092:
+                    return new Sim_CS2_092();
+                case cardIDEnum.CS2_022:
+                    return new Sim_CS2_022();
+                case cardIDEnum.EX1_046:
+                    return new Sim_EX1_046();
+                case cardIDEnum.PRO_001b:
+                    return new Sim_PRO_001b();
+                case cardIDEnum.PRO_001a:
+                    return new Sim_PRO_001a();
+                case cardIDEnum.CS2_103:
+                    return new Sim_CS2_103();
+                case cardIDEnum.NEW1_041:
+                    return new Sim_NEW1_041();
+                case cardIDEnum.EX1_360:
+                    return new Sim_EX1_360();
+                case cardIDEnum.FP1_023:
+                    return new Sim_FP1_023();
+                case cardIDEnum.NEW1_038:
+                    return new Sim_NEW1_038();
+                case cardIDEnum.CS2_009:
+                    return new Sim_CS2_009();
+                case cardIDEnum.EX1_010:
+                    return new Sim_EX1_010();
+                case cardIDEnum.CS2_024:
+                    return new Sim_CS2_024();
+                case cardIDEnum.EX1_565:
+                    return new Sim_EX1_565();
+                case cardIDEnum.CS2_076:
+                    return new Sim_CS2_076();
+                case cardIDEnum.FP1_004:
+                    return new Sim_FP1_004();
+                case cardIDEnum.CS2_162:
+                    return new Sim_CS2_162();
+                case cardIDEnum.EX1_110t:
+                    return new Sim_EX1_110t();
+                case cardIDEnum.CS2_181:
+                    return new Sim_CS2_181();
+                case cardIDEnum.EX1_309:
+                    return new Sim_EX1_309();
+                case cardIDEnum.EX1_354:
+                    return new Sim_EX1_354();
+                case cardIDEnum.EX1_023:
+                    return new Sim_EX1_023();
+                case cardIDEnum.NEW1_034:
+                    return new Sim_NEW1_034();
+                case cardIDEnum.CS2_003:
+                    return new Sim_CS2_003();
+                case cardIDEnum.HERO_06:
+                    return new Sim_HERO_06();
+                case cardIDEnum.CS2_201:
+                    return new Sim_CS2_201();
+                case cardIDEnum.EX1_508:
+                    return new Sim_EX1_508();
+                case cardIDEnum.EX1_259:
+                    return new Sim_EX1_259();
+                case cardIDEnum.EX1_341:
+                    return new Sim_EX1_341();
+                case cardIDEnum.EX1_103:
+                    return new Sim_EX1_103();
+                case cardIDEnum.FP1_021:
+                    return new Sim_FP1_021();
+                case cardIDEnum.EX1_411:
+                    return new Sim_EX1_411();
+                case cardIDEnum.CS2_053:
+                    return new Sim_CS2_053();
+                case cardIDEnum.CS2_182:
+                    return new Sim_CS2_182();
+                case cardIDEnum.CS2_008:
+                    return new Sim_CS2_008();
+                case cardIDEnum.CS2_233:
+                    return new Sim_CS2_233();
+                case cardIDEnum.EX1_626:
+                    return new Sim_EX1_626();
+                case cardIDEnum.EX1_059:
+                    return new Sim_EX1_059();
+                case cardIDEnum.EX1_334:
+                    return new Sim_EX1_334();
+                case cardIDEnum.EX1_619:
+                    return new Sim_EX1_619();
+                case cardIDEnum.NEW1_032:
+                    return new Sim_NEW1_032();
+                case cardIDEnum.EX1_158t:
+                    return new Sim_EX1_158t();
+                case cardIDEnum.EX1_006:
+                    return new Sim_EX1_006();
+                case cardIDEnum.NEW1_031:
+                    return new Sim_NEW1_031();
+                case cardIDEnum.DREAM_04:
+                    return new Sim_DREAM_04();
+                case cardIDEnum.EX1_004:
+                    return new Sim_EX1_004();
+                case cardIDEnum.EX1_095:
+                    return new Sim_EX1_095();
+                case cardIDEnum.NEW1_007:
+                    return new Sim_NEW1_007();
+                case cardIDEnum.EX1_275:
+                    return new Sim_EX1_275();
+                case cardIDEnum.EX1_245:
+                    return new Sim_EX1_245();
+                case cardIDEnum.EX1_383:
+                    return new Sim_EX1_383();
+                case cardIDEnum.FP1_016:
+                    return new Sim_FP1_016();
+                case cardIDEnum.EX1_016t:
+                    return new Sim_EX1_016t();
+                case cardIDEnum.CS2_125:
+                    return new Sim_CS2_125();
+                case cardIDEnum.EX1_137:
+                    return new Sim_EX1_137();
+                case cardIDEnum.DS1_185:
+                    return new Sim_DS1_185();
+                case cardIDEnum.FP1_010:
+                    return new Sim_FP1_010();
+                case cardIDEnum.EX1_598:
+                    return new Sim_EX1_598();
+                case cardIDEnum.EX1_304:
+                    return new Sim_EX1_304();
+                case cardIDEnum.EX1_302:
+                    return new Sim_EX1_302();
+                case cardIDEnum.EX1_614t:
+                    return new Sim_EX1_614t();
+                case cardIDEnum.CS2_108:
+                    return new Sim_CS2_108();
+                case cardIDEnum.CS2_046:
+                    return new Sim_CS2_046();
+                case cardIDEnum.EX1_014t:
+                    return new Sim_EX1_014t();
+                case cardIDEnum.NEW1_005:
+                    return new Sim_NEW1_005();
+                case cardIDEnum.EX1_062:
+                    return new Sim_EX1_062();
+                case cardIDEnum.Mekka1:
+                    return new Sim_Mekka1();
+                case cardIDEnum.tt_010a:
+                    return new Sim_tt_010a();
+                case cardIDEnum.CS2_072:
+                    return new Sim_CS2_072();
+                case cardIDEnum.EX1_tk28:
+                    return new Sim_EX1_tk28();
+                case cardIDEnum.FP1_014:
+                    return new Sim_FP1_014();
+                case cardIDEnum.EX1_409t:
+                    return new Sim_EX1_409t();
+                case cardIDEnum.EX1_507:
+                    return new Sim_EX1_507();
+                case cardIDEnum.EX1_144:
+                    return new Sim_EX1_144();
+                case cardIDEnum.CS2_038:
+                    return new Sim_CS2_038();
+                case cardIDEnum.EX1_093:
+                    return new Sim_EX1_093();
+                case cardIDEnum.CS2_080:
+                    return new Sim_CS2_080();
+                case cardIDEnum.EX1_005:
+                    return new Sim_EX1_005();
+                case cardIDEnum.EX1_382:
+                    return new Sim_EX1_382();
+                case cardIDEnum.CS2_028:
+                    return new Sim_CS2_028();
+                case cardIDEnum.EX1_538:
+                    return new Sim_EX1_538();
+                case cardIDEnum.DREAM_02:
+                    return new Sim_DREAM_02();
+                case cardIDEnum.EX1_581:
+                    return new Sim_EX1_581();
+                case cardIDEnum.EX1_131t:
+                    return new Sim_EX1_131t();
+                case cardIDEnum.CS2_147:
+                    return new Sim_CS2_147();
+                case cardIDEnum.CS1_113:
+                    return new Sim_CS1_113();
+                case cardIDEnum.CS2_161:
+                    return new Sim_CS2_161();
+                case cardIDEnum.CS2_031:
+                    return new Sim_CS2_031();
+                case cardIDEnum.EX1_166b:
+                    return new Sim_EX1_166b();
+                case cardIDEnum.EX1_066:
+                    return new Sim_EX1_066();
+                case cardIDEnum.EX1_355:
+                    return new Sim_EX1_355();
+                case cardIDEnum.EX1_534:
+                    return new Sim_EX1_534();
+                case cardIDEnum.EX1_162:
+                    return new Sim_EX1_162();
+                case cardIDEnum.EX1_363:
+                    return new Sim_EX1_363();
+                case cardIDEnum.EX1_164a:
+                    return new Sim_EX1_164a();
+                case cardIDEnum.CS2_188:
+                    return new Sim_CS2_188();
+                case cardIDEnum.EX1_016:
+                    return new Sim_EX1_016();
+                case cardIDEnum.EX1_603:
+                    return new Sim_EX1_603();
+                case cardIDEnum.EX1_238:
+                    return new Sim_EX1_238();
+                case cardIDEnum.EX1_166:
+                    return new Sim_EX1_166();
+                case cardIDEnum.DS1h_292:
+                    return new Sim_DS1h_292();
+                case cardIDEnum.DS1_183:
+                    return new Sim_DS1_183();
+                case cardIDEnum.EX1_076:
+                    return new Sim_EX1_076();
+                case cardIDEnum.EX1_048:
+                    return new Sim_EX1_048();
+                case cardIDEnum.FP1_026:
+                    return new Sim_FP1_026();
+                case cardIDEnum.CS2_074:
+                    return new Sim_CS2_074();
+                case cardIDEnum.FP1_027:
+                    return new Sim_FP1_027();
+                case cardIDEnum.EX1_323w:
+                    return new Sim_EX1_323w();
+                case cardIDEnum.EX1_129:
+                    return new Sim_EX1_129();
+                case cardIDEnum.EX1_405:
+                    return new Sim_EX1_405();
+                case cardIDEnum.EX1_317:
+                    return new Sim_EX1_317();
+                case cardIDEnum.EX1_606:
+                    return new Sim_EX1_606();
+                case cardIDEnum.FP1_006:
+                    return new Sim_FP1_006();
+                case cardIDEnum.NEW1_008:
+                    return new Sim_NEW1_008();
+                case cardIDEnum.CS2_119:
+                    return new Sim_CS2_119();
+                case cardIDEnum.CS2_121:
+                    return new Sim_CS2_121();
+                case cardIDEnum.CS1h_001:
+                    return new Sim_CS1h_001();
+                case cardIDEnum.EX1_tk34:
+                    return new Sim_EX1_tk34();
+                case cardIDEnum.NEW1_020:
+                    return new Sim_NEW1_020();
+                case cardIDEnum.CS2_196:
+                    return new Sim_CS2_196();
+                case cardIDEnum.EX1_312:
+                    return new Sim_EX1_312();
+                case cardIDEnum.FP1_022:
+                    return new Sim_FP1_022();
+                case cardIDEnum.EX1_160b:
+                    return new Sim_EX1_160b();
+                case cardIDEnum.EX1_563:
+                    return new Sim_EX1_563();
+                case cardIDEnum.FP1_031:
+                    return new Sim_FP1_031();
+                case cardIDEnum.NEW1_029:
+                    return new Sim_NEW1_029();
+                case cardIDEnum.CS1_129:
+                    return new Sim_CS1_129();
+                case cardIDEnum.HERO_03:
+                    return new Sim_HERO_03();
+                case cardIDEnum.Mekka4t:
+                    return new Sim_Mekka4t();
+                case cardIDEnum.EX1_158:
+                    return new Sim_EX1_158();
+                case cardIDEnum.NEW1_025:
+                    return new Sim_NEW1_025();
+                case cardIDEnum.FP1_012t:
+                    return new Sim_FP1_012t();
+                case cardIDEnum.EX1_083:
+                    return new Sim_EX1_083();
+                case cardIDEnum.EX1_295:
+                    return new Sim_EX1_295();
+                case cardIDEnum.EX1_407:
+                    return new Sim_EX1_407();
+                case cardIDEnum.NEW1_004:
+                    return new Sim_NEW1_004();
+                case cardIDEnum.FP1_019:
+                    return new Sim_FP1_019();
+                case cardIDEnum.PRO_001at:
+                    return new Sim_PRO_001at();
+                case cardIDEnum.EX1_625t:
+                    return new Sim_EX1_625t();
+                case cardIDEnum.EX1_014:
+                    return new Sim_EX1_014();
+                case cardIDEnum.CS2_097:
+                    return new Sim_CS2_097();
+                case cardIDEnum.EX1_558:
+                    return new Sim_EX1_558();
+                case cardIDEnum.EX1_tk29:
+                    return new Sim_EX1_tk29();
+                case cardIDEnum.CS2_186:
+                    return new Sim_CS2_186();
+                case cardIDEnum.EX1_084:
+                    return new Sim_EX1_084();
+                case cardIDEnum.NEW1_012:
+                    return new Sim_NEW1_012();
+                case cardIDEnum.FP1_014t:
+                    return new Sim_FP1_014t();
+                case cardIDEnum.EX1_578:
+                    return new Sim_EX1_578();
+                case cardIDEnum.CS2_221:
+                    return new Sim_CS2_221();
+                case cardIDEnum.EX1_019:
+                    return new Sim_EX1_019();
+                case cardIDEnum.FP1_019t:
+                    return new Sim_FP1_019t();
+                case cardIDEnum.EX1_132:
+                    return new Sim_EX1_132();
+                case cardIDEnum.EX1_284:
+                    return new Sim_EX1_284();
+                case cardIDEnum.EX1_105:
+                    return new Sim_EX1_105();
+                case cardIDEnum.NEW1_011:
+                    return new Sim_NEW1_011();
+                case cardIDEnum.EX1_017:
+                    return new Sim_EX1_017();
+                case cardIDEnum.EX1_249:
+                    return new Sim_EX1_249();
+                case cardIDEnum.FP1_002t:
+                    return new Sim_FP1_002t();
+                case cardIDEnum.EX1_313:
+                    return new Sim_EX1_313();
+                case cardIDEnum.EX1_155b:
+                    return new Sim_EX1_155b();
+                case cardIDEnum.NEW1_033:
+                    return new Sim_NEW1_033();
+                case cardIDEnum.CS2_106:
+                    return new Sim_CS2_106();
+                case cardIDEnum.FP1_018:
+                    return new Sim_FP1_018();
+                case cardIDEnum.DS1_233:
+                    return new Sim_DS1_233();
+                case cardIDEnum.DS1_175:
+                    return new Sim_DS1_175();
+                case cardIDEnum.NEW1_024:
+                    return new Sim_NEW1_024();
+                case cardIDEnum.CS2_189:
+                    return new Sim_CS2_189();
+                case cardIDEnum.NEW1_037:
+                    return new Sim_NEW1_037();
+                case cardIDEnum.EX1_414:
+                    return new Sim_EX1_414();
+                case cardIDEnum.EX1_538t:
+                    return new Sim_EX1_538t();
+                case cardIDEnum.EX1_586:
+                    return new Sim_EX1_586();
+                case cardIDEnum.EX1_310:
+                    return new Sim_EX1_310();
+                case cardIDEnum.NEW1_010:
+                    return new Sim_NEW1_010();
+                case cardIDEnum.EX1_534t:
+                    return new Sim_EX1_534t();
+                case cardIDEnum.FP1_028:
+                    return new Sim_FP1_028();
+                case cardIDEnum.EX1_604:
+                    return new Sim_EX1_604();
+                case cardIDEnum.EX1_160:
+                    return new Sim_EX1_160();
+                case cardIDEnum.EX1_165t1:
+                    return new Sim_EX1_165t1();
+                case cardIDEnum.CS2_062:
+                    return new Sim_CS2_062();
+                case cardIDEnum.CS2_155:
+                    return new Sim_CS2_155();
+                case cardIDEnum.CS2_213:
+                    return new Sim_CS2_213();
+                case cardIDEnum.CS2_004:
+                    return new Sim_CS2_004();
+                case cardIDEnum.CS2_023:
+                    return new Sim_CS2_023();
+                case cardIDEnum.EX1_164:
+                    return new Sim_EX1_164();
+                case cardIDEnum.EX1_009:
+                    return new Sim_EX1_009();
+                case cardIDEnum.FP1_007:
+                    return new Sim_FP1_007();
+                case cardIDEnum.EX1_345:
+                    return new Sim_EX1_345();
+                case cardIDEnum.EX1_116:
+                    return new Sim_EX1_116();
+                case cardIDEnum.EX1_399:
+                    return new Sim_EX1_399();
+                case cardIDEnum.EX1_587:
+                    return new Sim_EX1_587();
+                case cardIDEnum.EX1_571:
+                    return new Sim_EX1_571();
+                case cardIDEnum.EX1_335:
+                    return new Sim_EX1_335();
+                case cardIDEnum.HERO_08:
+                    return new Sim_HERO_08();
+                case cardIDEnum.EX1_166a:
+                    return new Sim_EX1_166a();
+                case cardIDEnum.EX1_finkle:
+                    return new Sim_EX1_finkle();
+                case cardIDEnum.EX1_164b:
+                    return new Sim_EX1_164b();
+                case cardIDEnum.EX1_283:
+                    return new Sim_EX1_283();
+                case cardIDEnum.EX1_339:
+                    return new Sim_EX1_339();
+                case cardIDEnum.EX1_531:
+                    return new Sim_EX1_531();
+                case cardIDEnum.EX1_134:
+                    return new Sim_EX1_134();
+                case cardIDEnum.EX1_350:
+                    return new Sim_EX1_350();
+                case cardIDEnum.EX1_308:
+                    return new Sim_EX1_308();
+                case cardIDEnum.CS2_197:
+                    return new Sim_CS2_197();
+                case cardIDEnum.skele21:
+                    return new Sim_skele21();
+                case cardIDEnum.FP1_013:
+                    return new Sim_FP1_013();
+                case cardIDEnum.NEW1_006:
+                    return new Sim_NEW1_006();
+                case cardIDEnum.EX1_509:
+                    return new Sim_EX1_509();
+                case cardIDEnum.EX1_612:
+                    return new Sim_EX1_612();
+                case cardIDEnum.EX1_021:
+                    return new Sim_EX1_021();
+                case cardIDEnum.CS2_226:
+                    return new Sim_CS2_226();
+                case cardIDEnum.EX1_608:
+                    return new Sim_EX1_608();
+                case cardIDEnum.EX1_624:
+                    return new Sim_EX1_624();
+                case cardIDEnum.EX1_616:
+                    return new Sim_EX1_616();
+                case cardIDEnum.EX1_008:
+                    return new Sim_EX1_008();
+                case cardIDEnum.PlaceholderCard:
+                    return new Sim_PlaceholderCard();
+                case cardIDEnum.EX1_045:
+                    return new Sim_EX1_045();
+                case cardIDEnum.EX1_015:
+                    return new Sim_EX1_015();
+                case cardIDEnum.CS2_171:
+                    return new Sim_CS2_171();
+                case cardIDEnum.CS2_041:
+                    return new Sim_CS2_041();
+                case cardIDEnum.EX1_128:
+                    return new Sim_EX1_128();
+                case cardIDEnum.CS2_112:
+                    return new Sim_CS2_112();
+                case cardIDEnum.HERO_07:
+                    return new Sim_HERO_07();
+                case cardIDEnum.EX1_412:
+                    return new Sim_EX1_412();
+                case cardIDEnum.CS2_117:
+                    return new Sim_CS2_117();
+                case cardIDEnum.EX1_562:
+                    return new Sim_EX1_562();
+                case cardIDEnum.EX1_055:
+                    return new Sim_EX1_055();
+                case cardIDEnum.FP1_012:
+                    return new Sim_FP1_012();
+                case cardIDEnum.EX1_317t:
+                    return new Sim_EX1_317t();
+                case cardIDEnum.EX1_278:
+                    return new Sim_EX1_278();
+                case cardIDEnum.CS2_tk1:
+                    return new Sim_CS2_tk1();
+                case cardIDEnum.EX1_590:
+                    return new Sim_EX1_590();
+                case cardIDEnum.CS1_130:
+                    return new Sim_CS1_130();
+                case cardIDEnum.NEW1_008b:
+                    return new Sim_NEW1_008b();
+                case cardIDEnum.EX1_365:
+                    return new Sim_EX1_365();
+                case cardIDEnum.CS2_141:
+                    return new Sim_CS2_141();
+                case cardIDEnum.PRO_001:
+                    return new Sim_PRO_001();
+                case cardIDEnum.CS2_173:
+                    return new Sim_CS2_173();
+                case cardIDEnum.CS2_017:
+                    return new Sim_CS2_017();
+                case cardIDEnum.EX1_392:
+                    return new Sim_EX1_392();
+                case cardIDEnum.EX1_593:
+                    return new Sim_EX1_593();
+                case cardIDEnum.EX1_049:
+                    return new Sim_EX1_049();
+                case cardIDEnum.EX1_002:
+                    return new Sim_EX1_002();
+                case cardIDEnum.CS2_056:
+                    return new Sim_CS2_056();
+                case cardIDEnum.EX1_596:
+                    return new Sim_EX1_596();
+                case cardIDEnum.EX1_136:
+                    return new Sim_EX1_136();
+                case cardIDEnum.EX1_323:
+                    return new Sim_EX1_323();
+                case cardIDEnum.CS2_073:
+                    return new Sim_CS2_073();
+                case cardIDEnum.EX1_001:
+                    return new Sim_EX1_001();
+                case cardIDEnum.EX1_044:
+                    return new Sim_EX1_044();
+                case cardIDEnum.Mekka4:
+                    return new Sim_Mekka4();
+                case cardIDEnum.CS2_142:
+                    return new Sim_CS2_142();
+                case cardIDEnum.EX1_573:
+                    return new Sim_EX1_573();
+                case cardIDEnum.FP1_009:
+                    return new Sim_FP1_009();
+                case cardIDEnum.CS2_050:
+                    return new Sim_CS2_050();
+                case cardIDEnum.EX1_390:
+                    return new Sim_EX1_390();
+                case cardIDEnum.EX1_610:
+                    return new Sim_EX1_610();
+                case cardIDEnum.hexfrog:
+                    return new Sim_hexfrog();
+                case cardIDEnum.CS2_082:
+                    return new Sim_CS2_082();
+                case cardIDEnum.NEW1_040:
+                    return new Sim_NEW1_040();
+                case cardIDEnum.DREAM_01:
+                    return new Sim_DREAM_01();
+                case cardIDEnum.EX1_595:
+                    return new Sim_EX1_595();
+                case cardIDEnum.CS2_013:
+                    return new Sim_CS2_013();
+                case cardIDEnum.CS2_077:
+                    return new Sim_CS2_077();
+                case cardIDEnum.NEW1_014:
+                    return new Sim_NEW1_014();
+                case cardIDEnum.GAME_002:
+                    return new Sim_GAME_002();
+                case cardIDEnum.EX1_165:
+                    return new Sim_EX1_165();
+                case cardIDEnum.CS2_013t:
+                    return new Sim_CS2_013t();
+                case cardIDEnum.EX1_tk11:
+                    return new Sim_EX1_tk11();
+                case cardIDEnum.EX1_591:
+                    return new Sim_EX1_591();
+                case cardIDEnum.EX1_549:
+                    return new Sim_EX1_549();
+                case cardIDEnum.CS2_045:
+                    return new Sim_CS2_045();
+                case cardIDEnum.CS2_237:
+                    return new Sim_CS2_237();
+                case cardIDEnum.CS2_027:
+                    return new Sim_CS2_027();
+                case cardIDEnum.CS2_101t:
+                    return new Sim_CS2_101t();
+                case cardIDEnum.CS2_063:
+                    return new Sim_CS2_063();
+                case cardIDEnum.EX1_145:
+                    return new Sim_EX1_145();
+                case cardIDEnum.EX1_110:
+                    return new Sim_EX1_110();
+                case cardIDEnum.EX1_408:
+                    return new Sim_EX1_408();
+                case cardIDEnum.EX1_544:
+                    return new Sim_EX1_544();
+                case cardIDEnum.CS2_151:
+                    return new Sim_CS2_151();
+                case cardIDEnum.CS2_088:
+                    return new Sim_CS2_088();
+                case cardIDEnum.EX1_057:
+                    return new Sim_EX1_057();
+                case cardIDEnum.FP1_020:
+                    return new Sim_FP1_020();
+                case cardIDEnum.CS2_169:
+                    return new Sim_CS2_169();
+                case cardIDEnum.EX1_573t:
+                    return new Sim_EX1_573t();
+                case cardIDEnum.EX1_323h:
+                    return new Sim_EX1_323h();
+                case cardIDEnum.EX1_tk9:
+                    return new Sim_EX1_tk9();
+                case cardIDEnum.CS2_037:
+                    return new Sim_CS2_037();
+                case cardIDEnum.CS2_007:
+                    return new Sim_CS2_007();
+                case cardIDEnum.CS2_227:
+                    return new Sim_CS2_227();
+                case cardIDEnum.NEW1_003:
+                    return new Sim_NEW1_003();
+                case cardIDEnum.GAME_006:
+                    return new Sim_GAME_006();
+                case cardIDEnum.EX1_320:
+                    return new Sim_EX1_320();
+                case cardIDEnum.EX1_097:
+                    return new Sim_EX1_097();
+                case cardIDEnum.tt_004:
+                    return new Sim_tt_004();
+                case cardIDEnum.EX1_096:
+                    return new Sim_EX1_096();
+                case cardIDEnum.EX1_126:
+                    return new Sim_EX1_126();
+                case cardIDEnum.EX1_577:
+                    return new Sim_EX1_577();
+                case cardIDEnum.EX1_319:
+                    return new Sim_EX1_319();
+                case cardIDEnum.EX1_611:
+                    return new Sim_EX1_611();
+                case cardIDEnum.CS2_146:
+                    return new Sim_CS2_146();
+                case cardIDEnum.EX1_154b:
+                    return new Sim_EX1_154b();
+                case cardIDEnum.skele11:
+                    return new Sim_skele11();
+                case cardIDEnum.EX1_165t2:
+                    return new Sim_EX1_165t2();
+                case cardIDEnum.CS2_172:
+                    return new Sim_CS2_172();
+                case cardIDEnum.CS2_114:
+                    return new Sim_CS2_114();
+                case cardIDEnum.CS1_069:
+                    return new Sim_CS1_069();
+                case cardIDEnum.EX1_173:
+                    return new Sim_EX1_173();
+                case cardIDEnum.CS1_042:
+                    return new Sim_CS1_042();
+                case cardIDEnum.EX1_506a:
+                    return new Sim_EX1_506a();
+                case cardIDEnum.EX1_298:
+                    return new Sim_EX1_298();
+                case cardIDEnum.CS2_104:
+                    return new Sim_CS2_104();
+                case cardIDEnum.FP1_001:
+                    return new Sim_FP1_001();
+                case cardIDEnum.HERO_02:
+                    return new Sim_HERO_02();
+                case cardIDEnum.CS2_051:
+                    return new Sim_CS2_051();
+                case cardIDEnum.NEW1_016:
+                    return new Sim_NEW1_016();
+                case cardIDEnum.EX1_033:
+                    return new Sim_EX1_033();
+                case cardIDEnum.EX1_028:
+                    return new Sim_EX1_028();
+                case cardIDEnum.EX1_621:
+                    return new Sim_EX1_621();
+                case cardIDEnum.EX1_554:
+                    return new Sim_EX1_554();
+                case cardIDEnum.EX1_091:
+                    return new Sim_EX1_091();
+                case cardIDEnum.FP1_017:
+                    return new Sim_FP1_017();
+                case cardIDEnum.EX1_409:
+                    return new Sim_EX1_409();
+                case cardIDEnum.EX1_410:
+                    return new Sim_EX1_410();
+                case cardIDEnum.CS2_039:
+                    return new Sim_CS2_039();
+                case cardIDEnum.EX1_557:
+                    return new Sim_EX1_557();
+                case cardIDEnum.DS1_070:
+                    return new Sim_DS1_070();
+                case cardIDEnum.CS2_033:
+                    return new Sim_CS2_033();
+                case cardIDEnum.EX1_536:
+                    return new Sim_EX1_536();
+                case cardIDEnum.EX1_559:
+                    return new Sim_EX1_559();
+                case cardIDEnum.CS2_052:
+                    return new Sim_CS2_052();
+                case cardIDEnum.EX1_539:
+                    return new Sim_EX1_539();
+                case cardIDEnum.EX1_575:
+                    return new Sim_EX1_575();
+                case cardIDEnum.CS2_083b:
+                    return new Sim_CS2_083b();
+                case cardIDEnum.CS2_061:
+                    return new Sim_CS2_061();
+                case cardIDEnum.NEW1_021:
+                    return new Sim_NEW1_021();
+                case cardIDEnum.DS1_055:
+                    return new Sim_DS1_055();
+                case cardIDEnum.EX1_625:
+                    return new Sim_EX1_625();
+                case cardIDEnum.CS2_026:
+                    return new Sim_CS2_026();
+                case cardIDEnum.EX1_294:
+                    return new Sim_EX1_294();
+                case cardIDEnum.EX1_287:
+                    return new Sim_EX1_287();
+                case cardIDEnum.EX1_625t2:
+                    return new Sim_EX1_625t2();
+                case cardIDEnum.CS2_118:
+                    return new Sim_CS2_118();
+                case cardIDEnum.CS2_124:
+                    return new Sim_CS2_124();
+                case cardIDEnum.Mekka3:
+                    return new Sim_Mekka3();
+                case cardIDEnum.EX1_112:
+                    return new Sim_EX1_112();
+                case cardIDEnum.FP1_011:
+                    return new Sim_FP1_011();
+                case cardIDEnum.HERO_04:
+                    return new Sim_HERO_04();
+                case cardIDEnum.EX1_607:
+                    return new Sim_EX1_607();
+                case cardIDEnum.DREAM_03:
+                    return new Sim_DREAM_03();
+                case cardIDEnum.FP1_003:
+                    return new Sim_FP1_003();
+                case cardIDEnum.CS2_105:
+                    return new Sim_CS2_105();
+                case cardIDEnum.FP1_002:
+                    return new Sim_FP1_002();
+                case cardIDEnum.EX1_567:
+                    return new Sim_EX1_567();
+                case cardIDEnum.FP1_008:
+                    return new Sim_FP1_008();
+                case cardIDEnum.DS1_184:
+                    return new Sim_DS1_184();
+                case cardIDEnum.CS2_029:
+                    return new Sim_CS2_029();
+                case cardIDEnum.GAME_005:
+                    return new Sim_GAME_005();
+                case cardIDEnum.CS2_187:
+                    return new Sim_CS2_187();
+                case cardIDEnum.EX1_020:
+                    return new Sim_EX1_020();
+                case cardIDEnum.EX1_011:
+                    return new Sim_EX1_011();
+                case cardIDEnum.CS2_057:
+                    return new Sim_CS2_057();
+                case cardIDEnum.EX1_274:
+                    return new Sim_EX1_274();
+                case cardIDEnum.EX1_306:
+                    return new Sim_EX1_306();
+                case cardIDEnum.EX1_170:
+                    return new Sim_EX1_170();
+                case cardIDEnum.EX1_617:
+                    return new Sim_EX1_617();
+                case cardIDEnum.CS2_101:
+                    return new Sim_CS2_101();
+                case cardIDEnum.FP1_015:
+                    return new Sim_FP1_015();
+                case cardIDEnum.CS2_005:
+                    return new Sim_CS2_005();
+                case cardIDEnum.EX1_537:
+                    return new Sim_EX1_537();
+                case cardIDEnum.EX1_384:
+                    return new Sim_EX1_384();
+                case cardIDEnum.EX1_362:
+                    return new Sim_EX1_362();
+                case cardIDEnum.EX1_301:
+                    return new Sim_EX1_301();
+                case cardIDEnum.CS2_235:
+                    return new Sim_CS2_235();
+                case cardIDEnum.EX1_029:
+                    return new Sim_EX1_029();
+                case cardIDEnum.CS2_042:
+                    return new Sim_CS2_042();
+                case cardIDEnum.EX1_155a:
+                    return new Sim_EX1_155a();
+                case cardIDEnum.CS2_102:
+                    return new Sim_CS2_102();
+                case cardIDEnum.EX1_609:
+                    return new Sim_EX1_609();
+                case cardIDEnum.NEW1_027:
+                    return new Sim_NEW1_027();
+                case cardIDEnum.EX1_165a:
+                    return new Sim_EX1_165a();
+                case cardIDEnum.EX1_570:
+                    return new Sim_EX1_570();
+                case cardIDEnum.EX1_131:
+                    return new Sim_EX1_131();
+                case cardIDEnum.EX1_556:
+                    return new Sim_EX1_556();
+                case cardIDEnum.EX1_543:
+                    return new Sim_EX1_543();
+                case cardIDEnum.NEW1_009:
+                    return new Sim_NEW1_009();
+                case cardIDEnum.EX1_100:
+                    return new Sim_EX1_100();
+                case cardIDEnum.EX1_573a:
+                    return new Sim_EX1_573a();
+                case cardIDEnum.CS2_084:
+                    return new Sim_CS2_084();
+                case cardIDEnum.EX1_582:
+                    return new Sim_EX1_582();
+                case cardIDEnum.EX1_043:
+                    return new Sim_EX1_043();
+                case cardIDEnum.EX1_050:
+                    return new Sim_EX1_050();
+                case cardIDEnum.FP1_005:
+                    return new Sim_FP1_005();
+                case cardIDEnum.EX1_620:
+                    return new Sim_EX1_620();
+                case cardIDEnum.EX1_303:
+                    return new Sim_EX1_303();
+                case cardIDEnum.HERO_09:
+                    return new Sim_HERO_09();
+                case cardIDEnum.EX1_067:
+                    return new Sim_EX1_067();
+                case cardIDEnum.EX1_277:
+                    return new Sim_EX1_277();
+                case cardIDEnum.Mekka2:
+                    return new Sim_Mekka2();
+                case cardIDEnum.FP1_024:
+                    return new Sim_FP1_024();
+                case cardIDEnum.FP1_030:
+                    return new Sim_FP1_030();
+                case cardIDEnum.EX1_178:
+                    return new Sim_EX1_178();
+                case cardIDEnum.CS2_222:
+                    return new Sim_CS2_222();
+                case cardIDEnum.EX1_160a:
+                    return new Sim_EX1_160a();
+                case cardIDEnum.CS2_012:
+                    return new Sim_CS2_012();
+                case cardIDEnum.EX1_246:
+                    return new Sim_EX1_246();
+                case cardIDEnum.EX1_572:
+                    return new Sim_EX1_572();
+                case cardIDEnum.EX1_089:
+                    return new Sim_EX1_089();
+                case cardIDEnum.CS2_059:
+                    return new Sim_CS2_059();
+                case cardIDEnum.EX1_279:
+                    return new Sim_EX1_279();
+                case cardIDEnum.CS2_168:
+                    return new Sim_CS2_168();
+                case cardIDEnum.tt_010:
+                    return new Sim_tt_010();
+                case cardIDEnum.NEW1_023:
+                    return new Sim_NEW1_023();
+                case cardIDEnum.CS2_075:
+                    return new Sim_CS2_075();
+                case cardIDEnum.EX1_316:
+                    return new Sim_EX1_316();
+                case cardIDEnum.CS2_025:
+                    return new Sim_CS2_025();
+                case cardIDEnum.CS2_234:
+                    return new Sim_CS2_234();
+                case cardIDEnum.EX1_130:
+                    return new Sim_EX1_130();
+                case cardIDEnum.CS2_064:
+                    return new Sim_CS2_064();
+                case cardIDEnum.EX1_161:
+                    return new Sim_EX1_161();
+                case cardIDEnum.CS2_049:
+                    return new Sim_CS2_049();
+                case cardIDEnum.EX1_154:
+                    return new Sim_EX1_154();
+                case cardIDEnum.EX1_080:
+                    return new Sim_EX1_080();
+                case cardIDEnum.NEW1_022:
+                    return new Sim_NEW1_022();
+                case cardIDEnum.EX1_251:
+                    return new Sim_EX1_251();
+                case cardIDEnum.FP1_025:
+                    return new Sim_FP1_025();
+                case cardIDEnum.EX1_371:
+                    return new Sim_EX1_371();
+                case cardIDEnum.CS2_mirror:
+                    return new Sim_CS2_mirror();
+                case cardIDEnum.EX1_594:
+                    return new Sim_EX1_594();
+                case cardIDEnum.EX1_560:
+                    return new Sim_EX1_560();
+                case cardIDEnum.CS2_236:
+                    return new Sim_CS2_236();
+                case cardIDEnum.EX1_402:
+                    return new Sim_EX1_402();
+                case cardIDEnum.EX1_506:
+                    return new Sim_EX1_506();
+                case cardIDEnum.DS1_178:
+                    return new Sim_DS1_178();
+                case cardIDEnum.EX1_315:
+                    return new Sim_EX1_315();
+                case cardIDEnum.CS2_094:
+                    return new Sim_CS2_094();
+                case cardIDEnum.NEW1_040t:
+                    return new Sim_NEW1_040t();
+                case cardIDEnum.CS2_131:
+                    return new Sim_CS2_131();
+                case cardIDEnum.EX1_082:
+                    return new Sim_EX1_082();
+                case cardIDEnum.CS2_093:
+                    return new Sim_CS2_093();
+                case cardIDEnum.CS2_boar:
+                    return new Sim_CS2_boar();
+                case cardIDEnum.NEW1_019:
+                    return new Sim_NEW1_019();
+                case cardIDEnum.EX1_289:
+                    return new Sim_EX1_289();
+                case cardIDEnum.EX1_025t:
+                    return new Sim_EX1_025t();
+                case cardIDEnum.EX1_398t:
+                    return new Sim_EX1_398t();
+                case cardIDEnum.CS2_091:
+                    return new Sim_CS2_091();
+                case cardIDEnum.EX1_241:
+                    return new Sim_EX1_241();
+                case cardIDEnum.EX1_085:
+                    return new Sim_EX1_085();
+                case cardIDEnum.CS2_200:
+                    return new Sim_CS2_200();
+                case cardIDEnum.CS2_034:
+                    return new Sim_CS2_034();
+                case cardIDEnum.EX1_583:
+                    return new Sim_EX1_583();
+                case cardIDEnum.EX1_584:
+                    return new Sim_EX1_584();
+                case cardIDEnum.EX1_155:
+                    return new Sim_EX1_155();
+                case cardIDEnum.EX1_622:
+                    return new Sim_EX1_622();
+                case cardIDEnum.CS2_203:
+                    return new Sim_CS2_203();
+                case cardIDEnum.EX1_124:
+                    return new Sim_EX1_124();
+                case cardIDEnum.EX1_379:
+                    return new Sim_EX1_379();
+                case cardIDEnum.EX1_032:
+                    return new Sim_EX1_032();
+                case cardIDEnum.EX1_391:
+                    return new Sim_EX1_391();
+                case cardIDEnum.EX1_366:
+                    return new Sim_EX1_366();
+                case cardIDEnum.EX1_400:
+                    return new Sim_EX1_400();
+                case cardIDEnum.EX1_614:
+                    return new Sim_EX1_614();
+                case cardIDEnum.EX1_561:
+                    return new Sim_EX1_561();
+                case cardIDEnum.EX1_332:
+                    return new Sim_EX1_332();
+                case cardIDEnum.HERO_05:
+                    return new Sim_HERO_05();
+                case cardIDEnum.CS2_065:
+                    return new Sim_CS2_065();
+                case cardIDEnum.ds1_whelptoken:
+                    return new Sim_ds1_whelptoken();
+                case cardIDEnum.CS2_032:
+                    return new Sim_CS2_032();
+                case cardIDEnum.CS2_120:
+                    return new Sim_CS2_120();
+                case cardIDEnum.EX1_247:
+                    return new Sim_EX1_247();
+                case cardIDEnum.EX1_154a:
+                    return new Sim_EX1_154a();
+                case cardIDEnum.EX1_554t:
+                    return new Sim_EX1_554t();
+                case cardIDEnum.NEW1_026t:
+                    return new Sim_NEW1_026t();
+                case cardIDEnum.EX1_623:
+                    return new Sim_EX1_623();
+                case cardIDEnum.EX1_383t:
+                    return new Sim_EX1_383t();
+                case cardIDEnum.EX1_597:
+                    return new Sim_EX1_597();
+                case cardIDEnum.EX1_130a:
+                    return new Sim_EX1_130a();
+                case cardIDEnum.CS2_011:
+                    return new Sim_CS2_011();
+                case cardIDEnum.EX1_169:
+                    return new Sim_EX1_169();
+                case cardIDEnum.EX1_tk33:
+                    return new Sim_EX1_tk33();
+                case cardIDEnum.EX1_250:
+                    return new Sim_EX1_250();
+                case cardIDEnum.EX1_564:
+                    return new Sim_EX1_564();
+                case cardIDEnum.EX1_349:
+                    return new Sim_EX1_349();
+                case cardIDEnum.EX1_102:
+                    return new Sim_EX1_102();
+                case cardIDEnum.EX1_058:
+                    return new Sim_EX1_058();
+                case cardIDEnum.EX1_243:
+                    return new Sim_EX1_243();
+                case cardIDEnum.PRO_001c:
+                    return new Sim_PRO_001c();
+                case cardIDEnum.EX1_116t:
+                    return new Sim_EX1_116t();
+                case cardIDEnum.FP1_029:
+                    return new Sim_FP1_029();
+                case cardIDEnum.CS2_089:
+                    return new Sim_CS2_089();
+                case cardIDEnum.EX1_248:
+                    return new Sim_EX1_248();
+                case cardIDEnum.CS2_122:
+                    return new Sim_CS2_122();
+                case cardIDEnum.EX1_393:
+                    return new Sim_EX1_393();
+                case cardIDEnum.CS2_232:
+                    return new Sim_CS2_232();
+                case cardIDEnum.EX1_165b:
+                    return new Sim_EX1_165b();
+                case cardIDEnum.NEW1_030:
+                    return new Sim_NEW1_030();
+                case cardIDEnum.CS2_150:
+                    return new Sim_CS2_150();
+                case cardIDEnum.CS2_152:
+                    return new Sim_CS2_152();
+                case cardIDEnum.EX1_160t:
+                    return new Sim_EX1_160t();
+                case cardIDEnum.CS2_127:
+                    return new Sim_CS2_127();
+                case cardIDEnum.DS1_188:
+                    return new Sim_DS1_188();
+            }
+
             return new SimTemplate();
         }
 
@@ -19645,6 +22031,8 @@ namespace SilverfishRush
             int ntssd = 6;
             int ntssm = 50;
 
+            int alpha = 50;
+
             bool dosecrets = false;
 
             Hrtprozis.Instance.clearAll();
@@ -19746,6 +22134,12 @@ namespace SilverfishRush
                     if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
 
                     if (s.Contains(" secret")) dosecrets = true;
+
+                    if (s.Contains(" weight "))
+                    {
+                        string alphaval = s.Split(new string[] { " weight " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        alpha = Convert.ToInt32(alphaval.Split(' ')[0]);
+                    }
 
                     continue;
                 }
@@ -19939,7 +22333,7 @@ namespace SilverfishRush
 
                 if (readstate == 1 && counter == 3) // ability + abilityready
                 {
-                    abilityReady = (s.Split(' ')[1] == "True") ? true : false;
+                    abilityReady = (s.Split(' ')[1] == "True");
                     heroability = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(s.Split(' ')[2]));
                 }
 
@@ -20001,63 +22395,28 @@ namespace SilverfishRush
                         int attack = Convert.ToInt32(s.Split(new string[] { " A:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
                         int hp = Convert.ToInt32(s.Split(new string[] { " H:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
                         int maxhp = Convert.ToInt32(s.Split(new string[] { " mH:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
-                        bool ready = s.Split(new string[] { " rdy:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0] == "True" ? true : false;
+                        bool ready = s.Split(new string[] { " rdy:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0] == "True";
                         int natt = 0;
                         if (s.Contains(" natt:")) natt = Convert.ToInt32(s.Split(new string[] { " natt:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
 
-                        //optional params (bools)
-
-                        bool ex = false;//exhausted
-                        if (s.Contains(" ex")) ex = true;
-
-                        bool taunt = false;
-                        if (s.Contains(" tnt")) taunt = true;
-
-                        bool frzn = false;
-                        if (s.Contains(" frz")) frzn = true;
-
-                        bool silenced = false;
-                        if (s.Contains(" silenced")) silenced = true;
-
-                        bool divshield = false;
-                        if (s.Contains(" divshield")) divshield = true;
-
-                        bool ptt = false;//played this turn
-                        if (s.Contains(" ptt")) ptt = true;
-
-                        bool wndfry = false;//windfurry
-                        if (s.Contains(" wndfr")) wndfry = true;
-
-                        bool stl = false;//stealth
-                        if (s.Contains(" stlth")) stl = true;
-
-                        bool pois = false;//poision
-                        if (s.Contains(" poi")) pois = true;
-
-                        bool immn = false;//immune
-                        if (s.Contains(" imm")) immn = true;
-
-                        bool cncdl = false;//concedal buffed
-                        if (s.Contains(" cncdl")) cncdl = true;
-
-                        bool destroyOnOwnTurnStart = false;//destroyOnOwnTurnStart
-                        if (s.Contains(" dstrOwnTrnStrt")) destroyOnOwnTurnStart = true;
-
-                        bool destroyOnOwnTurnEnd = false;//destroyOnOwnTurnEnd
-                        if (s.Contains(" dstrOwnTrnnd")) destroyOnOwnTurnEnd = true;
-
-                        bool destroyOnEnemyTurnStart = false;//destroyOnEnemyTurnStart
-                        if (s.Contains(" dstrEnmTrnStrt")) destroyOnEnemyTurnStart = true;
-
-                        bool destroyOnEnemyTurnEnd = false;//destroyOnEnemyTurnEnd
-                        if (s.Contains(" dstrEnmTrnnd")) destroyOnEnemyTurnEnd = true;
-
-                        bool shadowmadnessed = false;//shadowmadnessed
-                        if (s.Contains(" shdwmdnssd")) shadowmadnessed = true;
-
-                        bool cntlower = false;//shadowmadnessed
-                        if (s.Contains(" cantLowerHpBelowOne")) cntlower = true;
-
+                        // optional params (bools)
+                        bool ex = s.Contains(" ex");
+                        bool taunt = s.Contains(" tnt");
+                        bool frzn = s.Contains(" frz");
+                        bool silenced = s.Contains(" silenced");
+                        bool divshield = s.Contains(" divshield");
+                        bool ptt = s.Contains(" ptt");
+                        bool wndfry = s.Contains(" wndfr");
+                        bool stl = s.Contains(" stlth");
+                        bool pois = s.Contains(" poi");
+                        bool immn = s.Contains(" imm");
+                        bool cncdl = s.Contains(" cncdl");
+                        bool destroyOnOwnTurnStart = s.Contains(" dstrOwnTrnStrt");
+                        bool destroyOnOwnTurnEnd = s.Contains(" dstrOwnTrnnd");
+                        bool destroyOnEnemyTurnStart = s.Contains(" dstrEnmTrnStrt");
+                        bool destroyOnEnemyTurnEnd = s.Contains(" dstrEnmTrnnd");
+                        bool shadowmadnessed = s.Contains(" shdwmdnssd");
+                        bool cntlower = s.Contains(" cantLowerHpBelowOne");
                         //optional params (ints)
 
 
@@ -20152,59 +22511,24 @@ namespace SilverfishRush
                         int natt = 0;
                         //if (s.Contains(" natt:")) natt = Convert.ToInt32(s.Split(new string[] { " natt:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
 
-                        //optional params (bools)
-
-                        bool ex = false;//exhausted
-                        if (s.Contains(" ex")) ex = true;
-
-                        bool taunt = false;
-                        if (s.Contains(" tnt")) taunt = true;
-
-                        bool frzn = false;
-                        if (s.Contains(" frz")) frzn = true;
-
-                        bool silenced = false;
-                        if (s.Contains(" silenced")) silenced = true;
-
-                        bool divshield = false;
-                        if (s.Contains(" divshield")) divshield = true;
-
-                        bool ptt = false;//played this turn
-                        if (s.Contains(" ptt")) ptt = true;
-
-                        bool wndfry = false;//windfurry
-                        if (s.Contains(" wndfr")) wndfry = true;
-
-                        bool stl = false;//stealth
-                        if (s.Contains(" stlth")) stl = true;
-
-                        bool pois = false;//poision
-                        if (s.Contains(" poi")) pois = true;
-
-                        bool immn = false;//immune
-                        if (s.Contains(" imm")) immn = true;
-
-                        bool cncdl = false;//concedal buffed
-                        if (s.Contains(" cncdl")) cncdl = true;
-
-                        bool destroyOnOwnTurnStart = false;//destroyOnOwnTurnStart
-                        if (s.Contains(" dstrOwnTrnStrt")) destroyOnOwnTurnStart = true;
-
-                        bool destroyOnOwnTurnEnd = false;//destroyOnOwnTurnEnd
-                        if (s.Contains(" dstrOwnTrnnd")) destroyOnOwnTurnEnd = true;
-
-                        bool destroyOnEnemyTurnStart = false;//destroyOnEnemyTurnStart
-                        if (s.Contains(" dstrEnmTrnStrt")) destroyOnEnemyTurnStart = true;
-
-                        bool destroyOnEnemyTurnEnd = false;//destroyOnEnemyTurnEnd
-                        if (s.Contains(" dstrEnmTrnnd")) destroyOnEnemyTurnEnd = true;
-
-                        bool shadowmadnessed = false;//shadowmadnessed
-                        if (s.Contains(" shdwmdnssd")) shadowmadnessed = true;
-
-                        bool cntlower = false;//shadowmadnessed
-                        if (s.Contains(" cantLowerHpBelowOne")) cntlower = true;
-
+                        // optional params (bools)
+                        bool ex = s.Contains(" ex");
+                        bool taunt = s.Contains(" tnt");
+                        bool frzn = s.Contains(" frz");
+                        bool silenced = s.Contains(" silenced");
+                        bool divshield = s.Contains(" divshield");
+                        bool ptt = s.Contains(" ptt");
+                        bool wndfry = s.Contains(" wndfr");
+                        bool stl = s.Contains(" stlth");
+                        bool pois = s.Contains(" poi");
+                        bool immn = s.Contains(" imm");
+                        bool cncdl = s.Contains(" cncdl");
+                        bool destroyOnOwnTurnStart = s.Contains(" dstrOwnTrnStrt");
+                        bool destroyOnOwnTurnEnd = s.Contains(" dstrOwnTrnnd");
+                        bool destroyOnEnemyTurnStart = s.Contains(" dstrEnmTrnStrt");
+                        bool destroyOnEnemyTurnEnd = s.Contains(" dstrEnmTrnnd");
+                        bool shadowmadnessed = s.Contains(" shdwmdnssd");
+                        bool cntlower = s.Contains(" cantLowerHpBelowOne");
 
                         //optional params (ints)
 
@@ -20443,6 +22767,7 @@ namespace SilverfishRush
 
             Settings.Instance.useSecretsPlayArround = dosecrets;
 
+            Settings.Instance.setWeights(alpha);
 
         }
 
@@ -20450,19 +22775,24 @@ namespace SilverfishRush
 
         public Minion createNewMinion(Handmanager.Handcard hc, int zonepos, bool own)
         {
-            Minion m = new Minion();
-            Handmanager.Handcard handc = new Handmanager.Handcard(hc);
-            m.handcard = handc;
+            Minion m = new Minion
+            {
+                handcard = new Handmanager.Handcard(hc),
+                zonepos = zonepos,
+                entitiyID = hc.entity,
+                Angr = hc.card.Attack,
+                Hp = hc.card.Health,
+                maxHp = hc.card.Health,
+                name = hc.card.name,
+                playedThisTurn = true,
+                numAttacksThisTurn = 0
+            };
+
             m.own = own;
             m.isHero = false;
             m.entitiyID = hc.entity;
-            m.Angr = hc.card.Attack;
-            m.Hp = hc.card.Health;
-            m.maxHp = hc.card.Health;
-            m.name = hc.card.name;
             m.playedThisTurn = true;
             m.numAttacksThisTurn = 0;
-            m.zonepos = zonepos;
             m.windfury = hc.card.windfury;
             m.taunt = hc.card.tank;
             m.charge = (hc.card.Charge) ? 1 : 0;
@@ -20634,7 +22964,7 @@ namespace SilverfishRush
 
             this.name = m.name;
             this.handcard = m.handcard;//new?
-            this.entitiyID = m.entitiyID;
+            //this.entitiyID = m.entitiyID;
             this.zonepos = m.zonepos;
 
 
@@ -20752,7 +23082,7 @@ namespace SilverfishRush
             if (damage >= 1 && this.divineshild)
             {
                 this.divineshild = false;
-                if (!own && !dontCalcLostDmg)
+                if (!own && !dontCalcLostDmg && p.turnCounter == 0)
                 {
                     if (isMinionAttack)
                     {
@@ -20768,7 +23098,7 @@ namespace SilverfishRush
 
             if (this.cantLowerHPbelowONE && damage >= 1 && damage >= this.Hp) damage = this.Hp - 1;
 
-            if (!own && !dontCalcLostDmg && this.Hp < damage)
+            if (!own && !dontCalcLostDmg && this.Hp < damage && p.turnCounter == 0)
             {
                 if (isMinionAttack)
                 {
@@ -21283,6 +23613,7 @@ namespace SilverfishRush
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
                 if (m.handcard.card.name == CardDB.cardName.bloodmagethalnos) retval += 10;
+                if (m.handcard.card.name == CardDB.cardName.nerubianegg && m.Angr >= 1) retval += 2;
                 if (m.Ready) readycount++;
             }
 
@@ -21356,6 +23687,7 @@ namespace SilverfishRush
             retval -= p.enemySecretCount;
             retval -= p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
             retval -= p.lostWeaponDamage;
+
             //if (p.ownMinions.Count == 0) retval -= 20;
             //if (p.enemyMinions.Count == 0) retval += 20;
             if (p.enemyHero.Hp <= 0) retval = 10000;
@@ -21650,9 +23982,12 @@ namespace SilverfishRush
         GENERAL
     }
 
-    class Settings
+    internal class Settings
     {
-        public int numberOfThreads = 32;
+        public float firstweight = 0.5f;
+        public float secondweight = 0.5f;
+
+        public int numberOfThreads = 32; // at least 1
         public bool useSecretsPlayArround = false;
 
         public bool simulateEnemysTurn = true;
@@ -21679,17 +24014,21 @@ namespace SilverfishRush
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new Settings();
-                }
-                return instance;
+                return instance ?? (instance = new Settings());
             }
         }
 
 
         private Settings()
         {
+        }
+
+        public void setWeights(int a)
+        {
+            float alpha = ((float)a) / 100f;
+            this.firstweight = 1f - alpha;
+            this.secondweight = alpha;
+            Helpfunctions.Instance.ErrorLog("current alpha is " + this.secondweight);
         }
 
         public void setFilePath(string path)
@@ -22024,18 +24363,11 @@ namespace SilverfishRush
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
-            for (int i = 0; i < temp.Count; i++)
+            foreach (Minion t in temp)
             {
-                p.minionGetTempBuff(temp[i], 2, 0);
+                p.minionGetTempBuff(t, 2, 0);
             }
-            if (ownplay)
-            {
-                p.minionGetTempBuff(p.ownHero, 2, 0);
-            }
-            else
-            {
-                p.minionGetTempBuff(p.enemyHero, 2, 0);
-            }
+            p.minionGetTempBuff(ownplay ? p.ownHero : p.enemyHero, 2, 0);
         }
 
     }
@@ -22199,9 +24531,9 @@ namespace SilverfishRush
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             List<Minion> temp = (ownplay) ? p.enemyMinions : p.ownMinions;
-            for (int i = 0; i < temp.Count; i++)
+            foreach (Minion t in temp)
             {
-                temp[i].frozen = true;
+                t.frozen = true;
             }
         }
     }
@@ -22534,14 +24866,8 @@ namespace SilverfishRush
             int dmg = (ownplay) ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
             int heal = (ownplay) ? p.getSpellHeal(2) : p.getEnemySpellHeal(2);
             p.minionGetDamageOrHeal(target, dmg);
-            if (ownplay)
-            {
-                p.minionGetDamageOrHeal(p.ownHero, -heal);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, -heal);
-            }
+
+            p.minionGetDamageOrHeal(ownplay ? p.ownHero : p.enemyHero, -heal);
         }
 
     }
@@ -22650,14 +24976,8 @@ namespace SilverfishRush
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             int dmg = (ownplay) ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
-            if (ownplay)
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, dmg);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.ownHero, dmg);
-            }
+
+            p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, dmg);
 
         }
 
@@ -22747,14 +25067,7 @@ namespace SilverfishRush
         {
             int heal = (own.own) ? p.getMinionHeal(6) : p.getEnemyMinionHeal(6);
 
-            if (own.own)
-            {
-                p.minionGetDamageOrHeal(p.ownHero, -heal);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, -heal);
-            }
+            p.minionGetDamageOrHeal(own.own ? p.ownHero : p.enemyHero, -heal);
         }
 
 
@@ -22901,14 +25214,7 @@ namespace SilverfishRush
         //    verleiht eurem helden +4 angriff in diesem zug.
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            if (ownplay)
-            {
-                p.minionGetTempBuff(p.ownHero, 4, 0);
-            }
-            else
-            {
-                p.minionGetTempBuff(p.enemyHero, 4, 0);
-            }
+            p.minionGetTempBuff(ownplay ? p.ownHero : p.enemyHero, 4, 0);
 
         }
 
@@ -23930,14 +26236,8 @@ namespace SilverfishRush
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             int dmg = (ownplay) ? p.getSpellDamageDamage(5) : p.getEnemySpellDamageDamage(5);
-            if (ownplay)
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, dmg);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.ownHero, dmg);
-            }
+
+            p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, dmg);
         }
 
     }
@@ -24293,14 +26593,7 @@ namespace SilverfishRush
         //    todesröcheln:/ fügt dem feindlichen helden 2 schaden zu.
         public override void onDeathrattle(Playfield p, Minion m)
         {
-            if (m.own)
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, 2);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.ownHero, 2);
-            }
+            p.minionGetDamageOrHeal(m.own ? p.enemyHero : p.ownHero, 2);
         }
 
     }
@@ -24796,7 +27089,7 @@ namespace SilverfishRush
                 }
                 if (!dmgdone)
                 {
-                    if (turnStartOfOwner) { p.minionGetDamageOrHeal(p.enemyHero, 2); } else { p.minionGetDamageOrHeal(p.ownHero, 2); }
+                    p.minionGetDamageOrHeal(turnStartOfOwner ? p.enemyHero : p.ownHero, 2);
                 };
             }
         }
@@ -24810,9 +27103,9 @@ namespace SilverfishRush
         {
             List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
 
-            for (int i = 0; i < temp.Count; i++)
+            foreach (Minion t in temp)
             {
-                if ((TAG_RACE)temp[i].handcard.card.race == TAG_RACE.MURLOC) p.minionGetBuffed(temp[i], 0, 2);
+                if ((TAG_RACE)t.handcard.card.race == TAG_RACE.MURLOC) p.minionGetBuffed(t, 0, 2);
             }
         }
     }
@@ -25046,14 +27339,7 @@ namespace SilverfishRush
         {
             int dmg = (ownplay) ? p.getSpellDamageDamage(number) : p.getEnemySpellDamageDamage(number);
 
-            if (ownplay)
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, dmg);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.ownHero, dmg);
-            }
+            p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, dmg);
         }
 
     }
@@ -25093,24 +27379,10 @@ namespace SilverfishRush
 
         public override void onSecretPlay(Playfield p, bool ownplay, int number)
         {
-            int posi = 0;
-            if (ownplay)
-            {
-                posi = p.ownMinions.Count;
-            }
-            else
-            {
-                posi = p.enemyMinions.Count;
-            }
-            CardDB.Card kid = null;
-            if (ownplay)
-            {
-                kid = CardDB.Instance.getCardDataFromID(p.revivingOwnMinion);
-            }
-            else
-            {
-                kid = CardDB.Instance.getCardDataFromID(p.revivingEnemyMinion);
-            }
+            int posi = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
+
+            CardDB.Card kid = CardDB.Instance.getCardDataFromID(ownplay ? p.revivingOwnMinion : p.revivingEnemyMinion);
+
             p.callKid(kid, posi, ownplay);
             if (ownplay)
             {
@@ -25155,14 +27427,9 @@ namespace SilverfishRush
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             int dmg = (ownplay) ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
-            if (ownplay)
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, dmg);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.ownHero, dmg);
-            }
+
+            p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, dmg);
+
             if (p.cardsPlayedThisTurn >= 1) p.evaluatePenality -= 5;
         }
 
@@ -25819,11 +28086,11 @@ namespace SilverfishRush
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
-            for (int i = 0; i < temp.Count; i++)
+            foreach (Minion t in temp)
             {
-                if (temp[i].handcard.card.race == 21) // if minion is a totem, buff it
+                if (t.handcard.card.race == 21) // if minion is a totem, buff it
                 {
-                    p.minionGetBuffed(temp[i], 0, 2);
+                    p.minionGetBuffed(t, 0, 2);
                 }
             }
         }
@@ -26052,19 +28319,13 @@ namespace SilverfishRush
                         }
                         else
                         {
-                            if (ownplay)
-                                p.minionGetDamageOrHeal(p.enemyHero, 1);
-                            else
-                                p.minionGetDamageOrHeal(p.ownHero, 1);
+                            p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, 1);
                         }
 
                     }
                     else
                     {
-                        if (ownplay)
-                            p.minionGetDamageOrHeal(p.enemyHero, 1);
-                        else
-                            p.minionGetDamageOrHeal(p.ownHero, 1);
+                        p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, 1);
                     }
 
                     i++;
@@ -26237,15 +28498,7 @@ namespace SilverfishRush
                 }
                 else
                 {
-                    if (turnEndOfOwner)
-                    {
-                        p.minionGetDamageOrHeal(p.enemyHero, 8);
-                    }
-                    else
-                    {
-
-                        p.minionGetDamageOrHeal(p.ownHero, 8);
-                    }
+                    p.minionGetDamageOrHeal(turnEndOfOwner ? p.enemyHero : p.ownHero, 8);
                 }
                 triggerEffectMinion.stealth = false;
             }
@@ -26378,14 +28631,8 @@ namespace SilverfishRush
         {
             p.minionGetDestroyed(target);
             int heal = (ownplay) ? p.getSpellHeal(3) : p.getEnemySpellHeal(3);
-            if (ownplay)
-            {
-                p.minionGetDamageOrHeal(p.ownHero, -heal);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, -heal);
-            }
+
+            p.minionGetDamageOrHeal(ownplay ? p.ownHero : p.enemyHero, -heal);
         }
 
     }
@@ -26423,14 +28670,7 @@ namespace SilverfishRush
         //    kampfschrei:/ fügt eurem helden 5 schaden zu.
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (own.own)
-            {
-                p.minionGetDamageOrHeal(p.ownHero, 5);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, 5);
-            }
+            p.minionGetDamageOrHeal(own.own ? p.ownHero : p.enemyHero, 5);
         }
 
 
@@ -26501,14 +28741,7 @@ namespace SilverfishRush
         //    kampfschrei:/ fügt eurem helden 3 schaden zu.
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (own.own)
-            {
-                p.minionGetDamageOrHeal(p.ownHero, 3);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, 3);
-            }
+            p.minionGetDamageOrHeal(own.own ? p.ownHero : p.enemyHero, 3);
         }
 
 
@@ -26664,14 +28897,12 @@ namespace SilverfishRush
 
                     if (!healed)
                     {
-                        if (turnStartOfOwner) p.minionGetDamageOrHeal(p.ownHero, -heal);
-                        else p.minionGetDamageOrHeal(p.enemyHero, -heal);
+                        p.minionGetDamageOrHeal(turnStartOfOwner ? p.ownHero : p.enemyHero, -heal);
                     }
                 }
                 else
                 {
-                    if (turnStartOfOwner) p.minionGetDamageOrHeal(p.ownHero, -heal);
-                    else p.minionGetDamageOrHeal(p.enemyHero, -heal);
+                    p.minionGetDamageOrHeal(turnStartOfOwner ? p.ownHero : p.enemyHero, -heal);
                 }
 
             }
@@ -26748,6 +28979,7 @@ namespace SilverfishRush
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             int heal = (ownplay) ? p.getSpellHeal(8) : p.getEnemySpellHeal(8);
+            //Helpfunctions.Instance.ErrorLog("heal " + heal + " " + target.entitiyID + " " + p.anzOwnAuchenaiSoulpriest);
             p.minionGetDamageOrHeal(target, -heal);
             for (int i = 0; i < 3; i++)
             {
@@ -26955,19 +29187,13 @@ namespace SilverfishRush
                         }
                         else
                         {
-                            if (ownplay)
-                                p.minionGetDamageOrHeal(p.enemyHero, 1);
-                            else
-                                p.minionGetDamageOrHeal(p.ownHero, 1);
+                            p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, 1);
                         }
 
                     }
                     else
                     {
-                        if (ownplay)
-                            p.minionGetDamageOrHeal(p.enemyHero, 1);
-                        else
-                            p.minionGetDamageOrHeal(p.ownHero, 1);
+                        p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, 1);
                     }
 
                     i++;
@@ -27808,7 +30034,9 @@ namespace SilverfishRush
             if (target != null)
             {
                 //p.copyMinion(own, target);
+                bool source = own.own;
                 own.setMinionTominion(target);
+                own.own = source;
                 own.handcard.card.sim_card.onAuraStarts(p, own);
             }
         }
@@ -28098,8 +30326,7 @@ namespace SilverfishRush
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
             int heal = (own.own) ? p.getMinionHeal(4) : p.getEnemyMinionHeal(4);
-            if (own.own) p.minionGetDamageOrHeal(p.ownHero, -heal);
-            else p.minionGetDamageOrHeal(p.enemyHero, -heal);
+            p.minionGetDamageOrHeal(own.own ? p.ownHero : p.enemyHero, -heal);
         }
 
 
@@ -28217,8 +30444,7 @@ namespace SilverfishRush
         //    kampfschrei: /fügt dem feindlichen helden 3 schaden zu.
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (own.own) p.minionGetDamageOrHeal(p.enemyHero, 3);
-            else p.minionGetDamageOrHeal(p.ownHero, 3);
+            p.minionGetDamageOrHeal(own.own ? p.enemyHero : p.ownHero, 3);
         }
 
     }
@@ -28422,14 +30648,7 @@ namespace SilverfishRush
 
         public override void onSecretPlay(Playfield p, bool ownplay, Minion target, int number)
         {
-            if (ownplay)
-            {
-                p.minionReturnToHand(target, false, 2);
-            }
-            else
-            {
-                p.minionReturnToHand(target, true, 2);
-            }
+            p.minionReturnToHand(target, !ownplay, 2);
             target.Hp = -100;
         }
 
@@ -28588,8 +30807,8 @@ namespace SilverfishRush
             int dmg = (ownplay) ? p.getSpellDamageDamage(5) : p.getEnemySpellDamageDamage(5);
             p.minionGetDamageOrHeal(target, dmg);
             int heal = (ownplay) ? p.getSpellHeal(5) : p.getEnemySpellHeal(5);
-            if (ownplay) p.minionGetDamageOrHeal(p.ownHero, -heal);
-            else p.minionGetDamageOrHeal(p.enemyHero, -heal);
+
+            p.minionGetDamageOrHeal(ownplay ? p.ownHero : p.enemyHero, -heal);
         }
 
     }
@@ -28618,14 +30837,7 @@ namespace SilverfishRush
             }
             else
             {
-                if (p.enemyHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001) // lesser heal becomes mind spike
-                {
-                    p.enemyHeroAblility.card = mindspike;
-                }
-                else
-                {
-                    p.enemyHeroAblility.card = shatter;  // mindspike becomes mind shatter
-                }
+                p.enemyHeroAblility.card = p.enemyHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001 ? this.mindspike : this.shatter;
             }
         }
 
@@ -28762,8 +30974,7 @@ namespace SilverfishRush
         {
             int heal = (m.own) ? p.getMinionHeal(5) : p.getEnemyMinionHeal(5);
 
-            if (m.own) p.minionGetDamageOrHeal(p.enemyHero, -heal);
-            else p.minionGetDamageOrHeal(p.ownHero, -heal);
+            p.minionGetDamageOrHeal(m.own ? p.enemyHero : p.ownHero, -heal);
         }
 
     }
@@ -28881,14 +31092,7 @@ namespace SilverfishRush
 
         public override void onDeathrattle(Playfield p, Minion m)
         {
-            if (m.own)
-            {
-                p.minionGetDamageOrHeal(p.ownHero, 3);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, 3);
-            }
+            p.minionGetDamageOrHeal(m.own ? p.ownHero : p.enemyHero, 3);
         }
 
     }
@@ -29572,14 +31776,7 @@ namespace SilverfishRush
                 }
                 else
                 {
-                    if (p.ownHero.Hp < 30)
-                    {
-                        p.minionGetDamageOrHeal(p.ownHero, -hl);
-                    }
-                    else
-                    {
-                        p.minionGetDamageOrHeal(p.enemyHero, -hl);
-                    }
+                    p.minionGetDamageOrHeal(p.ownHero.Hp < 30 ? p.ownHero : p.enemyHero, -hl);
                 }
 
             }
@@ -29678,14 +31875,7 @@ namespace SilverfishRush
         {
             p.minionGetDestroyed(target);
             int heal = (ownplay) ? p.getSpellHeal(5) : p.getEnemySpellHeal(5);
-            if (ownplay)
-            {
-                p.minionGetDamageOrHeal(p.ownHero, -heal);
-            }
-            else
-            {
-                p.minionGetDamageOrHeal(p.enemyHero, -heal);
-            }
+            p.minionGetDamageOrHeal(ownplay ? p.ownHero : p.enemyHero, -heal);
         }
 
     }
@@ -29984,19 +32174,13 @@ namespace SilverfishRush
                     }
                     else
                     {
-                        if (triggerEffectMinion.own)
-                            p.minionGetDamageOrHeal(p.enemyHero, 1);
-                        else
-                            p.minionGetDamageOrHeal(p.ownHero, 1);
+                        p.minionGetDamageOrHeal(triggerEffectMinion.own ? p.enemyHero : p.ownHero, 1);
                     }
 
                 }
                 else
                 {
-                    if (triggerEffectMinion.own)
-                        p.minionGetDamageOrHeal(p.enemyHero, 1);
-                    else
-                        p.minionGetDamageOrHeal(p.ownHero, 1);
+                    p.minionGetDamageOrHeal(triggerEffectMinion.own ? p.enemyHero : p.ownHero, 1);
                 }
 
                 triggerEffectMinion.stealth = false;
@@ -30280,9 +32464,9 @@ namespace SilverfishRush
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
-            for (int i = 0; i < temp.Count; i++)
+            foreach (Minion t in temp)
             {
-                temp[i].cantLowerHPbelowONE = true;
+                t.cantLowerHPbelowONE = true;
             }
             p.drawACard(CardDB.cardName.unknown, ownplay);
         }

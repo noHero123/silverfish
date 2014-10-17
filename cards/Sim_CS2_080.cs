@@ -1,50 +1,19 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_080.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_080.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_080.
-    /// </summary>
-    internal class Sim_CS2_080 : SimTemplate
-    {
-        // assassinsblade
-        #region Fields
+	class Sim_CS2_080 : SimTemplate //assassinsblade
+	{
 
-        /// <summary>
-        ///     The w.
-        /// </summary>
-        private CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_080);
+//
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_080);
 
-        #endregion
-
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            p.equipWeapon(this.w, ownplay);
+            p.equipWeapon(w, ownplay);
         }
 
-        #endregion
-    }
+	}
 }

@@ -1,18 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_tk28.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_tk 28.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_tk 28.
-    /// </summary>
-    internal class Sim_EX1_tk28 : SimTemplate
-    {
-        // squirrel
-    }
+	class Sim_EX1_tk28 : SimTemplate //squirrel
+	{
+
+//
+		
+
+	}
 }

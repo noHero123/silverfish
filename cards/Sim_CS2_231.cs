@@ -1,18 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_231.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_231.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_231.
-    /// </summary>
-    internal class Sim_CS2_231 : SimTemplate
+    class Sim_CS2_231 : SimTemplate//wisp
     {
-        // wisp
+
+
     }
 }

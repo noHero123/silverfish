@@ -75,6 +75,9 @@
 <Label>which probability does the enemy needs, to use the aoe, but wont kill your minions. insert a value from 0 to 100.</Label>
 <Setting name="uai.playAroundProb2" default="80" type="text" description="play around max probability:" />
 <Label>which probability does the enemy needs, to use the aoe and kill your minions with it. insert a value from 0 to 100.</Label>
+<Label></Label>
+<Setting name="uai.secondweight" default="50" type="text" description="weight of second turn:" />
+<Label>how strong does the second turn simulation affects the value of a board (weight should be between 0 and 100, default is 50)</Label>
 </Section>
 <Section id="silver4" title="developper options">
 <Description>Developper settings, ignore them if you are not one.&lt;br&gt;</Description>

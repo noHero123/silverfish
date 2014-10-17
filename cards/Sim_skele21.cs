@@ -1,18 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_skele21.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_skele 21.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_skele 21.
-    /// </summary>
-    internal class Sim_skele21 : SimTemplate
-    {
-        // damagedgolem
-    }
+	class Sim_skele21 : SimTemplate //damagedgolem
+	{
+
+//
+		
+
+	}
 }

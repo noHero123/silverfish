@@ -1,12 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Helpfunctions.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The helpfunctions.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
@@ -17,80 +9,10 @@ namespace HREngine.Bots
     /// <summary>
     ///     The helpfunctions.
     /// </summary>
+
     public class Helpfunctions
     {
-        #region Static Fields
 
-        /// <summary>
-        ///     The instance.
-        /// </summary>
-        private static Helpfunctions instance;
-
-        #endregion
-
-        #region Fields
-
-        /// <summary>
-        ///     The runningbot.
-        /// </summary>
-        public bool runningbot = false;
-
-        /// <summary>
-        ///     The sendbuffer.
-        /// </summary>
-        private string sendbuffer = string.Empty;
-
-        /// <summary>
-        ///     The writelogg.
-        /// </summary>
-        private bool writelogg = true;
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>
-        /// Verhindert, dass eine Standardinstanz der <see cref="Helpfunctions"/> Klasse erstellt wird. 
-        ///     Prevents a default instance of the <see cref="Helpfunctions"/> class from being created.
-        /// </summary>
-        private Helpfunctions()
-        {
-            File.WriteAllText(Settings.Instance.logpath + Settings.Instance.logfile, string.Empty);
-        }
-
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>
-        ///     Gets the instance.
-        /// </summary>
-        public static Helpfunctions Instance
-        {
-            get
-            {
-                return instance ?? (instance = new Helpfunctions());
-            }
-        }
-
-        #endregion
-
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The take list.
-        /// </summary>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="limit">
-        /// The limit.
-        /// </param>
-        /// <typeparam name="T">
-        /// </typeparam>
-        /// <returns>
-        /// The <see cref="List"/>.
-        /// </returns>
         public static List<T> TakeList<T>(IEnumerable<T> source, int limit)
         {
             List<T> retlist = new List<T>();
@@ -101,64 +23,46 @@ namespace HREngine.Bots
                 retlist.Add(item);
                 i++;
 
-                if (i >= limit)
-                {
-                    break;
-                }
+                if (i >= limit) break;
             }
-
             return retlist;
         }
 
-        /// <summary>
-        /// The error log.
-        /// </summary>
-        /// <param name="s">
-        /// The s.
-        /// </param>
-        public void ErrorLog(string s)
+
+        public bool runningbot = false;
+
+        private static Helpfunctions instance;
+
+        public static Helpfunctions Instance
         {
-            HRLog.Write(s);
+            get
+            {
+                return instance ?? (instance = new Helpfunctions());
+            }
         }
 
-        /// <summary>
-        /// The unix time stamp to date time.
-        /// </summary>
-        /// <param name="unixTimeStamp">
-        /// The unix time stamp.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTime"/>.
-        /// </returns>
-        public DateTime UnixTimeStampToDateTime(int unixTimeStamp)
+        private Helpfunctions()
         {
-            // Unix timestamp is seconds past epoch
-            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            return dtDateTime;
+
+            //System.IO.File.WriteAllText(Settings.Instance.logpath + Settings.Instance.logfile, "");
         }
 
-        /// <summary>
-        ///     The create new loggfile.
-        /// </summary>
+        private bool writelogg = true;
+        public void loggonoff(bool onoff)
+        {
+            //writelogg = onoff;
+        }
+
         public void createNewLoggfile()
         {
-            File.WriteAllText(Settings.Instance.logpath + Settings.Instance.logfile, string.Empty);
+            //System.IO.File.WriteAllText(Settings.Instance.logpath + Settings.Instance.logfile, "");
         }
 
-        /// <summary>
-        /// The logg.
-        /// </summary>
-        /// <param name="s">
-        /// The s.
-        /// </param>
         public void logg(string s)
         {
-            if (!this.writelogg)
-            {
-                return;
-            }
 
+
+            /*if (!writelogg) return;
             try
             {
                 using (StreamWriter sw = File.AppendText(Settings.Instance.logpath + Settings.Instance.logfile))
@@ -166,56 +70,35 @@ namespace HREngine.Bots
                     sw.WriteLine(s);
                 }
             }
-            catch
-            {
-            }
+            catch { }*/
+            Console.WriteLine(s);
         }
 
-        /// <summary>
-        /// The loggonoff.
-        /// </summary>
-        /// <param name="onoff">
-        /// The onoff.
-        /// </param>
-        public void loggonoff(bool onoff)
+        public DateTime UnixTimeStampToDateTime(int unixTimeStamp)
         {
-            // writelogg = onoff;
+            // Unix timestamp is seconds past epoch
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            return dtDateTime;
         }
 
-        /// <summary>
-        ///     The reset buffer.
-        /// </summary>
+        public void ErrorLog(string s)
+        {
+            //HREngine.API.Utilities.HRLog.Write(s);
+            Console.WriteLine(s);
+        }
+
+        string sendbuffer = "";
         public void resetBuffer()
         {
-            this.sendbuffer = string.Empty;
+            this.sendbuffer = "";
         }
 
-        /// <summary>
-        ///     The write buffer to action file.
-        /// </summary>
-        public void writeBufferToActionFile()
+        public void writeToBuffer(string data)
         {
-            bool writed = true;
-            this.sendbuffer += "<EoF>";
-            while (writed)
-            {
-                try
-                {
-                    File.WriteAllText(Settings.Instance.path + "actionstodo.txt", this.sendbuffer);
-                    writed = false;
-                }
-                catch
-                {
-                    writed = true;
-                }
-            }
-
-            this.sendbuffer = string.Empty;
+            this.sendbuffer += "\r\n" + data;
         }
 
-        /// <summary>
-        ///     The write buffer to file.
-        /// </summary>
         public void writeBufferToFile()
         {
             bool writed = true;
@@ -224,7 +107,7 @@ namespace HREngine.Bots
             {
                 try
                 {
-                    File.WriteAllText(Settings.Instance.path + "crrntbrd.txt", this.sendbuffer);
+                    System.IO.File.WriteAllText(Settings.Instance.path + "crrntbrd.txt", this.sendbuffer);
                     writed = false;
                 }
                 catch
@@ -232,21 +115,30 @@ namespace HREngine.Bots
                     writed = true;
                 }
             }
-
-            this.sendbuffer = string.Empty;
+            this.sendbuffer = "";
         }
 
-        /// <summary>
-        /// The write to buffer.
-        /// </summary>
-        /// <param name="data">
-        /// The data.
-        /// </param>
-        public void writeToBuffer(string data)
+        public void writeBufferToActionFile()
         {
-            this.sendbuffer += "\r\n" + data;
+            bool writed = true;
+            this.sendbuffer += "<EoF>";
+            this.ErrorLog("write to action file: " + sendbuffer);
+            while (writed)
+            {
+                try
+                {
+                    System.IO.File.WriteAllText(Settings.Instance.path + "actionstodo.txt", this.sendbuffer);
+                    writed = false;
+                }
+                catch
+                {
+                    writed = true;
+                }
+            }
+            this.sendbuffer = "";
+
         }
 
-        #endregion
     }
+
 }

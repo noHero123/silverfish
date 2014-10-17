@@ -1,47 +1,17 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Pen_HERO_05.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The pen_ her o_05.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The pen_ her o_05.
-    /// </summary>
-    internal class Pen_HERO_05 : PenTemplate
-    {
-        // rexxar
-        #region Public Methods and Operators
+	class Pen_HERO_05 : PenTemplate //rexxar
+	{
 
-        /// <summary>
-        /// The get play penalty.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        /// <param name="isLethal">
-        /// The is lethal.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-        {
-            return 0;
-        }
+//
+		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		{
+		return 0;
+		}
 
-        #endregion
-    }
+	}
 }

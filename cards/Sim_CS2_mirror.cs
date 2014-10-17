@@ -1,20 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_mirror.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_mirror.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_mirror.
-    /// </summary>
-    internal class Sim_CS2_mirror : SimTemplate
-    {
-        // mirrorimage
+	class Sim_CS2_mirror : SimTemplate //mirrorimage
+	{
 
-        // spott/
-    }
+//    spott/
+		
+
+	}
 }

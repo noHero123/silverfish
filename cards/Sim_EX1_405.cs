@@ -1,20 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_405.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_405.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_405.
-    /// </summary>
-    internal class Sim_EX1_405 : SimTemplate
-    {
-        // shieldbearer
+	class Sim_EX1_405 : SimTemplate //shieldbearer
+	{
 
-        // spott/
-    }
+//    spott/
+
+
+	}
 }

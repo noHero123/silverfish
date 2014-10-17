@@ -1,40 +1,15 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_539.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_539.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_539.
-    /// </summary>
-    internal class Sim_EX1_539 : SimTemplate
-    {
-        // killcommand
+	class Sim_EX1_539 : SimTemplate //killcommand
+	{
 
-        // verursacht $3 schaden. verursacht stattdessen $5 schaden, wenn ihr ein wildtier besitzt.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-        {
+//    verursacht $3 schaden. verursacht stattdessen $5 schaden, wenn ihr ein wildtier besitzt.
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		{
             if (ownplay)
             {
                 bool haspet = false;
@@ -47,16 +22,11 @@ namespace HREngine.Bots
                     }
                 }
 
-                int dmg = ownplay ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
-                if (haspet)
-                {
-                    dmg = ownplay ? p.getSpellDamageDamage(5) : p.getEnemySpellDamageDamage(5);
-                }
-
+                int dmg = (ownplay) ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
+                if (haspet) dmg = (ownplay) ? p.getSpellDamageDamage(5) : p.getEnemySpellDamageDamage(5);
                 p.minionGetDamageOrHeal(target, dmg);
             }
-        }
+		}
 
-        #endregion
-    }
+	}
 }

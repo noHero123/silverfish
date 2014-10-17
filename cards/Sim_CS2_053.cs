@@ -1,43 +1,17 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_053.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_053.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_053.
-    /// </summary>
-    internal class Sim_CS2_053 : SimTemplate
+    class Sim_CS2_053 : SimTemplate//far sight
     {
-        // far sight
 
-        // todo: bonus for it?
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
+        //todo: bonus for it?
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             p.drawACard(CardDB.cardName.unknown, ownplay);
         }
 
-        #endregion
     }
 }

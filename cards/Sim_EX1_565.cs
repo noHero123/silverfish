@@ -1,19 +1,11 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_565.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_565.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_565.
-    /// </summary>
-    internal class Sim_EX1_565 : SimTemplate
+    class Sim_EX1_565 : SimTemplate//Flametongue Totem
     {
-        // Flametongue Totem
         // note buff and debuff is handled by playfield (faster)
         /*
         public override void onAuraStarts(Playfield p, Minion own)
@@ -66,5 +58,7 @@ namespace HREngine.Bots
             }
         }
         */
+
+
     }
 }

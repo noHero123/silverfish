@@ -1,18 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_FP1_014t.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ f p 1_014 t.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ f p 1_014 t.
-    /// </summary>
-    internal class Sim_FP1_014t : SimTemplate
-    {
-        // thaddius
-    }
+	class Sim_FP1_014t : SimTemplate //thaddius
+	{
+
+//
+		
+
+	}
 }

@@ -1,65 +1,28 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_625.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_625.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_625.
-    /// </summary>
-    internal class Sim_EX1_625 : SimTemplate
+    class Sim_EX1_625 : SimTemplate //shadowform
     {
-        // shadowform
 
-        // eure heldenfähigkeit wird zu „verursacht 2 schaden“. wenn euer held bereits schattengestalt angenommen hat: 3 schaden.
-        #region Fields
+        //    eure heldenfähigkeit wird zu „verursacht 2 schaden“. wenn euer held bereits schattengestalt angenommen hat: 3 schaden.
 
-        /// <summary>
-        ///     The mindspike.
-        /// </summary>
-        private CardDB.Card mindspike = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_625t);
-
-        /// <summary>
-        ///     The shatter.
-        /// </summary>
-        private CardDB.Card shatter = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_625t2);
-
-        #endregion
-
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
+        CardDB.Card mindspike = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_625t);
+        CardDB.Card shatter = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_625t2);
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             if (ownplay)
             {
-                if (p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001)
+                if (p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001) // lesser heal becomes mind spike
                 {
-                    // lesser heal becomes mind spike
-                    p.ownHeroAblility.card = this.mindspike;
+                    p.ownHeroAblility.card = mindspike;
                     p.ownAbilityReady = true;
                 }
                 else
                 {
-                    p.ownHeroAblility.card = this.shatter; // mindspike becomes mind shatter
+                    p.ownHeroAblility.card = shatter;  // mindspike becomes mind shatter
                     p.ownAbilityReady = true;
                 }
             }
@@ -69,6 +32,5 @@ namespace HREngine.Bots
             }
         }
 
-        #endregion
     }
 }

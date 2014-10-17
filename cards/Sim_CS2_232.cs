@@ -1,20 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_232.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_232.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_232.
-    /// </summary>
-    internal class Sim_CS2_232 : SimTemplate
-    {
-        // ironbarkprotector
+	class Sim_CS2_232 : SimTemplate //ironbarkprotector
+	{
 
-        // spott/
-    }
+//    spott/
+		
+
+	}
 }

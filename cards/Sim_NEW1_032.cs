@@ -1,20 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_NEW1_032.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ ne w 1_032.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ ne w 1_032.
-    /// </summary>
-    internal class Sim_NEW1_032 : SimTemplate
-    {
-        // misha
+	class Sim_NEW1_032 : SimTemplate //misha
+	{
 
-        // spott/
-    }
+//    spott/
+		
+
+	}
 }

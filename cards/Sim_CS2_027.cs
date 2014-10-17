@@ -1,54 +1,20 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_027.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_027.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_027.
-    /// </summary>
-    internal class Sim_CS2_027 : SimTemplate
-    {
-        // mirrorimage
-        #region Fields
+	class Sim_CS2_027 : SimTemplate //mirrorimage
+	{
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_mirror);
+//    ruft zwei diener (0/2) mit spott/ herbei.
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		{
+            int posi = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
+            
+            p.callKid(kid, posi, ownplay);
+            p.callKid(kid, posi, ownplay);
+		}
 
-        /// <summary>
-        ///     The kid.
-        /// </summary>
-        private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_mirror);
-
-        #endregion
-
-        // ruft zwei diener (0/2) mit spott/ herbei.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-        {
-            int posi = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-
-            p.callKid(this.kid, posi, ownplay);
-            p.callKid(this.kid, posi, ownplay);
-        }
-
-        #endregion
-    }
+	}
 }

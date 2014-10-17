@@ -1,49 +1,17 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Pen_CS2_083b.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The pen_ c s 2_083 b.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The pen_ c s 2_083 b.
-    /// </summary>
-    internal class Pen_CS2_083b : PenTemplate
-    {
-        // daggermastery
+	class Pen_CS2_083b : PenTemplate //daggermastery
+	{
 
-        // heldenfähigkeit/\nlegt einen dolch (1/2) an.
-        #region Public Methods and Operators
+//    heldenfähigkeit/\nlegt einen dolch (1/2) an.
+		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		{
+		return 0;
+		}
 
-        /// <summary>
-        /// The get play penalty.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        /// <param name="isLethal">
-        /// The is lethal.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-        {
-            return 0;
-        }
-
-        #endregion
-    }
+	}
 }

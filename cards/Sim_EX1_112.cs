@@ -1,51 +1,18 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_112.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_112.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_112.
-    /// </summary>
-    internal class Sim_EX1_112 : SimTemplate
-    {
-        // gelbinmekkatorque
-        #region Fields
+	class Sim_EX1_112 : SimTemplate //gelbinmekkatorque
+	{
+        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.Mekka1);//homingchicken
+//    kampfschrei:/ konstruiert eine fantastische erfindung.
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+            p.callKid(kid, own.zonepos, own.own, true);
+		}
 
-        /// <summary>
-        ///     The kid.
-        /// </summary>
-        private CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.Mekka1); // homingchicken
 
-        #endregion
-
-        // kampfschrei:/ konstruiert eine fantastische erfindung.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The get battlecry effect.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-        {
-            p.callKid(this.kid, own.zonepos, own.own, true);
-        }
-
-        #endregion
-    }
+	}
 }

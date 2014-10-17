@@ -1,42 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_258.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_258.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_258.
-    /// </summary>
-    internal class Sim_EX1_258 : SimTemplate
+    class Sim_EX1_258 : SimTemplate//Unbound Elemental
     {
-        // Unbound Elemental
         // <deDE>ErhÃ¤lt jedes Mal +1/+1, wenn Ihr eine Karte mit &lt;b&gt;Ãœberladung&lt;/b&gt; ausspielt.</deDE>
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card is going to be played.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="c">
-        /// The c.
-        /// </param>
-        /// <param name="wasOwnCard">
-        /// The was own card.
-        /// </param>
-        /// <param name="triggerEffectMinion">
-        /// The trigger effect minion.
-        /// </param>
-        public override void onCardIsGoingToBePlayed(
-            Playfield p, 
-            CardDB.Card c, 
-            bool wasOwnCard, 
-            Minion triggerEffectMinion)
+        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
         {
             if (wasOwnCard == triggerEffectMinion.own && c.Recall)
             {
@@ -44,6 +15,5 @@ namespace HREngine.Bots
             }
         }
 
-        #endregion
     }
 }

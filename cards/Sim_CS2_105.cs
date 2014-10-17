@@ -1,43 +1,18 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_105.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_105.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_105.
-    /// </summary>
-    internal class Sim_CS2_105 : SimTemplate
+    class Sim_CS2_105 : SimTemplate //heroicstrike
     {
-        // heroicstrike
 
-        // verleiht eurem helden +4 angriff in diesem zug.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
+        //    verleiht eurem helden +4 angriff in diesem zug.
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             p.minionGetTempBuff(ownplay ? p.ownHero : p.enemyHero, 4, 0);
+
         }
 
-        #endregion
     }
 }

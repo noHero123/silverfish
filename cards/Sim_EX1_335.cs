@@ -1,44 +1,18 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_335.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_335.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_335.
-    /// </summary>
-    internal class Sim_EX1_335 : SimTemplate
-    {
-        // lightspawn
+	class Sim_EX1_335 : SimTemplate //lightspawn
+	{
 
-        // der angriff dieses dieners entspricht immer seinem leben.
-        // todo dont buff this!
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The get battlecry effect.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-        {
+//    der angriff dieses dieners entspricht immer seinem leben.
+        //todo dont buff this!
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
             own.Angr = own.Hp;
-        }
+		}
 
-        #endregion
-    }
+	}
 }

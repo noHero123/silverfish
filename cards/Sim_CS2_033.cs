@@ -1,20 +1,13 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_033.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_033.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_033.
-    /// </summary>
-    internal class Sim_CS2_033 : SimTemplate
-    {
-        // waterelemental
+	class Sim_CS2_033 : SimTemplate //waterelemental
+	{
 
-        // friert/ jeden charakter ein, der von diesem diener verletzt wurde.
-    }
+//    friert/ jeden charakter ein, der von diesem diener verletzt wurde.
+
+	}
 }

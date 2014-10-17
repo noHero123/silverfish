@@ -1,20 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_050.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_050.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_050.
-    /// </summary>
-    internal class Sim_CS2_050 : SimTemplate
-    {
-        // searingtotem
+	class Sim_CS2_050 : SimTemplate //searingtotem
+	{
 
-        // fire totem of shaman ability
-    }
+// fire totem of shaman ability
+		
+
+	}
 }

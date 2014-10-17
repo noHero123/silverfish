@@ -1,20 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS1_069.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 1_069.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 1_069.
-    /// </summary>
-    internal class Sim_CS1_069 : SimTemplate
-    {
-        // fencreeper
+	class Sim_CS1_069 : SimTemplate //fencreeper
+	{
 
-        // spott/
-    }
+//    spott/
+		
+
+	}
 }

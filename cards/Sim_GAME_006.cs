@@ -1,20 +1,14 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_GAME_006.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ gam e_006.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ gam e_006.
-    /// </summary>
-    internal class Sim_GAME_006 : SimTemplate
-    {
-        // noooooooooooo
+	class Sim_GAME_006 : SimTemplate //noooooooooooo
+	{
 
-        // leider wurde die karte, die ihr einst besaßt, entfernt. aber nehmt doch diese hier!
-    }
+//    leider wurde die karte, die ihr einst besaßt, entfernt. aber nehmt doch diese hier!
+
+
+	}
 }

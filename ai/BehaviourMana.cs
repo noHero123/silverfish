@@ -1,75 +1,18 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BehaviourMana.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The behavior mana.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
 
-    /// <summary>
-    ///     The behavior mana.
-    /// </summary>
     public class BehaviorMana : Behavior
     {
-        #region Fields
+        PenalityManager penman = PenalityManager.Instance;
 
-        /// <summary>
-        ///     The penman.
-        /// </summary>
-        private PenalityManager penman = PenalityManager.Instance;
-
-        #endregion
-
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The get enemy minion value.
-        /// </summary>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public override int getEnemyMinionValue(Minion m, Playfield p)
-        {
-            int retval = 0;
-            retval += m.handcard.card.cost;
-            if (m.handcard.card.name == CardDB.cardName.unknown)
-            {
-                retval = 4;
-            }
-
-            return retval;
-        }
-
-        /// <summary>
-        /// The get playfield value.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <returns>
-        /// The <see cref="float"/>.
-        /// </returns>
         public override float getPlayfieldValue(Playfield p)
         {
-            if (p.value >= -2000000)
-            {
-                return p.value;
-            }
-
+            if (p.value >= -2000000) return p.value;
             int retval = 0;
 
             retval += p.ownHero.Hp + p.ownHero.armor;
-            retval -= p.enemyHero.Hp + p.enemyHero.armor;
+            retval -= (p.enemyHero.Hp + p.enemyHero.armor);
 
             foreach (Minion m in p.ownMinions)
             {
@@ -84,37 +27,34 @@ namespace HREngine.Bots
             foreach (Handmanager.Handcard hc in p.owncards)
             {
                 int r = Math.Max(hc.getManaCost(p), 1);
-                if (hc.card.name == CardDB.cardName.unknown)
-                {
-                    r = 4;
-                }
-
+                if (hc.card.name == CardDB.cardName.unknown) r = 4;
                 retval += r;
             }
 
             retval -= p.enemySecretCount;
-            retval -= p.lostDamage; // damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
+            retval -= p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
             retval -= p.lostWeaponDamage;
-            if (p.enemyHero.Hp <= 0)
-            {
-                retval = 10000;
-            }
-
+            if (p.enemyHero.Hp <= 0) retval = 10000;
             if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
             {
                 retval += p.owncarddraw * 500;
                 retval -= 1000;
             }
-
-            if (p.ownHero.Hp <= 0)
-            {
-                retval = -10000;
-            }
+            if (p.ownHero.Hp <= 0) retval = -10000;
 
             p.value = retval;
             return retval;
         }
 
-        #endregion
+        public override int getEnemyMinionValue(Minion m, Playfield p)
+        {
+            int retval = 0;
+            retval += m.handcard.card.cost;
+            if (m.handcard.card.name == CardDB.cardName.unknown) retval = 4;
+            return retval;
+        }
+
+
     }
+
 }

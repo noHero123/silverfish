@@ -1,49 +1,17 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Pen_DREAM_04.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The pen_ drea m_04.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The pen_ drea m_04.
-    /// </summary>
-    internal class Pen_DREAM_04 : PenTemplate
-    {
-        // dream
+	class Pen_DREAM_04 : PenTemplate //dream
+	{
 
-        // lasst einen diener auf die hand seines besitzers zurückkehren.
-        #region Public Methods and Operators
+//    lasst einen diener auf die hand seines besitzers zurückkehren.
+		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		{
+		return 0;
+		}
 
-        /// <summary>
-        /// The get play penalty.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        /// <param name="isLethal">
-        /// The is lethal.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-        {
-            return 0;
-        }
-
-        #endregion
-    }
+	}
 }

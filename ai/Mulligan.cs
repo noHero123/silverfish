@@ -22,7 +22,7 @@ namespace HREngine.Bots
             public string enemyclass = "";
             public string ownclass = "";
             public int howmuch = 2;
-            public string[] requiresCard;
+            public string[] requiresCard = null;
             public int manarule = -1;
             public string rulestring = "";
             public mulliitem(string id, string own, string enemy, int number, string[] req = null, int mrule = -1)
@@ -45,6 +45,7 @@ namespace HREngine.Bots
                 this.manarule = mrule;
                 this.rulestring = all;
             }
+
         }
 
         class concedeItem
@@ -64,7 +65,11 @@ namespace HREngine.Bots
         {
             get
             {
-                return instance ?? (instance = new Mulligan());
+                if (instance == null)
+                {
+                    instance = new Mulligan();
+                }
+                return instance;
             }
         }
 
@@ -75,7 +80,7 @@ namespace HREngine.Bots
 
         private void readCombos()
         {
-            string[] lines;
+            string[] lines = new string[0] { };
             this.holdlist.Clear();
             this.deletelist.Clear();
             try
@@ -89,7 +94,6 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("cant find _mulligan.txt (if you dont created your own mulliganfile, ignore this message)");
                 return;
             }
-
             Helpfunctions.Instance.logg("read _mulligan.txt...");
             Helpfunctions.Instance.ErrorLog("read _mulligan.txt...");
             foreach (string line in lines)
@@ -105,13 +109,13 @@ namespace HREngine.Bots
                     try
                     {
                         string ownh = line.Split(':')[1];
-                        concedeItem ci = new concedeItem { urhero = Hrtprozis.Instance.heroNametoEnum(ownh) };
+                        concedeItem ci = new concedeItem();
+                        ci.urhero = Hrtprozis.Instance.heroNametoEnum(ownh);
                         string enemlist = line.Split(':')[2];
                         foreach (string s in enemlist.Split(','))
                         {
                             ci.enemhero.Add(Hrtprozis.Instance.heroNametoEnum(s));
                         }
-
                         concedelist.Add(ci);
                     }
                     catch
@@ -119,7 +123,6 @@ namespace HREngine.Bots
                         Helpfunctions.Instance.logg("mullimaker cant read: " + line);
                         Helpfunctions.Instance.ErrorLog("mullimaker cant read: " + line);
                     }
-
                     continue;
                 }
 
@@ -134,21 +137,15 @@ namespace HREngine.Bots
                         {
                             if (crd.Contains(":"))
                             {
-                                this.holdlist.Add(
-                                    crd.Split(':').Length == 3
-                                        ? new mulliitem(
-                                              line,
-                                              crd.Split(':')[0],
-                                              ownclass,
-                                              enemyclass,
-                                              Convert.ToInt32(crd.Split(':')[1]),
-                                              crd.Split(':')[2].Split('/'))
-                                        : new mulliitem(
-                                              line,
-                                              crd.Split(':')[0],
-                                              ownclass,
-                                              enemyclass,
-                                              Convert.ToInt32(crd.Split(':')[1])));
+                                if ((crd.Split(':')).Length == 3)
+                                {
+                                    this.holdlist.Add(new mulliitem(line, crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1]), crd.Split(':')[2].Split('/')));
+                                }
+                                else
+                                {
+                                    this.holdlist.Add(new mulliitem(line, crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1])));
+                                }
+
                             }
                             else
                             {
@@ -161,6 +158,7 @@ namespace HREngine.Bots
                             int manarule = Convert.ToInt32(line.Split(';')[4]);
                             this.holdlist.Add(new mulliitem(line, "#MANARULE", ownclass, enemyclass, 2, null, manarule));
                         }
+
                     }
                     catch
                     {
@@ -179,11 +177,7 @@ namespace HREngine.Bots
                             string cardlist = line.Split(';')[3];
                             foreach (string crd in cardlist.Split(','))
                             {
-                                if (string.IsNullOrEmpty(crd))
-                                {
-                                    continue;
-                                }
-
+                                if (crd == null || crd == "") continue;
                                 this.deletelist.Add(new mulliitem(line, crd, ownclass, enemyclass, 2));
                             }
 
@@ -192,6 +186,7 @@ namespace HREngine.Bots
                                 int manarule = Convert.ToInt32(line.Split(';')[4]);
                                 this.deletelist.Add(new mulliitem(line, "#MANARULE", ownclass, enemyclass, 2, null, manarule));
                             }
+
                         }
                         catch
                         {
@@ -211,30 +206,16 @@ namespace HREngine.Bots
 
         public bool hasmulliganrules(string ownclass, string enemclass)
         {
-            if (this.holdlist.Count == 0 && this.deletelist.Count == 0)
-            {
-                return false;
-            }
-
+            if (this.holdlist.Count == 0 && this.deletelist.Count == 0) return false;
             bool hasARule = false;
             foreach (mulliitem mi in this.holdlist)
             {
-                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass)
-                    && (mi.ownclass == "all" || mi.ownclass == ownclass))
-                {
-                    hasARule = true;
-                }
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass)) hasARule = true;
             }
-
             foreach (mulliitem mi in this.deletelist)
             {
-                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass)
-                    && (mi.ownclass == "all" || mi.ownclass == ownclass))
-                {
-                    hasARule = true;
-                }
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass)) hasARule = true;
             }
-
             return hasARule;
         }
 
@@ -243,13 +224,8 @@ namespace HREngine.Bots
             bool hasARule = false;
             foreach (mulliitem mi in this.holdlist)
             {
-                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass)
-                    && (mi.ownclass == "all" || mi.ownclass == ownclass))
-                {
-                    hasARule = true;
-                }
+                if ((mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass)) hasARule = true;
             }
-
             return hasARule;
         }
 
@@ -265,13 +241,8 @@ namespace HREngine.Bots
                     {
                         if (CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(c.id)).cost >= mi.manarule)
                         {
-                            if (discarditems.Contains(c.entitiy))
-                            {
-                                continue;
-                            }
-
-                            Helpfunctions.Instance.ErrorLog(
-                                "discard " + c.id + " because of this rule " + mi.rulestring);
+                            if (discarditems.Contains(c.entitiy)) continue;
+                            Helpfunctions.Instance.ErrorLog("discard " + c.id + " because of this rule " + mi.rulestring);
                             discarditems.Add(c.entitiy);
                         }
                         continue;
@@ -279,21 +250,14 @@ namespace HREngine.Bots
 
                     if (c.id == mi.cardid && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
                     {
-                        if (discarditems.Contains(c.entitiy))
-                        {
-                            continue;
-                        }
-
+                        if (discarditems.Contains(c.entitiy)) continue;
                         Helpfunctions.Instance.ErrorLog("discard " + c.id + " because of this rule " + mi.rulestring);
                         discarditems.Add(c.entitiy);
                     }
                 }
             }
 
-            if (holdlist.Count == 0 || !hasHoldListRule(ownclass, enemclass))
-            {
-                return discarditems;
-            }
+            if (holdlist.Count == 0 || !hasHoldListRule(ownclass, enemclass)) return discarditems;
 
             Dictionary<string, int> holddic = new Dictionary<string, int>();
             foreach (CardIDEntity c in cards)
@@ -301,6 +265,7 @@ namespace HREngine.Bots
                 bool delete = true;
                 foreach (mulliitem mi in this.holdlist)
                 {
+
                     if (mi.cardid == "#MANARULE" && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
                     {
                         if (CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(c.id)).cost <= mi.manarule)
@@ -310,67 +275,60 @@ namespace HREngine.Bots
                         continue;
                     }
 
-                    if (c.id != mi.cardid || (mi.enemyclass != "all" && mi.enemyclass != enemclass)
-                        || (mi.ownclass != "all" && mi.ownclass != ownclass))
+                    if (c.id == mi.cardid && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
                     {
-                        continue;
-                    }
 
-                    if (mi.requiresCard == null)
-                    {
-                        if (holddic.ContainsKey(c.id)) // we are holding one of the cards
+                        if (mi.requiresCard == null)
                         {
-                            if (mi.howmuch == 2)
+
+                            if (holddic.ContainsKey(c.id)) // we are holding one of the cards
                             {
-                                delete = false;
-                            }
-                        }
-                        else
-                        {
-                            delete = false;
-                        }
-                    }
-                    else
-                    {
-                        bool hasRequirements = false;
-                        foreach (CardIDEntity reqs in cards)
-                        {
-                            foreach (string s in mi.requiresCard)
-                            {
-                                if (s == reqs.id)
+                                if (mi.howmuch == 2)
                                 {
-                                    hasRequirements = true;
-                                    break;
+                                    delete = false;
                                 }
                             }
-                        }
-
-                        if (!hasRequirements)
-                        {
-                            continue;
-                        }
-
-                        if (holddic.ContainsKey(c.id)) // we are holding one of the cards
-                        {
-                            if (mi.howmuch == 2)
+                            else
                             {
                                 delete = false;
                             }
                         }
                         else
                         {
-                            delete = false;
+                            bool hasRequirements = false;
+                            foreach (CardIDEntity reqs in cards)
+                            {
+                                foreach (string s in mi.requiresCard)
+                                {
+                                    if (s == reqs.id)
+                                    {
+                                        hasRequirements = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (hasRequirements)
+                            {
+                                if (holddic.ContainsKey(c.id)) // we are holding one of the cards
+                                {
+                                    if (mi.howmuch == 2)
+                                    {
+                                        delete = false;
+                                    }
+                                }
+                                else
+                                {
+                                    delete = false;
+                                }
+                            }
+
                         }
                     }
                 }
 
                 if (delete)
                 {
-                    if (discarditems.Contains(c.entitiy))
-                    {
-                        continue;
-                    }
-
+                    if (discarditems.Contains(c.entitiy)) continue;
                     discarditems.Add(c.entitiy);
                 }
                 else
@@ -386,9 +344,11 @@ namespace HREngine.Bots
                         holddic.Add(c.id, 1);
                     }
                 }
+
             }
 
             return discarditems;
+
         }
 
         public void setAutoConcede(bool mode)
@@ -398,15 +358,15 @@ namespace HREngine.Bots
 
         public bool shouldConcede(HeroEnum ownhero, HeroEnum enemHero)
         {
+
             foreach (concedeItem ci in concedelist)
             {
-                if (ci.urhero == ownhero && ci.enemhero.Contains(enemHero))
-                {
-                    return true;
-                }
+                if (ci.urhero == ownhero && ci.enemhero.Contains(enemHero)) return true;
             }
 
             return false;
         }
+
     }
+
 }

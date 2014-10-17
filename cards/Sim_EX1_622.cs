@@ -1,43 +1,17 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_622.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_622.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_622.
-    /// </summary>
-    internal class Sim_EX1_622 : SimTemplate
-    {
-        // shadowworddeath
+	class Sim_EX1_622 : SimTemplate //shadowworddeath
+	{
 
-        // vernichtet einen diener mit mind. 5 angriff.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-        {
+//    vernichtet einen diener mit mind. 5 angriff.
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		{
             p.minionGetDestroyed(target);
-        }
+		}
 
-        #endregion
-    }
+	}
 }

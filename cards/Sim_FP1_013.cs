@@ -1,40 +1,17 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_FP1_013.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ f p 1_013.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ f p 1_013.
-    /// </summary>
-    internal class Sim_FP1_013 : SimTemplate
-    {
-        // kelthuzad
+	class Sim_FP1_013 : SimTemplate //kelthuzad
+	{
 
-        // ruft am ende jedes zuges alle befreundeten diener herbei, die in diesem zug gestorben sind.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on turn ends trigger.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="triggerEffectMinion">
-        /// The trigger effect minion.
-        /// </param>
-        /// <param name="turnEndOfOwner">
-        /// The turn end of owner.
-        /// </param>
+//    ruft am ende jedes zuges alle befreundeten diener herbei, die in diesem zug gestorben sind.
         public override void onTurnEndsTrigger(Playfield p, Minion triggerEffectMinion, bool turnEndOfOwner)
         {
-            foreach (GraveYardItem m in p.diedMinions.ToArray())
+            foreach (GraveYardItem m in p.diedMinions.ToArray()) // toArray() because a knifejuggler could kill a minion due to the summon :D
             {
-                // toArray() because a knifejuggler could kill a minion due to the summon :D
                 if (triggerEffectMinion.own == m.own)
                 {
                     CardDB.Card card = CardDB.Instance.getCardDataFromID(m.cardid);
@@ -43,6 +20,6 @@ namespace HREngine.Bots
             }
         }
 
-        #endregion
-    }
+	}
+
 }

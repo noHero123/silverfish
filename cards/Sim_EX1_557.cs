@@ -1,35 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_557.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_557.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_557.
-    /// </summary>
-    internal class Sim_EX1_557 : SimTemplate
-    {
-        // natpagle
+	class Sim_EX1_557 : SimTemplate //natpagle
+	{
 
-        // zu beginn eures zuges besteht eine chance von 50%, dass ihr eine zusätzliche karte zieht.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on turn start trigger.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="triggerEffectMinion">
-        /// The trigger effect minion.
-        /// </param>
-        /// <param name="turnStartOfOwner">
-        /// The turn start of owner.
-        /// </param>
+//    zu beginn eures zuges besteht eine chance von 50%, dass ihr eine zusätzliche karte zieht.
         public override void onTurnStartTrigger(Playfield p, Minion triggerEffectMinion, bool turnStartOfOwner)
         {
             if (triggerEffectMinion.own == turnStartOfOwner)
@@ -38,6 +16,5 @@ namespace HREngine.Bots
             }
         }
 
-        #endregion
-    }
+	}
 }

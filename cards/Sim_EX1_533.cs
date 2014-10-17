@@ -1,39 +1,11 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_533.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_533.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_533.
-    /// </summary>
-    internal class Sim_EX1_533 : SimTemplate
+    class Sim_EX1_533 : SimTemplate//Misdirection
     {
-        // Misdirection
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on secret play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="attacker">
-        /// The attacker.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="number">
-        /// The number.
-        /// </param>
         public override void onSecretPlay(Playfield p, bool ownplay, Minion attacker, Minion target, out int number)
         {
             number = 0;
@@ -64,6 +36,7 @@ namespace HREngine.Bots
                     newTarget = p.enemyHero;
                 }
             }
+
             else
             {
                 foreach (Minion m in p.ownMinions)
@@ -91,12 +64,13 @@ namespace HREngine.Bots
                 }
             }
 
+
             if (newTarget != null)
             {
                 number = newTarget.entitiyID;
             }
         }
 
-        #endregion
     }
+
 }

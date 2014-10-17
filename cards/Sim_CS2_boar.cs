@@ -1,18 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_boar.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_boar.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_boar.
-    /// </summary>
-    internal class Sim_CS2_boar : SimTemplate
-    {
-        // boar
-    }
+	class Sim_CS2_boar : SimTemplate //boar
+	{
+
+//
+
+
+	}
 }

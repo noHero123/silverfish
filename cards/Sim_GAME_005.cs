@@ -1,38 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_GAME_005.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ gam e_005.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ gam e_005.
-    /// </summary>
-    internal class Sim_GAME_005 : SimTemplate
-    {
-        // thecoin
+	class Sim_GAME_005 : SimTemplate //thecoin
+	{
 
-        // erhaltet 1 manakristall nur für diesen zug.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
+//    erhaltet 1 manakristall nur für diesen zug.
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             if (ownplay)
@@ -45,6 +20,5 @@ namespace HREngine.Bots
             }
         }
 
-        #endregion
-    }
+	}
 }

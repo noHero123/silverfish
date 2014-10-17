@@ -1,43 +1,18 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_332.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_332.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_332.
-    /// </summary>
-    internal class Sim_EX1_332 : SimTemplate
-    {
-        // silence
+	class Sim_EX1_332 : SimTemplate //silence
+	{
 
-        // bringt einen diener zum schweigen/.
-        #region Public Methods and Operators
+//    bringt einen diener zum schweigen/.
 
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-        {
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		{
             p.minionGetSilenced(target);
-        }
+		}
 
-        #endregion
-    }
+	}
 }

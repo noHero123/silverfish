@@ -1,40 +1,16 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_408.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_408.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_408.
-    /// </summary>
-    internal class Sim_EX1_408 : SimTemplate
-    {
-        // mortalstrike
+	class Sim_EX1_408 : SimTemplate //mortalstrike
+	{
 
-        // verursacht $4 schaden. verursacht stattdessen $6 schaden, wenn euer held max. 12 leben hat.
-        #region Public Methods and Operators
+//    verursacht $4 schaden. verursacht stattdessen $6 schaden, wenn euer held max. 12 leben hat.
 
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-        {
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		{
             int dmg = 0;
 
             if (ownplay)
@@ -45,10 +21,8 @@ namespace HREngine.Bots
             {
                 dmg = (p.enemyHero.Hp <= 12) ? p.getEnemySpellDamageDamage(6) : p.getEnemySpellDamageDamage(4);
             }
-
             p.minionGetDamageOrHeal(target, dmg);
-        }
+		}
 
-        #endregion
-    }
+	}
 }

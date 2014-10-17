@@ -1,34 +1,14 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_FP1_026.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ f p 1_026.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    using System.Collections.Generic;
+	class Sim_FP1_026 : SimTemplate //anubarambusher
+	{
 
-    /// <summary>
-    ///     The sim_ f p 1_026.
-    /// </summary>
-    internal class Sim_FP1_026 : SimTemplate
-    {
-        // anubarambusher
+//    todesröcheln:/ lasst einen zufälligen befreundeten diener auf eure hand zurückkehren.
 
-        // todesröcheln:/ lasst einen zufälligen befreundeten diener auf eure hand zurückkehren.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on deathrattle.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
         public override void onDeathrattle(Playfield p, Minion m)
         {
             List<Minion> temp = new List<Minion>();
@@ -52,11 +32,7 @@ namespace HREngine.Bots
                 {
                     Minion target = new Minion();
                     target = temp[0];
-                    if (temp.Count >= 2 && !target.taunt && temp[1].taunt)
-                    {
-                        target = temp[1];
-                    }
-
+                    if (temp.Count >= 2 && !target.taunt && temp[1].taunt) target = temp[1];
                     p.minionReturnToHand(target, m.own, 0);
                 }
                 else
@@ -64,16 +40,11 @@ namespace HREngine.Bots
                     Minion target = new Minion();
 
                     target = temp[0];
-                    if (temp.Count >= 2 && target.taunt && !temp[1].taunt)
-                    {
-                        target = temp[1];
-                    }
-
+                    if (temp.Count >= 2 && target.taunt && !temp[1].taunt) target = temp[1];
                     p.minionReturnToHand(target, m.own, 0);
                 }
             }
         }
 
-        #endregion
-    }
+	}
 }

@@ -1,18 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_PRO_001at.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ pr o_001 at.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ pr o_001 at.
-    /// </summary>
-    internal class Sim_PRO_001at : SimTemplate
-    {
-        // murloc
-    }
+	class Sim_PRO_001at : SimTemplate //murloc
+	{
+
+//
+		
+
+	}
 }

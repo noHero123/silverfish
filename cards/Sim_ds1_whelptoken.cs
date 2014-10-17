@@ -1,18 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_ds1_whelptoken.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ds 1_whelptoken.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ds 1_whelptoken.
-    /// </summary>
-    internal class Sim_ds1_whelptoken : SimTemplate
-    {
-        // whelp
-    }
+	class Sim_ds1_whelptoken : SimTemplate //whelp
+	{
+
+//
+		
+
+	}
 }

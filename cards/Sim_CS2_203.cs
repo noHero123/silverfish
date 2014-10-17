@@ -1,46 +1,18 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_203.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_203.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_203.
-    /// </summary>
-    internal class Sim_CS2_203 : SimTemplate
-    {
-        // ironbeakowl
+	class Sim_CS2_203 : SimTemplate //ironbeakowl
+	{
 
-        // kampfschrei:/ bringt einen diener zum schweigen/.
-        #region Public Methods and Operators
+//    kampfschrei:/ bringt einen diener zum schweigen/.
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+            if (target != null) p.minionGetSilenced(target);
+		}
 
-        /// <summary>
-        /// The get battlecry effect.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-        {
-            if (target != null)
-            {
-                p.minionGetSilenced(target);
-            }
-        }
 
-        #endregion
-    }
+	}
 }

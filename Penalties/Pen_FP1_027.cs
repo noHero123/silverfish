@@ -1,49 +1,17 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Pen_FP1_027.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The pen_ f p 1_027.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The pen_ f p 1_027.
-    /// </summary>
-    internal class Pen_FP1_027 : PenTemplate
-    {
-        // stoneskingargoyle
+	class Pen_FP1_027 : PenTemplate //stoneskingargoyle
+	{
 
-        // stellt zu beginn eures zuges das volle leben dieses dieners wieder her.
-        #region Public Methods and Operators
+//    stellt zu beginn eures zuges das volle leben dieses dieners wieder her.
+		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		{
+		return 0;
+		}
 
-        /// <summary>
-        /// The get play penalty.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        /// <param name="isLethal">
-        /// The is lethal.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-        {
-            return 0;
-        }
-
-        #endregion
-    }
+	}
 }

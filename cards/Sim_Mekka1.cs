@@ -1,35 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_Mekka1.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ mekka 1.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ mekka 1.
-    /// </summary>
-    internal class Sim_Mekka1 : SimTemplate
-    {
-        // homingchicken
+	class Sim_Mekka1 : SimTemplate //homingchicken
+	{
 
-        // vernichtet zu beginn eures zuges diesen diener und zieht 3 karten.
-        #region Public Methods and Operators
+//    vernichtet zu beginn eures zuges diesen diener und zieht 3 karten.
 
-        /// <summary>
-        /// The on turn start trigger.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="triggerEffectMinion">
-        /// The trigger effect minion.
-        /// </param>
-        /// <param name="turnStartOfOwner">
-        /// The turn start of owner.
-        /// </param>
         public override void onTurnStartTrigger(Playfield p, Minion triggerEffectMinion, bool turnStartOfOwner)
         {
             if (turnStartOfOwner == triggerEffectMinion.own)
@@ -41,6 +20,5 @@ namespace HREngine.Bots
             }
         }
 
-        #endregion
-    }
+	}
 }

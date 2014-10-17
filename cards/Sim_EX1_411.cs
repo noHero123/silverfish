@@ -1,50 +1,16 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_411.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_411.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_411.
-    /// </summary>
-    internal class Sim_EX1_411 : SimTemplate
+    class Sim_EX1_411 : SimTemplate//Gorehowl
     {
-        // Gorehowl
-        #region Fields
-
-        /// <summary>
-        ///     The wcard.
-        /// </summary>
-        private CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_411);
-
-        #endregion
-
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The on card play.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="ownplay">
-        /// The ownplay.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
+        CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_411);
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            p.equipWeapon(this.wcard, ownplay);
+            p.equipWeapon(wcard, ownplay);
         }
 
-        #endregion
     }
 }

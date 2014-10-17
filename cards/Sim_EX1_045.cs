@@ -1,20 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_045.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_045.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_045.
-    /// </summary>
-    internal class Sim_EX1_045 : SimTemplate
-    {
-        // ancientwatcher
+	class Sim_EX1_045 : SimTemplate //ancientwatcher
+	{
 
-        // kann nicht angreifen.
-    }
+//    kann nicht angreifen.
+		
+
+	}
 }

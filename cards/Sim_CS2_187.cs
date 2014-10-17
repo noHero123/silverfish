@@ -1,20 +1,13 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_187.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_187.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_187.
-    /// </summary>
-    internal class Sim_CS2_187 : SimTemplate
-    {
-        // bootybaybodyguard
+	class Sim_CS2_187 : SimTemplate //bootybaybodyguard
+	{
 
-        // spott/
-    }
+//    spott/
+
+	}
 }

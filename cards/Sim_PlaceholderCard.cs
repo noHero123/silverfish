@@ -1,18 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_PlaceholderCard.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ placeholder card.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ placeholder card.
-    /// </summary>
-    internal class Sim_PlaceholderCard : SimTemplate
-    {
-        // placeholdercard
-    }
+	class Sim_PlaceholderCard : SimTemplate //placeholdercard
+	{
+
+//
+		
+
+	}
 }

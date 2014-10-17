@@ -1,20 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_NEW1_011.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ ne w 1_011.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ ne w 1_011.
-    /// </summary>
-    internal class Sim_NEW1_011 : SimTemplate
-    {
-        // korkronelite
+	class Sim_NEW1_011 : SimTemplate //korkronelite
+	{
 
-        // ansturm/
-    }
+//    ansturm/
+		
+
+	}
 }

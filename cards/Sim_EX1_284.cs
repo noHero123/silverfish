@@ -1,73 +1,19 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_284.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_284.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_284.
-    /// </summary>
-    internal class Sim_EX1_284 : SimTemplate
-    {
-        // azuredrake
+	class Sim_EX1_284 : SimTemplate //azuredrake
+	{
 
-        // zauberschaden +1/. kampfschrei:/ zieht eine karte.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The get battlecry effect.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-        {
+//    zauberschaden +1/. kampfschrei:/ zieht eine karte.
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+           
             p.drawACard(CardDB.cardName.unknown, own.own);
-        }
+		}
 
-        /// <summary>
-        /// The on aura ends.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        public override void onAuraEnds(Playfield p, Minion m)
-        {
-            if (m.own)
-            {
-                p.spellpower--;
-            }
-            else
-            {
-                p.enemyspellpower--;
-            }
-        }
-
-        /// <summary>
-        /// The on aura starts.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
         public override void onAuraStarts(Playfield p, Minion m)
         {
             if (m.own)
@@ -80,6 +26,18 @@ namespace HREngine.Bots
             }
         }
 
-        #endregion
-    }
+        public override void onAuraEnds(Playfield p, Minion m)
+        {
+            if (m.own)
+            {
+                p.spellpower--;
+            }
+            else
+            {
+                p.enemyspellpower--;
+            }
+        }
+
+
+	}
 }

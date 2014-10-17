@@ -1,49 +1,17 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Pen_EX1_165t1.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The pen_ e x 1_165 t 1.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The pen_ e x 1_165 t 1.
-    /// </summary>
-    internal class Pen_EX1_165t1 : PenTemplate
-    {
-        // druidoftheclaw
+	class Pen_EX1_165t1 : PenTemplate //druidoftheclaw
+	{
 
-        // ansturm/
-        #region Public Methods and Operators
+//    ansturm/
+		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		{
+		return 0;
+		}
 
-        /// <summary>
-        /// The get play penalty.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        /// <param name="isLethal">
-        /// The is lethal.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-        {
-            return 0;
-        }
-
-        #endregion
-    }
+	}
 }

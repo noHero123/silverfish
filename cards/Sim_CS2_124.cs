@@ -1,20 +1,13 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_CS2_124.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ c s 2_124.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ c s 2_124.
-    /// </summary>
-    internal class Sim_CS2_124 : SimTemplate
-    {
-        // wolfrider
+	class Sim_CS2_124 : SimTemplate //wolfrider
+	{
 
-        // ansturm/
-    }
+//    ansturm/
+
+	}
 }

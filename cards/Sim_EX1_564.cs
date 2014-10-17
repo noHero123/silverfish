@@ -1,48 +1,25 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_564.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_564.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_564.
-    /// </summary>
-    internal class Sim_EX1_564 : SimTemplate
+    class Sim_EX1_564 : SimTemplate //facelessmanipulator
     {
-        // facelessmanipulator
 
-        // kampfschrei:/ wählt einen diener aus, um gesichtsloser manipulator in eine kopie desselben zu verwandeln.
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The get battlecry effect.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="own">
-        /// The own.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
+        //    kampfschrei:/ wählt einen diener aus, um gesichtsloser manipulator in eine kopie desselben zu verwandeln.
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
             if (target != null)
             {
-                // p.copyMinion(own, target);
+                //p.copyMinion(own, target);
+                bool source = own.own;
                 own.setMinionTominion(target);
+                own.own = source;
                 own.handcard.card.sim_card.onAuraStarts(p, own);
             }
         }
 
-        #endregion
+
     }
 }

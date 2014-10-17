@@ -1,49 +1,17 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Pen_EX1_089.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The pen_ e x 1_089.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The pen_ e x 1_089.
-    /// </summary>
-    internal class Pen_EX1_089 : PenTemplate
-    {
-        // arcanegolem
+	class Pen_EX1_089 : PenTemplate //arcanegolem
+	{
 
-        // ansturm/. kampfschrei:/ gebt eurem gegner 1 manakristall.
-        #region Public Methods and Operators
+//    ansturm/. kampfschrei:/ gebt eurem gegner 1 manakristall.
+		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		{
+		return 0;
+		}
 
-        /// <summary>
-        /// The get play penalty.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        /// <param name="isLethal">
-        /// The is lethal.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-        {
-            return 0;
-        }
-
-        #endregion
-    }
+	}
 }

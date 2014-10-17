@@ -1,18 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_HERO_06.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ her o_06.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ her o_06.
-    /// </summary>
-    internal class Sim_HERO_06 : SimTemplate
-    {
-        // malfurionstormrage
-    }
+	class Sim_HERO_06 : SimTemplate //malfurionstormrage
+	{
+
+//
+		
+
+	}
 }

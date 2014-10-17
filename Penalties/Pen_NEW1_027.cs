@@ -1,49 +1,17 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Pen_NEW1_027.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The pen_ ne w 1_027.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The pen_ ne w 1_027.
-    /// </summary>
-    internal class Pen_NEW1_027 : PenTemplate
-    {
-        // southseacaptain
+	class Pen_NEW1_027 : PenTemplate //southseacaptain
+	{
 
-        // eure anderen piraten haben +1/+1.
-        #region Public Methods and Operators
+//    eure anderen piraten haben +1/+1.
+		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		{
+		return 0;
+		}
 
-        /// <summary>
-        /// The get play penalty.
-        /// </summary>
-        /// <param name="p">
-        /// The p.
-        /// </param>
-        /// <param name="m">
-        /// The m.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="choice">
-        /// The choice.
-        /// </param>
-        /// <param name="isLethal">
-        /// The is lethal.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
-        {
-            return 0;
-        }
-
-        #endregion
-    }
+	}
 }

@@ -1,18 +1,14 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Sim_EX1_323w.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The sim_ e x 1_323 w.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace HREngine.Bots
 {
-    /// <summary>
-    ///     The sim_ e x 1_323 w.
-    /// </summary>
-    internal class Sim_EX1_323w : SimTemplate
-    {
-        // bloodfury
-    }
+	class Sim_EX1_323w : SimTemplate //bloodfury
+	{
+
+//
+		
+
+	}
 }
