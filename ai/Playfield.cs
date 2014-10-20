@@ -2268,6 +2268,13 @@
 
             if (logging) Helpfunctions.Instance.logg(".attck with" + attacker.name + " A " + attacker.Angr + " H " + attacker.Hp);
 
+            int attackerAngr = attacker.Angr;
+            int defAngr = defender.Angr;
+
+            //trigger attack ---------------------------
+            this.triggerAMinionIsGoingToAttack(attacker);
+            //------------------------------------------
+
             if (defender.isHero)//target is enemy hero
             {
 
@@ -2281,12 +2288,7 @@
                 return;
             }
 
-            int attackerAngr = attacker.Angr;
-            int defAngr = defender.Angr;
-
-            //trigger attack ---------------------------
-            this.triggerAMinionIsGoingToAttack(attacker);
-            //------------------------------------------
+           
 
             //defender gets dmg
             int oldHP = defender.Hp;

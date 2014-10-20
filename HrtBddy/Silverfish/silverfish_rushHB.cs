@@ -652,7 +652,7 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "113.4";
+        public string versionnumber = "113.5";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -10877,7 +10877,7 @@ namespace SilverfishRush
             {
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.manacost <= p.ownMaxMana && hc.card.type == CardDB.cardtype.MOB) return 10;
+                    if (hc.manacost <= p.ownMaxMana && hc.card.type == CardDB.cardtype.MOB) return 5;
                 }
 
             }

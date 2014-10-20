@@ -62,7 +62,7 @@
         {
 
 
-            /*if (!writelogg) return;
+            if (!writelogg) return;
             try
             {
                 using (StreamWriter sw = File.AppendText(Settings.Instance.logpath + Settings.Instance.logfile))
@@ -70,8 +70,8 @@
                     sw.WriteLine(s);
                 }
             }
-            catch { }*/
-            Console.WriteLine(s);
+            catch { }
+            //Console.WriteLine(s);
         }
 
         public DateTime UnixTimeStampToDateTime(int unixTimeStamp)
@@ -84,8 +84,8 @@
 
         public void ErrorLog(string s)
         {
-            //HREngine.API.Utilities.HRLog.Write(s);
-            Console.WriteLine(s);
+            HREngine.API.Utilities.HRLog.Write(s);
+            //Console.WriteLine(s);
         }
 
         string sendbuffer = "";

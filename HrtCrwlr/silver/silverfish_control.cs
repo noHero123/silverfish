@@ -107,7 +107,7 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("cant read your concede-Lvl");
             }
 
-            /*try
+            try
            {
                this.stopAfterWins = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.stopwin")));
                if (this.stopAfterWins <= 0) this.stopAfterWins = 10000;
@@ -116,7 +116,7 @@ namespace HREngine.Bots
            catch
            {
                Helpfunctions.Instance.ErrorLog("cant read stop after # of wins");
-           }*/
+           }
             try
             {
                 this.enemyConcede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.enemyconcede") == "true");
@@ -1044,7 +1044,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "113.4";
+        public string versionnumber = "113.5";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -4536,6 +4536,13 @@ namespace HREngine.Bots
 
             if (logging) Helpfunctions.Instance.logg(".attck with" + attacker.name + " A " + attacker.Angr + " H " + attacker.Hp);
 
+            int attackerAngr = attacker.Angr;
+            int defAngr = defender.Angr;
+
+            //trigger attack ---------------------------
+            this.triggerAMinionIsGoingToAttack(attacker);
+            //------------------------------------------
+
             if (defender.isHero)//target is enemy hero
             {
 
@@ -4549,12 +4556,7 @@ namespace HREngine.Bots
                 return;
             }
 
-            int attackerAngr = attacker.Angr;
-            int defAngr = defender.Angr;
 
-            //trigger attack ---------------------------
-            this.triggerAMinionIsGoingToAttack(attacker);
-            //------------------------------------------
 
             //defender gets dmg
             int oldHP = defender.Hp;
@@ -6907,6 +6909,7 @@ namespace HREngine.Bots
 
     }
 
+
     public class Ai
     {
 
@@ -7666,7 +7669,7 @@ namespace HREngine.Bots
                     }
                     else
                     {
-                        p.value = -10000;
+                        //p.value = -10000;
                     }
                     //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
                     this.posmoves.Add(p);
@@ -11332,7 +11335,7 @@ namespace HREngine.Bots
             {
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.manacost <= p.ownMaxMana && hc.card.type == CardDB.cardtype.MOB) return 10;
+                    if (hc.manacost <= p.ownMaxMana && hc.card.type == CardDB.cardtype.MOB) return 5;
                 }
 
             }
@@ -24156,7 +24159,7 @@ namespace HREngine.Bots
             }
             if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
             {
-                if (p.turnCounter < 2) retval += p.owncarddraw * 500;
+                if (p.turnCounter < 2) retval += p.owncarddraw * 100;
                 retval -= 1000;
             }
             if (p.ownHero.Hp <= 0) retval = -10000;
