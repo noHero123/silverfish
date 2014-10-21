@@ -2288,7 +2288,7 @@
                 return;
             }
 
-           
+
 
             //defender gets dmg
             int oldHP = defender.Hp;
@@ -3962,7 +3962,7 @@
                         this.ownDeckSize--;
                         if (this.owncards.Count >= 10)
                         {
-                            this.evaluatePenality += 5;
+                            this.evaluatePenality += 15;
                             return;
                         }
                         this.owncarddraw++;
@@ -4055,7 +4055,7 @@
                         this.ownDeckSize--;
                         if (this.owncards.Count >= 10)
                         {
-                            this.evaluatePenality += 5;
+                            this.evaluatePenality += 15;
                             return;
                         }
                         this.owncarddraw++;

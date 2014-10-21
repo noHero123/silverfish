@@ -8,6 +8,8 @@
         public int numberOfThreads = 32;
         public bool useSecretsPlayArround = false;
 
+        public bool simulatePlacement = true;
+
         public bool simulateEnemysTurn = true;
         public int enemyTurnMaxWide = 20;
 

@@ -1111,7 +1111,10 @@
 
             }
 
-
+            if (name == CardDB.cardName.flare && p.enemySecretCount >= 1 && p.playactions.Count == 0)
+            {
+                return -10;
+            }
 
             //some effects, which are bad :D
             int pen = 0;

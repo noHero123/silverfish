@@ -17,7 +17,7 @@ namespace HREngine.Bots
                 if (count >= 1)
                 {
                     List<Minion> temp2 = (turnEndOfOwner) ? new List<Minion>(p.enemyMinions) : new List<Minion>(p.ownMinions);
-                    temp2.Sort((a, b) => -a.Hp.CompareTo(b.Hp));//damage the stronges
+                    temp2.Sort((a, b) => a.Hp.CompareTo(b.Hp));//damage the lowest
                     foreach (Minion mins in temp2)
                     {
                         p.minionGetDamageOrHeal(mins, 8);
@@ -33,4 +33,5 @@ namespace HREngine.Bots
         }
 
     }
+
 }

@@ -275,6 +275,15 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("something went wrong with reading weight settings");
             }
 
+            try
+            {
+                Settings.Instance.simulatePlacement = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.placement") == "true") ? true : false;
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("something went wrong with reading placement settings");
+            }
+
 
             Helpfunctions.Instance.ErrorLog("----------------------------");
             Helpfunctions.Instance.ErrorLog("you are running uai V" + sf.versionnumber);

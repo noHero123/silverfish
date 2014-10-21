@@ -140,7 +140,7 @@
                     List<Action> actions = movegen.getMoveList(p, isLethalCheck, usePenalityManager, useCutingTargets);
                     foreach (Action a in actions)
                     {
-                        //if (deep == 0 && a.actionType == actionEnum.playcard) Helpfunctions.Instance.ErrorLog("play " + a.card.card.name);
+                        //if (deep == 0 && a.actionType == actionEnum.attackWithMinion) Helpfunctions.Instance.ErrorLog("play " + a.own.entitiyID + " -> " + a.target.entitiyID);
                         havedonesomething = true;
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
@@ -283,7 +283,7 @@
                     }
                     else
                     {
-                        p.value = -10000;
+                        //p.value = -10000;
                     }
                     //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
                     this.posmoves.Add(p);
@@ -328,6 +328,10 @@
 
 
             }
+
+            //just for debugging
+            posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
+
             //Helpfunctions.Instance.ErrorLog("time needed for parallel: " + (DateTime.Now - started).TotalSeconds);
         }
 
@@ -351,7 +355,7 @@
                     }
                     else
                     {
-                        p.value = -10000;
+                        //p.value = -10000;
                     }
                     //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
 

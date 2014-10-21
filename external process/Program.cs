@@ -4730,7 +4730,7 @@ namespace ConsoleApplication1
                         this.ownDeckSize--;
                         if (this.owncards.Count >= 10)
                         {
-                            this.evaluatePenality += 5;
+                            this.evaluatePenality += 15;
                             return;
                         }
                         this.owncarddraw++;
@@ -4823,7 +4823,7 @@ namespace ConsoleApplication1
                         this.ownDeckSize--;
                         if (this.owncards.Count >= 10)
                         {
-                            this.evaluatePenality += 5;
+                            this.evaluatePenality += 15;
                             return;
                         }
                         this.owncarddraw++;
@@ -6214,6 +6214,10 @@ namespace ConsoleApplication1
 
 
             }
+
+            //just for debugging
+            posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
+
             //Helpfunctions.Instance.ErrorLog("time needed for parallel: " + (DateTime.Now - started).TotalSeconds);
         }
 
@@ -6237,7 +6241,7 @@ namespace ConsoleApplication1
                     }
                     else
                     {
-                        p.value = -10000;
+                        //p.value = -10000;
                     }
                     //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
 
@@ -7374,6 +7378,18 @@ namespace ConsoleApplication1
 
             List<CardDB.cardName> playedcards = new List<CardDB.cardName>();
 
+            bool superplacement = false;
+            bool useplacement = Settings.Instance.simulatePlacement && p.turnCounter == 0 && p.ownMinions.Count >=2;
+            foreach (Minion hc in p.ownMinions)
+            {
+                if (hc.handcard.card.name == CardDB.cardName.direwolfalpha || hc.handcard.card.name == CardDB.cardName.flametonguetotem || hc.handcard.card.name == CardDB.cardName.defenderofargus)
+                {
+                    superplacement = true;
+                    break;
+                }
+
+            }
+
             foreach (Handmanager.Handcard hc in p.owncards)
             {
                 CardDB.Card c = hc.card;
@@ -7423,9 +7439,30 @@ namespace ConsoleApplication1
                                 cardplayPenality = pen.getPlayCardPenality(c, null, p, 0, isLethalCheck);
                                 if (cardplayPenality <= 499)
                                 {
-                                    Action a = new Action(actionEnum.playcard, hc, null, bestplace, null, cardplayPenality, 0);
-                                    //pf.playCard(hc, hc.position - 1, hc.entity, -1, -1, 0, bestplace, cardplayPenality);
-                                    ret.Add(a);
+
+                                    if (useplacement && ((hc.card.name == CardDB.cardName.direwolfalpha || hc.card.name == CardDB.cardName.flametonguetotem || hc.card.name == CardDB.cardName.defenderofargus) || (superplacement && hc.card.type == CardDB.cardtype.MOB)))
+                                    {
+                                        int adding = 1;
+                                        int subbing = 0;
+                                        if (hc.card.name == CardDB.cardName.direwolfalpha || hc.card.name == CardDB.cardName.flametonguetotem )//|| hc.card.name == CardDB.cardName.defenderofargus)
+                                        {
+                                            adding = 2;
+                                            subbing = 2;
+                                        }
+                                        for (int placer = 0; placer < p.ownMinions.Count - subbing; placer++)
+                                        {
+                                            Action a = new Action(actionEnum.playcard, hc, null, placer + adding, null, cardplayPenality, 0);
+                                            //Helpfunctions.Instance.ErrorLog("place " +hc.card.name + " on pos " + (placer+adding) + " mincount " + p.ownMinions.Count);
+                                            //pf.playCard(hc, hc.position - 1, hc.entity, -1, -1, 0, bestplace, cardplayPenality);
+                                            ret.Add(a);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Action a = new Action(actionEnum.playcard, hc, null, bestplace, null, cardplayPenality, 0);
+                                        //pf.playCard(hc, hc.position - 1, hc.entity, -1, -1, 0, bestplace, cardplayPenality);
+                                        ret.Add(a);
+                                    }
                                 }
                             }
                             else
@@ -9840,7 +9877,10 @@ namespace ConsoleApplication1
 
             }
 
-
+            if (name == CardDB.cardName.flare && p.enemySecretCount >= 1 && p.playactions.Count==0)
+            {
+                return -10;
+            }
 
             //some effects, which are bad :D
             int pen = 0;
@@ -12819,13 +12859,14 @@ namespace ConsoleApplication1
         public List<int> whatShouldIMulligan(List<CardIDEntity> cards, string ownclass, string enemclass)
         {
             List<int> discarditems = new List<int>();
-
+            bool usedManarule = false;
             foreach (mulliitem mi in this.deletelist)
             {
                 foreach (CardIDEntity c in cards)
                 {
                     if (mi.cardid == "#MANARULE" && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
                     {
+                        usedManarule = true;
                         if (CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(c.id)).cost >= mi.manarule)
                         {
                             if (discarditems.Contains(c.entitiy)) continue;
@@ -12913,22 +12954,41 @@ namespace ConsoleApplication1
                     }
                 }
 
-                if (delete)
+                if (!usedManarule)
                 {
-                    if (discarditems.Contains(c.entitiy)) continue;
-                    discarditems.Add(c.entitiy);
-                }
-                else
-                {
-                    discarditems.RemoveAll(x => x == c.entitiy);
-
-                    if (holddic.ContainsKey(c.id))
+                    if (delete)
                     {
-                        holddic[c.id]++;
+                        if (discarditems.Contains(c.entitiy)) continue;
+                        discarditems.Add(c.entitiy);
                     }
                     else
                     {
-                        holddic.Add(c.id, 1);
+                        discarditems.RemoveAll(x => x == c.entitiy);
+
+                        if (holddic.ContainsKey(c.id))
+                        {
+                            holddic[c.id]++;
+                        }
+                        else
+                        {
+                            holddic.Add(c.id, 1);
+                        }
+                    }
+                }
+                else
+                {//used manarules in discard line
+                    if (!delete)
+                    {
+                        discarditems.RemoveAll(x => x == c.entitiy);
+
+                        if (holddic.ContainsKey(c.id))
+                        {
+                            holddic[c.id]++;
+                        }
+                        else
+                        {
+                            holddic.Add(c.id, 1);
+                        }
                     }
                 }
 
@@ -22945,8 +23005,10 @@ namespace ConsoleApplication1
         public float firstweight = 0.5f;
         public float secondweight = 0.5f;
 
-        public int numberOfThreads = 32; // at least 1
+        public int numberOfThreads = 32;
         public bool useSecretsPlayArround = false;
+
+        public bool simulatePlacement = true;
 
         public bool simulateEnemysTurn = true;
         public int enemyTurnMaxWide = 20;
@@ -23691,12 +23753,21 @@ namespace ConsoleApplication1
 
         //    heldenfähigkeit/\nbeschwört ein zufälliges totem.
         CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_050);//
-
+        CardDB.Card kid2 = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_052);//
         //    heldenfähigkeit/\nruft einen rekruten der silbernen hand (1/1) herbei.
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             int posi = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
-            p.callKid(kid, posi, ownplay);
+            bool spawnspellpower = true;
+            foreach (Minion m in (ownplay) ? p.ownMinions : p.enemyMinions)
+            {
+                if (m.handcard.card.cardIDenum == CardDB.cardIDEnum.CS2_052)
+                {
+                    spawnspellpower = false;
+                    break;
+                }
+            }
+            p.callKid((spawnspellpower)? kid2 : kid, posi, ownplay);
         }
     }
 
@@ -27184,7 +27255,7 @@ namespace ConsoleApplication1
     {
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            int dmg = (ownplay) ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
+            int dmg = (ownplay) ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(3);
             p.allMinionOfASideGetDamage(!ownplay, dmg);
         }
 
@@ -27263,7 +27334,7 @@ namespace ConsoleApplication1
                         {
                             if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2) continue; //dont attack nerubianegg!
 
-                            if (m.Hp >= 1 && minhp > m.Hp)
+                            if (m.Hp >= 2 && minhp > m.Hp)
                             {
                                 enemy = m;
                                 minhp = m.Hp;
@@ -27447,7 +27518,7 @@ namespace ConsoleApplication1
                 if (count >= 1)
                 {
                     List<Minion> temp2 = (turnEndOfOwner) ? new List<Minion>(p.enemyMinions) : new List<Minion>(p.ownMinions);
-                    temp2.Sort((a, b) => -a.Hp.CompareTo(b.Hp));//damage the stronges
+                    temp2.Sort((a, b) => a.Hp.CompareTo(b.Hp));//damage the lowest
                     foreach (Minion mins in temp2)
                     {
                         p.minionGetDamageOrHeal(mins, 8);
@@ -28131,7 +28202,7 @@ namespace ConsoleApplication1
                         {
                             if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2) continue; //dont attack nerubianegg!
 
-                            if (m.Hp >= 1 && minhp > m.Hp)
+                            if (m.Hp >= 2 && minhp > m.Hp)
                             {
                                 enemy = m;
                                 minhp = m.Hp;
@@ -31115,10 +31186,11 @@ namespace ConsoleApplication1
                     bool found = false;
                     foreach (Minion m in temp)
                     {
-                        if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2) continue; //dont attack nerubianegg!
+                        if (m.name == CardDB.cardName.nerubianegg && m.Hp >= 2) continue; //dont attack nerubianegg!
+                        if (m.handcard.card.isToken && m.Hp == 1) continue;
                         if (m.name == CardDB.cardName.defender) continue;
                         if (m.name == CardDB.cardName.spellbender) continue;
-                        if (m.Hp >= 1 && minhp > m.Hp)
+                        if (m.Hp >= 2 && minhp > m.Hp)
                         {
                             enemy = m;
                             minhp = m.Hp;

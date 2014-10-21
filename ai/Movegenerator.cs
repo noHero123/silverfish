@@ -231,6 +231,18 @@
 
             List<CardDB.cardName> playedcards = new List<CardDB.cardName>();
 
+            bool superplacement = false;
+            bool useplacement = Settings.Instance.simulatePlacement && p.turnCounter == 0 && p.ownMinions.Count >= 2;
+            foreach (Minion hc in p.ownMinions)
+            {
+                if (hc.handcard.card.name == CardDB.cardName.direwolfalpha || hc.handcard.card.name == CardDB.cardName.flametonguetotem || hc.handcard.card.name == CardDB.cardName.defenderofargus)
+                {
+                    superplacement = true;
+                    break;
+                }
+
+            }
+
             foreach (Handmanager.Handcard hc in p.owncards)
             {
                 CardDB.Card c = hc.card;
@@ -280,9 +292,30 @@
                                 cardplayPenality = pen.getPlayCardPenality(c, null, p, 0, isLethalCheck);
                                 if (cardplayPenality <= 499)
                                 {
-                                    Action a = new Action(actionEnum.playcard, hc, null, bestplace, null, cardplayPenality, 0);
-                                    //pf.playCard(hc, hc.position - 1, hc.entity, -1, -1, 0, bestplace, cardplayPenality);
-                                    ret.Add(a);
+
+                                    if (useplacement && ((hc.card.name == CardDB.cardName.direwolfalpha || hc.card.name == CardDB.cardName.flametonguetotem || hc.card.name == CardDB.cardName.defenderofargus) || (superplacement && hc.card.type == CardDB.cardtype.MOB)))
+                                    {
+                                        int adding = 1;
+                                        int subbing = 0;
+                                        if (hc.card.name == CardDB.cardName.direwolfalpha || hc.card.name == CardDB.cardName.flametonguetotem)//|| hc.card.name == CardDB.cardName.defenderofargus)
+                                        {
+                                            adding = 2;
+                                            subbing = 2;
+                                        }
+                                        for (int placer = 0; placer < p.ownMinions.Count - subbing; placer++)
+                                        {
+                                            Action a = new Action(actionEnum.playcard, hc, null, placer + adding, null, cardplayPenality, 0);
+                                            //Helpfunctions.Instance.ErrorLog("place " +hc.card.name + " on pos " + (placer+adding) + " mincount " + p.ownMinions.Count);
+                                            //pf.playCard(hc, hc.position - 1, hc.entity, -1, -1, 0, bestplace, cardplayPenality);
+                                            ret.Add(a);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Action a = new Action(actionEnum.playcard, hc, null, bestplace, null, cardplayPenality, 0);
+                                        //pf.playCard(hc, hc.position - 1, hc.entity, -1, -1, 0, bestplace, cardplayPenality);
+                                        ret.Add(a);
+                                    }
                                 }
                             }
                             else
@@ -743,7 +776,7 @@
 
                         if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                         {
-                            if (mnn.Angr == m.Angr && mnn.Hp <= m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp <= m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && m.handcard.card.isToken == mnn.handcard.card.isToken) goingtoadd = false;
                             continue;
                         }
 
@@ -754,7 +787,7 @@
                                 continue;
                             }
                             // same name -> test whether they are equal
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && m.handcard.card.isToken == mnn.handcard.card.isToken) goingtoadd = false;
                             continue;
                         }
 

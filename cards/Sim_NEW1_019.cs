@@ -4,6 +4,7 @@ using System.Text;
 
 namespace HREngine.Bots
 {
+
     class Sim_NEW1_019 : SimTemplate //knifejuggler
     {
 
@@ -22,10 +23,11 @@ namespace HREngine.Bots
                     bool found = false;
                     foreach (Minion m in temp)
                     {
-                        if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2) continue; //dont attack nerubianegg!
+                        if (m.name == CardDB.cardName.nerubianegg && m.Hp >= 2) continue; //dont attack nerubianegg!
+                        if (m.handcard.card.isToken && m.Hp == 1) continue;
                         if (m.name == CardDB.cardName.defender) continue;
                         if (m.name == CardDB.cardName.spellbender) continue;
-                        if (m.Hp >= 1 && minhp > m.Hp)
+                        if (m.Hp >= 2 && minhp > m.Hp)
                         {
                             enemy = m;
                             minhp = m.Hp;
@@ -53,4 +55,5 @@ namespace HREngine.Bots
         }
 
     }
+
 }

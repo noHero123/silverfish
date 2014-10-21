@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace HREngine.Bots
 {
+
     public class Mulligan
     {
         public class CardIDEntity
@@ -327,22 +328,41 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (delete && !usedManarule)
+                if (!usedManarule)
                 {
-                    if (discarditems.Contains(c.entitiy)) continue;
-                    discarditems.Add(c.entitiy);
-                }
-                else
-                {
-                    discarditems.RemoveAll(x => x == c.entitiy);
-
-                    if (holddic.ContainsKey(c.id))
+                    if (delete)
                     {
-                        holddic[c.id]++;
+                        if (discarditems.Contains(c.entitiy)) continue;
+                        discarditems.Add(c.entitiy);
                     }
                     else
                     {
-                        holddic.Add(c.id, 1);
+                        discarditems.RemoveAll(x => x == c.entitiy);
+
+                        if (holddic.ContainsKey(c.id))
+                        {
+                            holddic[c.id]++;
+                        }
+                        else
+                        {
+                            holddic.Add(c.id, 1);
+                        }
+                    }
+                }
+                else
+                {//used manarules in discard line
+                    if (!delete)
+                    {
+                        discarditems.RemoveAll(x => x == c.entitiy);
+
+                        if (holddic.ContainsKey(c.id))
+                        {
+                            holddic[c.id]++;
+                        }
+                        else
+                        {
+                            holddic.Add(c.id, 1);
+                        }
                     }
                 }
 

@@ -64,6 +64,9 @@
 <Setting name="uai.maxBoardsEnemysSecondTurn" default="20" type="text" description="max boards enemys second turn:" />
 <Label>number of boards that are simulated in enemys second turn. requires "simulate enemys second turn" activated</Label>
 <Label></Label>
+<Setting name="uai.placement" default="false" type="boolean" description="simulate minion-placement" />
+<Label>check this and the ai will simulate all posibilities of minionplacement (whether it is necessary). will slow things down.</Label>
+<Label></Label>
 <Label></Label>
 <Setting name="uai.secrets" default="false" type="boolean" description="play arround secrets" />
 <Label>(EXPERIMENTAL) check this and the ai will play around enemys secrets</Label>

@@ -36,7 +36,7 @@ namespace HREngine.Bots
                         {
                             if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2) continue; //dont attack nerubianegg!
 
-                            if (m.Hp >= 1 && minhp > m.Hp)
+                            if (m.Hp >= 2 && minhp > m.Hp)
                             {
                                 enemy = m;
                                 minhp = m.Hp;
@@ -65,4 +65,5 @@ namespace HREngine.Bots
         }
 
     }
+
 }
