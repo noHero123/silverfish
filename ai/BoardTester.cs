@@ -96,6 +96,8 @@
 
             bool dosecrets = false;
 
+            Settings.Instance.simulatePlacement = false;
+
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
             string[] lines = new string[0] { };
@@ -200,6 +202,12 @@
                     {
                         string alphaval = s.Split(new string[] { " weight " }, StringSplitOptions.RemoveEmptyEntries)[1];
                         alpha = Convert.ToInt32(alphaval.Split(' ')[0]);
+                    }
+
+                    
+                    if (s.Contains(" plcmnt"))
+                    {
+                        Settings.Instance.simulatePlacement = true;
                     }
 
                     continue;

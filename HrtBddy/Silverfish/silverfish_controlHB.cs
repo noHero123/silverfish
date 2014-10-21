@@ -656,7 +656,7 @@ namespace SilverfishControl
 
     public class Silverfish
     {
-        public string versionnumber = "113.6";
+        public string versionnumber = "113.61";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1301,6 +1301,10 @@ namespace SilverfishControl
                 this.botbehave += " weight " + (int)(Settings.Instance.secondweight * 100f);
             }
 
+            if (Settings.Instance.simulatePlacement)
+            {
+                this.botbehave += " plcmnt";
+            }
 
 
         }
@@ -22102,6 +22106,8 @@ namespace SilverfishControl
 
             bool dosecrets = false;
 
+            Settings.Instance.simulatePlacement = false;
+
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
             string[] lines = new string[0] { };
@@ -22206,6 +22212,12 @@ namespace SilverfishControl
                     {
                         string alphaval = s.Split(new string[] { " weight " }, StringSplitOptions.RemoveEmptyEntries)[1];
                         alpha = Convert.ToInt32(alphaval.Split(' ')[0]);
+                    }
+
+
+                    if (s.Contains(" plcmnt"))
+                    {
+                        Settings.Instance.simulatePlacement = true;
                     }
 
                     continue;

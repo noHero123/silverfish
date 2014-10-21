@@ -1053,7 +1053,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "113.6";
+        public string versionnumber = "113.61";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1755,6 +1755,10 @@ namespace HREngine.Bots
                 this.botbehave += " weight " + (int)(Settings.Instance.secondweight * 100f);
             }
 
+            if (Settings.Instance.simulatePlacement)
+            {
+                this.botbehave += " plcmnt";
+            }
 
 
         }
@@ -22562,6 +22566,8 @@ namespace HREngine.Bots
 
             bool dosecrets = false;
 
+            Settings.Instance.simulatePlacement = false;
+
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
             string[] lines = new string[0] { };
@@ -22666,6 +22672,12 @@ namespace HREngine.Bots
                     {
                         string alphaval = s.Split(new string[] { " weight " }, StringSplitOptions.RemoveEmptyEntries)[1];
                         alpha = Convert.ToInt32(alphaval.Split(' ')[0]);
+                    }
+
+
+                    if (s.Contains(" plcmnt"))
+                    {
+                        Settings.Instance.simulatePlacement = true;
                     }
 
                     continue;

@@ -720,7 +720,10 @@ namespace HREngine.Bots
                 this.botbehave += " weight " + (int)(Settings.Instance.secondweight*100f);
             }
 
-
+            if (Settings.Instance.simulatePlacement)
+            {
+                this.botbehave += " plcmnt";
+            }
 
 
         }
