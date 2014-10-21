@@ -652,7 +652,7 @@ namespace SilverfishControl
 
     public class Silverfish
     {
-        public string versionnumber = "113.5";
+        public string versionnumber = "113.51";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -13861,13 +13861,14 @@ namespace SilverfishControl
         public List<int> whatShouldIMulligan(List<CardIDEntity> cards, string ownclass, string enemclass)
         {
             List<int> discarditems = new List<int>();
-
+            bool usedManarule = false;
             foreach (mulliitem mi in this.deletelist)
             {
                 foreach (CardIDEntity c in cards)
                 {
                     if (mi.cardid == "#MANARULE" && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
                     {
+                        usedManarule = true;
                         if (CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(c.id)).cost >= mi.manarule)
                         {
                             if (discarditems.Contains(c.entitiy)) continue;
@@ -13955,7 +13956,7 @@ namespace SilverfishControl
                     }
                 }
 
-                if (delete)
+                if (delete && !usedManarule)
                 {
                     if (discarditems.Contains(c.entitiy)) continue;
                     discarditems.Add(c.entitiy);

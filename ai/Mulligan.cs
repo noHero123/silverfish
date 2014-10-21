@@ -232,13 +232,14 @@ namespace HREngine.Bots
         public List<int> whatShouldIMulligan(List<CardIDEntity> cards, string ownclass, string enemclass)
         {
             List<int> discarditems = new List<int>();
-
+            bool usedManarule = false;
             foreach (mulliitem mi in this.deletelist)
             {
                 foreach (CardIDEntity c in cards)
                 {
                     if (mi.cardid == "#MANARULE" && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
                     {
+                        usedManarule = true;
                         if (CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(c.id)).cost >= mi.manarule)
                         {
                             if (discarditems.Contains(c.entitiy)) continue;
@@ -326,7 +327,7 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (delete)
+                if (delete && !usedManarule)
                 {
                     if (discarditems.Contains(c.entitiy)) continue;
                     discarditems.Add(c.entitiy);
