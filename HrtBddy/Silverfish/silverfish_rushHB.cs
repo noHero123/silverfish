@@ -656,7 +656,7 @@ namespace SilverfishRush
 
     public class Silverfish
     {
-        public string versionnumber = "113.7";
+        public string versionnumber = "113.71";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -2955,7 +2955,7 @@ namespace SilverfishRush
                 Minion target = null;
                 foreach (Minion mnn in temp)
                 {
-                    if (mnn.Hp <= damage || mnn.handcard.card.isSpecialMinion)
+                    if (mnn.Hp <= damage || mnn.handcard.card.isSpecialMinion || target == null)
                     {
                         target = mnn;
                     }
@@ -6463,7 +6463,6 @@ namespace SilverfishRush
 
 
     }
-
 
     public class Ai
     {

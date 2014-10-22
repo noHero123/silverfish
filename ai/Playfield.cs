@@ -1134,7 +1134,7 @@
                 Minion target = null;
                 foreach (Minion mnn in temp)
                 {
-                    if (mnn.Hp <= damage || mnn.handcard.card.isSpecialMinion)
+                    if (mnn.Hp <= damage || mnn.handcard.card.isSpecialMinion || target == null)
                     {
                         target = mnn;
                     }
