@@ -65,6 +65,7 @@
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (usecoin) retval -= 5 * p.manaTurnEnd;
+            if (p.manaTurnEnd >= 2 && !usecoin) retval -= 10;
             //if (usecoin && p.mana >= 1) retval -= 20;
 
             foreach (Minion m in p.ownMinions)
@@ -77,6 +78,11 @@
                 if (!m.taunt && m.stealth && m.handcard.card.isSpecialMinion) retval += 20;
                 if (m.handcard.card.name == CardDB.cardName.silverhandrecruit && m.Angr == 1 && m.Hp == 1) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
+                if (m.handcard.card.name == CardDB.cardName.nerubianegg)
+                {
+                    if (m.Angr >= 1) retval += 2;
+                    if ((!m.taunt && m.Angr == 0) && (m.divineshild || m.maxHp > 2)) retval -= 10;
+                }
             }
 
             foreach (Minion m in p.enemyMinions)

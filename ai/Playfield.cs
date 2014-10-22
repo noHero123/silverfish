@@ -2142,6 +2142,7 @@
             // its a minion attack--------------------------------
             if (a.actionType == actionEnum.attackWithMinion)
             {
+                this.evaluatePenality += a.penalty;
                 Minion target = a.target;
                 //secret stuff
                 int newTarget = this.secretTrigger_CharIsAttacked(a.own, target);
@@ -2177,7 +2178,7 @@
                 if (a.actionType == actionEnum.attackWithHero)
                 {
                     //secret trigger is inside
-                    attackWithWeapon(a.target, a.penalty);
+                    attackWithWeapon(a.own, a.target, a.penalty);
                 }
                 else
                 {
@@ -2325,12 +2326,11 @@
         }
 
         //a hero attacks a minion
-        public void attackWithWeapon(Minion target, int penality)
+        public void attackWithWeapon(Minion hero, Minion target, int penality)
         {
-            bool own = !target.own; //you cant attack own minions
+            bool own = hero.own;
             this.attacked = true;
             this.evaluatePenality += penality;
-            Minion hero = (own) ? this.ownHero : this.enemyHero;
             hero.numAttacksThisTurn++;
 
             //hero will end his readyness
@@ -2341,7 +2341,8 @@
             {
                 if (this.ownWeaponName == CardDB.cardName.truesilverchampion)
                 {
-                    this.minionGetDamageOrHeal(this.ownHero, -2);
+                    int heal = this.getMinionHeal(2);//minionheal because it's ignoring spellpower
+                    this.minionGetDamageOrHeal(hero, -heal);
                     doDmgTriggers();
                 }
             }
@@ -2349,7 +2350,8 @@
             {
                 if (this.enemyWeaponName == CardDB.cardName.truesilverchampion)
                 {
-                    this.minionGetDamageOrHeal(this.enemyHero, -2);
+                    int heal = this.getEnemyMinionHeal(2);
+                    this.minionGetDamageOrHeal(hero, -heal);
                     doDmgTriggers();
                 }
             }
@@ -2394,7 +2396,7 @@
                 if (ownWeaponName == CardDB.cardName.gorehowl && !target.isHero)
                 {
                     this.ownWeaponAttack--;
-                    this.ownHero.Angr--;
+                    hero.Angr--;
                 }
                 else
                 {
@@ -2405,8 +2407,8 @@
             {
                 if (enemyWeaponName == CardDB.cardName.gorehowl && !target.isHero)
                 {
-                    this.ownWeaponAttack--;
-                    this.enemyHero.Angr--;
+                    this.enemyWeaponAttack--;
+                    hero.Angr--;
                 }
                 else
                 {

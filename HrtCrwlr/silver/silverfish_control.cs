@@ -1053,7 +1053,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "113.61";
+        public string versionnumber = "113.7";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -4423,6 +4423,7 @@ namespace HREngine.Bots
             // its a minion attack--------------------------------
             if (a.actionType == actionEnum.attackWithMinion)
             {
+                this.evaluatePenality += a.penalty;
                 Minion target = a.target;
                 //secret stuff
                 int newTarget = this.secretTrigger_CharIsAttacked(a.own, target);
@@ -4458,7 +4459,7 @@ namespace HREngine.Bots
                 if (a.actionType == actionEnum.attackWithHero)
                 {
                     //secret trigger is inside
-                    attackWithWeapon(a.target, a.penalty);
+                    attackWithWeapon(a.own, a.target, a.penalty);
                 }
                 else
                 {
@@ -4606,12 +4607,11 @@ namespace HREngine.Bots
         }
 
         //a hero attacks a minion
-        public void attackWithWeapon(Minion target, int penality)
+        public void attackWithWeapon(Minion hero, Minion target, int penality)
         {
-            bool own = !target.own; //you cant attack own minions
+            bool own = hero.own;
             this.attacked = true;
             this.evaluatePenality += penality;
-            Minion hero = (own) ? this.ownHero : this.enemyHero;
             hero.numAttacksThisTurn++;
 
             //hero will end his readyness
@@ -4622,7 +4622,8 @@ namespace HREngine.Bots
             {
                 if (this.ownWeaponName == CardDB.cardName.truesilverchampion)
                 {
-                    this.minionGetDamageOrHeal(this.ownHero, -2);
+                    int heal = this.getMinionHeal(2);//minionheal because it's ignoring spellpower
+                    this.minionGetDamageOrHeal(hero, -heal);
                     doDmgTriggers();
                 }
             }
@@ -4630,7 +4631,8 @@ namespace HREngine.Bots
             {
                 if (this.enemyWeaponName == CardDB.cardName.truesilverchampion)
                 {
-                    this.minionGetDamageOrHeal(this.enemyHero, -2);
+                    int heal = this.getEnemyMinionHeal(2);
+                    this.minionGetDamageOrHeal(hero, -heal);
                     doDmgTriggers();
                 }
             }
@@ -4675,7 +4677,7 @@ namespace HREngine.Bots
                 if (ownWeaponName == CardDB.cardName.gorehowl && !target.isHero)
                 {
                     this.ownWeaponAttack--;
-                    this.ownHero.Angr--;
+                    hero.Angr--;
                 }
                 else
                 {
@@ -4686,8 +4688,8 @@ namespace HREngine.Bots
             {
                 if (enemyWeaponName == CardDB.cardName.gorehowl && !target.isHero)
                 {
-                    this.ownWeaponAttack--;
-                    this.enemyHero.Angr--;
+                    this.enemyWeaponAttack--;
+                    hero.Angr--;
                 }
                 else
                 {
@@ -9372,7 +9374,7 @@ namespace HREngine.Bots
 
                     foreach (Minion trgt in trgts)
                     {
-                        Action a = new Action(actionEnum.attackWithMinion, null, m, 0, trgt, 0, 0);
+                        Action a = new Action(actionEnum.attackWithMinion, null, m, 0, trgt, this.pen.getAttackWithMininonPenality(m, p, trgt, false), 0);
                         ret.Add(a);
                     }
 
@@ -24074,7 +24076,7 @@ namespace HREngine.Bots
             }
             else
             {
-                retval -= (hpboarder + 1 - p.ownHero.Hp - p.ownHero.armor) * (hpboarder + 1 - p.ownHero.Hp - p.ownHero.armor);
+                retval -= 2 * (hpboarder + 1 - p.ownHero.Hp - p.ownHero.armor) * (hpboarder + 1 - p.ownHero.Hp - p.ownHero.armor);
             }
 
 
@@ -24147,12 +24149,16 @@ namespace HREngine.Bots
                 //if (m.poisonous) retval += 1;
                 if (m.divineshild && m.taunt) retval += 4;
                 //if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
-                if (m.Angr > 1 || m.Hp > 1) ownMinionsCount++;
+                if (m.Angr > 2 || m.Hp > 2) ownMinionsCount++;
                 //if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
                 if (m.handcard.card.name == CardDB.cardName.bloodmagethalnos) retval += 10;
-                if (m.handcard.card.name == CardDB.cardName.nerubianegg && m.Angr >= 1) retval += 2;
+                if (m.handcard.card.name == CardDB.cardName.nerubianegg)
+                {
+                    if (m.Angr >= 1) retval += 2;
+                    if ((!m.taunt && m.Angr == 0) && (m.divineshild || m.maxHp > 2)) retval -= 10;
+                }
                 if (m.Ready) readycount++;
             }
 
@@ -24181,6 +24187,7 @@ namespace HREngine.Bots
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (usecoin) retval -= 5 * p.manaTurnEnd;
+            if (p.manaTurnEnd >= 2 && !usecoin) retval -= 10;
             //if (usecoin && p.mana >= 1) retval -= 20;
 
             int mobsInHand = 0;
@@ -24348,6 +24355,7 @@ namespace HREngine.Bots
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (usecoin) retval -= 5 * p.manaTurnEnd;
+            if (p.manaTurnEnd >= 2 && !usecoin) retval -= 10;
             //if (usecoin && p.mana >= 1) retval -= 20;
 
             foreach (Minion m in p.ownMinions)
@@ -24360,6 +24368,11 @@ namespace HREngine.Bots
                 if (!m.taunt && m.stealth && m.handcard.card.isSpecialMinion) retval += 20;
                 if (m.handcard.card.name == CardDB.cardName.silverhandrecruit && m.Angr == 1 && m.Hp == 1) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
+                if (m.handcard.card.name == CardDB.cardName.nerubianegg)
+                {
+                    if (m.Angr >= 1) retval += 2;
+                    if ((!m.taunt && m.Angr == 0) && (m.divineshild || m.maxHp > 2)) retval -= 10;
+                }
             }
 
             foreach (Minion m in p.enemyMinions)

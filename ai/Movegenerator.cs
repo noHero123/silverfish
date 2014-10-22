@@ -712,7 +712,7 @@
 
                     foreach (Minion trgt in trgts)
                     {
-                        Action a = new Action(actionEnum.attackWithMinion, null, m, 0, trgt, 0, 0);
+                        Action a = new Action(actionEnum.attackWithMinion, null, m, 0, trgt, this.pen.getAttackWithMininonPenality(m, p, trgt, false), 0);
                         ret.Add(a);
                     }
 
