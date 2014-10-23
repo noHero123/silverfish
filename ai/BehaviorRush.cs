@@ -65,7 +65,11 @@
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (usecoin) retval -= 5 * p.manaTurnEnd;
-            if (p.manaTurnEnd >= 2 && !usecoin) retval -= 10;
+            if (p.manaTurnEnd >= 2 && !useAbili)
+            {
+                retval -= 10;
+                if (p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2)) retval += 10;
+            }
             //if (usecoin && p.mana >= 1) retval -= 20;
 
             foreach (Minion m in p.ownMinions)

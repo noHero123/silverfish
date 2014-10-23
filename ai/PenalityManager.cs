@@ -175,14 +175,16 @@
 
             retval += getDestroyPenality(name, target, p, lethal);
             retval += getSpecialCardComboPenalitys(card, target, p, lethal, choice);
-            retval += playSecretPenality(card, p);
-            retval += getPlayCardSecretPenality(card, p);
             retval += getRandomPenaltiy(card, p, target);
             if (!lethal)
             {
                 retval += cb.getPenalityForDestroyingCombo(card, p);
                 retval += cb.getPlayValue(card.cardIDenum);
             }
+
+            retval += playSecretPenality(card, p);
+            retval += getPlayCardSecretPenality(card, p);
+
             //Helpfunctions.Instance.ErrorLog("retval " + retval);
             return retval;
         }
@@ -988,6 +990,11 @@
 
                 Minion m = target;
 
+                if (m.allreadyAttacked)
+                {
+                    return 50;
+                }
+
                 if (name == CardDB.cardName.shadowwordpain)
                 {
                     if (this.specialMinions.ContainsKey(m.name) || m.Angr == 3 || m.Hp >= 4)
@@ -1093,11 +1100,26 @@
                 }
             }
 
+            //lethal end########################################################
+
+            if (card.name == CardDB.cardName.daggermastery)
+            {
+                if (p.ownWeaponAttack >= 2 || p.ownWeaponDurability >= 2) return 5;
+            }
+
             if (card.name == CardDB.cardName.upgrade)
             {
                 if (p.ownWeaponDurability == 0)
                 {
                     return 16;
+                }
+            }
+
+            if (card.name == CardDB.cardName.baronrivendare)
+            {
+                foreach (Minion mnn in p.ownMinions)
+                {
+                    if (mnn.name == CardDB.cardName.deathlord || mnn.name == CardDB.cardName.zombiechow || mnn.name == CardDB.cardName.dancingswords) return 30;
                 }
             }
 
@@ -1399,6 +1421,8 @@
             if ((name == CardDB.cardName.polymorph || name == CardDB.cardName.hex))
             {
 
+
+
                 if (target.own && !target.isHero)
                 {
                     return 500;
@@ -1406,6 +1430,7 @@
 
                 if (!target.own && !target.isHero)
                 {
+                    if (target.allreadyAttacked) return 30;
                     Minion frog = target;
                     if (this.priorityTargets.ContainsKey(frog.name)) return 0;
                     if (frog.Angr >= 4 && frog.Hp >= 4) return 0;
@@ -2099,6 +2124,7 @@
             this.destroyDatabase.Add(CardDB.cardName.naturalize, 0);//not own mins
             this.destroyDatabase.Add(CardDB.cardName.siphonsoul, 0);//not own mins
             this.destroyDatabase.Add(CardDB.cardName.mindcontrol, 0);//not own mins
+            this.destroyDatabase.Add(CardDB.cardName.theblackknight, 0);//not own mins
 
         }
 

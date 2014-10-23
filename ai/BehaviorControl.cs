@@ -1,5 +1,6 @@
 ﻿namespace HREngine.Bots
 {
+
     public class BehaviorControl : Behavior
     {
         PenalityManager penman = PenalityManager.Instance;
@@ -73,7 +74,7 @@
                 retval += p.owncarddraw * 5;
             }
 
-            retval += p.owncarddraw * 5;
+            //retval += p.owncarddraw * 5;
             retval -= p.enemycarddraw * 15;
 
             //int owntaunt = 0;
@@ -101,7 +102,7 @@
                 //if (m.poisonous) retval += 1;
                 if (m.divineshild && m.taunt) retval += 4;
                 //if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
-                if (m.Angr > 2 || m.Hp > 2) ownMinionsCount++;
+                if (m.Angr > 2 || m.Hp > 3) ownMinionsCount++;
                 //if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
@@ -139,7 +140,11 @@
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (usecoin) retval -= 5 * p.manaTurnEnd;
-            if (p.manaTurnEnd >= 2 && !usecoin) retval -= 10;
+            if (p.manaTurnEnd >= 2 && !useAbili)
+            {
+                retval -= 10;
+                if (p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2)) retval += 10;
+            }
             //if (usecoin && p.mana >= 1) retval -= 20;
 
             int mobsInHand = 0;
@@ -159,14 +164,14 @@
             }
 
 
-            bool hasTank = false;
+            //bool hasTank = false;
             foreach (Minion m in p.enemyMinions)
             {
                 retval -= this.getEnemyMinionValue(m, p);
-                hasTank = hasTank || m.taunt;
+                //hasTank = hasTank || m.taunt;
             }
 
-            foreach (SecretItem si in p.enemySecretList)
+            /*foreach (SecretItem si in p.enemySecretList)
             {
                 if (readycount >= 1 && !hasTank && si.canbeTriggeredWithAttackingHero)
                 {
@@ -180,7 +185,7 @@
                 {
                     retval -= 25;
                 }
-            }
+            }*/
 
             retval -= p.enemySecretCount;
             retval -= p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2

@@ -35,6 +35,8 @@
         public int numAttacksThisTurn = 0;
         public bool immuneWhileAttacking = false;
 
+        public bool allreadyAttacked = false;
+
         //---------------------------------------
         public bool shadowmadnessed = false;//´can be silenced :D
 
@@ -95,6 +97,7 @@
             this.entitiyID = m.entitiyID;
             this.zonepos = m.zonepos;
 
+            this.allreadyAttacked = m.allreadyAttacked;
 
 
             this.playedThisTurn = m.playedThisTurn;
@@ -157,6 +160,7 @@
             this.zonepos = m.zonepos;
 
 
+            this.allreadyAttacked = m.allreadyAttacked;
 
             this.playedThisTurn = m.playedThisTurn;
             this.numAttacksThisTurn = m.numAttacksThisTurn;
@@ -267,6 +271,8 @@
                 damage = -1 * heal;
                 heal = 0;
             }
+
+            if (damage >= 1) this.allreadyAttacked = true;
 
             if (damage >= 1 && this.divineshild)
             {
