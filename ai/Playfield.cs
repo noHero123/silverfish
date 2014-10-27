@@ -3330,7 +3330,7 @@
 
         public void secretTrigger_HeroGotDmg(bool own, int dmg)
         {
-            int triggered=0;
+            int triggered = 0;
             if (own != this.isOwnTurn)
             {
                 if (this.isOwnTurn && this.enemySecretCount >= 1)
@@ -3489,10 +3489,10 @@
         public void secretTrigger_MinionDied(bool own)
         {
             int triggered = 0;
-            
+
             if (this.isOwnTurn && !own && this.enemySecretCount >= 1)
             {
-                
+
                 foreach (SecretItem si in this.enemySecretList)
                 {
                     if (si.canBe_duplicate)

@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "113.71";
+        public string versionnumber = "113.8";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -706,7 +706,7 @@ namespace HREngine.Bots
 
             if (Settings.Instance.simEnemySecondTurn)
             {
-                this.botbehave += " simEnemy2Turn";
+                this.botbehave += " ets2 " + Settings.Instance.enemyTurnMaxWideSecondTime;
                 this.botbehave += " ents " + Settings.Instance.enemySecondTurnMaxWide;
             }
 

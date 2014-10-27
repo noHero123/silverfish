@@ -108,6 +108,18 @@
 
         private void doallmoves(bool test, bool isLethalCheck)
         {
+            //set maxwide to the value for the first-turn-sim.
+            foreach (EnemyTurnSimulator ets in enemyTurnSim)
+            {
+                ets.setMaxwideFirstStep(true);
+            }
+
+            foreach (EnemyTurnSimulator ets in enemySecondTurnSim)
+            {
+                ets.setMaxwideFirstStep(false);
+            }
+
+            if (isLethalCheck) this.posmoves[0].enemySecretList.Clear();
             this.mainTurnSimulator.doallmoves(this.posmoves[0], isLethalCheck);
 
             Playfield bestplay = this.mainTurnSimulator.bestboard;

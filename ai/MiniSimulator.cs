@@ -269,6 +269,13 @@
             this.posmoves.Clear();
             int thread = 0;
             //DateTime started = DateTime.Now;
+
+            //set maxwide of enemyturnsimulator's to second step (this value is higher than the maxwide in first step) 
+            foreach (EnemyTurnSimulator ets in Ai.Instance.enemyTurnSim)
+            {
+                ets.setMaxwideSecondStep(true);
+            }
+
             if (Settings.Instance.numberOfThreads == 1)
             {
                 foreach (Playfield p in this.twoturnfields)

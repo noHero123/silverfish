@@ -48,6 +48,16 @@ namespace HREngine.Bots
 
             try
             {
+                bool reset = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.reset") == "true");
+                if (reset) resetSettings();
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("error! cant reset settings...");
+            }
+
+            try
+            {
                 concede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.autoconcede") == "true");
                 writeToSingleFile = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.singleLog") == "true");
             }
@@ -265,6 +275,7 @@ namespace HREngine.Bots
             }
 
             int amountBoardsInEnemyTurnSim = 20;
+            int amountBoardsInEnemyTurnSimSecondStepp = 200;
             int amountBoardsInEnemySecondTurnSim = 20;
 
             int nextturnsimDeep = 6;
@@ -274,6 +285,7 @@ namespace HREngine.Bots
             try
             {
                 amountBoardsInEnemyTurnSim = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysTurn"));
+                amountBoardsInEnemyTurnSimSecondStepp = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysTurnSecondStepp"));
                 amountBoardsInEnemySecondTurnSim = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysSecondTurn"));
                 nextturnsimDeep = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimDeep"));
                 nextturnsimMaxWidth = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimWide"));
@@ -543,6 +555,140 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.logg("cant write Settings.ini");
             }
         }
+
+        private void resetSettings()
+        {
+            string[] lines = new string[0] { };
+            Helpfunctions.Instance.logg("start write");
+            try
+            {
+                string path = (HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "Common" + System.IO.Path.DirectorySeparatorChar;
+                lines = System.IO.File.ReadAllLines(path + "Settings.ini");
+            }
+            catch
+            {
+                Helpfunctions.Instance.logg("cant find Settings.ini");
+            }
+            Helpfunctions.Instance.logg("begin write");
+            List<string> newlines = new List<string>();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string s = lines[i];
+
+                if (s.Contains("uai.reset"))
+                {
+                    s = "uai.reset=false";
+                }
+
+                if (s.Contains("uai.extern"))
+                {
+                    s = "uai.extern=true";
+                }
+                if (s.Contains("uai.passivewait"))
+                {
+                    s = "uai.passivewait=true";
+                }
+                if (s.Contains("uai.wwuaid"))
+                {
+                    s = "uai.wwuaid=false";
+                }
+                if (s.Contains("uai.enemyfacehp"))
+                {
+                    s = "uai.enemyfacehp=15";
+                }
+                if (s.Contains("uai.singleLog"))
+                {
+                    s = "uai.singleLog=false";
+                }
+
+
+                // advanced settings
+                if (s.Contains("uai.maxwide"))
+                {
+                    s = "uai.maxwide=4000";
+                }
+
+                if (s.Contains("uai.maxBoardsEnemysTurn"))
+                {
+                    s = "uai.maxBoardsEnemysTurn=40";
+                }
+
+                if (s.Contains("uai.simulateTwoTurnCounter"))
+                {
+                    s = "uai.simulateTwoTurnCounter=1500";
+                }
+
+                if (s.Contains("uai.maxBoardsEnemysTurnSecondStepp"))
+                {
+                    s = "uai.maxBoardsEnemysTurnSecondStepp=200";
+                }
+
+                if (s.Contains("uai.nextTurnSimDeep"))
+                {
+                    s = "uai.nextTurnSimDeep=6";
+                }
+                if (s.Contains("uai.nextTurnSimWide"))
+                {
+                    s = "uai.nextTurnSimWide=20";
+                }
+                if (s.Contains("uai.nextTurnSimBoards"))
+                {
+                    s = "uai.nextTurnSimBoards=200";
+                }
+
+                if (s.Contains("uai.simulateEnemyOnSecondTurn"))
+                {
+                    s = "uai.simulateEnemyOnSecondTurn=true";
+                }
+                if (s.Contains("uai.maxBoardsEnemysSecondTurn"))
+                {
+                    s = "uai.maxBoardsEnemysSecondTurn=20";
+                }
+
+                if (s.Contains("uai.placement"))
+                {
+                    s = "uai.placement=true";
+                }
+
+                if (s.Contains("uai.secrets"))
+                {
+                    s = "uai.secrets=false";
+                }
+
+                if (s.Contains("uai.playAround"))
+                {
+                    s = "uai.playAround=false";
+                }
+                if (s.Contains("uai.playAroundProb"))
+                {
+                    s = "uai.playAroundProb=40";
+                }
+                if (s.Contains("uai.playAroundProb2"))
+                {
+                    s = "uai.playAroundProb2=80";
+                }
+
+                if (s.Contains("uai.secondweight"))
+                {
+                    s = "uai.secondweight=50";
+                }
+                //Helpfunctions.Instance.ErrorLog("add " + s);
+                newlines.Add(s);
+
+            }
+
+
+            try
+            {
+                string path = (HRSettings.Get.CustomRuleFilePath).Remove(HRSettings.Get.CustomRuleFilePath.Length - 13) + "Common" + System.IO.Path.DirectorySeparatorChar;
+                System.IO.File.WriteAllLines(path + "Settings.ini", newlines.ToArray());
+            }
+            catch
+            {
+                Helpfunctions.Instance.logg("cant write Settings.ini");
+            }
+        }
+
 
         private HREngine.API.Actions.ActionBase HandleBattleMulliganPhase()
         {
@@ -1053,7 +1199,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "113.75";
+        public string versionnumber = "113.8";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1741,7 +1887,7 @@ namespace HREngine.Bots
 
             if (Settings.Instance.simEnemySecondTurn)
             {
-                this.botbehave += " simEnemy2Turn";
+                this.botbehave += " ets2 " + Settings.Instance.enemyTurnMaxWideSecondTime;
                 this.botbehave += " ents " + Settings.Instance.enemySecondTurnMaxWide;
             }
 
@@ -7089,6 +7235,18 @@ namespace HREngine.Bots
 
         private void doallmoves(bool test, bool isLethalCheck)
         {
+            //set maxwide to the value for the first-turn-sim.
+            foreach (EnemyTurnSimulator ets in enemyTurnSim)
+            {
+                ets.setMaxwideFirstStep(true);
+            }
+
+            foreach (EnemyTurnSimulator ets in enemySecondTurnSim)
+            {
+                ets.setMaxwideFirstStep(false);
+            }
+
+            if (isLethalCheck) this.posmoves[0].enemySecretList.Clear();
             this.mainTurnSimulator.doallmoves(this.posmoves[0], isLethalCheck);
 
             Playfield bestplay = this.mainTurnSimulator.bestboard;
@@ -7728,7 +7886,14 @@ namespace HREngine.Bots
             if (this.dirtyTwoTurnSim == 0) return;
             this.posmoves.Clear();
             int thread = 0;
-            //DateTime started = DateTime.Now;
+            DateTime started = DateTime.Now;
+
+            //set maxwide of enemyturnsimulator's to second step (this value is higher than the maxwide in first step) 
+            foreach (EnemyTurnSimulator ets in Ai.Instance.enemyTurnSim)
+            {
+                ets.setMaxwideSecondStep(true);
+            }
+
             if (Settings.Instance.numberOfThreads == 1)
             {
                 foreach (Playfield p in this.twoturnfields)
@@ -7792,7 +7957,7 @@ namespace HREngine.Bots
             //just for debugging
             posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
 
-            //Helpfunctions.Instance.ErrorLog("time needed for parallel: " + (DateTime.Now - started).TotalSeconds);
+            Helpfunctions.Instance.ErrorLog("time needed for parallel part: " + (DateTime.Now - started).TotalSeconds);
         }
 
         //workthread for dirtyTwoTurnsim
@@ -8035,17 +8200,22 @@ namespace HREngine.Bots
         private List<Playfield> posmoves = new List<Playfield>(7000);
         //public int maxwide = 20;
         Movegenerator movegen = Movegenerator.Instance;
-        bool readSettings = true;
-        private int maxwide = 20;
+        public int maxwide = 20;
+
+        public void setMaxwideFirstStep(bool firstTurn)
+        {
+            maxwide = Settings.Instance.enemyTurnMaxWide;
+            if (!firstTurn) maxwide = Settings.Instance.enemyTurnMaxWide;
+        }
+
+        public void setMaxwideSecondStep(bool firstTurn)
+        {
+            maxwide = Settings.Instance.enemyTurnMaxWideSecondTime;
+            if (!firstTurn) maxwide = Settings.Instance.enemyTurnMaxWide;
+        }
 
         public void simulateEnemysTurn(Playfield rootfield, bool simulateTwoTurns, bool playaround, bool print, int pprob, int pprob2)
         {
-            if (readSettings)
-            {
-                maxwide = Settings.Instance.enemyTurnMaxWide;
-                if (rootfield.turnCounter >= 2) maxwide = Settings.Instance.enemyTurnMaxWide;
-                this.readSettings = false;
-            }
 
             bool havedonesomething = true;
             posmoves.Clear();
@@ -10558,8 +10728,8 @@ namespace HREngine.Bots
                 //allow it if you have biggamehunter
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.name == CardDB.cardName.biggamehunter) return pen;
-                    if (hc.card.name == CardDB.cardName.shadowworddeath) return pen;
+                    if (hc.card.name == CardDB.cardName.biggamehunter) return 5;
+                    if (hc.card.name == CardDB.cardName.shadowworddeath) return 5;
                 }
                 if (card.name == CardDB.cardName.crueltaskmaster || card.name == CardDB.cardName.innerrage)
                 {
@@ -11494,7 +11664,17 @@ namespace HREngine.Bots
                 pen = 30;
             }
             if (name == CardDB.cardName.shatteredsuncleric && target == null) { pen = 10; }
-            if (name == CardDB.cardName.argentprotector && target == null) { pen = 10; }
+            if (name == CardDB.cardName.argentprotector)
+            {
+                if (target == null) { pen = 20; }
+                else
+                {
+                    if (!target.own) { return 500; }
+                    if (!target.Ready && !target.handcard.card.isSpecialMinion) { pen = 10; }
+                    if (!target.Ready && !target.handcard.card.isSpecialMinion && target.Angr <= 2 && target.Hp <= 2) { pen = 15; }
+                }
+
+            }
 
             if (name == CardDB.cardName.facelessmanipulator)
             {
@@ -12252,6 +12432,7 @@ namespace HREngine.Bots
             DamageAllDatabase.Add(CardDB.cardName.yseraawakens, 5);
 
             DamageAllEnemysDatabase.Add(CardDB.cardName.arcaneexplosion, 1);
+            DamageAllEnemysDatabase.Add(CardDB.cardName.shadowflame, 2);
             DamageAllEnemysDatabase.Add(CardDB.cardName.consecration, 1);
             DamageAllEnemysDatabase.Add(CardDB.cardName.fanofknives, 1);
             DamageAllEnemysDatabase.Add(CardDB.cardName.flamestrike, 4);
@@ -22736,8 +22917,17 @@ namespace HREngine.Bots
                         ets = Convert.ToInt32(eturnsim.Split(' ')[0]);
                     }
 
+                    if (s.Contains(" ets2 "))
+                    {
+                        string eturnsim2 = s.Split(new string[] { " ets2 " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        int ets2 = Convert.ToInt32(eturnsim2.Split(' ')[0]);
+                        Settings.Instance.enemyTurnMaxWideSecondTime = ets2;
+                    }
+
+
                     if (s.Contains(" ents "))
                     {
+                        this.simEnemy2Turn = true;
                         string eturnsim = s.Split(new string[] { " ents " }, StringSplitOptions.RemoveEmptyEntries)[1];
                         ents = Convert.ToInt32(eturnsim.Split(' ')[0]);
                     }
@@ -22745,13 +22935,10 @@ namespace HREngine.Bots
                     if (s.Contains(" ntss "))
                     {
                         string probs = s.Split(new string[] { " ntss " }, StringSplitOptions.RemoveEmptyEntries)[1];
-                        this.playarround = true;
                         ntssd = Convert.ToInt32(probs.Split(' ')[0]);
                         ntssw = Convert.ToInt32(probs.Split(' ')[1]);
                         ntssm = Convert.ToInt32(probs.Split(' ')[2]);
                     }
-
-                    if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
 
                     if (s.Contains(" secret")) dosecrets = true;
 
@@ -24240,7 +24427,6 @@ namespace HREngine.Bots
                 //if (m.poisonous) retval += 1;
                 if (m.divineshild && m.taunt) retval += 4;
                 //if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
-                if (m.Angr > 2 || m.Hp > 3) ownMinionsCount++;
                 //if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
@@ -24251,6 +24437,7 @@ namespace HREngine.Bots
                     if ((!m.taunt && m.Angr == 0) && (m.divineshild || m.maxHp > 2)) retval -= 10;
                 }
                 if (m.Ready) readycount++;
+                if (m.Hp <= 4 && (m.Angr > 2 || m.Hp > 3)) ownMinionsCount++;
             }
 
             /*if (p.enemyMinions.Count >= 0)
@@ -24645,6 +24832,7 @@ namespace HREngine.Bots
 
         public bool simulateEnemysTurn = true;
         public int enemyTurnMaxWide = 20;
+        public int enemyTurnMaxWideSecondTime = 20;
 
         public int secondTurnAmount = 256;
         public bool simEnemySecondTurn = true;

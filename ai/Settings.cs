@@ -12,6 +12,7 @@
 
         public bool simulateEnemysTurn = true;
         public int enemyTurnMaxWide = 20;
+        public int enemyTurnMaxWideSecondTime = 200;
 
         public int secondTurnAmount = 256;
         public bool simEnemySecondTurn = true;

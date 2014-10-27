@@ -11,17 +11,22 @@
         private List<Playfield> posmoves = new List<Playfield>(7000);
         //public int maxwide = 20;
         Movegenerator movegen = Movegenerator.Instance;
-        bool readSettings = true;
-        private int maxwide = 20;
+        public int maxwide = 20;
+
+        public void setMaxwideFirstStep(bool firstTurn)
+        {
+            maxwide = Settings.Instance.enemyTurnMaxWide;
+            if (!firstTurn) maxwide = Settings.Instance.enemyTurnMaxWide;
+        }
+
+        public void setMaxwideSecondStep(bool firstTurn)
+        {
+            maxwide = Settings.Instance.enemyTurnMaxWideSecondTime;
+            if (!firstTurn) maxwide = Settings.Instance.enemyTurnMaxWide;
+        }
 
         public void simulateEnemysTurn(Playfield rootfield, bool simulateTwoTurns, bool playaround, bool print, int pprob, int pprob2)
         {
-            if (readSettings)
-            {
-                maxwide = Settings.Instance.enemyTurnMaxWide;
-                if (rootfield.turnCounter >= 2) maxwide = Settings.Instance.enemyTurnMaxWide;
-                this.readSettings = false;
-            }
 
             bool havedonesomething = true;
             posmoves.Clear();

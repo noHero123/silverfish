@@ -8,6 +8,7 @@
 </Section>
 <Section id="silver1" title="settings">
 <Description>General settings related to ultimate AI.&lt;br&gt;</Description>
+<Setting name="uai.reset" default="false" type="boolean" description="reset the settings!" />
 <Setting name="uai.wwuaid" type="boolean" description="tutor mode" />
 <Setting name="uai.extern" default="true" type="boolean" description="use external process for calculations (recomended)" />
 <Label>uses Silver.exe for calculations, make sure you started it manually.</Label>
@@ -43,19 +44,22 @@
 <Setting name="uai.maxwide" default="3000" type="text" description="maxwide:" />
 <Label>raise this state to do more calculations, but dont overdo it (default is 3000). Isnt allowed to be below 100.</Label>
 <Label></Label>
-<Setting name="uai.maxBoardsEnemysTurn" default="20" type="text" description="max boards enemys turn:" />
+<Setting name="uai.maxBoardsEnemysTurn" default="40" type="text" description="max boards enemys turn:" />
 <Label>number of boards that are simulated in enemys turn</Label>
 <Label></Label>
-<Setting name="uai.simulateTwoTurnCounter" default="256" type="text" description="amount of Two-Turn-simulations" />
+<Setting name="uai.simulateTwoTurnCounter" default="1500" type="text" description="amount of Two-Turn-simulations" />
 <Label>number of boards, where the second turn is simulated, write a 0 to turn it off</Label>
+<Label></Label>
+<Setting name="uai.maxBoardsEnemysTurnSecondStepp" default="200" type="text" description="max boards enemys turn during second turn simulation:" />
+<Label>number of boards that are simulated in enemys turn, during the second turn simulation</Label>
 <Label></Label>
 <Setting name="uai.nextTurnSimDeep" default="6" type="text" description="max deep in your second turn simulation:" />
 <Label>deepness of simulation in your second turn </Label>
 <Label></Label>
-<Setting name="uai.nextTurnSimWide" default="10" type="text" description="max wide in your second turn simulation:" />
+<Setting name="uai.nextTurnSimWide" default="20" type="text" description="max wide in your second turn simulation:" />
 <Label>maximum width of your second turn simulation</Label>
 <Label></Label>
-<Setting name="uai.nextTurnSimBoards" default="50" type="text" description="max boards in your second turn simulation:" />
+<Setting name="uai.nextTurnSimBoards" default="200" type="text" description="max boards in your second turn simulation:" />
 <Label>maximum amount of boards calculated in your second turn simulation</Label>
 <Label></Label>
 <Setting name="uai.simulateEnemyOnSecondTurn" default="true" type="boolean" description="simulate enemys second turn" />
@@ -73,7 +77,6 @@
 <Label></Label>
 <Setting name="uai.playAround" type="boolean" description="play arround specific cards" />
 <Label>(EXPERIMENTAL) check this and the ai will play around some cards (like flamestrike) (will not change calculation time mutch)</Label>
-<Label></Label>
 <Setting name="uai.playAroundProb" default="50" type="text" description="play around min probability:" />
 <Label>which probability does the enemy needs, to use the aoe, but wont kill your minions. insert a value from 0 to 100.</Label>
 <Setting name="uai.playAroundProb2" default="80" type="text" description="play around max probability:" />
@@ -81,7 +84,6 @@
 <Label></Label>
 <Setting name="uai.secondweight" default="50" type="text" description="weight of second turn:" />
 <Label>how strong does the second turn simulation affects the value of a board (weight should be between 0 and 100, default is 50)</Label>
-</Section>
 <Section id="silver4" title="developper options">
 <Description>Developper settings, ignore them if you are not one.&lt;br&gt;</Description>
 <Setting name="uai.teststuff" type="boolean" description="simulating test file" />

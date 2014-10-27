@@ -102,7 +102,6 @@
                 //if (m.poisonous) retval += 1;
                 if (m.divineshild && m.taunt) retval += 4;
                 //if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
-                if (m.Angr > 2 || m.Hp > 3) ownMinionsCount++;
                 //if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
@@ -113,6 +112,7 @@
                     if ((!m.taunt && m.Angr == 0) && (m.divineshild || m.maxHp > 2)) retval -= 10;
                 }
                 if (m.Ready) readycount++;
+                if (m.Hp <= 4 && (m.Angr > 2 || m.Hp > 3)) ownMinionsCount++;
             }
 
             /*if (p.enemyMinions.Count >= 0)

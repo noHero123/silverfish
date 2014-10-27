@@ -218,8 +218,8 @@
                 //allow it if you have biggamehunter
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.name == CardDB.cardName.biggamehunter) return pen;
-                    if (hc.card.name == CardDB.cardName.shadowworddeath) return pen;
+                    if (hc.card.name == CardDB.cardName.biggamehunter) return 5;
+                    if (hc.card.name == CardDB.cardName.shadowworddeath) return 5;
                 }
                 if (card.name == CardDB.cardName.crueltaskmaster || card.name == CardDB.cardName.innerrage)
                 {
@@ -1154,7 +1154,17 @@
                 pen = 30;
             }
             if (name == CardDB.cardName.shatteredsuncleric && target == null) { pen = 10; }
-            if (name == CardDB.cardName.argentprotector && target == null) { pen = 10; }
+            if (name == CardDB.cardName.argentprotector)
+            {
+                if (target == null) { pen = 20; }
+                else
+                {
+                    if (!target.own) { return 500; }
+                    if (!target.Ready && !target.handcard.card.isSpecialMinion) { pen = 10; }
+                    if (!target.Ready && !target.handcard.card.isSpecialMinion && target.Angr <= 2 && target.Hp <= 2) { pen = 15; }
+                }
+
+            }
 
             if (name == CardDB.cardName.facelessmanipulator)
             {
@@ -1912,6 +1922,7 @@
             DamageAllDatabase.Add(CardDB.cardName.yseraawakens, 5);
 
             DamageAllEnemysDatabase.Add(CardDB.cardName.arcaneexplosion, 1);
+            DamageAllEnemysDatabase.Add(CardDB.cardName.shadowflame, 2);
             DamageAllEnemysDatabase.Add(CardDB.cardName.consecration, 1);
             DamageAllEnemysDatabase.Add(CardDB.cardName.fanofknives, 1);
             DamageAllEnemysDatabase.Add(CardDB.cardName.flamestrike, 4);

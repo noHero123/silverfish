@@ -2,6 +2,7 @@
 <Sections>
 <Section id="silver1" title="settings">
 <Description>General settings related to ultimate AI.&lt;br&gt;</Description>
+<Setting name="uai.reset" default="false" type="boolean" description="reset the settings!" />
 <Setting name="uai.wwuaid" type="boolean" description="tutor mode" />
 <Setting name="uai.extern" default="true" type="boolean" description="use external process for calculations (recomended)" />
 <Label>uses Silver.exe for calculations, make sure you started it manually.</Label>
@@ -16,6 +17,7 @@
 <Label></Label>
 <Setting name="uai.enemyfacehp" default="15" type="text" description="attack enemys face hp:" />
 <Label>the hp of the enemy, when your hero is allowed to attack his face (if he doesnt own another weapon).</Label>
+
 </Section>
 <Section id="silver2" title="info">
 <Description>info about uai.&lt;br&gt;</Description>
@@ -39,19 +41,22 @@
 <Setting name="uai.maxwide" default="3000" type="text" description="maxwide:" />
 <Label>raise this state to do more calculations, but dont overdo it (default is 3000). Isnt allowed to be below 100.</Label>
 <Label></Label>
-<Setting name="uai.maxBoardsEnemysTurn" default="20" type="text" description="max boards enemys turn:" />
+<Setting name="uai.maxBoardsEnemysTurn" default="40" type="text" description="max boards enemys turn:" />
 <Label>number of boards that are simulated in enemys turn</Label>
 <Label></Label>
-<Setting name="uai.simulateTwoTurnCounter" default="256" type="text" description="amount of Two-Turn-simulations" />
+<Setting name="uai.simulateTwoTurnCounter" default="1500" type="text" description="amount of Two-Turn-simulations" />
 <Label>number of boards, where the second turn is simulated, write a 0 to turn it off</Label>
+<Label></Label>
+<Setting name="uai.maxBoardsEnemysTurnSecondStepp" default="200" type="text" description="max boards enemys turn during second turn simulation:" />
+<Label>number of boards that are simulated in enemys turn, during the second turn simulation</Label>
 <Label></Label>
 <Setting name="uai.nextTurnSimDeep" default="6" type="text" description="max deep in your second turn simulation:" />
 <Label>deepness of simulation in your second turn </Label>
 <Label></Label>
-<Setting name="uai.nextTurnSimWide" default="10" type="text" description="max wide in your second turn simulation:" />
+<Setting name="uai.nextTurnSimWide" default="20" type="text" description="max wide in your second turn simulation:" />
 <Label>maximum width of your second turn simulation</Label>
 <Label></Label>
-<Setting name="uai.nextTurnSimBoards" default="50" type="text" description="max boards in your second turn simulation:" />
+<Setting name="uai.nextTurnSimBoards" default="200" type="text" description="max boards in your second turn simulation:" />
 <Label>maximum amount of boards calculated in your second turn simulation</Label>
 <Label></Label>
 <Setting name="uai.simulateEnemyOnSecondTurn" default="true" type="boolean" description="simulate enemys second turn" />

@@ -179,8 +179,17 @@
                         ets = Convert.ToInt32(eturnsim.Split(' ')[0]);
                     }
 
+                    if (s.Contains(" ets2 "))
+                    {
+                        string eturnsim2 = s.Split(new string[] { " ets2 " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        int ets2 = Convert.ToInt32(eturnsim2.Split(' ')[0]);
+                        Settings.Instance.enemyTurnMaxWideSecondTime = ets2;
+                    }
+
+
                     if (s.Contains(" ents "))
                     {
+                        this.simEnemy2Turn = true;
                         string eturnsim = s.Split(new string[] { " ents " }, StringSplitOptions.RemoveEmptyEntries)[1];
                         ents = Convert.ToInt32(eturnsim.Split(' ')[0]);
                     }
@@ -188,13 +197,10 @@
                     if (s.Contains(" ntss "))
                     {
                         string probs = s.Split(new string[] { " ntss " }, StringSplitOptions.RemoveEmptyEntries)[1];
-                        this.playarround = true;
                         ntssd = Convert.ToInt32(probs.Split(' ')[0]);
                         ntssw = Convert.ToInt32(probs.Split(' ')[1]);
                         ntssm = Convert.ToInt32(probs.Split(' ')[2]);
                     }
-
-                    if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
 
                     if (s.Contains(" secret")) dosecrets = true;
 
@@ -204,7 +210,7 @@
                         alpha = Convert.ToInt32(alphaval.Split(' ')[0]);
                     }
 
-                    
+
                     if (s.Contains(" plcmnt"))
                     {
                         Settings.Instance.simulatePlacement = true;

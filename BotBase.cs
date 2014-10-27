@@ -43,6 +43,16 @@ namespace HREngine.Bots
 
             try
             {
+                bool reset = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.reset") == "true");
+                if (reset) resetSettings();
+            }
+            catch
+            {
+                Helpfunctions.Instance.ErrorLog("error! cant reset settings...");
+            }
+
+            try
+            {
                 concede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.autoconcede") == "true") ? true : false;
                 writeToSingleFile = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.singleLog") == "true") ? true : false;
             }
@@ -237,6 +247,7 @@ namespace HREngine.Bots
             }
 
             int amountBoardsInEnemyTurnSim = 20;
+            int amountBoardsInEnemyTurnSimSecondStepp = 200;
             int amountBoardsInEnemySecondTurnSim = 20;
 
             int nextturnsimDeep = 6;
@@ -247,6 +258,7 @@ namespace HREngine.Bots
             {
 
                 amountBoardsInEnemyTurnSim = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysTurn"));
+                amountBoardsInEnemyTurnSimSecondStepp = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysTurnSecondStepp"));
                 amountBoardsInEnemySecondTurnSim = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysSecondTurn"));
                 nextturnsimDeep = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimDeep"));
                 nextturnsimMaxWidth = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimWide"));
@@ -494,6 +506,139 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.logg("cant write Settings.ini");
             }
         }
+
+        private void resetSettings()
+        {
+            string[] lines = new string[0] { };
+            try
+            {
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "Common" + System.IO.Path.DirectorySeparatorChar;
+                lines = System.IO.File.ReadAllLines(path + "Settings.ini");
+            }
+            catch
+            {
+                Helpfunctions.Instance.logg("cant find Settings.ini");
+            }
+            List<string> newlines = new List<string>();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string s = lines[i];
+
+                if (s.Contains("uai.reset"))
+                {
+                    s = "uai.reset=false";
+                }
+
+                if (s.Contains("uai.extern"))
+                {
+                    s = "uai.extern=true";
+                }
+                if (s.Contains("uai.passivewait"))
+                {
+                    s = "uai.passivewait=true";
+                }
+                if (s.Contains("uai.wwuaid"))
+                {
+                    s = "uai.wwuaid=false";
+                }
+                if (s.Contains("uai.enemyfacehp"))
+                {
+                    s = "uai.enemyfacehp=15";
+                }
+                if (s.Contains("uai.singleLog"))
+                {
+                    s = "uai.singleLog=false";
+                }
+
+
+                // advanced settings
+                if (s.Contains("uai.maxwide"))
+                {
+                    s = "uai.maxwide=4000";
+                }
+
+                if (s.Contains("uai.maxBoardsEnemysTurn"))
+                {
+                    s = "uai.maxBoardsEnemysTurn=40";
+                }
+
+                if (s.Contains("uai.simulateTwoTurnCounter"))
+                {
+                    s = "uai.simulateTwoTurnCounter=1500";
+                }
+
+                if (s.Contains("uai.maxBoardsEnemysTurnSecondStepp"))
+                {
+                    s = "uai.maxBoardsEnemysTurnSecondStepp=200";
+                }
+
+                if (s.Contains("uai.nextTurnSimDeep"))
+                {
+                    s = "uai.nextTurnSimDeep=6";
+                }
+                if (s.Contains("uai.nextTurnSimWide"))
+                {
+                    s = "uai.nextTurnSimWide=20";
+                }
+                if (s.Contains("uai.nextTurnSimBoards"))
+                {
+                    s = "uai.nextTurnSimBoards=200";
+                }
+
+                if (s.Contains("uai.simulateEnemyOnSecondTurn"))
+                {
+                    s = "uai.simulateEnemyOnSecondTurn=true";
+                }
+                if (s.Contains("uai.maxBoardsEnemysSecondTurn"))
+                {
+                    s = "uai.maxBoardsEnemysSecondTurn=20";
+                }
+
+                if (s.Contains("uai.placement"))
+                {
+                    s = "uai.placement=true";
+                }
+
+                if (s.Contains("uai.secrets"))
+                {
+                    s = "uai.secrets=false";
+                }
+
+                if (s.Contains("uai.playAround"))
+                {
+                    s = "uai.playAround=false";
+                }
+                if (s.Contains("uai.playAroundProb"))
+                {
+                    s = "uai.playAroundProb=40";
+                }
+                if (s.Contains("uai.playAroundProb2"))
+                {
+                    s = "uai.playAroundProb2=80";
+                }
+
+                if (s.Contains("uai.secondweight"))
+                {
+                    s = "uai.secondweight=50";
+                }
+                newlines.Add(s);
+                Helpfunctions.Instance.logg("add " +s);
+
+            }
+
+
+            try
+            {
+                string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "Common" + System.IO.Path.DirectorySeparatorChar;
+                System.IO.File.WriteAllLines(path + "Settings.ini", newlines.ToArray());
+            }
+            catch
+            {
+                Helpfunctions.Instance.logg("cant write Settings.ini");
+            }
+        }
+
+
 
         private HREngine.API.Actions.ActionBase HandleBattleMulliganPhase()
         {

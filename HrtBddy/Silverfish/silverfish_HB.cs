@@ -9,9 +9,10 @@ using Triton.Game.Mapping;
 
 //using System.Linq;
 
-namespace SilverfishControl
+namespace Silverfish
 {
-    public class SilverControl : ICustomDeck
+    
+    public class Control : ICustomDeck
     {
         private int dirtyTargetSource = -1;
         private int stopAfterWins = 30;
@@ -36,7 +37,7 @@ namespace SilverfishControl
         int wins = 0;
         int loses = 0;
 
-        public SilverControl()
+        public Control()
         {
             
             bool concede = false;
@@ -54,12 +55,13 @@ namespace SilverfishControl
             int playaroundprob2 = 80;   // probability where the enemy plays the aoe-spell, and your minions can die!
             this.useExternalProcess = false; // use silver.exe for calculations a lot faster than turning it off (true = recomended)
 
-            int amountBoardsInEnemyTurnSim = 20;
+            int amountBoardsInEnemyTurnSim = 40;
+            int amountBoardsInEnemyTurnSimSecondStepp = 200;
             int amountBoardsInEnemySecondTurnSim = 20;
 
             int nextturnsimDeep = 6;
-            int nextturnsimMaxWidth = 10;
-            int nexttunsimMaxBoards = 50;
+            int nextturnsimMaxWidth = 20;
+            int nexttunsimMaxBoards = 200;
 
             bool secrets = false; // playing arround enemys secrets
 
@@ -587,6 +589,584 @@ namespace SilverfishControl
         }
     }
 
+    public class Rush : ICustomDeck
+    {
+        private int dirtyTargetSource = -1;
+        private int stopAfterWins = 30;
+        private int concedeLvl = 5; // the rank, till you want to concede
+        private int dirtytarget = -1;
+        private int dirtychoice = -1;
+        private string choiceCardId = "";
+        DateTime starttime = DateTime.Now;
+        Silverfish sf;
+        bool enemyConcede = false;
+
+        public bool learnmode = false;
+        public bool printlearnmode = true;
+
+        bool useExternalProcess = true;
+        public bool passiveWaiting = false;
+
+        Behavior behave = new BehaviorRush();//change this to new BehaviorRush() for rush mode
+
+        //crawlerstuff
+        bool isgoingtoconcede = false;
+        int wins = 0;
+        int loses = 0;
+
+        public Rush()
+        {
+
+            bool concede = false;
+            bool writeToSingleFile = false;
+
+            // play with these settings###################################
+            int enfacehp = 15;  // hp of enemy when your hero is allowed to attack the enemy face with his weapon
+            int mxwde = 3000;   // numer of boards which are taken to the next deep-lvl
+            int twotsamount = 0;          // number of boards where the next turn is simulated
+            bool enemySecondTurnSim = false; // if he simulates the next players-turn, he also simulates the enemys respons
+
+            bool playaround = false;  //play around some enemys aoe-spells?
+            //these two probs are >= 0 and <= 100
+            int playaroundprob = 50;    //probability where the enemy plays the aoe-spell, but your minions will not die through it
+            int playaroundprob2 = 80;   // probability where the enemy plays the aoe-spell, and your minions can die!
+            this.useExternalProcess = false; // use silver.exe for calculations a lot faster than turning it off (true = recomended)
+
+            int amountBoardsInEnemyTurnSim = 40;
+            int amountBoardsInEnemyTurnSimSecondStepp = 200;
+            int amountBoardsInEnemySecondTurnSim = 20;
+
+            int nextturnsimDeep = 6;
+            int nextturnsimMaxWidth = 20;
+            int nexttunsimMaxBoards = 200;
+
+            bool secrets = false; // playing arround enemys secrets
+
+            int alpha = 50; // weight of the second turn in calculation (0<= alpha <= 100)
+
+            Settings.Instance.simulatePlacement = false;  // set this true, and ai will simulate all placements, whether you have a alpha/flametongue/argus
+            //use it only with useExternalProcess = true !!!!
+
+            //###########################################################
+
+
+            sf = new Silverfish(writeToSingleFile);
+            Mulligan.Instance.setAutoConcede(concede);
+
+            sf.setnewLoggFile();
+
+            Helpfunctions.Instance.ErrorLog("set enemy-face-hp to: " + enfacehp);
+            ComboBreaker.Instance.attackFaceHP = enfacehp;
+
+            Ai.Instance.setMaxWide(mxwde);
+            Helpfunctions.Instance.ErrorLog("set maxwide to: " + mxwde);
+
+            Ai.Instance.setTwoTurnSimulation(false, twotsamount);
+            Helpfunctions.Instance.ErrorLog("calculate the second turn of the " + twotsamount + " best boards");
+            if (twotsamount >= 1)
+            {
+                //Ai.Instance.nextTurnSimulator.setEnemyTurnsim(enemySecondTurnSim);
+                Settings.Instance.simEnemySecondTurn = enemySecondTurnSim;
+                if (enemySecondTurnSim) Helpfunctions.Instance.ErrorLog("simulates the enemy turn on your second turn");
+            }
+
+            if (secrets)
+            {
+
+                Settings.Instance.useSecretsPlayArround = secrets;
+                Helpfunctions.Instance.ErrorLog("playing arround secrets is " + secrets);
+            }
+
+
+            if (playaround)
+            {
+                Settings.Instance.playarround = playaround;
+                Settings.Instance.playaroundprob = playaroundprob;
+                Settings.Instance.playaroundprob2 = playaroundprob2;
+                Ai.Instance.setPlayAround();
+                Helpfunctions.Instance.ErrorLog("activated playaround");
+            }
+
+            if (writeToSingleFile) Helpfunctions.Instance.ErrorLog("write to log to single file");
+
+
+            Settings.Instance.setWeights(alpha);
+
+
+            bool teststuff = false;
+            // set to true, to run a testfile (requires test.txt file in filder where _cardDB.txt file is located)
+            bool printstuff = false; // if true, the best board of the tested file is printet stepp by stepp
+
+            Settings.Instance.enemyTurnMaxWide = amountBoardsInEnemyTurnSim;
+            Settings.Instance.enemySecondTurnMaxWide = amountBoardsInEnemySecondTurnSim;
+
+            Settings.Instance.nextTurnDeep = nextturnsimDeep;
+            Settings.Instance.nextTurnMaxWide = nextturnsimMaxWidth;
+            Settings.Instance.nextTurnTotalBoards = nexttunsimMaxBoards;
+
+            Helpfunctions.Instance.ErrorLog("----------------------------");
+            Helpfunctions.Instance.ErrorLog("you are running uai V" + sf.versionnumber);
+            Helpfunctions.Instance.ErrorLog("----------------------------");
+
+            if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("YOU USE SILVER.EXE FOR CALCULATION, MAKE SURE YOU STARTED IT!");
+            if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("SILVER.EXE IS LOCATED IN: " + Settings.Instance.path);
+
+            if (teststuff)
+            {
+                Ai.Instance.autoTester(printstuff);
+            }
+        }
+
+        // you may have to out-comment the code in this function (its for conceding)
+        /*
+     private void concede()
+      {
+          int curlvl = HRPlayer.GetLocalPlayer().GetRank();
+          if (HREngine.API.Utilities.HRSettings.Get.SelectedGameMode != HRGameMode.RANKED_PLAY) return;
+          if (curlvl < this.concedeLvl)
+          {
+              Helpfunctions.Instance.ErrorLog("not today!");
+              HRGame.ConcedeGame();
+          }
+      }
+
+        
+
+
+        // HC mulligan
+      private HREngine.API.Actions.ActionBase HandleBattleMulliganPhase()
+      {
+          Helpfunctions.Instance.ErrorLog("handle mulligan");
+
+          if (HRMulligan.IsMulliganActive())
+          {
+              var list = HRCard.GetCards(HRPlayer.GetLocalPlayer(), HRCardZone.HAND);
+              if (Mulligan.Instance.hasmulliganrules())
+              {
+                  HRPlayer enemyPlayer = HRPlayer.GetEnemyPlayer();
+                  string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.GetHeroCard().GetEntity().GetCardId());
+                  List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
+                  foreach (var item in list)
+                  {
+                      if (item.GetEntity().GetCardId() != "GAME_005")// dont mulligan coin
+                      {
+                          celist.Add(new Mulligan.CardIDEntity(item.GetEntity().GetCardId(), item.GetEntity().GetEntityId()));
+                      }
+                  }
+                  List<int> mullientitys = Mulligan.Instance.whatShouldIMulligan(celist, enemName);
+                  foreach (var item in list)
+                  {
+                      if (mullientitys.Contains(item.GetEntity().GetEntityId()))
+                      {
+                          Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + item.GetEntity().GetName() + " because of your rules");
+                          HRMulligan.ToggleCard(item);
+                      }
+                  }
+
+
+              }
+              else
+              {
+                  foreach (var item in list)
+                  {
+                      if (item.GetEntity().GetCost() >= 4)
+                      {
+                          Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + item.GetEntity().GetName() + " because it cost is >= 4.");
+                          HRMulligan.ToggleCard(item);
+                      }
+                      if (item.GetEntity().GetCardId() == "EX1_308" || item.GetEntity().GetCardId() == "EX1_622" || item.GetEntity().GetCardId() == "EX1_005")
+                      {
+                          Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + item.GetEntity().GetName() + " because it is soulfire or shadow word: death");
+                          HRMulligan.ToggleCard(item);
+                      }
+                  }
+              }
+
+
+              sf.setnewLoggFile();
+
+              if (Mulligan.Instance.loserLoserLoser)
+              {
+                  concede();
+              }
+              return null;
+              //HRMulligan.EndMulligan();
+          }
+          return null;
+      }
+
+       */
+
+        /// <summary>
+        ///     [EN]
+        ///     This handler is executed when the local player turn is active.
+        /// </summary>
+        public IEnumerator SelectCard()
+        {
+            if (this.passiveWaiting && sf.waitingForSilver)
+            {
+                if (!this.sf.readActionFile(true))
+                {
+                    yield return Coroutine.Sleep(50);
+                    yield break;
+                }
+            }
+
+            if (this.learnmode && (TritonHS.IsInTargetMode() || TritonHS.IsInChoiceMode()))
+            {
+                yield return Coroutine.Sleep(50);
+                yield break;
+            }
+
+            if (TritonHS.IsInTargetMode())
+            {
+                if (dirtytarget >= 0)
+                {
+                    Logging.Write("targeting...");
+                    HSCard source = null;
+                    if (dirtyTargetSource == 9000) // 9000 = ability
+                    {
+                        source = TritonHS.OurHeroPowerCard;
+                    }
+                    else
+                    {
+                        source = getEntityWithNumber(dirtyTargetSource);
+                    }
+                    HSCard target = getEntityWithNumber(dirtytarget);
+
+                    if (target == null) Logging.Write("error: target is null...");
+
+                    dirtytarget = -1;
+                    dirtyTargetSource = -1;
+
+                    if (source == null) TritonHS.DoTarget(target);
+                    else source.DoTarget(target);
+
+                    yield break;
+                }
+                Logging.Write("target failure...");
+                TritonHS.CancelTargetingMode();
+            }
+
+            if (TritonHS.IsInChoiceMode())
+            {
+                if (dirtychoice >= 1)
+                {
+                    //dirtychoice == 1 -> choose left card, 
+                    // dirty choice == 2 -> right card
+
+                    Helpfunctions.Instance.logg("chooses the card: " + dirtychoice);
+                    if (dirtychoice == 1)
+                    {
+                        TritonHS.ChooseOneClickLeft();
+                    }
+                    else
+                    {
+                        TritonHS.ChooseOneClickRight();
+                    }
+                    dirtychoice = -1;
+                    yield break;
+                }
+                //Todo: ultimate tracking-simulation!
+                var r = new Random();
+                int choice = r.Next(0, 2);
+                Helpfunctions.Instance.logg("chooses a random card");
+                TritonHS.ChooseOneClickLeft();
+                yield break;
+            }
+
+            bool templearn = sf.updateEverything(behave, this.useExternalProcess, this.passiveWaiting);
+            if (templearn == true) this.printlearnmode = true;
+
+            if (this.passiveWaiting && sf.waitingForSilver)
+            {
+                yield return Coroutine.Sleep(50);
+                yield break;
+            }
+
+            if (this.learnmode)
+            {
+                if (this.printlearnmode)
+                {
+                    Ai.Instance.simmulateWholeTurnandPrint();
+                }
+                this.printlearnmode = false;
+
+                //do nothing
+                yield return Coroutine.Sleep(50);
+                yield break;
+            }
+
+            Action moveTodo = Ai.Instance.bestmove;
+            if (moveTodo == null || moveTodo.actionType == actionEnum.endturn)
+            {
+                Helpfunctions.Instance.ErrorLog("end turn");
+                TritonHS.EndTurn();
+                yield break;
+            }
+            Helpfunctions.Instance.ErrorLog("play action");
+            moveTodo.print();
+
+            //play the move#########################################################################
+
+            //play a card form hand
+            if (moveTodo.actionType == actionEnum.playcard)
+            {
+                HSCard cardtoplay = getCardWithNumber(moveTodo.card.entity);
+                if (moveTodo.target != null)
+                {
+                    HSCard target = getEntityWithNumber(moveTodo.target.entitiyID);
+                    Helpfunctions.Instance.ErrorLog("play: " + cardtoplay.Name + " target: " + target.Name + " targetEnt " + target.EntityId);
+                    Helpfunctions.Instance.logg("play: " + cardtoplay.Name + " target: " + target.Name + " choice: " +
+                                                moveTodo.druidchoice);
+
+                    if (moveTodo.druidchoice >= 1)
+                    {
+                        dirtytarget = moveTodo.target.entitiyID;
+                        dirtychoice = moveTodo.druidchoice; //1=leftcard, 2= rightcard
+                        choiceCardId = moveTodo.card.card.cardIDenum.ToString();
+                    }
+
+                    //safe targeting stuff for hsbuddy
+                    dirtyTargetSource = moveTodo.card.entity;
+                    dirtytarget = moveTodo.target.entitiyID;
+
+
+                    //we can place mobs (if api supports it)
+                    /*
+                if (moveTodo.handcard.card.type == CardDB.cardtype.MOB)
+                {
+                    //moveTodo.owntarget (maybe +1 (depends on api)) is the place, where the mob should be placed
+                    //return;
+                }
+                */
+
+                    cardtoplay.DoGrab();
+
+                    if (moveTodo.card.card.type == CardDB.cardtype.MOB)
+                    {
+                        int place = this.localPosToGlobalPos(moveTodo.place - 1, Hrtprozis.Instance.ownMinions.Count);
+                        TritonHS.SetCursorPos(place);
+                    }
+
+                    yield return Coroutine.Sleep(500);
+                    cardtoplay.DoDrop();
+                    yield break;
+                }
+                Helpfunctions.Instance.ErrorLog("play: " + cardtoplay.Name + " target nothing");
+                Helpfunctions.Instance.logg("play: " + cardtoplay.Name + " choice: " + moveTodo.druidchoice);
+                if (moveTodo.druidchoice >= 1)
+                {
+                    dirtychoice = moveTodo.druidchoice; //1=leftcard, 2= rightcard
+                    choiceCardId = moveTodo.card.card.cardIDenum.ToString();
+                }
+
+                dirtyTargetSource = -1;
+                dirtytarget = -1;
+
+                //mob placement...
+                /*
+                if (moveTodo.handcard.card.type == CardDB.cardtype.MOB)
+                {
+                    //moveTodo.owntarget (maybe +1 (depends on api)) is the place, where the mob should be placed
+                    //return;
+                }*/
+
+                cardtoplay.DoGrab();
+
+                if (moveTodo.card.card.type == CardDB.cardtype.MOB)
+                {
+                    int place = this.localPosToGlobalPos(moveTodo.place - 1, Hrtprozis.Instance.ownMinions.Count);
+                    TritonHS.SetCursorPos(place);
+                }
+
+                yield return Coroutine.Sleep(500);
+                cardtoplay.DoDrop();
+                yield break;
+            }
+
+            //attack with minion
+            if (moveTodo.actionType == actionEnum.attackWithMinion)
+            {
+                HSCard attacker = getEntityWithNumber(moveTodo.own.entitiyID);
+                HSCard target = getEntityWithNumber(moveTodo.target.entitiyID);
+                Helpfunctions.Instance.ErrorLog("minion attack: " + attacker.Name + " target: " + target.Name);
+                Helpfunctions.Instance.logg("minion attack: " + attacker.Name + " target: " + target.Name);
+                attacker.DoAttack(target);
+                yield break;
+            }
+            //attack with hero
+            if (moveTodo.actionType == actionEnum.attackWithHero)
+            {
+                HSCard attacker = getEntityWithNumber(moveTodo.own.entitiyID);
+                HSCard target = getEntityWithNumber(moveTodo.target.entitiyID);
+                dirtytarget = moveTodo.target.entitiyID;
+                Helpfunctions.Instance.ErrorLog("heroattack: " + attacker.Name + " target: " + target.Name);
+                Helpfunctions.Instance.logg("heroattack: " + attacker.Name + " target: " + target.Name);
+
+                //safe targeting stuff for hsbuddy
+                dirtyTargetSource = moveTodo.own.entitiyID;
+                dirtytarget = moveTodo.target.entitiyID;
+                attacker.DoAttack(target);
+                yield break;
+            }
+
+            //use ability
+            if (moveTodo.actionType == actionEnum.useHeroPower)
+            {
+                HSCard cardtoplay = TritonHS.OurHeroPowerCard;
+
+                if (moveTodo.target != null)
+                {
+                    HSCard target = getEntityWithNumber(moveTodo.target.entitiyID);
+                    dirtyTargetSource = 9000;
+                    dirtytarget = moveTodo.target.entitiyID;
+
+                    Helpfunctions.Instance.ErrorLog("use ablitiy: " + cardtoplay.Name + " target " + target.Name);
+                    Helpfunctions.Instance.logg("use ablitiy: " + cardtoplay.Name + " target " + target.Name);
+                }
+                else
+                {
+                    Helpfunctions.Instance.ErrorLog("use ablitiy: " + cardtoplay.Name + " target nothing");
+                    Helpfunctions.Instance.logg("use ablitiy: " + cardtoplay.Name + " target nothing");
+                }
+                cardtoplay.DoGrab();
+                yield return Coroutine.Sleep(500);
+                cardtoplay.DoDrop();
+                yield break;
+            }
+
+            TritonHS.EndTurn();
+        }
+
+        private int localPosToGlobalPos(int lp, int numMins)
+        {
+            int gp = lp;
+            string place = "left of your first minion";
+            if (lp == 1) place = "right of your first minion";
+            if (lp == 2) place = "right of your second minion";
+            if (lp == 3) place = "right of your third minion";
+            if (lp == 4) place = "right of your 4th minion";
+            if (lp == 5) place = "right of your 5th minion";
+            if (lp == 6) place = "right of your 6th minion";
+            if (lp == 7) place = "right of your 7th minion";
+
+
+            if (numMins == 6)
+            {
+                gp = lp;
+                if (lp == 0) gp = 0;
+                if (lp == 1) gp = 1;
+                if (lp == 2) gp = 2;
+                if (lp == 3) gp = 4;
+                if (lp == 4) gp = 6;
+                if (lp == 5) gp = 7;
+                if (lp == 6) gp = 9;
+
+            }
+            if (numMins == 4)
+            {
+                gp = lp + 1;
+                if (lp == 0) gp = 0;
+                if (lp == 1) gp = 2;
+                if (lp == 2) gp = 4;
+                if (lp == 3) gp = 6;
+                if (lp == 4) gp = 7;
+            }
+            if (numMins == 2)
+            {
+                gp = lp + 2;
+                if (lp == 0) gp = 2;
+                if (lp == 1) gp = 4;
+                if (lp == 2) gp = 6;
+            }
+            if (numMins == 1)
+            {
+                gp = lp + 2;
+                if (lp == 0) gp = 2;
+                if (lp == 1) gp = 6;
+
+            }
+            if (numMins == 3)
+            {
+                gp = lp + 1;
+                if (lp == 0) gp = 1;
+                if (lp == 1) gp = 3;
+                if (lp == 2) gp = 5;
+                if (lp == 3) gp = 7;
+
+            }
+            if (numMins == 5)
+            {
+                gp = lp + 0;
+                if (lp == 0) gp = 0;
+                if (lp == 1) gp = 1;
+                if (lp == 2) gp = 3;
+                if (lp == 3) gp = 5;
+                if (lp == 4) gp = 7;
+                if (lp == 5) gp = 9;
+
+            }
+            if (numMins == 0) { gp = 4; }
+            Helpfunctions.Instance.ErrorLog("should place minion " + place + " (" + lp + " " + numMins + ") ");
+            Helpfunctions.Instance.logg("should place minion " + place + " (" + lp + " " + numMins + ") ");
+            return gp;
+        }
+
+        private HSCard getEntityWithNumber(int number)
+        {
+            foreach (HSCard e in getallEntitys())
+            {
+                if (number == e.EntityId) return e;
+            }
+            return null;
+        }
+
+        private HSCard getCardWithNumber(int number)
+        {
+            foreach (HSCard e in getallHandCards())
+            {
+                if (number == e.EntityId) return e;
+            }
+            return null;
+        }
+
+        private List<HSCard> getallEntitys()
+        {
+            var result = new List<HSCard>();
+            HSCard ownhero = TritonHS.OurHero;
+            HSCard enemyhero = TritonHS.EnemyHero;
+            HSCard ownHeroAbility = TritonHS.OurHeroPowerCard;
+            List<HSCard> list2 = TritonHS.GetCards(CardZone.Battlefield, true);
+            List<HSCard> list3 = TritonHS.GetCards(CardZone.Battlefield, false);
+
+            result.Add(ownhero);
+            result.Add(enemyhero);
+            result.Add(ownHeroAbility);
+
+            result.AddRange(list2);
+            result.AddRange(list3);
+
+            return result;
+        }
+
+        private List<HSCard> getallHandCards()
+        {
+            List<HSCard> list = TritonHS.GetCards(CardZone.Hand, true);
+            return list;
+        }
+
+        protected virtual void SafeHandleBattleLocalPlayerTurnHandler()
+        {
+        }
+
+        protected virtual HSCard GetMinionByPriority(HSCard lastMinion = null)
+        {
+            return null;
+        }
+    }
+
+
     public class HBMulligan : ICustomMulligan
     {
         private const int MaximumCost = 3;
@@ -656,7 +1236,7 @@ namespace SilverfishControl
 
     public class Silverfish
     {
-        public string versionnumber = "113.75";
+        public string versionnumber = "113.8";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1287,7 +1867,7 @@ namespace SilverfishControl
 
             if (Settings.Instance.simEnemySecondTurn)
             {
-                this.botbehave += " simEnemy2Turn";
+                this.botbehave += " ets2 " + Settings.Instance.enemyTurnMaxWideSecondTime;
                 this.botbehave += " ents " + Settings.Instance.enemySecondTurnMaxWide;
             }
 
@@ -1591,6 +2171,7 @@ namespace SilverfishControl
 
     // the ai :D
     //please ask/write me if you use this in your project
+
 
     public enum actionEnum
     {
@@ -6629,6 +7210,18 @@ namespace SilverfishControl
 
         private void doallmoves(bool test, bool isLethalCheck)
         {
+            //set maxwide to the value for the first-turn-sim.
+            foreach (EnemyTurnSimulator ets in enemyTurnSim)
+            {
+                ets.setMaxwideFirstStep(true);
+            }
+
+            foreach (EnemyTurnSimulator ets in enemySecondTurnSim)
+            {
+                ets.setMaxwideFirstStep(false);
+            }
+
+            if (isLethalCheck) this.posmoves[0].enemySecretList.Clear();
             this.mainTurnSimulator.doallmoves(this.posmoves[0], isLethalCheck);
 
             Playfield bestplay = this.mainTurnSimulator.bestboard;
@@ -7268,7 +7861,14 @@ namespace SilverfishControl
             if (this.dirtyTwoTurnSim == 0) return;
             this.posmoves.Clear();
             int thread = 0;
-            //DateTime started = DateTime.Now;
+            DateTime started = DateTime.Now;
+
+            //set maxwide of enemyturnsimulator's to second step (this value is higher than the maxwide in first step) 
+            foreach (EnemyTurnSimulator ets in Ai.Instance.enemyTurnSim)
+            {
+                ets.setMaxwideSecondStep(true);
+            }
+
             if (Settings.Instance.numberOfThreads == 1)
             {
                 foreach (Playfield p in this.twoturnfields)
@@ -7332,7 +7932,7 @@ namespace SilverfishControl
             //just for debugging
             posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
 
-            //Helpfunctions.Instance.ErrorLog("time needed for parallel: " + (DateTime.Now - started).TotalSeconds);
+            Helpfunctions.Instance.ErrorLog("time needed for parallel part: " + (DateTime.Now - started).TotalSeconds);
         }
 
         //workthread for dirtyTwoTurnsim
@@ -7575,17 +8175,22 @@ namespace SilverfishControl
         private List<Playfield> posmoves = new List<Playfield>(7000);
         //public int maxwide = 20;
         Movegenerator movegen = Movegenerator.Instance;
-        bool readSettings = true;
-        private int maxwide = 20;
+        public int maxwide = 20;
+
+        public void setMaxwideFirstStep(bool firstTurn)
+        {
+            maxwide = Settings.Instance.enemyTurnMaxWide;
+            if (!firstTurn) maxwide = Settings.Instance.enemyTurnMaxWide;
+        }
+
+        public void setMaxwideSecondStep(bool firstTurn)
+        {
+            maxwide = Settings.Instance.enemyTurnMaxWideSecondTime;
+            if (!firstTurn) maxwide = Settings.Instance.enemyTurnMaxWide;
+        }
 
         public void simulateEnemysTurn(Playfield rootfield, bool simulateTwoTurns, bool playaround, bool print, int pprob, int pprob2)
         {
-            if (readSettings)
-            {
-                maxwide = Settings.Instance.enemyTurnMaxWide;
-                if (rootfield.turnCounter >= 2) maxwide = Settings.Instance.enemyTurnMaxWide;
-                this.readSettings = false;
-            }
 
             bool havedonesomething = true;
             posmoves.Clear();
@@ -10098,8 +10703,8 @@ namespace SilverfishControl
                 //allow it if you have biggamehunter
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.name == CardDB.cardName.biggamehunter) return pen;
-                    if (hc.card.name == CardDB.cardName.shadowworddeath) return pen;
+                    if (hc.card.name == CardDB.cardName.biggamehunter) return 5;
+                    if (hc.card.name == CardDB.cardName.shadowworddeath) return 5;
                 }
                 if (card.name == CardDB.cardName.crueltaskmaster || card.name == CardDB.cardName.innerrage)
                 {
@@ -11034,7 +11639,17 @@ namespace SilverfishControl
                 pen = 30;
             }
             if (name == CardDB.cardName.shatteredsuncleric && target == null) { pen = 10; }
-            if (name == CardDB.cardName.argentprotector && target == null) { pen = 10; }
+            if (name == CardDB.cardName.argentprotector)
+            {
+                if (target == null) { pen = 20; }
+                else
+                {
+                    if (!target.own) { return 500; }
+                    if (!target.Ready && !target.handcard.card.isSpecialMinion) { pen = 10; }
+                    if (!target.Ready && !target.handcard.card.isSpecialMinion && target.Angr <= 2 && target.Hp <= 2) { pen = 15; }
+                }
+
+            }
 
             if (name == CardDB.cardName.facelessmanipulator)
             {
@@ -11792,6 +12407,7 @@ namespace SilverfishControl
             DamageAllDatabase.Add(CardDB.cardName.yseraawakens, 5);
 
             DamageAllEnemysDatabase.Add(CardDB.cardName.arcaneexplosion, 1);
+            DamageAllEnemysDatabase.Add(CardDB.cardName.shadowflame, 2);
             DamageAllEnemysDatabase.Add(CardDB.cardName.consecration, 1);
             DamageAllEnemysDatabase.Add(CardDB.cardName.fanofknives, 1);
             DamageAllEnemysDatabase.Add(CardDB.cardName.flamestrike, 4);
@@ -22276,8 +22892,17 @@ namespace SilverfishControl
                         ets = Convert.ToInt32(eturnsim.Split(' ')[0]);
                     }
 
+                    if (s.Contains(" ets2 "))
+                    {
+                        string eturnsim2 = s.Split(new string[] { " ets2 " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        int ets2 = Convert.ToInt32(eturnsim2.Split(' ')[0]);
+                        Settings.Instance.enemyTurnMaxWideSecondTime = ets2;
+                    }
+
+
                     if (s.Contains(" ents "))
                     {
+                        this.simEnemy2Turn = true;
                         string eturnsim = s.Split(new string[] { " ents " }, StringSplitOptions.RemoveEmptyEntries)[1];
                         ents = Convert.ToInt32(eturnsim.Split(' ')[0]);
                     }
@@ -22285,13 +22910,10 @@ namespace SilverfishControl
                     if (s.Contains(" ntss "))
                     {
                         string probs = s.Split(new string[] { " ntss " }, StringSplitOptions.RemoveEmptyEntries)[1];
-                        this.playarround = true;
                         ntssd = Convert.ToInt32(probs.Split(' ')[0]);
                         ntssw = Convert.ToInt32(probs.Split(' ')[1]);
                         ntssm = Convert.ToInt32(probs.Split(' ')[2]);
                     }
-
-                    if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
 
                     if (s.Contains(" secret")) dosecrets = true;
 
@@ -23780,7 +24402,6 @@ namespace SilverfishControl
                 //if (m.poisonous) retval += 1;
                 if (m.divineshild && m.taunt) retval += 4;
                 //if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
-                if (m.Angr > 2 || m.Hp > 3) ownMinionsCount++;
                 //if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
@@ -23791,6 +24412,7 @@ namespace SilverfishControl
                     if ((!m.taunt && m.Angr == 0) && (m.divineshild || m.maxHp > 2)) retval -= 10;
                 }
                 if (m.Ready) readycount++;
+                if (m.Hp <= 4 && (m.Angr > 2 || m.Hp > 3)) ownMinionsCount++;
             }
 
             /*if (p.enemyMinions.Count >= 0)
@@ -24185,6 +24807,7 @@ namespace SilverfishControl
 
         public bool simulateEnemysTurn = true;
         public int enemyTurnMaxWide = 20;
+        public int enemyTurnMaxWideSecondTime = 20;
 
         public int secondTurnAmount = 256;
         public bool simEnemySecondTurn = true;
