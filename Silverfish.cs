@@ -773,7 +773,7 @@ namespace HREngine.Bots
             enemysecretIds = Probabilitymaker.Instance.getEnemySecretData();
             Helpfunctions.Instance.logg("#######################################################################");
             Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("start calculations, current time: " + "00:00:00:0000" + " V" + this.versionnumber + " " + this.botbehave);
+            Helpfunctions.Instance.logg("start calculations, current time: " + DateTime.Now.ToString("HH:mm:ss") + " V" + this.versionnumber + " " + this.botbehave);
             Helpfunctions.Instance.logg("#######################################################################");
             Helpfunctions.Instance.logg("mana " + currentMana + "/" + ownMaxMana);
             Helpfunctions.Instance.logg("emana " + enemyMaxMana);
