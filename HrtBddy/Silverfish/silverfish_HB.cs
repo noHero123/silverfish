@@ -1236,7 +1236,7 @@ namespace Silverfish
 
     public class Silverfish
     {
-        public string versionnumber = "113.8";
+        public string versionnumber = "113.9";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1924,7 +1924,7 @@ namespace Silverfish
             enemysecretIds = Probabilitymaker.Instance.getEnemySecretData();
             Helpfunctions.Instance.logg("#######################################################################");
             Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("start calculations, current time: " + dtimes + " V" + this.versionnumber + " " + this.botbehave);
+            Helpfunctions.Instance.logg("start calculations, current time: " + "00:00:00:0000" + " V" + this.versionnumber + " " + this.botbehave);
             Helpfunctions.Instance.logg("#######################################################################");
             Helpfunctions.Instance.logg("mana " + currentMana + "/" + ownMaxMana);
             Helpfunctions.Instance.logg("emana " + enemyMaxMana);
@@ -3170,6 +3170,19 @@ namespace Silverfish
                 if (dis.entitiyID != pis.entitiyID) Ai.Instance.updateEntitiy(pis.entitiyID, dis.entitiyID);
 
             }
+            if (this.ownSecretsIDList.Count != p.ownSecretsIDList.Count)
+            {
+                if (logg) Helpfunctions.Instance.logg("secretsCount changed");
+                return false;
+            }
+            for (int i = 0; i < this.ownSecretsIDList.Count; i++)
+            {
+                if (this.ownSecretsIDList[i] != p.ownSecretsIDList[i])
+                {
+                    if (logg) Helpfunctions.Instance.logg("secrets changed");
+                    return false;
+                }
+            }
             return true;
         }
 
@@ -3254,6 +3267,18 @@ namespace Silverfish
                     {
                         return false;
                     }
+                }
+            }
+
+            if (this.ownSecretsIDList.Count != p.ownSecretsIDList.Count)
+            {
+                return false;
+            }
+            for (int i = 0; i < this.ownSecretsIDList.Count; i++)
+            {
+                if (this.ownSecretsIDList[i] != p.ownSecretsIDList[i])
+                {
+                    return false;
                 }
             }
 
@@ -7105,6 +7130,7 @@ namespace Silverfish
 
     }
 
+   
     public class Ai
     {
 
@@ -11733,7 +11759,11 @@ namespace Silverfish
                 if (!found) return 20;
             }
 
-            if (name == CardDB.cardName.windfury && !m.Ready) return 500;
+            if (name == CardDB.cardName.windfury)
+            {
+                if (!m.own) return 500;
+                if (m.own && !m.Ready) return 500;
+            }
 
             if ((name == CardDB.cardName.wildgrowth || name == CardDB.cardName.nourish) && p.ownMaxMana == 9 && !(p.ownHeroName == HeroEnum.thief && p.cardsPlayedThisTurn == 0))
             {

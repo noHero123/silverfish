@@ -768,6 +768,19 @@
                 if (dis.entitiyID != pis.entitiyID) Ai.Instance.updateEntitiy(pis.entitiyID, dis.entitiyID);
 
             }
+            if (this.ownSecretsIDList.Count != p.ownSecretsIDList.Count)
+            {
+                if (logg) Helpfunctions.Instance.logg("secretsCount changed");
+                return false;
+            }
+            for (int i = 0; i < this.ownSecretsIDList.Count; i++)
+            {
+                if (this.ownSecretsIDList[i] != p.ownSecretsIDList[i])
+                {
+                    if (logg) Helpfunctions.Instance.logg("secrets changed");
+                    return false;
+                }
+            }
             return true;
         }
 
@@ -852,6 +865,18 @@
                     {
                         return false;
                     }
+                }
+            }
+
+            if (this.ownSecretsIDList.Count != p.ownSecretsIDList.Count)
+            {
+                return false;
+            }
+            for (int i = 0; i < this.ownSecretsIDList.Count; i++)
+            {
+                if (this.ownSecretsIDList[i] != p.ownSecretsIDList[i])
+                {
+                    return false;
                 }
             }
 

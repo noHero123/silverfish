@@ -1536,6 +1536,19 @@ namespace ConsoleApplication1
                 if (dis.entitiyID != pis.entitiyID) Ai.Instance.updateEntitiy(pis.entitiyID, dis.entitiyID);
 
             }
+            if (this.ownSecretsIDList.Count != p.ownSecretsIDList.Count)
+            {
+                if (logg) Helpfunctions.Instance.logg("secretsCount changed");
+                return false;
+            }
+            for (int i = 0; i < this.ownSecretsIDList.Count; i++)
+            {
+                if (this.ownSecretsIDList[i] != p.ownSecretsIDList[i])
+                {
+                    if (logg) Helpfunctions.Instance.logg("secrets changed");
+                    return false;
+                }
+            }
             return true;
         }
 
@@ -1620,6 +1633,18 @@ namespace ConsoleApplication1
                     {
                         return false;
                     }
+                }
+            }
+
+            if (this.ownSecretsIDList.Count != p.ownSecretsIDList.Count)
+            {
+                return false;
+            }
+            for (int i = 0; i < this.ownSecretsIDList.Count; i++)
+            {
+                if (this.ownSecretsIDList[i] != p.ownSecretsIDList[i])
+                {
+                    return false;
                 }
             }
 
@@ -5576,6 +5601,18 @@ namespace ConsoleApplication1
 
         private void doallmoves(bool test, bool isLethalCheck)
         {
+            //set maxwide to the value for the first-turn-sim.
+            foreach (EnemyTurnSimulator ets in enemyTurnSim)
+            {
+                ets.setMaxwideFirstStep(true);
+            }
+
+            foreach (EnemyTurnSimulator ets in enemySecondTurnSim)
+            {
+                ets.setMaxwideFirstStep(false);
+            }
+
+            if (isLethalCheck) this.posmoves[0].enemySecretList.Clear();
             this.mainTurnSimulator.doallmoves(this.posmoves[0], isLethalCheck);
 
             Playfield bestplay = this.mainTurnSimulator.bestboard;
@@ -6215,7 +6252,14 @@ namespace ConsoleApplication1
             if (this.dirtyTwoTurnSim == 0) return;
             this.posmoves.Clear();
             int thread = 0;
-            //DateTime started = DateTime.Now;
+            DateTime started = DateTime.Now;
+
+            //set maxwide of enemyturnsimulator's to second step (this value is higher than the maxwide in first step) 
+            foreach (EnemyTurnSimulator ets in Ai.Instance.enemyTurnSim)
+            {
+                ets.setMaxwideSecondStep(true);
+            }
+
             if (Settings.Instance.numberOfThreads == 1)
             {
                 foreach (Playfield p in this.twoturnfields)
@@ -6279,7 +6323,7 @@ namespace ConsoleApplication1
             //just for debugging
             posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
 
-            //Helpfunctions.Instance.ErrorLog("time needed for parallel: " + (DateTime.Now - started).TotalSeconds);
+            Helpfunctions.Instance.ErrorLog("time needed for parallel part: " + (DateTime.Now - started).TotalSeconds);
         }
 
         //workthread for dirtyTwoTurnsim
@@ -6522,17 +6566,22 @@ namespace ConsoleApplication1
         private List<Playfield> posmoves = new List<Playfield>(7000);
         //public int maxwide = 20;
         Movegenerator movegen = Movegenerator.Instance;
-        bool readSettings = true;
-        private int maxwide = 20;
+        public int maxwide = 20;
+
+        public void setMaxwideFirstStep(bool firstTurn)
+        {
+            maxwide = Settings.Instance.enemyTurnMaxWide;
+            if (!firstTurn) maxwide = Settings.Instance.enemyTurnMaxWide;
+        }
+
+        public void setMaxwideSecondStep(bool firstTurn)
+        {
+            maxwide = Settings.Instance.enemyTurnMaxWideSecondTime;
+            if (!firstTurn) maxwide = Settings.Instance.enemyTurnMaxWide;
+        }
 
         public void simulateEnemysTurn(Playfield rootfield, bool simulateTwoTurns, bool playaround, bool print, int pprob, int pprob2)
         {
-            if (readSettings)
-            {
-                maxwide = Settings.Instance.enemyTurnMaxWide;
-                if (rootfield.turnCounter >= 2) maxwide = Settings.Instance.enemyTurnMaxWide;
-                this.readSettings = false;
-            }
 
             bool havedonesomething = true;
             posmoves.Clear();
@@ -9045,8 +9094,8 @@ namespace ConsoleApplication1
                 //allow it if you have biggamehunter
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.name == CardDB.cardName.biggamehunter) return pen;
-                    if (hc.card.name == CardDB.cardName.shadowworddeath) return pen;
+                    if (hc.card.name == CardDB.cardName.biggamehunter) return 5;
+                    if (hc.card.name == CardDB.cardName.shadowworddeath) return 5;
                 }
                 if (card.name == CardDB.cardName.crueltaskmaster || card.name == CardDB.cardName.innerrage)
                 {
@@ -9926,7 +9975,7 @@ namespace ConsoleApplication1
                     }
                 }
             }
-            
+
             //lethal end########################################################
 
             if (card.name == CardDB.cardName.daggermastery)
@@ -9981,7 +10030,17 @@ namespace ConsoleApplication1
                 pen = 30;
             }
             if (name == CardDB.cardName.shatteredsuncleric && target == null) { pen = 10; }
-            if (name == CardDB.cardName.argentprotector && target == null) { pen = 10; }
+            if (name == CardDB.cardName.argentprotector)
+            {
+                if (target == null) { pen = 20; }
+                else
+                {
+                    if (!target.own) { return 500; }
+                    if (!target.Ready && !target.handcard.card.isSpecialMinion) { pen = 10; }
+                    if (!target.Ready && !target.handcard.card.isSpecialMinion && target.Angr <= 2 && target.Hp <= 2) { pen = 15; }
+                }
+
+            }
 
             if (name == CardDB.cardName.facelessmanipulator)
             {
@@ -10065,7 +10124,11 @@ namespace ConsoleApplication1
                 if (!found) return 20;
             }
 
-            if (name == CardDB.cardName.windfury && !m.Ready) return 500;
+            if (name == CardDB.cardName.windfury)
+            {
+                if (!m.own) return 500;
+                if (m.own && !m.Ready) return 500;
+            }
 
             if ((name == CardDB.cardName.wildgrowth || name == CardDB.cardName.nourish) && p.ownMaxMana == 9 && !(p.ownHeroName == HeroEnum.thief && p.cardsPlayedThisTurn == 0))
             {
@@ -10248,7 +10311,7 @@ namespace ConsoleApplication1
             if ((name == CardDB.cardName.polymorph || name == CardDB.cardName.hex))
             {
 
-                
+
 
                 if (target.own && !target.isHero)
                 {
@@ -10739,6 +10802,7 @@ namespace ConsoleApplication1
             DamageAllDatabase.Add(CardDB.cardName.yseraawakens, 5);
 
             DamageAllEnemysDatabase.Add(CardDB.cardName.arcaneexplosion, 1);
+            DamageAllEnemysDatabase.Add(CardDB.cardName.shadowflame, 2);
             DamageAllEnemysDatabase.Add(CardDB.cardName.consecration, 1);
             DamageAllEnemysDatabase.Add(CardDB.cardName.fanofknives, 1);
             DamageAllEnemysDatabase.Add(CardDB.cardName.flamestrike, 4);
@@ -21223,8 +21287,17 @@ namespace ConsoleApplication1
                         ets = Convert.ToInt32(eturnsim.Split(' ')[0]);
                     }
 
+                    if (s.Contains(" ets2 "))
+                    {
+                        string eturnsim2 = s.Split(new string[] { " ets2 " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        int ets2 = Convert.ToInt32(eturnsim2.Split(' ')[0]);
+                        Settings.Instance.enemyTurnMaxWideSecondTime = ets2;
+                    }
+
+
                     if (s.Contains(" ents "))
                     {
+                        this.simEnemy2Turn = true;
                         string eturnsim = s.Split(new string[] { " ents " }, StringSplitOptions.RemoveEmptyEntries)[1];
                         ents = Convert.ToInt32(eturnsim.Split(' ')[0]);
                     }
@@ -21232,13 +21305,10 @@ namespace ConsoleApplication1
                     if (s.Contains(" ntss "))
                     {
                         string probs = s.Split(new string[] { " ntss " }, StringSplitOptions.RemoveEmptyEntries)[1];
-                        this.playarround = true;
                         ntssd = Convert.ToInt32(probs.Split(' ')[0]);
                         ntssw = Convert.ToInt32(probs.Split(' ')[1]);
                         ntssm = Convert.ToInt32(probs.Split(' ')[2]);
                     }
-
-                    if (s.Contains("simEnemy2Turn")) this.simEnemy2Turn = true;
 
                     if (s.Contains(" secret")) dosecrets = true;
 
@@ -22727,7 +22797,6 @@ namespace ConsoleApplication1
                 //if (m.poisonous) retval += 1;
                 if (m.divineshild && m.taunt) retval += 4;
                 //if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
-                if (m.Angr > 2 || m.Hp > 3) ownMinionsCount++;
                 //if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
@@ -22738,6 +22807,7 @@ namespace ConsoleApplication1
                     if ((!m.taunt && m.Angr == 0) && (m.divineshild || m.maxHp > 2)) retval -= 10;
                 }
                 if (m.Ready) readycount++;
+                if (m.Hp <= 4 && (m.Angr > 2 || m.Hp > 3)) ownMinionsCount++;
             }
 
             /*if (p.enemyMinions.Count >= 0)
@@ -23132,6 +23202,7 @@ namespace ConsoleApplication1
 
         public bool simulateEnemysTurn = true;
         public int enemyTurnMaxWide = 20;
+        public int enemyTurnMaxWideSecondTime = 20;
 
         public int secondTurnAmount = 256;
         public bool simEnemySecondTurn = true;

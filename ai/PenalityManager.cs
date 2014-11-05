@@ -1248,7 +1248,11 @@
                 if (!found) return 20;
             }
 
-            if (name == CardDB.cardName.windfury && !m.Ready) return 500;
+            if (name == CardDB.cardName.windfury)
+            {
+                if (!m.own) return 500;
+                if(m.own && !m.Ready) return 500;
+            }
 
             if ((name == CardDB.cardName.wildgrowth || name == CardDB.cardName.nourish) && p.ownMaxMana == 9 && !(p.ownHeroName == HeroEnum.thief && p.cardsPlayedThisTurn == 0))
             {
