@@ -15,12 +15,12 @@ namespace HREngine.Bots
             if (ownplay)
             {
                 if (p.doublepriest >= 1) dmg *= (2 * p.doublepriest);
-                p.minionGetDamageOrHeal(p.enemyHero, dmg);
+                p.minionGetDamageOrHeal(target, dmg);
             }
             else
             {
                 if (p.enemydoublepriest >= 1) dmg *= (2 * p.enemydoublepriest);
-                p.minionGetDamageOrHeal(p.ownHero, dmg);
+                p.minionGetDamageOrHeal(target, dmg);
             }
 
 		}

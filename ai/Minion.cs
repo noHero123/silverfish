@@ -53,6 +53,7 @@
         public int enemyBlessingOfWisdom = 0;
         public int spellpower = 0;
 
+        public bool cantBeTargetedBySpellsOrHeroPowers = false;
 
         public int Hp = 0;
         public int maxHp = 0;
@@ -222,12 +223,12 @@
 
             if (this.isHero)
             {
+                int copy = this.Hp;
                 if (dmg < 0 || this.armor <= 0)
                 {
                     //if (dmg < 0) return;
 
                     //heal
-                    int copy = this.Hp;
 
                     this.Hp = Math.Min(30, this.Hp - dmg);
                     if (copy < this.Hp)
@@ -255,6 +256,12 @@
                     }
                 }
                 if (this.cantLowerHPbelowONE && this.Hp <= 0) this.Hp = 1;
+
+
+                if (this.Hp < copy)
+                {
+                    this.anzGotDmg++;
+                }
                 return;
             }
 
@@ -333,12 +340,10 @@
                 if (this.own)
                 {
                     p.tempTrigger.ownMinionsGotDmg++;
-
                 }
                 else
                 {
                     p.tempTrigger.enemyMinionsGotDmg++;
-
                 }
                 this.anzGotDmg++;
             }
@@ -389,10 +394,7 @@
                 if (this.name == CardDB.cardName.feugen) p.feugenDead = true;
             }
 
-            if (this.handcard.card.race == 14)
-            {
-                p.tempTrigger.murlocDied++;
-            }
+            
 
             if (own)
             {
@@ -402,6 +404,14 @@
                 {
                     p.tempTrigger.ownBeastDied++;
                 }
+                if (this.handcard.card.race == 17)
+                {
+                    p.tempTrigger.ownMechanicDied++;
+                }
+                if (this.handcard.card.race == 14)
+                {
+                    p.tempTrigger.ownMurlocDied++;
+                }
             }
             else
             {
@@ -409,6 +419,14 @@
                 if (this.handcard.card.race == 20)
                 {
                     p.tempTrigger.enemyBeastDied++;
+                }
+                if (this.handcard.card.race == 17)
+                {
+                    p.tempTrigger.enemyMechanicDied++;
+                }
+                if (this.handcard.card.race == 14)
+                {
+                    p.tempTrigger.enemyMurlocDied++;
                 }
             }
 
@@ -431,7 +449,7 @@
 
             if (!silenced && (name == CardDB.cardName.ragnarosthefirelord || name == CardDB.cardName.ancientwatcher)) return;
 
-            if (!frozen && ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury))) Ready = true;
+            if (!frozen && ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury) || ( !silenced && this.name == CardDB.cardName.v07tr0n && numAttacksThisTurn <=3 )) ) Ready = true;
 
         }
 
@@ -448,6 +466,8 @@
             souloftheforest = 0;
             ownBlessingOfWisdom = 0;
             enemyBlessingOfWisdom = 0;
+
+            cantBeTargetedBySpellsOrHeroPowers = false;
 
             charge = 0;
             taunt = false;
@@ -520,12 +540,20 @@
                 {
                     this.spellpower++;
                 }
+                if (me.CARDID == CardDB.cardIDEnum.GVG_010b) //Velen's Chosen (+2+4, +spellpower)
+                {
+                    this.spellpower++;
+                }
                 if (me.CARDID == CardDB.cardIDEnum.EX1_158e) //soul of the forest
                 {
                     this.souloftheforest++;
                 }
 
                 if (me.CARDID == CardDB.cardIDEnum.EX1_128e) //conceal
+                {
+                    this.concedal = true;
+                }
+                if (me.CARDID == CardDB.cardIDEnum.PART_004e) //conceal
                 {
                     this.concedal = true;
                 }
@@ -616,10 +644,6 @@
                 {
                     this.charge++;
                 }
-                if (me.CARDID == CardDB.cardIDEnum.CS2_103e)// sturmangriff    +2 angriff und ansturm/.
-                {
-                    this.charge++;
-                }
 
                 //ancientbuffs-------------------------------------------------
                 if (me.CARDID == CardDB.cardIDEnum.EX1_565o) //flametongue
@@ -678,7 +702,14 @@
                 {
                     this.tempAttack += 2;
                 }
-
+                if (me.CARDID == CardDB.cardIDEnum.GVG_011a) //Shrink Ray
+                {
+                    this.tempAttack -= 2; //todo might not be correct
+                }
+                if (me.CARDID == CardDB.cardIDEnum.GVG_057a) //Seal of Light
+                {
+                    this.tempAttack += 2;
+                }
 
 
 

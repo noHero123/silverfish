@@ -11,8 +11,8 @@ namespace HREngine.Bots
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
             target.taunt = true;
-            int heal = (ownplay)? p.getSpellHeal(target.maxHp - target.Hp) : p.getEnemySpellHeal(target.maxHp - target.Hp);
-            p.minionGetDamageOrHeal(target, heal);
+            int heal = (ownplay)? p.getSpellHeal(target.maxHp) : p.getEnemySpellHeal(target.maxHp);
+            p.minionGetDamageOrHeal(target, -heal);
 		}
 
 	}

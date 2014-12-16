@@ -14,11 +14,13 @@ namespace HREngine.Bots
             if (own.own)
             {
                 p.owncards.Clear();
+                p.triggerCardsChanged(true);
             }
             else
             {
                 p.enemycarddraw = 0;
                 p.enemyAnzCards = 0;
+                p.triggerCardsChanged(false);
             }
 		}
 

@@ -1,11 +1,5 @@
 ﻿namespace HREngine.Bots
 {
-    public enum Side
-    {
-        NEUTRAL,
-        FRIENDLY,
-        OPPOSING
-    }
 
     public enum GAME_TAGs
     {
@@ -156,6 +150,7 @@
         PARENT_CARD = 316,
         NUM_MINIONS_PLAYED_THIS_TURN,
         CANT_BE_TARGETED_BY_HERO_POWERS = 332,
+        CANT_BE_TARGETED_BY_BATTLECRIES = 379,//new
         COMBO = 220,
         ELITE = 114,
         CARD_SET = 183,
@@ -192,7 +187,14 @@
         MULTIPLY_HERO_DAMAGE,
         MULTIPLY_BUFF_VALUE,
         CUSTOM_KEYWORD_EFFECT,
-        TOPDECK
+        TOPDECK,
+        OVERKILL = 380,//new
+        DEATHRATTLE_SENDS_BACK_TO_DECK = 382,//new
+        DISPLAYED_CREATOR = 385,//new
+        POWERED_UP,//new
+        SPARE_PART = 388,//new
+        FORGETFUL,//new
+        CAN_SUMMON_MAXPLUSONE_MINION //new
     }
 
     public enum TAG_ZONE
@@ -205,15 +207,6 @@
         REMOVEDFROMGAME,
         SETASIDE,
         SECRET
-    }
-
-    public enum TAG_MULLIGAN
-    {
-        INVALID,
-        INPUT,
-        DEALING,
-        WAITING,
-        DONE
     }
 
     public enum TAG_CLASS
@@ -232,52 +225,6 @@
         DREAM
 
     }
-
-    public enum TAG_CARDTYPE
-    {
-        INVALID,
-        GAME,
-        PLAYER,
-        HERO,
-        MINION,
-        ABILITY,
-        ENCHANTMENT,
-        WEAPON,
-        ITEM,
-        TOKEN,
-        HERO_POWER
-    }
-
-
-    public enum AttackType
-    {
-        INVALID,
-        REGULAR,
-        PROPOSED,
-        CANCELED,
-        ONLY_ATTACKER,
-        ONLY_DEFENDER,
-        ONLY_PROPOSED_ATTACKER,
-        ONLY_PROPOSED_DEFENDER,
-        WAITING_ON_PROPOSED_ATTACKER,
-        WAITING_ON_PROPOSED_DEFENDER,
-        WAITING_ON_ATTACKER,
-        WAITING_ON_DEFENDER
-    }
-
-    public enum TAG_PLAYSTATE
-    {
-        INVALID,
-        PLAYING,
-        WINNING,
-        LOSING,
-        WON,
-        LOST,
-        TIED,
-        DISCONNECTED,
-        QUIT
-    }
-
 
     public enum TAG_RACE
     {
@@ -308,41 +255,5 @@
         DRAGON
     }
 
-    public enum TAG_STATE
-    {
-        INVALID,
-        LOADING,
-        RUNNING,
-        COMPLETE
-    }
-
-    public enum TAG_STEP
-    {
-        INVALID,
-        BEGIN_FIRST,
-        BEGIN_SHUFFLE,
-        BEGIN_DRAW,
-        BEGIN_MULLIGAN,
-        MAIN_BEGIN,
-        MAIN_READY,
-        MAIN_RESOURCE,
-        MAIN_DRAW,
-        MAIN_START,
-        MAIN_ACTION,
-        MAIN_COMBAT,
-        MAIN_END,
-        MAIN_NEXT,
-        FINAL_WRAPUP,
-        FINAL_GAMEOVER,
-        MAIN_CLEANUP,
-        MAIN_START_TRIGGERS
-    }
-
-    public enum CHOICE_TYPE
-    {
-        INVALID,
-        MULLIGAN,
-        GENERAL
-    }
-
+   
 }

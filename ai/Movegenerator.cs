@@ -530,7 +530,7 @@
             {
                 int abilityPenality = 0;
                 // if we have mage or priest, we have to target something####################################################
-                if (p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS2_034 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.EX1_625t || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.EX1_625t2)
+                if (p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS2_034 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.EX1_625t || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.EX1_625t2 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.DS1h_292)
                 {
 
                     List<Minion> trgts = p.ownHeroAblility.card.getTargetsForCard(p);

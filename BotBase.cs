@@ -648,11 +648,6 @@ namespace HREngine.Bots
             }
             //Helpfunctions.Instance.ErrorLog("handle mulligan");
 
-            if ((TAG_MULLIGAN)HRPlayer.GetLocalPlayer().GetTag(HRGameTag.MULLIGAN_STATE) != TAG_MULLIGAN.INPUT)
-            {
-                //Helpfunctions.Instance.ErrorLog("but we have to wait :D");
-                return null;
-            }
 
             if (HRMulligan.IsMulliganActive())
             {

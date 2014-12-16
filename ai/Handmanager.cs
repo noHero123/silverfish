@@ -10,6 +10,8 @@
             public int position = 0;
             public int entity = -1;
             public int manacost = 1000;
+            public int addattack = 0;
+            public int addHp = 0;
             public CardDB.Card card;
 
             public Handcard()
@@ -22,12 +24,16 @@
                 this.entity = hc.entity;
                 this.manacost = hc.manacost;
                 this.card = hc.card;
+                this.addattack = hc.addattack;
+                this.addHp = hc.addHp;
             }
             public Handcard(CardDB.Card c)
             {
                 this.position = 0;
                 this.entity = -1;
                 this.card = c;
+                this.addattack = 0;
+                this.addHp = 0;
             }
             public int getManaCost(Playfield p)
             {
@@ -102,7 +108,7 @@
             help.logg("Own Handcards: ");
             foreach (Handmanager.Handcard c in this.handCards)
             {
-                help.logg("pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum);
+                help.logg("pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum + " " + c.addattack);
             }
             help.logg("Enemy cards: " + this.enemyAnzCards);
 
@@ -151,7 +157,7 @@
                 help.writeToBuffer("Own Handcards: ");
                 foreach (Handmanager.Handcard c in this.handCards)
                 {
-                    help.writeToBuffer("pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum);
+                    help.writeToBuffer("pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum + " " + c.addattack);
                 }
                 help.writeToBuffer("Enemy cards: " + this.enemyAnzCards);
 

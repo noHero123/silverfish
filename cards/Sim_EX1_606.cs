@@ -12,11 +12,11 @@ namespace HREngine.Bots
 		{
             if (ownplay)
             {
-                p.ownHero.armor += 5;
+                p.minionGetArmor(p.ownHero, 5);
             }
             else
             {
-                p.enemyHero.armor += 5;
+                p.minionGetArmor(p.enemyHero, 5);
             }
             p.drawACard(CardDB.cardName.unknown, ownplay);
 		}

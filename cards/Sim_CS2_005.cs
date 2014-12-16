@@ -12,12 +12,12 @@ namespace HREngine.Bots
 		{
             if (ownplay)
             {
-                p.ownHero.armor += 2;
+                p.minionGetArmor(p.ownHero, 2);
                 p.minionGetTempBuff(p.ownHero, 2, 0);
             }
             else
             {
-                p.enemyHero.armor += 2;
+                p.minionGetArmor(p.enemyHero, 2);
                 p.minionGetTempBuff(p.enemyHero, 2, 0);
             }
 		}

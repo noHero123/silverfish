@@ -12,9 +12,32 @@ namespace HREngine.Bots
 		{
             if (own.own)
             {
-                p.owncarddraw -= Math.Min(2, p.owncards.Count);
-                p.owncards.RemoveRange(0, Math.Min(2, p.owncards.Count));
+                int anz = Math.Min(2, p.owncards.Count);
+                p.owncarddraw -= anz;
+                p.owncards.RemoveRange(0, anz);
+                if (anz >= 1)
+                {
+                    p.triggerCardsChanged(true);
+                }
+
             }
+            else
+            {
+                if (p.enemyAnzCards >= 1)
+                {
+                    p.enemycarddraw--;
+                    p.enemyAnzCards--;
+                    p.triggerCardsChanged(false);
+                }
+                if (p.enemyAnzCards >= 1)
+                {
+                    p.enemycarddraw--;
+                    p.enemyAnzCards--;
+                    p.triggerCardsChanged(false);
+                }
+            }
+
+
 		}
 
 	}

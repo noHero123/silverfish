@@ -49,6 +49,7 @@
                 float newval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
                 posmoves[0].value = int.MinValue;
                 posmoves[0].enemyAnzCards--;
+                posmoves[0].triggerCardsChanged(false);
                 if (oldval < newval)
                 {
                     posmoves.Clear();
@@ -65,7 +66,7 @@
 
                 havedonesomething = true;
                 // if we have mage or priest, we have to target something####################################################
-                if (posmoves[0].enemyHeroName == HeroEnum.mage || posmoves[0].enemyHeroName == HeroEnum.priest)
+                if (posmoves[0].enemyHeroName == HeroEnum.mage || posmoves[0].enemyHeroName == HeroEnum.priest || posmoves[0].enemyHeroName == HeroEnum.hunter)
                 {
 
                     List<Minion> trgts = posmoves[0].enemyHeroAblility.card.getTargetsForCardEnemy(posmoves[0]);
@@ -137,7 +138,6 @@
                         boardcount++;
                     }
 
-                    //p.endCurrentPlayersTurnAndStartTheNextOne(1, false);
                     p.endEnemyTurn();
                     p.guessingHeroHP = rootfield.guessingHeroHP;
                     if (Ai.Instance.botBase.getPlayfieldValue(p) < bestoldval) // want the best enemy-play-> worst for us
@@ -208,9 +208,22 @@
             }
 
             //play some cards (to not overdraw)
-            if (p.enemyAnzCards >= 8) p.enemyAnzCards--;
-            if (p.enemyAnzCards >= 4) p.enemyAnzCards--;
-            if (p.enemyAnzCards >= 2) p.enemyAnzCards--;
+            if (p.enemyAnzCards >= 8)
+            {
+                p.enemyAnzCards--;
+                p.triggerCardsChanged(false);
+            }
+            if (p.enemyAnzCards >= 4)
+            {
+                p.enemyAnzCards--;
+                p.triggerCardsChanged(false);
+            }
+            if (p.enemyAnzCards >= 2)
+            {
+                p.enemyAnzCards--;
+                p.triggerCardsChanged(false);
+            }
+            
             //int i = 0;
             //int count = 0;
 

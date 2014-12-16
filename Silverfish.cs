@@ -597,6 +597,11 @@ namespace HREngine.Bots
                     hc.position = entitiy.GetZonePosition();
                     hc.entity = entitiy.GetEntityId();
                     hc.manacost = entitiy.GetCost();
+                    hc.addattack = 0;
+                    if (c.name == CardDB.cardName.bolvarfordragon)
+                    {
+                        hc.addattack = entitiy.GetATK() - 1; // -1 because it starts with 1, we count only the additional attackvalue
+                    }
                     handCards.Add(hc);
                     this.anzcards++;
                 }

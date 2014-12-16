@@ -6,7 +6,7 @@ namespace HREngine.Bots
 {
     class Sim_FP1_004 : SimTemplate//Mad Scientist
     {
-        //<deDE>&lt;b&gt;TodesrÃ¶cheln:&lt;/b&gt; Legt ein &lt;b&gt;Geheimnis&lt;/b&gt; aus Eurem Deck auf das Schlachtfeld.</deDE>
+        //<deDE>TodesrÃ¶cheln: Legt ein Geheimnis aus Eurem Deck auf das Schlachtfeld.
 
         public override void onDeathrattle(Playfield p, Minion m)
         {
@@ -32,7 +32,7 @@ namespace HREngine.Bots
                     if (p.enemySecretCount <= 4)
                     {
                         p.enemySecretCount++;
-                        SecretItem si = Probabilitymaker.Instance.getNewSecretGuessedItem(p.nextEntity, p.enemyHeroName);
+                        SecretItem si = Probabilitymaker.Instance.getNewSecretGuessedItem(p.getNextEntity(), p.enemyHeroName);
                         if (p.enemyHeroName == HeroEnum.pala)
                         {
                             si.canBe_redemption = false;
@@ -41,7 +41,6 @@ namespace HREngine.Bots
                         {
                             p.enemySecretList.Add(si);
                         }
-                        p.nextEntity++;
                     }
                 }
             }

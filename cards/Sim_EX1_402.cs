@@ -15,11 +15,11 @@ namespace HREngine.Bots
             {
                 if (triggerEffectMinion.own)
                 {
-                    p.ownHero.armor  += 1;
+                    p.minionGetArmor(p.ownHero, 1);
                 }
                 else
                 {
-                    p.enemyHero.armor += 1;
+                    p.minionGetArmor(p.enemyHero, 1);
                 }
             }
         }

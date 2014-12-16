@@ -693,6 +693,11 @@
                     int mana = Convert.ToInt32(s.Split(' ')[3]);
                     card.card = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid));
                     card.entity = Convert.ToInt32(s.Split(' ')[5]);
+                    card.addattack = 0;
+                    if (s.Split(' ').Length >= 8 && s.Split(' ')[7] != "")
+                    {
+                        card.addattack = Convert.ToInt32(s.Split(' ')[7]);
+                    }
                     card.manacost = mana;
                     card.position = pos;
                     handcards.Add(card);

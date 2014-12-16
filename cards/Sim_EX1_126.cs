@@ -20,10 +20,11 @@ namespace HREngine.Bots
                 {
                     if (m.zonepos + 1 == target.zonepos || m.zonepos-1 == target.zonepos)
                     {
-                        int oldhp = m.Hp;
+                        /*int oldhp = m.Hp;
                         p.minionGetDamageOrHeal(m, dmg);
-                        if (!target.silenced && target.handcard.card.name == CardDB.cardName.waterelemental && m.Hp < oldhp) m.frozen=true;
-                        if (!target.silenced && m.Hp < oldhp && target.poisonous) p.minionGetDestroyed(m);
+                        if (!target.silenced && (target.handcard.card.name == CardDB.cardName.waterelemental ||target.handcard.card.name == CardDB.cardName.snowchugger) && m.Hp < oldhp) m.frozen=true;
+                        if (!target.silenced && m.Hp < oldhp && target.poisonous) p.minionGetDestroyed(m);*/
+                        p.minionAttacksMinion(target, m, true);
                     }
                 }
 

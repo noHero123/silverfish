@@ -13,11 +13,11 @@ namespace HREngine.Bots
 		{
             if (ownplay)
             {
-                p.ownHero.armor += 2;
+                p.minionGetArmor(p.ownHero, 2);
             }
             else
             {
-                p.enemyHero.armor += 2;
+                p.minionGetArmor(p.enemyHero, 2);
             }
 		}
 

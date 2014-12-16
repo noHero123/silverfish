@@ -14,11 +14,16 @@ namespace HREngine.Bots
             {
                 p.owncarddraw -= Math.Min(1, p.owncards.Count);
                 p.owncards.RemoveRange(0, Math.Min(1, p.owncards.Count));
+                p.triggerCardsChanged(true);
             }
             else
             {
-                p.enemycarddraw--;
-                p.enemyAnzCards--;
+                if (p.enemyAnzCards >= 1)
+                {
+                    p.enemycarddraw--;
+                    p.enemyAnzCards--;
+                    p.triggerCardsChanged(false);
+                }
             }
 		}
 
