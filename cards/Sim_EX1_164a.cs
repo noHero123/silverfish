@@ -16,7 +16,7 @@ namespace HREngine.Bots
                 if (p.ownMaxMana >= 10)
                 {
                     //p.drawACard(CardDB.cardName.excessmana, true);
-                    p.mana++;
+                    if(p.mana <10)p.mana++;
                 }
                 else
                 {
@@ -27,7 +27,7 @@ namespace HREngine.Bots
                 {
                     //this.owncarddraw++;
                     //p.drawACard(CardDB.cardName.excessmana, true);
-                    p.mana++;
+                    if (p.mana < 10) p.mana++;
                 }
                 else
                 {
@@ -40,19 +40,23 @@ namespace HREngine.Bots
                 if (p.enemyMaxMana == 10)
                 {
                     //p.drawACard(CardDB.cardName.excessmana, false);
+                    if (p.mana < 10) p.mana++;
                 }
                 else
                 {
                     p.enemyMaxMana++;
+                    p.mana++;
                 }
                 if (p.enemyMaxMana == 10)
                 {
                     //this.owncarddraw++;
                     //p.drawACard(CardDB.cardName.excessmana, false);
+                    if (p.mana < 10) p.mana++;
                 }
                 else
                 {
                     p.enemyMaxMana++;
+                    p.mana++;
                 }
             }
         }

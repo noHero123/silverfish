@@ -2219,7 +2219,6 @@
             returnHandDatabase.Add(CardDB.cardName.youthfulbrewmaster, 0);
             returnHandDatabase.Add(CardDB.cardName.timerewinder, 0);
             returnHandDatabase.Add(CardDB.cardName.recycle, 0);
-            returnHandDatabase.Add(CardDB.cardName.timerewinder, 0);
         }
 
         private void setupHeroDamagingAOE()

@@ -11629,7 +11629,6 @@ namespace ConsoleApplication1
             returnHandDatabase.Add(CardDB.cardName.youthfulbrewmaster, 0);
             returnHandDatabase.Add(CardDB.cardName.timerewinder, 0);
             returnHandDatabase.Add(CardDB.cardName.recycle, 0);
-            returnHandDatabase.Add(CardDB.cardName.timerewinder, 0);
         }
 
         private void setupHeroDamagingAOE()
@@ -26425,7 +26424,7 @@ namespace ConsoleApplication1
                     if (p.ownMaxMana >= 10)
                     {
                         //p.drawACard(CardDB.cardName.excessmana, true);
-                        p.mana++;
+                        if (p.mana < 10) p.mana++;
                     }
                     else
                     {
@@ -26436,7 +26435,7 @@ namespace ConsoleApplication1
                     {
                         //this.owncarddraw++;
                         //p.drawACard(CardDB.cardName.excessmana, true);
-                        p.mana++;
+                        if (p.mana < 10) p.mana++;
                     }
                     else
                     {
@@ -26449,19 +26448,23 @@ namespace ConsoleApplication1
                     if (p.enemyMaxMana == 10)
                     {
                         //p.drawACard(CardDB.cardName.excessmana, false);
+                        if (p.mana < 10) p.mana++;
                     }
                     else
                     {
                         p.enemyMaxMana++;
+                        p.mana++;
                     }
                     if (p.enemyMaxMana == 10)
                     {
                         //this.owncarddraw++;
                         //p.drawACard(CardDB.cardName.excessmana, false);
+                        if (p.mana < 10) p.mana++;
                     }
                     else
                     {
                         p.enemyMaxMana++;
+                        p.mana++;
                     }
                 }
             }
@@ -26476,8 +26479,6 @@ namespace ConsoleApplication1
 
     }
 
-
-
     class Sim_EX1_164a : SimTemplate //nourish
     {
 
@@ -26490,7 +26491,7 @@ namespace ConsoleApplication1
                 if (p.ownMaxMana >= 10)
                 {
                     //p.drawACard(CardDB.cardName.excessmana, true);
-                    p.mana++;
+                    if (p.mana < 10) p.mana++;
                 }
                 else
                 {
@@ -26501,7 +26502,7 @@ namespace ConsoleApplication1
                 {
                     //this.owncarddraw++;
                     //p.drawACard(CardDB.cardName.excessmana, true);
-                    p.mana++;
+                    if (p.mana < 10) p.mana++;
                 }
                 else
                 {
@@ -26514,25 +26515,28 @@ namespace ConsoleApplication1
                 if (p.enemyMaxMana == 10)
                 {
                     //p.drawACard(CardDB.cardName.excessmana, false);
+                    if (p.mana < 10) p.mana++;
                 }
                 else
                 {
                     p.enemyMaxMana++;
+                    p.mana++;
                 }
                 if (p.enemyMaxMana == 10)
                 {
                     //this.owncarddraw++;
                     //p.drawACard(CardDB.cardName.excessmana, false);
+                    if (p.mana < 10) p.mana++;
                 }
                 else
                 {
                     p.enemyMaxMana++;
+                    p.mana++;
                 }
             }
         }
 
     }
-
 
     class Sim_EX1_164b : SimTemplate //nourish
     {
