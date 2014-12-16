@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "113.9";
+        public string versionnumber = "114.0";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -63,9 +63,19 @@ namespace HREngine.Bots
         Minion ownHero;
         Minion enemyHero;
 
-        public Silverfish(bool snglLg)
+        private static Silverfish instance;
+
+        public static Silverfish Instance
         {
-            this.singleLog = snglLg;
+            get
+            {
+                return instance ?? (instance = new Silverfish());
+            }
+        }
+
+        private Silverfish()
+        {
+            this.singleLog = Settings.Instance.writeToSingleFile;
             Helpfunctions.Instance.ErrorLog("init Silverfish");
             string path = HRSettings.Get.Session.Paths.Hearthcrawler + System.IO.Path.DirectorySeparatorChar + "UltimateLogs" + System.IO.Path.DirectorySeparatorChar;
             System.IO.Directory.CreateDirectory(path);

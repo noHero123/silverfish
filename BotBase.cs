@@ -15,13 +15,7 @@ namespace HREngine.Bots
         private string choiceCardId = "";
         DateTime starttime = DateTime.Now;
         Silverfish sf;
-        bool enemyConcede = false;
-
-        public bool learnmode = true;
-        public bool printlearnmode = true;
-
-        bool useExternalProcess = true;
-        public bool passiveWaiting = false;
+        
 
         Behavior behave = new BehaviorControl();
 
@@ -33,287 +27,39 @@ namespace HREngine.Bots
 
         public Bot()
         {
+            //crawler stuff-----------------
             OnVictory = HandleWining;
             OnLost = HandleLosing;
             OnBattleStateUpdate = HandleOnBattleStateUpdate;
             OnMulliganStateUpdate = HandleBattleMulliganPhase;
+            //-----------------------------------------
             starttime = DateTime.Now;
-            bool concede = false;
-            bool writeToSingleFile = false;
 
-            try
-            {
-                bool reset = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.reset") == "true");
-                if (reset) resetSettings();
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("error! cant reset settings...");
-            }
 
-            try
-            {
-                concede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.autoconcede") == "true") ? true : false;
-                writeToSingleFile = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.singleLog") == "true") ? true : false;
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("a wild error occurrs! cant read the settings...");
-            }
-
-            this.sf = new Silverfish(writeToSingleFile);
-            CardDB cdb = CardDB.Instance;
-            if (cdb.installedWrong) return;
-            Mulligan.Instance.setAutoConcede(concede);
+            Settings set = Settings.Instance;
+            this.sf = Silverfish.Instance;
+            set.setSettings();
             sf.setnewLoggFile();
-
-
-            try
+            CardDB cdb = CardDB.Instance;
+            if (cdb.installedWrong)
             {
-                this.learnmode = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.wwuaid") == "true") ? true : false;
-                if (this.learnmode)
-                {
-                    Helpfunctions.Instance.ErrorLog("Learn mode is ON");
-                }
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("a wild error occurrs! cant read the settings...");
+                Helpfunctions.Instance.ErrorLog("cant find CardDB");
+                return;
             }
 
-            try
-            {
-                this.passiveWaiting = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.passivewait") == "true") ? true : false;
-                if (this.passiveWaiting)
-                {
-                    Helpfunctions.Instance.ErrorLog("Passive Waiting is ON");
-                }
-                else
-                {
-                    Helpfunctions.Instance.ErrorLog("Passive Waiting is OFF");
-                }
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("cant read passive waiting...");
-            }
-
-
-            try
-            {
-                this.concedeLvl = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.concedelvl")));
-                if (this.concedeLvl >= 20) this.concedeLvl = 20;
-                if (concede)
-                {
-                    Helpfunctions.Instance.ErrorLog("concede till rank " + concedeLvl);
-                }
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("cant read your concede-Lvl");
-            }
-            /*try
-            {
-                this.stopAfterWins = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.stopwin")));
-                if (this.stopAfterWins <= 0) this.stopAfterWins = 10000;
-                Helpfunctions.Instance.ErrorLog("stop after " + stopAfterWins + " wins");
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("cant read stop after # of wins");
-            }*/
-
-            try
-            {
-                this.enemyConcede = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.enemyconcede") == "true") ? true : false;
-                if (this.enemyConcede) Helpfunctions.Instance.ErrorLog("concede whether enemy has lethal");
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("cant read enemy concede");
-            }
-
-
-
-            try
-            {
-                bool secrets = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.secrets") == "true") ? true : false;
-                Settings.Instance.useSecretsPlayArround = secrets;
-                Helpfunctions.Instance.ErrorLog("playing arround secrets is " + secrets);
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("cant read secrets");
-            }
-
-            try
-            {
-                int enfacehp = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.enemyfacehp")));
-                Helpfunctions.Instance.ErrorLog("set enemy-face-hp to: " + enfacehp);
-                ComboBreaker.Instance.attackFaceHP = enfacehp;
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("error in reading enemy-face-hp");
-            }
-
-            try
-            {
-                int mxwde = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxwide")));
-                if (mxwde != 3000)
-                {
-                    Ai.Instance.setMaxWide(mxwde);
-                    Helpfunctions.Instance.ErrorLog("set maxwide to: " + mxwde);
-                }
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("error in reading Maxwide from settings, please recheck the entry");
-            }
-
-            int twotsamount = 0;
-            try
-            {
-                //bool twots = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurns") == "true") ? true : false;
-                twotsamount = Convert.ToInt32((HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateTwoTurnCounter")));
-                if (twotsamount < 0) twotsamount = 0;
-                Ai.Instance.setTwoTurnSimulation(false, twotsamount);
-                Helpfunctions.Instance.ErrorLog("calculate the second turn of the " + twotsamount + " best boards");
-
-
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("error in reading two-turn-simulation from settings");
-            }
-
-            if (twotsamount >= 1)
-            {
-                try
-                {
-                    bool enemySecondTurnSim = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.simulateEnemyOnSecondTurn") == "true") ? true : false;
-                    Settings.Instance.simEnemySecondTurn = enemySecondTurnSim;
-                    //Ai.Instance.nextTurnSimulator.setEnemyTurnsim(enemySecondTurnSim);
-                    if (enemySecondTurnSim) Helpfunctions.Instance.ErrorLog("simulates the enemy turn on your second turn");
-
-
-                }
-                catch
-                {
-                    Helpfunctions.Instance.ErrorLog("error in reading enemys-two-turn-simulation from settings");
-                }
-            }
-
-            try
-            {
-                bool playaround = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAround") == "true") ? true : false;
-                int playaroundprob = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAroundProb"));
-                if (playaroundprob > 100) playaroundprob = 100;
-                if (playaroundprob < 0) playaroundprob = 0;
-
-                int playaroundprob2 = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.playAroundProb2"));
-                if (playaroundprob2 < playaroundprob) playaroundprob2 = playaroundprob;
-                if (playaroundprob2 > 100) playaroundprob2 = 100;
-                if (playaroundprob2 < 0) playaroundprob2 = 0;
-                if (playaround)
-                {
-
-                    Settings.Instance.playarround = playaround;
-                    Settings.Instance.playaroundprob = playaroundprob;
-                    Settings.Instance.playaroundprob2 = playaroundprob2;
-                    Ai.Instance.setPlayAround();
-                    Helpfunctions.Instance.ErrorLog("activated playaround");
-                }
-
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("error in reading play around settings");
-            }
-
-            Helpfunctions.Instance.ErrorLog("write to single log file is: " + writeToSingleFile);
-
-            bool teststuff = false;
-            bool printstuff = false;
-            try
-            {
-
-                printstuff = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.longteststuff") == "true") ? true : false;
-                teststuff = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.teststuff") == "true") ? true : false;
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("something went wrong with simulating stuff!");
-            }
-
-            int amountBoardsInEnemyTurnSim = 20;
-            int amountBoardsInEnemyTurnSimSecondStepp = 200;
-            int amountBoardsInEnemySecondTurnSim = 20;
-
-            int nextturnsimDeep = 6;
-            int nextturnsimMaxWidth = 10;
-            int nexttunsimMaxBoards = 50;
-
-            try
-            {
-
-                amountBoardsInEnemyTurnSim = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysTurn"));
-                amountBoardsInEnemyTurnSimSecondStepp = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysTurnSecondStepp"));
-                amountBoardsInEnemySecondTurnSim = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.maxBoardsEnemysSecondTurn"));
-                nextturnsimDeep = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimDeep"));
-                nextturnsimMaxWidth = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimWide"));
-                nexttunsimMaxBoards = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.nextTurnSimBoards"));
-
-                Settings.Instance.enemyTurnMaxWide = amountBoardsInEnemyTurnSim;
-                Settings.Instance.enemySecondTurnMaxWide = amountBoardsInEnemySecondTurnSim;
-
-                Settings.Instance.nextTurnDeep = nextturnsimDeep;
-                Settings.Instance.nextTurnMaxWide = nextturnsimMaxWidth;
-                Settings.Instance.nextTurnTotalBoards = nexttunsimMaxBoards;
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("something went wrong with reading simulation settings");
-            }
-
-            try
-            {
-                int alpha = 50;
-                alpha = Convert.ToInt32(HRSettings.Get.ReadSetting("silverfish.xml", "uai.secondweight"));
-                Settings.Instance.setWeights(alpha);
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("something went wrong with reading weight settings");
-            }
-
-            try
-            {
-                Settings.Instance.simulatePlacement = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.placement") == "true") ? true : false;
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("something went wrong with reading placement settings");
-            }
-
+            bool teststuff = false; // set to true, to run a testfile (requires test.txt file in folder where _cardDB.txt file is located)
+            bool printstuff = false; // if true, the best board of the tested file is printet stepp by stepp
 
             Helpfunctions.Instance.ErrorLog("----------------------------");
             Helpfunctions.Instance.ErrorLog("you are running uai V" + sf.versionnumber);
             Helpfunctions.Instance.ErrorLog("----------------------------");
 
-            try
-            {
-                this.useExternalProcess = (HRSettings.Get.ReadSetting("silverfish.xml", "uai.extern") == "true") ? true : false;
-            }
-            catch
-            {
-                Helpfunctions.Instance.ErrorLog("rand read the external-process setting!");
-            }
+            if (Settings.Instance.useExternalProcess) Helpfunctions.Instance.ErrorLog("YOU USE SILVER.EXE FOR CALCULATION, MAKE SURE YOU STARTED IT!");
+            if (Settings.Instance.useExternalProcess) Helpfunctions.Instance.ErrorLog("SILVER.EXE IS LOCATED IN: " + Settings.Instance.path);
 
-            if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("YOU USE SILVER.EXE FOR CALCULATION, MAKE SURE YOU STARTED IT!");
-            if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("SILVER.EXE IS LOCATED IN: " + Settings.Instance.path);
 
-            if (teststuff)
+
+            if (teststuff)//run autotester for developpers
             {
                 Ai.Instance.autoTester(printstuff);
             }
@@ -642,7 +388,7 @@ namespace HREngine.Bots
 
         private HREngine.API.Actions.ActionBase HandleBattleMulliganPhase()
         {
-            if (this.learnmode)
+            if (Settings.Instance.learnmode)
             {
                 return new HREngine.API.Actions.MakeNothingAction();
             }
@@ -741,7 +487,7 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (this.passiveWaiting && sf.waitingForSilver)
+                if (Settings.Instance.passiveWaiting && sf.waitingForSilver)
                 {
                     if (!this.sf.readActionFile(true))
                     {
@@ -749,7 +495,7 @@ namespace HREngine.Bots
                     }
                 }
 
-                if (this.learnmode && (HRBattle.IsInTargetMode() || HRChoice.IsChoiceActive()))
+                if (Settings.Instance.learnmode && (HRBattle.IsInTargetMode() || HRChoice.IsChoiceActive()))
                 {
                     return new HREngine.API.Actions.MakeNothingAction();
                 }
@@ -867,27 +613,27 @@ namespace HREngine.Bots
                     }
                 }
 
-                bool templearn = sf.updateEverything(behave, this.useExternalProcess, this.passiveWaiting);
-                if (templearn == true) this.printlearnmode = true;
+                bool templearn = sf.updateEverything(behave, Settings.Instance.useExternalProcess, Settings.Instance.passiveWaiting);
+                if (templearn == true) Settings.Instance.printlearnmode = true;
 
-                if (this.passiveWaiting && sf.waitingForSilver)
+                if (Settings.Instance.passiveWaiting && sf.waitingForSilver)
                 {
                     return new HREngine.API.Actions.MakeNothingAction();
                 }
 
-                if (this.learnmode)
+                if (Settings.Instance.learnmode)
                 {
-                    if (this.printlearnmode)
+                    if (Settings.Instance.printlearnmode)
                     {
                         Ai.Instance.simmulateWholeTurnandPrint();
                     }
-                    this.printlearnmode = false;
+                    Settings.Instance.printlearnmode = false;
                     return new HREngine.API.Actions.MakeNothingAction();
                 }
 
 
 
-                if (Ai.Instance.bestmoveValue <= -900 && enemyConcede) { return new HREngine.API.Actions.ConcedeAction(); }
+                if (Ai.Instance.bestmoveValue <= -900 && Settings.Instance.enemyConcede) { return new HREngine.API.Actions.ConcedeAction(); }
 
                 Action moveTodo = Ai.Instance.bestmove;
 
@@ -993,7 +739,7 @@ namespace HREngine.Bots
             {
                 Helpfunctions.Instance.ErrorLog(Exception.Message);
                 Helpfunctions.Instance.ErrorLog(Environment.StackTrace);
-                if (this.learnmode)
+                if (Settings.Instance.learnmode)
                 {
                     return new HREngine.API.Actions.MakeNothingAction();
                 }

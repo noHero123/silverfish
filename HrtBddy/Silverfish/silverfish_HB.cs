@@ -11,25 +11,170 @@ using Triton.Game.Mapping;
 
 namespace Silverfish
 {
-    
+
+    internal class Settings
+    {
+
+        public void setSettings()
+        {
+            // play with these settings###################################
+            this.enfacehp = 15;  // hp of enemy when your hero is allowed to attack the enemy face with his weapon
+            this.maxwide = 3000;   // numer of boards which are taken to the next deep-lvl
+            this.twotsamount = 0;          // number of boards where the next turn is simulated
+            this.simEnemySecondTurn = true; // if he simulates the next players-turn, he also simulates the enemys respons
+
+            this.playarround = false;  //play around some enemys aoe-spells?
+            //these two probs are >= 0 and <= 100
+            this.playaroundprob = 50;    //probability where the enemy plays the aoe-spell, but your minions will not die through it
+            this.playaroundprob2 = 80;   // probability where the enemy plays the aoe-spell, and your minions can die!
+
+            this.enemyTurnMaxWide = 40; // bords calculated in enemys-first-turn in first AI step (lower than enemySecondTurnMaxWide)
+            this.enemyTurnMaxWideSecondTime = 200; // bords calculated in enemys-first-turn BUT in the second AI step (higher than enemyTurnMaxWide)
+            this.enemySecondTurnMaxWide = 20; // number of enemy-board calculated in enemys second TURN
+
+            this.nextTurnDeep = 6; //maximum combo-deep in your second turn (dont change this!)
+            this.nextTurnMaxWide = 20; //maximum boards calculated in one second-turn-"combo-step"
+            this.nextTurnTotalBoards = 200;//maximum boards calculated in second turn simulation
+
+            this.useSecretsPlayArround = false; // playing arround enemys secrets
+
+            this.alpha = 50; // weight of the second turn in calculation (0<= alpha <= 100)
+
+            this.simulatePlacement = false;  // set this true, and ai will simulate all placements, whether you have a alpha/flametongue/argus
+            //use this only with useExternalProcess = true !!!!
+
+            this.useExternalProcess = false; // use silver.exe for calculations a lot faster than turning it off (true = recomended)
+            this.passiveWaiting = false; // process will wait passive for silver.exe to finish
+
+            //###########################################################
+
+            this.setWeights(alpha);
+
+            Mulligan.Instance.setAutoConcede(Settings.Instance.concede);
+            Helpfunctions.Instance.ErrorLog("set enemy-face-hp to: " + this.enfacehp);
+            ComboBreaker.Instance.attackFaceHP = this.enfacehp;
+            Ai.Instance.setMaxWide(this.maxwide);
+            Helpfunctions.Instance.ErrorLog("set maxwide to: " + this.maxwide);
+
+            Ai.Instance.setTwoTurnSimulation(false, this.twotsamount);
+            Helpfunctions.Instance.ErrorLog("calculate the second turn of the " + this.twotsamount + " best boards");
+            if (this.twotsamount >= 1)
+            {
+                if (this.simEnemySecondTurn) Helpfunctions.Instance.ErrorLog("simulates the enemy turn on your second turn");
+            }
+            if (this.useSecretsPlayArround)
+            {
+                Helpfunctions.Instance.ErrorLog("playing arround secrets is " + this.useSecretsPlayArround);
+            }
+            if (this.playarround)
+            {
+                Ai.Instance.setPlayAround();
+                Helpfunctions.Instance.ErrorLog("activated playaround AOE Spells");
+            }
+            if (this.writeToSingleFile) Helpfunctions.Instance.ErrorLog("write log to single file");
+
+
+        }
+
+
+        private Settings()
+        {
+            this.writeToSingleFile = false;
+        }
+
+
+        public int maxwide = 3000;
+        public int twotsamount = 0;
+
+        public bool useExternalProcess = false;
+        public bool passiveWaiting = false;
+
+        public int alpha = 50;
+        public float firstweight = 0.5f;
+        public float secondweight = 0.5f;
+
+        public int numberOfThreads = 32;
+        public bool useSecretsPlayArround = false;
+
+        public bool simulatePlacement = true;
+
+        public bool simulateEnemysTurn = true;
+        public int enemyTurnMaxWide = 20;
+        public int enemyTurnMaxWideSecondTime = 200;
+
+        public int secondTurnAmount = 256;
+        public bool simEnemySecondTurn = true;
+        public int enemySecondTurnMaxWide = 20;
+
+        public int nextTurnDeep = 6;
+        public int nextTurnMaxWide = 20;
+        public int nextTurnTotalBoards = 50;
+
+        public bool playarround = false;
+        public int playaroundprob = 50;
+        public int playaroundprob2 = 80;
+
+        public int enfacehp = 15;
+
+        public string path = "";
+        public string logpath = "";
+        public string logfile = "Logg.txt";
+
+        public bool concede = false;
+        public bool enemyConcede = false;
+        public bool writeToSingleFile = false;
+
+        public bool learnmode = true;
+        public bool printlearnmode = true;
+
+        private static Settings instance;
+
+        public static Settings Instance
+        {
+            get
+            {
+                return instance ?? (instance = new Settings());
+            }
+        }
+
+        public void setWeights(int alpha)
+        {
+            float a = ((float)alpha) / 100f;
+            this.firstweight = 1f - a;
+            this.secondweight = a;
+            Helpfunctions.Instance.ErrorLog("current alpha is " + this.secondweight);
+        }
+
+        public void setFilePath(string path)
+        {
+            this.path = path;
+        }
+        public void setLoggPath(string path)
+        {
+            this.logpath = path;
+        }
+
+        public void setLoggFile(string path)
+        {
+            this.logfile = path;
+        }
+    }
+
     public class Control : ICustomDeck
     {
         private int dirtyTargetSource = -1;
-        private int stopAfterWins = 30;
-        private int concedeLvl = 5; // the rank, till you want to concede
+        
         private int dirtytarget = -1;
         private int dirtychoice = -1;
         private string choiceCardId = "";
+
+        private int stopAfterWins = 30;
+        private int concedeLvl = 5; // the rank, till you want to concede
+
         DateTime starttime = DateTime.Now;
         Silverfish sf;
-        bool enemyConcede = false;
+
         
-        public bool learnmode = false;
-        public bool printlearnmode = true;
-
-        bool useExternalProcess = true;
-        public bool passiveWaiting = false;
-
         Behavior behave = new BehaviorControl();//change this to new BehaviorRush() for rush mode
 
         //crawlerstuff
@@ -39,102 +184,31 @@ namespace Silverfish
 
         public Control()
         {
-            
-            bool concede = false;
-            bool writeToSingleFile = false; 
 
-            // play with these settings###################################
-            int enfacehp = 15;  // hp of enemy when your hero is allowed to attack the enemy face with his weapon
-            int mxwde = 3000;   // numer of boards which are taken to the next deep-lvl
-            int twotsamount = 0;          // number of boards where the next turn is simulated
-            bool enemySecondTurnSim = false; // if he simulates the next players-turn, he also simulates the enemys respons
-
-            bool playaround = false;  //play around some enemys aoe-spells?
-            //these two probs are >= 0 and <= 100
-            int playaroundprob = 50;    //probability where the enemy plays the aoe-spell, but your minions will not die through it
-            int playaroundprob2 = 80;   // probability where the enemy plays the aoe-spell, and your minions can die!
-            this.useExternalProcess = false; // use silver.exe for calculations a lot faster than turning it off (true = recomended)
-
-            int amountBoardsInEnemyTurnSim = 40;
-            int amountBoardsInEnemyTurnSimSecondStepp = 200;
-            int amountBoardsInEnemySecondTurnSim = 20;
-
-            int nextturnsimDeep = 6;
-            int nextturnsimMaxWidth = 20;
-            int nexttunsimMaxBoards = 200;
-
-            bool secrets = false; // playing arround enemys secrets
-
-            int alpha = 50; // weight of the second turn in calculation (0<= alpha <= 100)
-
-            Settings.Instance.simulatePlacement = false;  // set this true, and ai will simulate all placements, whether you have a alpha/flametongue/argus
-            //use it only with useExternalProcess = true !!!!
-
-            //###########################################################
-
-
-            sf = new Silverfish(writeToSingleFile);
-            Mulligan.Instance.setAutoConcede(concede);
-
+            Settings set = Settings.Instance;
+            this.sf = Silverfish.Instance;
+            set.setSettings();
             sf.setnewLoggFile();
-
-            Helpfunctions.Instance.ErrorLog("set enemy-face-hp to: " + enfacehp);
-            ComboBreaker.Instance.attackFaceHP = enfacehp;
-
-            Ai.Instance.setMaxWide(mxwde);
-            Helpfunctions.Instance.ErrorLog("set maxwide to: " + mxwde);
-
-            Ai.Instance.setTwoTurnSimulation(false, twotsamount);
-            Helpfunctions.Instance.ErrorLog("calculate the second turn of the " + twotsamount + " best boards");
-            if (twotsamount >= 1)
+            CardDB cdb = CardDB.Instance;
+            if (cdb.installedWrong)
             {
-                //Ai.Instance.nextTurnSimulator.setEnemyTurnsim(enemySecondTurnSim);
-                Settings.Instance.simEnemySecondTurn = enemySecondTurnSim;
-                if (enemySecondTurnSim) Helpfunctions.Instance.ErrorLog("simulates the enemy turn on your second turn");
+                Helpfunctions.Instance.ErrorLog("cant find CardDB");
+                return;
             }
 
-            if (secrets)
-            {
-                
-                Settings.Instance.useSecretsPlayArround = secrets;
-                Helpfunctions.Instance.ErrorLog("playing arround secrets is " + secrets);
-            }
-            
-
-            if (playaround)
-            {
-                Settings.Instance.playarround = playaround;
-                Settings.Instance.playaroundprob = playaroundprob;
-                Settings.Instance.playaroundprob2 = playaroundprob2;
-                Ai.Instance.setPlayAround();
-                Helpfunctions.Instance.ErrorLog("activated playaround");
-            }
-
-            if (writeToSingleFile) Helpfunctions.Instance.ErrorLog("write to log to single file");
-
-            
-            Settings.Instance.setWeights(alpha);
-
-
-            bool teststuff = false;
-            // set to true, to run a testfile (requires test.txt file in filder where _cardDB.txt file is located)
+            bool teststuff = false; // set to true, to run a testfile (requires test.txt file in folder where _cardDB.txt file is located)
             bool printstuff = false; // if true, the best board of the tested file is printet stepp by stepp
-
-            Settings.Instance.enemyTurnMaxWide = amountBoardsInEnemyTurnSim;
-            Settings.Instance.enemySecondTurnMaxWide = amountBoardsInEnemySecondTurnSim;
-
-            Settings.Instance.nextTurnDeep = nextturnsimDeep;
-            Settings.Instance.nextTurnMaxWide = nextturnsimMaxWidth;
-            Settings.Instance.nextTurnTotalBoards = nexttunsimMaxBoards;
 
             Helpfunctions.Instance.ErrorLog("----------------------------");
             Helpfunctions.Instance.ErrorLog("you are running uai V" + sf.versionnumber);
             Helpfunctions.Instance.ErrorLog("----------------------------");
 
-            if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("YOU USE SILVER.EXE FOR CALCULATION, MAKE SURE YOU STARTED IT!");
-            if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("SILVER.EXE IS LOCATED IN: " + Settings.Instance.path);
+            if (Settings.Instance.useExternalProcess) Helpfunctions.Instance.ErrorLog("YOU USE SILVER.EXE FOR CALCULATION, MAKE SURE YOU STARTED IT!");
+            if (Settings.Instance.useExternalProcess) Helpfunctions.Instance.ErrorLog("SILVER.EXE IS LOCATED IN: " + Settings.Instance.path);
 
-            if (teststuff)
+            
+
+            if (teststuff)//run autotester for developpers
             {
                 Ai.Instance.autoTester(printstuff);
             }
@@ -226,7 +300,7 @@ namespace Silverfish
         /// </summary>
         public IEnumerator SelectCard()
         {
-            if (this.passiveWaiting && sf.waitingForSilver)
+            if (Settings.Instance.passiveWaiting && sf.waitingForSilver)
             {
                 if (!this.sf.readActionFile(true))
                 {
@@ -235,7 +309,7 @@ namespace Silverfish
                 }
             }
 
-            if (this.learnmode && (TritonHS.IsInTargetMode() || TritonHS.IsInChoiceMode()))
+            if (Settings.Instance.learnmode && (TritonHS.IsInTargetMode() || TritonHS.IsInChoiceMode()))
             {
                 yield return Coroutine.Sleep(50);
                 yield break;
@@ -298,22 +372,22 @@ namespace Silverfish
                 yield break;
             }
 
-            bool templearn = sf.updateEverything(behave, this.useExternalProcess, this.passiveWaiting);
+            bool templearn = sf.updateEverything(behave, Settings.Instance.useExternalProcess, Settings.Instance.passiveWaiting);
             if (templearn == true) this.printlearnmode = true;
 
-            if (this.passiveWaiting && sf.waitingForSilver)
+            if (Settings.Instance.passiveWaiting && sf.waitingForSilver)
             {
                 yield return Coroutine.Sleep(50);
                 yield break;
             }
 
-            if (this.learnmode)
+            if (Settings.Instance.learnmode)
             {
-                if (this.printlearnmode)
+                if (Settings.Instance.printlearnmode)
                 {
                     Ai.Instance.simmulateWholeTurnandPrint();
                 }
-                this.printlearnmode = false;
+                Settings.Instance.printlearnmode = false;
 
                 //do nothing
                 yield return Coroutine.Sleep(50);
@@ -592,22 +666,19 @@ namespace Silverfish
     public class Rush : ICustomDeck
     {
         private int dirtyTargetSource = -1;
-        private int stopAfterWins = 30;
-        private int concedeLvl = 5; // the rank, till you want to concede
+
         private int dirtytarget = -1;
         private int dirtychoice = -1;
         private string choiceCardId = "";
+
+        private int stopAfterWins = 30;
+        private int concedeLvl = 5; // the rank, till you want to concede
+
         DateTime starttime = DateTime.Now;
         Silverfish sf;
-        bool enemyConcede = false;
 
-        public bool learnmode = false;
-        public bool printlearnmode = true;
 
-        bool useExternalProcess = true;
-        public bool passiveWaiting = false;
-
-        Behavior behave = new BehaviorRush();//change this to new BehaviorRush() for rush mode
+        Behavior behave = new BehaviorControl();//change this to new BehaviorRush() for rush mode
 
         //crawlerstuff
         bool isgoingtoconcede = false;
@@ -617,101 +688,30 @@ namespace Silverfish
         public Rush()
         {
 
-            bool concede = false;
-            bool writeToSingleFile = false;
-
-            // play with these settings###################################
-            int enfacehp = 15;  // hp of enemy when your hero is allowed to attack the enemy face with his weapon
-            int mxwde = 3000;   // numer of boards which are taken to the next deep-lvl
-            int twotsamount = 0;          // number of boards where the next turn is simulated
-            bool enemySecondTurnSim = false; // if he simulates the next players-turn, he also simulates the enemys respons
-
-            bool playaround = false;  //play around some enemys aoe-spells?
-            //these two probs are >= 0 and <= 100
-            int playaroundprob = 50;    //probability where the enemy plays the aoe-spell, but your minions will not die through it
-            int playaroundprob2 = 80;   // probability where the enemy plays the aoe-spell, and your minions can die!
-            this.useExternalProcess = false; // use silver.exe for calculations a lot faster than turning it off (true = recomended)
-
-            int amountBoardsInEnemyTurnSim = 40;
-            int amountBoardsInEnemyTurnSimSecondStepp = 200;
-            int amountBoardsInEnemySecondTurnSim = 20;
-
-            int nextturnsimDeep = 6;
-            int nextturnsimMaxWidth = 20;
-            int nexttunsimMaxBoards = 200;
-
-            bool secrets = false; // playing arround enemys secrets
-
-            int alpha = 50; // weight of the second turn in calculation (0<= alpha <= 100)
-
-            Settings.Instance.simulatePlacement = false;  // set this true, and ai will simulate all placements, whether you have a alpha/flametongue/argus
-            //use it only with useExternalProcess = true !!!!
-
-            //###########################################################
-
-
-            sf = new Silverfish(writeToSingleFile);
-            Mulligan.Instance.setAutoConcede(concede);
-
+            Settings set = Settings.Instance;
+            this.sf = Silverfish.Instance;
+            set.setSettings();
             sf.setnewLoggFile();
-
-            Helpfunctions.Instance.ErrorLog("set enemy-face-hp to: " + enfacehp);
-            ComboBreaker.Instance.attackFaceHP = enfacehp;
-
-            Ai.Instance.setMaxWide(mxwde);
-            Helpfunctions.Instance.ErrorLog("set maxwide to: " + mxwde);
-
-            Ai.Instance.setTwoTurnSimulation(false, twotsamount);
-            Helpfunctions.Instance.ErrorLog("calculate the second turn of the " + twotsamount + " best boards");
-            if (twotsamount >= 1)
+            CardDB cdb = CardDB.Instance;
+            if (cdb.installedWrong)
             {
-                //Ai.Instance.nextTurnSimulator.setEnemyTurnsim(enemySecondTurnSim);
-                Settings.Instance.simEnemySecondTurn = enemySecondTurnSim;
-                if (enemySecondTurnSim) Helpfunctions.Instance.ErrorLog("simulates the enemy turn on your second turn");
+                Helpfunctions.Instance.ErrorLog("cant find CardDB");
+                return;
             }
 
-            if (secrets)
-            {
-
-                Settings.Instance.useSecretsPlayArround = secrets;
-                Helpfunctions.Instance.ErrorLog("playing arround secrets is " + secrets);
-            }
-
-
-            if (playaround)
-            {
-                Settings.Instance.playarround = playaround;
-                Settings.Instance.playaroundprob = playaroundprob;
-                Settings.Instance.playaroundprob2 = playaroundprob2;
-                Ai.Instance.setPlayAround();
-                Helpfunctions.Instance.ErrorLog("activated playaround");
-            }
-
-            if (writeToSingleFile) Helpfunctions.Instance.ErrorLog("write to log to single file");
-
-
-            Settings.Instance.setWeights(alpha);
-
-
-            bool teststuff = false;
-            // set to true, to run a testfile (requires test.txt file in filder where _cardDB.txt file is located)
+            bool teststuff = false; // set to true, to run a testfile (requires test.txt file in folder where _cardDB.txt file is located)
             bool printstuff = false; // if true, the best board of the tested file is printet stepp by stepp
-
-            Settings.Instance.enemyTurnMaxWide = amountBoardsInEnemyTurnSim;
-            Settings.Instance.enemySecondTurnMaxWide = amountBoardsInEnemySecondTurnSim;
-
-            Settings.Instance.nextTurnDeep = nextturnsimDeep;
-            Settings.Instance.nextTurnMaxWide = nextturnsimMaxWidth;
-            Settings.Instance.nextTurnTotalBoards = nexttunsimMaxBoards;
 
             Helpfunctions.Instance.ErrorLog("----------------------------");
             Helpfunctions.Instance.ErrorLog("you are running uai V" + sf.versionnumber);
             Helpfunctions.Instance.ErrorLog("----------------------------");
 
-            if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("YOU USE SILVER.EXE FOR CALCULATION, MAKE SURE YOU STARTED IT!");
-            if (this.useExternalProcess) Helpfunctions.Instance.ErrorLog("SILVER.EXE IS LOCATED IN: " + Settings.Instance.path);
+            if (Settings.Instance.useExternalProcess) Helpfunctions.Instance.ErrorLog("YOU USE SILVER.EXE FOR CALCULATION, MAKE SURE YOU STARTED IT!");
+            if (Settings.Instance.useExternalProcess) Helpfunctions.Instance.ErrorLog("SILVER.EXE IS LOCATED IN: " + Settings.Instance.path);
 
-            if (teststuff)
+
+
+            if (teststuff)//run autotester for developpers
             {
                 Ai.Instance.autoTester(printstuff);
             }
@@ -803,7 +803,7 @@ namespace Silverfish
         /// </summary>
         public IEnumerator SelectCard()
         {
-            if (this.passiveWaiting && sf.waitingForSilver)
+            if (Settings.Instance.passiveWaiting && sf.waitingForSilver)
             {
                 if (!this.sf.readActionFile(true))
                 {
@@ -812,7 +812,7 @@ namespace Silverfish
                 }
             }
 
-            if (this.learnmode && (TritonHS.IsInTargetMode() || TritonHS.IsInChoiceMode()))
+            if (Settings.Instance.learnmode && (TritonHS.IsInTargetMode() || TritonHS.IsInChoiceMode()))
             {
                 yield return Coroutine.Sleep(50);
                 yield break;
@@ -875,22 +875,22 @@ namespace Silverfish
                 yield break;
             }
 
-            bool templearn = sf.updateEverything(behave, this.useExternalProcess, this.passiveWaiting);
+            bool templearn = sf.updateEverything(behave, Settings.Instance.useExternalProcess, Settings.Instance.passiveWaiting);
             if (templearn == true) this.printlearnmode = true;
 
-            if (this.passiveWaiting && sf.waitingForSilver)
+            if (Settings.Instance.passiveWaiting && sf.waitingForSilver)
             {
                 yield return Coroutine.Sleep(50);
                 yield break;
             }
 
-            if (this.learnmode)
+            if (Settings.Instance.learnmode)
             {
-                if (this.printlearnmode)
+                if (Settings.Instance.printlearnmode)
                 {
                     Ai.Instance.simmulateWholeTurnandPrint();
                 }
-                this.printlearnmode = false;
+                Settings.Instance.printlearnmode = false;
 
                 //do nothing
                 yield return Coroutine.Sleep(50);
@@ -1286,9 +1286,19 @@ namespace Silverfish
         Minion ownHero;
         Minion enemyHero;
 
-        public Silverfish(bool snglLg)
+        private static Silverfish instance;
+
+        public static Silverfish Instance
         {
-            this.singleLog = snglLg;
+            get
+            {
+                return instance ?? (instance = new Silverfish());
+            }
+        }
+
+        private Silverfish()
+        {
+            this.singleLog = Settings.Instance.writeToSingleFile;
             Helpfunctions.Instance.ErrorLog("init Silverfish");
             string p = "." + System.IO.Path.DirectorySeparatorChar + "CustomDecks" + System.IO.Path.DirectorySeparatorChar + "Silverfish" + System.IO.Path.DirectorySeparatorChar;
             string path = p + "UltimateLogs" + Path.DirectorySeparatorChar;
@@ -24305,73 +24315,6 @@ namespace Silverfish
         INVALID,
         MULLIGAN,
         GENERAL
-    }
-
-    internal class Settings
-    {
-        public float firstweight = 0.5f;
-        public float secondweight = 0.5f;
-
-        public int numberOfThreads = 32;
-        public bool useSecretsPlayArround = false;
-
-        public bool simulatePlacement = true;
-
-        public bool simulateEnemysTurn = true;
-        public int enemyTurnMaxWide = 20;
-        public int enemyTurnMaxWideSecondTime = 200;
-
-        public int secondTurnAmount = 256;
-        public bool simEnemySecondTurn = true;
-        public int enemySecondTurnMaxWide = 20;
-
-        public int nextTurnDeep = 6;
-        public int nextTurnMaxWide = 20;
-        public int nextTurnTotalBoards = 50;
-
-        public bool playarround = false;
-        public int playaroundprob = 50;
-        public int playaroundprob2 = 80;
-
-        public string path = "";
-        public string logpath = "";
-        public string logfile = "Logg.txt";
-        private static Settings instance;
-
-        public static Settings Instance
-        {
-            get
-            {
-                return instance ?? (instance = new Settings());
-            }
-        }
-
-
-        private Settings()
-        {
-        }
-
-        public void setWeights(int a)
-        {
-            float alpha = ((float)a) / 100f;
-            this.firstweight = 1f - alpha;
-            this.secondweight = alpha;
-            Helpfunctions.Instance.ErrorLog("current alpha is " + this.secondweight);
-        }
-
-        public void setFilePath(string path)
-        {
-            this.path = path;
-        }
-        public void setLoggPath(string path)
-        {
-            this.logpath = path;
-        }
-
-        public void setLoggFile(string path)
-        {
-            this.logfile = path;
-        }
     }
 
     public class SimTemplate

@@ -1,7 +1,0 @@
-{
-"script": "silver/silverfish_rush.cs",
-"settings": "silver/silverfish.xml",
-"classes": [
-{ "class": "Bot" }
-]
-}
