@@ -6723,6 +6723,7 @@ namespace ConsoleApplication1
                     foreach (Action a in actions)
                     {
                         //if (deep == 0 && a.actionType == actionEnum.attackWithMinion) Helpfunctions.Instance.ErrorLog("play " + a.own.entitiyID + " -> " + a.target.entitiyID);
+                        //if (deep == 0 && a.actionType == actionEnum.useHeroPower) Helpfunctions.Instance.ErrorLog("play " + " -> " + a.target.entitiyID);
                         havedonesomething = true;
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
@@ -8400,9 +8401,7 @@ namespace ConsoleApplication1
                 // if we have mage or priest, we have to target something####################################################
                 if (p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS2_034 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.EX1_625t || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.EX1_625t2 || p.ownHeroAblility.card.cardIDenum == CardDB.cardIDEnum.DS1h_292)
                 {
-
                     List<Minion> trgts = p.ownHeroAblility.card.getTargetsForCard(p);
-
                     if (isLethalCheck && (p.ownHeroName == HeroEnum.mage || (p.ownHeroName == HeroEnum.priest && (p.ownHeroAblility.card.name != CardDB.cardName.lesserheal || (p.ownHeroAblility.card.name == CardDB.cardName.lesserheal && p.anzOwnAuchenaiSoulpriest >= 1)))))// only target enemy hero during Lethal check!
                     {
                         if (trgts.Count >= 1 && trgts[0].entitiyID == p.enemyHero.entitiyID)
@@ -17842,7 +17841,7 @@ namespace ConsoleApplication1
 
                 if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO) && p.cardsPlayedThisTurn == 0) return retval;
 
-                bool moreh = isRequirementInList(CardDB.ErrorType2.REQ_HERO_OR_MINION_TARGET);
+                bool moreh = isRequirementInList(CardDB.ErrorType2.REQ_MINION_OR_ENEMY_HERO);
                 if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_TO_PLAY) || isRequirementInList(CardDB.ErrorType2.REQ_NONSELF_TARGET) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO))
                 {
                     addEnemyHero = true;
@@ -18098,7 +18097,7 @@ namespace ConsoleApplication1
 
                 if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO) && p.cardsPlayedThisTurn == 0) return retval;
 
-                bool moreh = isRequirementInList(CardDB.ErrorType2.REQ_HERO_OR_MINION_TARGET);
+                bool moreh = isRequirementInList(CardDB.ErrorType2.REQ_MINION_OR_ENEMY_HERO);
                 if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_TO_PLAY) || isRequirementInList(CardDB.ErrorType2.REQ_NONSELF_TARGET) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO))
                 {
                     addEnemyHero = true;
