@@ -4012,12 +4012,12 @@
 
                 if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO) && p.cardsPlayedThisTurn == 0) return retval;
 
-                bool moreh=isRequirementInList(CardDB.ErrorType2.REQ_HERO_OR_MINION_TARGET);
-                if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_TO_PLAY) || isRequirementInList(CardDB.ErrorType2.REQ_NONSELF_TARGET) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO) )
+                bool moreh = isRequirementInList(CardDB.ErrorType2.REQ_MINION_OR_ENEMY_HERO);
+                if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_TO_PLAY) || isRequirementInList(CardDB.ErrorType2.REQ_NONSELF_TARGET) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO))
                 {
                     addEnemyHero = true;
                     addOwnHero = true;
-                    
+
                     k = -1;
                     foreach (Minion m in p.ownMinions)
                     {
@@ -4084,7 +4084,7 @@
                     for (int i = 0; i < ownMins.Length; i++) ownMins[i] = false;
                 }
 
-                
+
 
                 if (isRequirementInList(CardDB.ErrorType2.REQ_DAMAGED_TARGET))
                 {
@@ -4268,8 +4268,8 @@
 
                 if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO) && p.cardsPlayedThisTurn == 0) return retval;
 
-                bool moreh = isRequirementInList(CardDB.ErrorType2.REQ_HERO_OR_MINION_TARGET);
-                if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_TO_PLAY) || isRequirementInList(CardDB.ErrorType2.REQ_NONSELF_TARGET) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO) )
+                bool moreh = isRequirementInList(CardDB.ErrorType2.REQ_MINION_OR_ENEMY_HERO);
+                if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_TO_PLAY) || isRequirementInList(CardDB.ErrorType2.REQ_NONSELF_TARGET) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO))
                 {
                     addEnemyHero = true;
                     addOwnHero = true;
@@ -4294,7 +4294,7 @@
                 if (moreh)
                 {
                     addOwnHero = true;
-                    
+
                     if (p.enemyHaveSteamwheedleSniper)
                     {
                         k = -1;
@@ -4335,7 +4335,7 @@
                     for (int i = 0; i < enemyMins.Length; i++) enemyMins[i] = false;
                 }
 
-               
+
 
                 if (isRequirementInList(CardDB.ErrorType2.REQ_DAMAGED_TARGET))
                 {
@@ -4642,7 +4642,7 @@
                 }
 
                 //manacosts changes with Mechwarper
-                if (p.anzOwnMechwarper != p.anzOwnMechwarperStarted && this.type == cardtype.MOB && (TAG_RACE) this.race == TAG_RACE.MECHANICAL)
+                if (p.anzOwnMechwarper != p.anzOwnMechwarperStarted && this.type == cardtype.MOB && (TAG_RACE)this.race == TAG_RACE.MECHANICAL)
                 { //if the number of zauberlehrlings change
                     offset += (p.anzOwnMechwarperStarted - p.anzOwnMechwarper);
                 }
@@ -4784,7 +4784,7 @@
         public Card teacherminion;
         public Card illidanminion;
         public Card lepergnome;
-        public Card burlyrockjaw; 
+        public Card burlyrockjaw;
         private static CardDB instance;
 
         public static CardDB Instance
