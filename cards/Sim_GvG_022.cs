@@ -18,7 +18,7 @@ namespace HREngine.Bots
                     p.ownWeaponAttack += 3;
                     p.minionGetBuffed(p.ownHero, 3, 0);
                 }
-                if (p.cardsPlayedThisTurn >= 1)
+                if (p.cardsPlayedThisTurn >= 1 && p.ownMinions.Count >= 1)
                 {
                     p.minionGetBuffed(p.searchRandomMinion(p.ownMinions, Playfield.searchmode.searchLowestAttack), 3, 0);
                 }
@@ -30,7 +30,7 @@ namespace HREngine.Bots
                     p.enemyWeaponAttack += 3;
                     p.minionGetBuffed(p.enemyHero, 3, 0);
                 }
-                if (p.cardsPlayedThisTurn >= 1)
+                if (p.cardsPlayedThisTurn >= 1 && p.enemyMinions.Count >= 1)
                 {
                     p.minionGetBuffed(p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchLowestAttack), 3, 0);
                 }

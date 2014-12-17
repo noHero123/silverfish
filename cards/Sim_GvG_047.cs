@@ -13,7 +13,11 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             List<Minion> temp = (ownplay)? p.enemyMinions : p.ownMinions;
-            p.minionGetDestroyed(p.searchRandomMinion(temp, Playfield.searchmode.searchLowestHP));
+            if (temp.Count >= 1)
+            {
+                p.minionGetDestroyed(p.searchRandomMinion(temp, Playfield.searchmode.searchLowestHP));
+                
+            }
             if (p.cardsPlayedThisTurn >= 1) p.lowerWeaponDurability(1000, !ownplay);
         }
 

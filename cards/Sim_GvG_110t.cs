@@ -14,7 +14,7 @@ namespace HREngine.Bots
         public override void onDeathrattle(Playfield p, Minion m)
         {
             List<Minion> temp = (m.own) ? p.enemyMinions : p.ownMinions;
-            if (temp.Count >= 1)
+            if (temp.Count >= 1 && temp.Count >=1 )
             {
                 p.minionGetDamageOrHeal(p.searchRandomMinion(temp, Playfield.searchmode.searchHighestHP), 2);
             }

@@ -31017,7 +31017,7 @@ namespace ConsoleApplication1
                     p.ownWeaponAttack += 3;
                     p.minionGetBuffed(p.ownHero, 3, 0);
                 }
-                if (p.cardsPlayedThisTurn >= 1)
+                if (p.cardsPlayedThisTurn >= 1 && p.ownMinions.Count >= 1)
                 {
                     p.minionGetBuffed(p.searchRandomMinion(p.ownMinions, Playfield.searchmode.searchLowestAttack), 3, 0);
                 }
@@ -31029,7 +31029,7 @@ namespace ConsoleApplication1
                     p.enemyWeaponAttack += 3;
                     p.minionGetBuffed(p.enemyHero, 3, 0);
                 }
-                if (p.cardsPlayedThisTurn >= 1)
+                if (p.cardsPlayedThisTurn >= 1 && p.enemyMinions.Count >= 1)
                 {
                     p.minionGetBuffed(p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchLowestAttack), 3, 0);
                 }
@@ -31186,13 +31186,15 @@ namespace ConsoleApplication1
             if (turnEndOfOwner == triggerEffectMinion.own)
             {
                 List<Minion> temp = (turnEndOfOwner) ? p.ownMinions : p.enemyMinions;
-                p.minionGetBuffed(p.searchRandomMinion(temp, Playfield.searchmode.searchHighestAttack), 2, 2);
+                if (temp.Count >= 1)
+                {
+                    p.minionGetBuffed(p.searchRandomMinion(temp, Playfield.searchmode.searchHighestAttack), 2, 2);
+                }
             }
         }
 
 
     }
-
 
     class Sim_GVG_028 : SimTemplate //Trade Prince Gallywix
     {
@@ -31638,12 +31640,12 @@ namespace ConsoleApplication1
         {
             p.equipWeapon(w, ownplay);
             List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
+            if (temp.Count <= 0) return;
             p.minionGetBuffed(p.searchRandomMinion(temp, Playfield.searchmode.searchLowestAttack), 1, 0);
 
         }
 
     }
-
 
     class Sim_GVG_044 : SimTemplate //Spider Tank
     {
@@ -31710,7 +31712,6 @@ namespace ConsoleApplication1
 
     }
 
-
     class Sim_GVG_047 : SimTemplate //Sabotage
     {
 
@@ -31720,13 +31721,16 @@ namespace ConsoleApplication1
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             List<Minion> temp = (ownplay) ? p.enemyMinions : p.ownMinions;
-            p.minionGetDestroyed(p.searchRandomMinion(temp, Playfield.searchmode.searchLowestHP));
+            if (temp.Count >= 1)
+            {
+                p.minionGetDestroyed(p.searchRandomMinion(temp, Playfield.searchmode.searchLowestHP));
+
+            }
             if (p.cardsPlayedThisTurn >= 1) p.lowerWeaponDurability(1000, !ownplay);
         }
 
 
     }
-
 
     class Sim_GVG_048 : SimTemplate //Metaltooth Leaper
     {
@@ -31971,6 +31975,7 @@ namespace ConsoleApplication1
         {
             p.equipWeapon(w, ownplay);
             List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
+            if (temp.Count <= 0) return;
             Minion m = p.searchRandomMinion(temp, Playfield.searchmode.searchLowestHP);
             m.divineshild = true;
             m.taunt = true;
@@ -31978,7 +31983,6 @@ namespace ConsoleApplication1
 
 
     }
-
 
     class Sim_GVG_060 : SimTemplate //Quartermaster
     {
@@ -32933,7 +32937,7 @@ namespace ConsoleApplication1
         public override void onDeathrattle(Playfield p, Minion m)
         {
             List<Minion> temp = (m.own) ? p.enemyMinions : p.ownMinions;
-            if (temp.Count >= 1)
+            if (temp.Count >= 1 && temp.Count >= 1)
             {
                 p.minionGetDamageOrHeal(p.searchRandomMinion(temp, Playfield.searchmode.searchHighestHP), 2);
             }
@@ -32946,7 +32950,6 @@ namespace ConsoleApplication1
 
 
     }
-
 
     class Sim_GVG_111 : SimTemplate //Mimiron's Head
     {

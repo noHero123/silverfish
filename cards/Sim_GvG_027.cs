@@ -14,7 +14,10 @@ namespace HREngine.Bots
             if (turnEndOfOwner == triggerEffectMinion.own)
             {
                 List<Minion> temp = (turnEndOfOwner) ? p.ownMinions : p.enemyMinions;
-                p.minionGetBuffed(p.searchRandomMinion(temp, Playfield.searchmode.searchHighestAttack),2,2);
+                if (temp.Count >= 1)
+                {
+                    p.minionGetBuffed(p.searchRandomMinion(temp, Playfield.searchmode.searchHighestAttack), 2, 2);
+                }
             }
         }
 
