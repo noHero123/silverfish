@@ -3844,7 +3844,7 @@ namespace ConsoleApplication1
                     }
                 }
 
-                if (mnn.handcard.card.name == CardDB.cardName.cogmaster || mnn.handcard.card.name == CardDB.cardName.cogmasterswrench)
+                if (mnn.handcard.card.name == CardDB.cardName.cogmaster)
                 {
                     if (this.tempTrigger.ownMechanicDied >= 1)
                     {
@@ -3865,6 +3865,29 @@ namespace ConsoleApplication1
 
                     }
                 }
+
+                if (mnn.handcard.card.name == CardDB.cardName.cogmasterswrench)
+                {
+                    if (this.tempTrigger.ownMechanicDied >= 1)
+                    {
+                        //check if we have more mechanics, or debuff him
+                        bool hasmechanics = false;
+                        foreach (Minion m in this.ownMinions)
+                        {
+                            if (m.Hp >= 1 && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) hasmechanics = true;
+                        }
+
+                        if (!hasmechanics)
+                        {
+                            this.ownWeaponAttack -= 2;
+                            this.minionGetBuffed(this.ownHero, -2, 0);
+                        }
+
+
+
+                    }
+                }
+
 
                 if (mnn.handcard.card.name == CardDB.cardName.junkbot)
                 {
@@ -3915,7 +3938,7 @@ namespace ConsoleApplication1
                     }
                 }
 
-                if (mnn.handcard.card.name == CardDB.cardName.cogmaster || mnn.handcard.card.name == CardDB.cardName.cogmasterswrench)
+                if (mnn.handcard.card.name == CardDB.cardName.cogmaster)
                 {
                     if (this.tempTrigger.enemyMechanicDied >= 1)
                     {
@@ -3930,6 +3953,28 @@ namespace ConsoleApplication1
                         {
                             //we have no living mechanics -> debuff cogmaster
                             this.minionGetBuffed(mnn, -2, 0);
+                        }
+
+
+
+                    }
+                }
+
+                if (mnn.handcard.card.name == CardDB.cardName.cogmasterswrench)
+                {
+                    if (this.tempTrigger.ownMechanicDied >= 1)
+                    {
+                        //check if we have more mechanics, or debuff him
+                        bool hasmechanics = false;
+                        foreach (Minion m in this.ownMinions)
+                        {
+                            if (m.Hp >= 1 && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) hasmechanics = true;
+                        }
+
+                        if (!hasmechanics)
+                        {
+                            this.enemyWeaponAttack -= 2;
+                            this.minionGetBuffed(this.enemyHero, -2, 0);
                         }
 
 
@@ -6047,6 +6092,7 @@ namespace ConsoleApplication1
 
 
     }
+
 
     public class Ai
     {
@@ -31031,6 +31077,35 @@ namespace ConsoleApplication1
 
         //    Has +2 Attack while you have a Mech.
 
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_024);
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            p.equipWeapon(w, ownplay);
+
+            List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
+            bool hasmech = false;
+            foreach (Minion m in temp)
+            {
+                //if we have allready a mechanical, we are buffed
+                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) hasmech = true;
+            }
+            if (hasmech)
+            {
+                if (ownplay)
+                {
+                    p.ownWeaponAttack += 2;
+                    p.minionGetBuffed(p.ownHero, 2, 0);
+                }
+                else
+                {
+                    p.enemyWeaponAttack += 2;
+                    p.minionGetBuffed(p.enemyHero, 2, 0);
+                }
+            }
+
+
+        }
+
         public override void onMinionIsSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
             if ((TAG_RACE)summonedMinion.handcard.card.race == TAG_RACE.MECHANICAL)
@@ -31044,7 +31119,16 @@ namespace ConsoleApplication1
                 }
 
                 //we had no mechanical, but now!
-                p.minionGetBuffed(triggerEffectMinion, 2, 0);
+                if (triggerEffectMinion.own)
+                {
+                    p.ownWeaponAttack += 2;
+                    p.minionGetBuffed(p.ownHero, 2, 0);
+                }
+                else
+                {
+                    p.enemyWeaponAttack += 2;
+                    p.minionGetBuffed(p.enemyHero, 2, 0);
+                }
             }
         }
 
@@ -31550,10 +31634,11 @@ namespace ConsoleApplication1
 
         //   Battlecry: Give a random friendly minion +1 Attack.
 
-
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_043);
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
+            p.equipWeapon(w, ownplay);
+            List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
             p.minionGetBuffed(p.searchRandomMinion(temp, Playfield.searchmode.searchLowestAttack), 1, 0);
 
         }
@@ -31764,11 +31849,15 @@ namespace ConsoleApplication1
 
         //   50% chance to attack the wrong enemy.
         // yolo!?
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_054);
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            p.equipWeapon(w, ownplay);
+        }
 
 
 
     }
-
 
     class Sim_GVG_055 : SimTemplate //Screwjank Clunker
     {
@@ -31878,14 +31967,16 @@ namespace ConsoleApplication1
     {
 
         //   Battlecry: Give a random friendly minion Divine Shield and Taunt;.
-
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_059);
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
+            p.equipWeapon(w, ownplay);
+            List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
             Minion m = p.searchRandomMinion(temp, Playfield.searchmode.searchLowestHP);
             m.divineshild = true;
             m.taunt = true;
         }
+
 
     }
 

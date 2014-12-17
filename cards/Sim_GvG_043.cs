@@ -8,11 +8,12 @@ namespace HREngine.Bots
     {
 
         //   Battlecry: Give a random friendly minion +1 Attack.
-        
 
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_043);
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
+            p.equipWeapon(w, ownplay);
+            List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
             p.minionGetBuffed(p.searchRandomMinion(temp, Playfield.searchmode.searchLowestAttack), 1, 0);
 
         }

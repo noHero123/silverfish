@@ -8,14 +8,16 @@ namespace HREngine.Bots
     {
 
         //   Battlecry: Give a random friendly minion Divine Shield and Taunt;.
-
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_059);
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
+            p.equipWeapon(w, ownplay);
+            List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
             Minion m = p.searchRandomMinion(temp, Playfield.searchmode.searchLowestHP);
             m.divineshild = true;
             m.taunt = true;
         }
+
 
     }
 

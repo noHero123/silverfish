@@ -3030,7 +3030,7 @@
                     }
                 }
 
-                if (mnn.handcard.card.name == CardDB.cardName.cogmaster || mnn.handcard.card.name == CardDB.cardName.cogmasterswrench)
+                if (mnn.handcard.card.name == CardDB.cardName.cogmaster )
                 {
                     if (this.tempTrigger.ownMechanicDied >= 1)
                     {
@@ -3051,6 +3051,29 @@
 
                     }
                 }
+
+                if ( mnn.handcard.card.name == CardDB.cardName.cogmasterswrench)
+                {
+                    if (this.tempTrigger.ownMechanicDied >= 1)
+                    {
+                        //check if we have more mechanics, or debuff him
+                        bool hasmechanics = false;
+                        foreach (Minion m in this.ownMinions)
+                        {
+                            if (m.Hp >= 1 && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) hasmechanics = true;
+                        }
+
+                        if (!hasmechanics)
+                        {
+                            this.ownWeaponAttack -= 2;
+                            this.minionGetBuffed(this.ownHero, -2, 0);
+                        }
+
+
+
+                    }
+                }
+
 
                 if (mnn.handcard.card.name == CardDB.cardName.junkbot)
                 {
@@ -3101,7 +3124,7 @@
                     }
                 }
 
-                if (mnn.handcard.card.name == CardDB.cardName.cogmaster || mnn.handcard.card.name == CardDB.cardName.cogmasterswrench)
+                if (mnn.handcard.card.name == CardDB.cardName.cogmaster)
                 {
                     if (this.tempTrigger.enemyMechanicDied >= 1)
                     {
@@ -3116,6 +3139,28 @@
                         {
                             //we have no living mechanics -> debuff cogmaster
                             this.minionGetBuffed(mnn, -2, 0);
+                        }
+
+
+
+                    }
+                }
+
+                if (mnn.handcard.card.name == CardDB.cardName.cogmasterswrench)
+                {
+                    if (this.tempTrigger.ownMechanicDied >= 1)
+                    {
+                        //check if we have more mechanics, or debuff him
+                        bool hasmechanics = false;
+                        foreach (Minion m in this.ownMinions)
+                        {
+                            if (m.Hp >= 1 && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) hasmechanics = true;
+                        }
+
+                        if (!hasmechanics)
+                        {
+                            this.enemyWeaponAttack -= 2;
+                            this.minionGetBuffed(this.enemyHero, -2, 0);
                         }
 
 
