@@ -392,7 +392,7 @@
                     if (i > 0) this.ownMinions[i - 1].cantBeTargetedBySpellsOrHeroPowers = true;
                     if (i < anz - 1) this.ownMinions[i + 1].cantBeTargetedBySpellsOrHeroPowers = true;
                 }
-
+                if (m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.laughingsister || m.name == CardDB.cardName.spectralknight || m.name == CardDB.cardName.arcanenullifierx21) m.cantBeTargetedBySpellsOrHeroPowers = true;
 
                 if (m.name == CardDB.cardName.pintsizedsummoner)
                 {
@@ -480,7 +480,7 @@
                     if (i > 0) this.enemyMinions[i - 1].cantBeTargetedBySpellsOrHeroPowers = true;
                     if (i < anz - 1) this.enemyMinions[i + 1].cantBeTargetedBySpellsOrHeroPowers = true;
                 }
-
+                if (m.name == CardDB.cardName.faeriedragon || m.name == CardDB.cardName.laughingsister || m.name == CardDB.cardName.spectralknight || m.name == CardDB.cardName.arcanenullifierx21) m.cantBeTargetedBySpellsOrHeroPowers = true;
 
                 if (m.name == CardDB.cardName.prophetvelen) this.enemydoublepriest++;
                 if (m.name == CardDB.cardName.manawraith)
