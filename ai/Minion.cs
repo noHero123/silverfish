@@ -104,7 +104,7 @@
             this.playedThisTurn = m.playedThisTurn;
             this.numAttacksThisTurn = m.numAttacksThisTurn;
             this.immuneWhileAttacking = m.immuneWhileAttacking;
-
+            this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
             //---------------------------------------
             this.shadowmadnessed = m.shadowmadnessed;
 
@@ -175,7 +175,7 @@
             this.destroyOnEnemyTurnStart = m.destroyOnEnemyTurnStart; // depends on own!
             this.destroyOnOwnTurnEnd = m.destroyOnOwnTurnEnd; // depends on own!
             this.destroyOnEnemyTurnEnd = m.destroyOnEnemyTurnEnd; // depends on own!
-
+            this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
             this.concedal = m.concedal;
             this.souloftheforest = m.souloftheforest;
 
@@ -710,10 +710,6 @@
                 {
                     this.tempAttack += 2;
                 }
-
-
-
-
             }
         }
 

@@ -492,6 +492,7 @@
                         bool destroyOnEnemyTurnEnd = s.Contains(" dstrEnmTrnnd");
                         bool shadowmadnessed = s.Contains(" shdwmdnssd");
                         bool cntlower = s.Contains(" cantLowerHpBelowOne");
+                        bool cnttrgt = s.Contains(" canttarget");
                         //optional params (ints)
 
 
@@ -548,6 +549,7 @@
                         tempminion.destroyOnEnemyTurnEnd = destroyOnEnemyTurnEnd;
                         tempminion.shadowmadnessed = shadowmadnessed;
                         tempminion.cantLowerHPbelowONE = cntlower;
+                        tempminion.cantBeTargetedBySpellsOrHeroPowers = cnttrgt;
 
                         tempminion.charge = chrg;
                         tempminion.AdjacentAngr = adjadmg;
@@ -604,6 +606,7 @@
                         bool destroyOnEnemyTurnEnd = s.Contains(" dstrEnmTrnnd");
                         bool shadowmadnessed = s.Contains(" shdwmdnssd");
                         bool cntlower = s.Contains(" cantLowerHpBelowOne");
+                        bool cnttrgt = s.Contains(" canttarget");
 
                         //optional params (ints)
 
@@ -661,6 +664,7 @@
                         tempminion.destroyOnEnemyTurnEnd = destroyOnEnemyTurnEnd;
                         tempminion.shadowmadnessed = shadowmadnessed;
                         tempminion.cantLowerHPbelowONE = cntlower;
+                        tempminion.cantBeTargetedBySpellsOrHeroPowers = cnttrgt;
 
                         tempminion.charge = chrg;
                         tempminion.AdjacentAngr = adjadmg;

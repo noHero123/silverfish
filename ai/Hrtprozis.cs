@@ -478,6 +478,7 @@
                 if (m.destroyOnEnemyTurnEnd) mini += " dstrEnmTrnnd";
                 if (m.shadowmadnessed) mini += " shdwmdnssd";
                 if (m.cantLowerHPbelowONE) mini += " cantLowerHpBelowOne";
+                if (m.cantBeTargetedBySpellsOrHeroPowers) mini += " canttarget";
 
                 if (m.charge >= 1) mini += " chrg(" + m.charge + ")";
                 if (m.AdjacentAngr >= 1) mini += " adjaattk(" + m.AdjacentAngr + ")";
@@ -522,6 +523,7 @@
                 if (m.destroyOnEnemyTurnEnd) mini += " dstrEnmTrnnd";
                 if (m.shadowmadnessed) mini += " shdwmdnssd";
                 if (m.cantLowerHPbelowONE) mini += " cantLowerHpBelowOne";
+                if (m.cantBeTargetedBySpellsOrHeroPowers) mini += " canttarget";
 
                 if (m.charge >= 1) mini += " chrg(" + m.charge + ")";
                 if (m.AdjacentAngr >= 1) mini += " adjaattk(" + m.AdjacentAngr + ")";

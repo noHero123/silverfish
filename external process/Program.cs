@@ -1188,9 +1188,11 @@ namespace ConsoleApplication1
             this.enemyspellpower = 0;
 
             this.startedWithDamagedMinions = false;
-
+            int i = -1;
+            int anz = this.ownMinions.Count;
             foreach (Minion m in this.ownMinions)
             {
+                i++;
                 if (m.Hp < m.maxHp && m.Hp >= 1) this.startedWithDamagedMinions = true;
                 if (m.playedThisTurn && m.name == CardDB.cardName.loatheb) this.loatheb = true;
 
@@ -1198,6 +1200,12 @@ namespace ConsoleApplication1
                 if (m.silenced) continue;
                 spellpower += m.handcard.card.spellpowervalue;
                 if (m.name == CardDB.cardName.prophetvelen) this.doublepriest++;
+
+                if (m.name == CardDB.cardName.weespellstopper)
+                {
+                    if (i > 0) this.ownMinions[i - 1].cantBeTargetedBySpellsOrHeroPowers = true;
+                    if (i < anz - 1) this.ownMinions[i + 1].cantBeTargetedBySpellsOrHeroPowers = true;
+                }
 
 
                 if (m.name == CardDB.cardName.pintsizedsummoner)
@@ -1271,11 +1279,23 @@ namespace ConsoleApplication1
                 }
             }
 
+            i = -1;
+            anz = this.enemyMinions.Count;
             foreach (Minion m in this.enemyMinions)
             {
+                i++;
                 this.enemyspellpower = this.enemyspellpower + m.spellpower;
                 enemyspellpower += m.handcard.card.spellpowervalue;
+
                 if (m.silenced) continue;
+
+                if (m.name == CardDB.cardName.weespellstopper)
+                {
+                    if (i > 0) this.enemyMinions[i - 1].cantBeTargetedBySpellsOrHeroPowers = true;
+                    if (i < anz - 1) this.enemyMinions[i + 1].cantBeTargetedBySpellsOrHeroPowers = true;
+                }
+
+
                 if (m.name == CardDB.cardName.prophetvelen) this.enemydoublepriest++;
                 if (m.name == CardDB.cardName.manawraith)
                 {
@@ -9394,6 +9414,7 @@ namespace ConsoleApplication1
                 if (m.destroyOnEnemyTurnEnd) mini += " dstrEnmTrnnd";
                 if (m.shadowmadnessed) mini += " shdwmdnssd";
                 if (m.cantLowerHPbelowONE) mini += " cantLowerHpBelowOne";
+                if (m.cantBeTargetedBySpellsOrHeroPowers) mini += " canttarget";
 
                 if (m.charge >= 1) mini += " chrg(" + m.charge + ")";
                 if (m.AdjacentAngr >= 1) mini += " adjaattk(" + m.AdjacentAngr + ")";
@@ -9438,6 +9459,7 @@ namespace ConsoleApplication1
                 if (m.destroyOnEnemyTurnEnd) mini += " dstrEnmTrnnd";
                 if (m.shadowmadnessed) mini += " shdwmdnssd";
                 if (m.cantLowerHPbelowONE) mini += " cantLowerHpBelowOne";
+                if (m.cantBeTargetedBySpellsOrHeroPowers) mini += " canttarget";
 
                 if (m.charge >= 1) mini += " chrg(" + m.charge + ")";
                 if (m.AdjacentAngr >= 1) mini += " adjaattk(" + m.AdjacentAngr + ")";
@@ -21161,6 +21183,7 @@ namespace ConsoleApplication1
                         bool destroyOnEnemyTurnEnd = s.Contains(" dstrEnmTrnnd");
                         bool shadowmadnessed = s.Contains(" shdwmdnssd");
                         bool cntlower = s.Contains(" cantLowerHpBelowOne");
+                        bool cnttrgt = s.Contains(" canttarget");
                         //optional params (ints)
 
 
@@ -21217,6 +21240,7 @@ namespace ConsoleApplication1
                         tempminion.destroyOnEnemyTurnEnd = destroyOnEnemyTurnEnd;
                         tempminion.shadowmadnessed = shadowmadnessed;
                         tempminion.cantLowerHPbelowONE = cntlower;
+                        tempminion.cantBeTargetedBySpellsOrHeroPowers = cnttrgt;
 
                         tempminion.charge = chrg;
                         tempminion.AdjacentAngr = adjadmg;
@@ -21273,6 +21297,7 @@ namespace ConsoleApplication1
                         bool destroyOnEnemyTurnEnd = s.Contains(" dstrEnmTrnnd");
                         bool shadowmadnessed = s.Contains(" shdwmdnssd");
                         bool cntlower = s.Contains(" cantLowerHpBelowOne");
+                        bool cnttrgt = s.Contains(" canttarget");
 
                         //optional params (ints)
 
@@ -21330,6 +21355,7 @@ namespace ConsoleApplication1
                         tempminion.destroyOnEnemyTurnEnd = destroyOnEnemyTurnEnd;
                         tempminion.shadowmadnessed = shadowmadnessed;
                         tempminion.cantLowerHPbelowONE = cntlower;
+                        tempminion.cantBeTargetedBySpellsOrHeroPowers = cnttrgt;
 
                         tempminion.charge = chrg;
                         tempminion.AdjacentAngr = adjadmg;
@@ -21664,7 +21690,7 @@ namespace ConsoleApplication1
             this.playedThisTurn = m.playedThisTurn;
             this.numAttacksThisTurn = m.numAttacksThisTurn;
             this.immuneWhileAttacking = m.immuneWhileAttacking;
-
+            this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
             //---------------------------------------
             this.shadowmadnessed = m.shadowmadnessed;
 
@@ -21735,7 +21761,7 @@ namespace ConsoleApplication1
             this.destroyOnEnemyTurnStart = m.destroyOnEnemyTurnStart; // depends on own!
             this.destroyOnOwnTurnEnd = m.destroyOnOwnTurnEnd; // depends on own!
             this.destroyOnEnemyTurnEnd = m.destroyOnEnemyTurnEnd; // depends on own!
-
+            this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
             this.concedal = m.concedal;
             this.souloftheforest = m.souloftheforest;
 
@@ -22270,10 +22296,6 @@ namespace ConsoleApplication1
                 {
                     this.tempAttack += 2;
                 }
-
-
-
-
             }
         }
 
