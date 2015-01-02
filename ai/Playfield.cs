@@ -5066,8 +5066,23 @@
 
             if (minions.Count == 0) return null;
             Minion ret = minions[0];
-            int value = ret.Hp;
-            if (get >= 2) value = ret.Angr;
+            int value = 0;
+            switch (get)
+            {
+                case 1:
+                        value = 0;
+                    break;
+                case 2:
+                        value = 2048;
+                    break;
+                case 3:
+                        value = 0;
+                    break;
+                default:
+                        value = 2048;
+                    break;
+            }
+
             foreach (Minion m in minions)
             {
                 if (m.Hp <= 0) continue;
@@ -5104,7 +5119,7 @@
                         break;
                 }
             }
-            if (ret.Hp <= 0) return null;
+            //if (ret.Hp <= 0) return null;
             return ret;
         }
 
