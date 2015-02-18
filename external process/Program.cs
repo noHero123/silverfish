@@ -263,7 +263,7 @@ namespace ConsoleApplication1
 
     public class Silverfish
     {
-        public string versionnumber = "112.8";
+        public string versionnumber = "114.1";
         private bool singleLog = false;
         private string botbehave = "rush";
 
@@ -30386,13 +30386,13 @@ namespace ConsoleApplication1
     class Sim_FP1_028 : SimTemplate //undertaker
     {
 
-        //    erhält jedes mal +1/+1, wenn ihr einen diener mit todesröcheln/ herbeiruft.
+        //    erhält jedes mal +1 attack, wenn ihr einen diener mit todesröcheln/ herbeiruft.
 
         public override void onMinionIsSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
             if (triggerEffectMinion.own == summonedMinion.own)
             {
-                if (summonedMinion.handcard.card.deathrattle) p.minionGetBuffed(triggerEffectMinion, 1, 1);
+                if (summonedMinion.handcard.card.deathrattle) p.minionGetBuffed(triggerEffectMinion, 1, 0);
             }
         }
 
