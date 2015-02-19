@@ -39,7 +39,15 @@ namespace ConsoleApplication1
     internal class Settings
     {
 
-        public void setSettings()
+        public Behavior setSettings()
+        {
+
+            return readSettings();
+
+        }
+
+
+        public Behavior setDefaultSettings() //settings not to high to run without external process
         {
             // play with these settings###################################
             this.enfacehp = 15;  // hp of enemy when your hero is allowed to attack the enemy face with his weapon
@@ -72,6 +80,13 @@ namespace ConsoleApplication1
 
             //###########################################################
 
+            applySettings();
+
+            return new BehaviorControl();
+        }
+
+        public void applySettings()
+        {
             this.setWeights(alpha);
 
             Mulligan.Instance.setAutoConcede(Settings.Instance.concede);
@@ -86,27 +101,22 @@ namespace ConsoleApplication1
             {
                 if (this.simEnemySecondTurn) Helpfunctions.Instance.ErrorLog("simulates the enemy turn on your second turn");
             }
+
             if (this.useSecretsPlayArround)
             {
                 Helpfunctions.Instance.ErrorLog("playing arround secrets is " + this.useSecretsPlayArround);
             }
-            if (this.playarround)
-            {
-                Ai.Instance.setPlayAround();
-                Helpfunctions.Instance.ErrorLog("activated playaround AOE Spells");
-            }
+            Ai.Instance.setPlayAround();
+
             if (this.writeToSingleFile) Helpfunctions.Instance.ErrorLog("write log to single file");
-
-
         }
-
 
         private Settings()
         {
-            this.writeToSingleFile = true;
+            this.writeToSingleFile = false;
         }
 
-        
+
         public int maxwide = 3000;
         public int twotsamount = 0;
 
@@ -148,7 +158,7 @@ namespace ConsoleApplication1
         public bool enemyConcede = false;
         public bool writeToSingleFile = false;
 
-        public bool learnmode = true;
+        public bool learnmode = false;
         public bool printlearnmode = true;
 
         private static Settings instance;
@@ -182,6 +192,304 @@ namespace ConsoleApplication1
         {
             this.logfile = path;
         }
+
+        public Behavior readSettings() //takes same path as carddb
+        {
+            string[] lines = new string[] { };
+            Helpfunctions.Instance.ErrorLog("read settings.txt");
+
+            try
+            {
+                lines = System.IO.File.ReadAllLines(this.path + "settings.txt");
+                Helpfunctions.Instance.ErrorLog("read carddb.txt");
+            }
+            catch
+            {
+                Helpfunctions.Instance.logg("cant find settings... take the default ones");
+                return setDefaultSettings();
+            }
+
+            Behavior returnbehav = new BehaviorControl();
+
+            foreach (string ss in lines)
+            {
+                string s = ss.Replace(" ", "");
+                if (s.Contains(";")) s = s.Split(';')[0];
+                if (s.Contains("#")) s = s.Split('#')[0];
+                if (s.Contains("//")) s = s.Split(new string[] { "//" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                if (s.Contains(",")) s = s.Split(',')[0];
+                if (s == "" || s == " ") continue;
+                s = s.ToLower();
+
+                string searchword = "maxwide=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.maxwide = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "twotsamount=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.twotsamount = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "simenemysecondturn=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.simEnemySecondTurn = Convert.ToBoolean(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "enfacehp=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.enfacehp = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "playarround=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.playarround = Convert.ToBoolean(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "playaroundprob=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.playaroundprob = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "playaroundprob2=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.playaroundprob2 = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "enemyturnmaxwide=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.enemyTurnMaxWide = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "enemyturnmaxwidesecondtime=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.enemyTurnMaxWideSecondTime = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "enemysecondturnmaxwide=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.enemySecondTurnMaxWide = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "nextturndeep=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.nextTurnDeep = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "nextturnmaxwide=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.nextTurnMaxWide = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "nextturntotalboards=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.nextTurnTotalBoards = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "usesecretsplayarround=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.useSecretsPlayArround = Convert.ToBoolean(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "alpha=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.alpha = Convert.ToInt32(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "simulateplacement=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.simulatePlacement = Convert.ToBoolean(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+                searchword = "useexternalprocess=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.useExternalProcess = Convert.ToBoolean(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+                searchword = "passivewaiting=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.passiveWaiting = Convert.ToBoolean(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
+                searchword = "behave=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    if (a.StartsWith("control")) returnbehav = new BehaviorControl();
+                    if (a.StartsWith("rush")) returnbehav = new BehaviorRush();
+                    if (a.StartsWith("mana")) returnbehav = new BehaviorMana();
+
+                }
+
+            }
+            //foreach ended----------
+
+            applySettings();
+
+
+            return returnbehav;
+        }
+
     }
 
 

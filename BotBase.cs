@@ -38,7 +38,7 @@ namespace HREngine.Bots
 
             Settings set = Settings.Instance;
             this.sf = Silverfish.Instance;
-            set.setSettings();
+            behave = set.setSettings();
             sf.setnewLoggFile();
             CardDB cdb = CardDB.Instance;
             if (cdb.installedWrong)
