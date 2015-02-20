@@ -1,0 +1,43 @@
+#######################################################################
+#######################################################################
+start calculations, current time: 04:04:19:3829 V112.3 rush 14000 twoturnsim 20256 ntss 6 30 50 ets 50 simEnemy2Turn ents 50
+#######################################################################
+mana 8/8
+emana 8
+own secretsCount: 0
+enemy secretsCount: 0
+player:
+0 0 0 1
+ownhero:
+druid 16 30 0 False False 4 True 0 False 0 0
+weapon: 0 0 unknown
+ability: True CS2_017
+osecrets: 
+enemyhero:
+druid 29 30 1 False False 40
+weapon: 0 0 unknown
+ability: true CS2_017
+fatigue: 16 0 19 0
+OwnMinions:
+imp EX1_598 zp:1 e:80 A:1 H:1 mH:1 rdy:True natt:0
+frostwolfwarlord CS2_226 zp:2 e:35 A:8 H:8 mH:8 rdy:True natt:0
+razorfenhunter CS2_196 zp:3 e:31 A:2 H:3 mH:3 rdy:True natt:0
+boar CS2_boar zp:4 e:85 A:1 H:1 mH:1 rdy:True natt:0
+EnemyMinions:
+rivercrocolisk CS2_120 zp:1 e:48 A:2 H:3 mH:3 rdy:False ex ptt
+silverbackpatriarch CS2_127 zp:2 e:57 A:1 H:1 mH:4 rdy:True ex tnt
+oasissnapjaw CS2_119 zp:3 e:67 A:2 H:1 mH:7 rdy:True ex
+nightblade EX1_593 zp:4 e:53 A:4 H:2 mH:4 rdy:True ex
+nightblade EX1_593 zp:5 e:52 A:4 H:4 mH:4 rdy:False ex ptt
+Own Handcards: 
+pos 1 dragonlingmechanic 4 entity 13 EX1_025
+pos 2 savageroar 3 entity 22 CS2_011
+pos 3 frostwolfwarlord 5 entity 19 CS2_226
+pos 4 harvestgolem 3 entity 33 EX1_556
+pos 5 harvestgolem 3 entity 17 EX1_556
+pos 6 knifejuggler 2 entity 18 NEW1_019
+Enemy cards: 3
+ownDiedMinions: 
+enemyDiedMinions: 
+og: 
+eg: 
