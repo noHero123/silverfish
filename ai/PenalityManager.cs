@@ -32,6 +32,8 @@
         Dictionary<CardDB.cardName, int> lethalHelpers = new Dictionary<CardDB.cardName, int>();
 
 
+        Dictionary<CardDB.cardName, int> backToHandDatabase = new Dictionary<CardDB.cardName, int>();
+
         Dictionary<CardDB.cardName, int> cardDiscardDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> destroyOwnDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> destroyDatabase = new Dictionary<CardDB.cardName, int>();
@@ -174,6 +176,7 @@
             retval += getDestroyOwnPenality(name, target, p, lethal);
 
             retval += getDestroyPenality(name, target, p, lethal);
+            retval += getbackToHandPenality(name, target, p, lethal);
             retval += getSpecialCardComboPenalitys(card, target, p, lethal, choice);
             retval += getRandomPenaltiy(card, p, target);
             if (!lethal)
@@ -1047,6 +1050,58 @@
             return pen;
         }
 
+        
+
+        private int getbackToHandPenality(CardDB.cardName name, Minion target, Playfield p, bool lethal)
+        {
+            if (!this.backToHandDatabase.ContainsKey(name) || lethal) return 0;
+            int pen = 0;
+            if (target == null) return 0;
+            if (target.own && !target.isHero)
+            {
+                // dont destroy owns ;_; (except mins with deathrattle effects, with battlecry, or to heal)
+                Minion m = target;
+                pen = 500;
+                if (m.handcard.card.deathrattle || m.handcard.card.battlecry || m.handcard.card.Charge || ((m.maxHp - m.Hp )>=4))
+                {
+                    pen = 0;
+                }
+                if (m.shadowmadnessed)
+                {
+                    pen = -2;
+                }
+            }
+            if (!target.own && !target.isHero)
+            {
+                
+                Minion m = target;
+
+                if (m.allreadyAttacked || m.shadowmadnessed) //dont sap shadow madness
+                {
+                    return 50;
+                }
+
+                if (m.name == CardDB.cardName.theblackknight)
+                {
+                    return 50;
+                }
+
+                if (m.Angr >= 4 || m.Hp >= 5)
+                {
+                    pen = 0; // so we dont destroy cheap ones :D
+                }
+                else
+                {
+                    pen = 30;
+                }
+
+
+            }
+
+            return pen;
+        }
+
+
         private int getSpecialCardComboPenalitys(CardDB.Card card, Minion target, Playfield p, bool lethal, int choice)
         {
             CardDB.cardName name = card.name;
@@ -1301,14 +1356,6 @@
                     return 0;
                 }
 
-            }
-
-            if (name == CardDB.cardName.sap || name == CardDB.cardName.dream || name == CardDB.cardName.kidnapper)
-            {
-                if (!m.own && m.name == CardDB.cardName.theblackknight)
-                {
-                    return 50;
-                }
             }
 
             if (name == CardDB.cardName.sylvanaswindrunner)
@@ -2206,6 +2253,15 @@
             this.destroyDatabase.Add(CardDB.cardName.sabotage, 0);//not own mins
             this.destroyDatabase.Add(CardDB.cardName.crush, 0);//not own mins
             this.destroyDatabase.Add(CardDB.cardName.hemetnesingwary, 0);//not own mins
+
+
+            this.backToHandDatabase.Add(CardDB.cardName.sap, 0);
+            this.backToHandDatabase.Add(CardDB.cardName.timerewinder, 0);
+            this.backToHandDatabase.Add(CardDB.cardName.ancientbrewmaster, 0);
+            this.backToHandDatabase.Add(CardDB.cardName.dream, 0);
+            this.backToHandDatabase.Add(CardDB.cardName.shadowstep, 0);
+            this.backToHandDatabase.Add(CardDB.cardName.youthfulbrewmaster, 0);
+            this.backToHandDatabase.Add(CardDB.cardName.kidnapper, 0);
 
         }
 

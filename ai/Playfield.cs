@@ -3577,6 +3577,7 @@
         {
 
             List<Minion> ownm = (ownturn) ? this.ownMinions : this.enemyMinions;
+            int summonbigone = -1;
             foreach (Minion m in ownm)
             {
                 m.playedThisTurn = false;
@@ -3584,10 +3585,22 @@
                 m.updateReadyness();
                 if (!m.silenced)
                 {
-                    m.handcard.card.sim_card.onTurnStartTrigger(this, m, ownturn);
+                    if (m.name == CardDB.cardName.mimironshead)
+                    {
+                        summonbigone = m.zonepos - 1;
+                    }
+                    else
+                    {
+                        m.handcard.card.sim_card.onTurnStartTrigger(this, m, ownturn);
+                    }
                 }
                 if (ownturn && m.destroyOnOwnTurnStart) this.minionGetDestroyed(m);
                 if (!ownturn && m.destroyOnEnemyTurnStart) this.minionGetDestroyed(m);
+            }
+
+            if (summonbigone >= 0)
+            {
+                ownm[summonbigone].handcard.card.sim_card.onTurnStartTrigger(this, ownm[summonbigone], ownturn);
             }
 
             List<Minion> enemm = (ownturn) ? this.enemyMinions : this.ownMinions;
@@ -3595,12 +3608,12 @@
             {
                 if (!m.silenced)
                 {
-                    if(m.name == CardDB.cardName.micromachine) m.handcard.card.sim_card.onTurnStartTrigger(this, m, ownturn);
+                    if (m.name == CardDB.cardName.micromachine) m.handcard.card.sim_card.onTurnStartTrigger(this, m, ownturn);
                 }
                 if (ownturn && m.destroyOnOwnTurnStart) this.minionGetDestroyed(m);
                 if (!ownturn && m.destroyOnEnemyTurnStart) this.minionGetDestroyed(m);
             }
-            
+
             this.doDmgTriggers();
 
             this.drawACard(CardDB.cardName.unknown, ownturn);
