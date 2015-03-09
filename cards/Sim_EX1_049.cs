@@ -10,7 +10,7 @@ namespace HREngine.Bots
 //    kampfschrei:/ lasst einen befreundeten diener vom schlachtfeld auf eure hand zurückkehren.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            p.minionReturnToHand(target, target.own, 0);
+            if (target != null) p.minionReturnToHand(target, target.own, 0);
 		}
 
 

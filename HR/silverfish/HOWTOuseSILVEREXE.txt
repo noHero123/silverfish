@@ -1,0 +1,10 @@
+open settings.txt and replace
+
+useExternalProcess = false;
+
+with
+
+useExternalProcess = true;
+
+start the bot and silver.exe (and let it run) and
+choose silver.dll as your ai
