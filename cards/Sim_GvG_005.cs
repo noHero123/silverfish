@@ -16,7 +16,7 @@ namespace HREngine.Bots
 
             foreach (Minion m in temp)
             {
-                p.drawACard(m.handcard.card.name, ownplay, true);
+                p.drawACard(m.handcard.card.cardIDenum, ownplay, true);
             }
             
         }

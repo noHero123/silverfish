@@ -14,7 +14,7 @@ namespace HREngine.Bots
             int dmg = (ownplay) ? p.getSpellDamageDamage(5) : p.getEnemySpellDamageDamage(5);
             p.minionGetDamageOrHeal(target, dmg);
             //this.owncarddraw++;
-            p.drawACard(CardDB.cardName.unknown, ownplay);
+            p.drawACard(CardDB.cardIDEnum.None, ownplay);
 		}
 
 	}

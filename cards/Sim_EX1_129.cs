@@ -12,7 +12,7 @@ namespace HREngine.Bots
 		{
             int dmg = (ownplay) ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
             p.allMinionOfASideGetDamage(!ownplay, dmg);
-            p.drawACard(CardDB.cardName.unknown, ownplay);
+            p.drawACard(CardDB.cardIDEnum.None, ownplay);
 		}
 
 	}

@@ -13,7 +13,7 @@ namespace HREngine.Bots
         {
             if (c.type == CardDB.cardtype.SPELL)
             {
-                p.drawACard(c.name, !wasOwnCard, true);
+                p.drawACard(c.cardIDenum, !wasOwnCard, true);
             }
         }
 

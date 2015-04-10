@@ -18,7 +18,7 @@ namespace HREngine.Bots
             {
                 p.minionGetArmor(p.enemyHero, 5);
             }
-            p.drawACard(CardDB.cardName.unknown, ownplay);
+            p.drawACard(CardDB.cardIDEnum.None, ownplay);
 		}
 
 	}

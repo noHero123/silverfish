@@ -10,7 +10,7 @@ namespace HREngine.Bots
 //    todesröcheln:/ fügt eurer hand ein zufälliges wildtier hinzu.
         public override void onDeathrattle(Playfield p, Minion m)
         {
-            p.drawACard(CardDB.cardName.rivercrocolisk, m.own, true);
+            p.drawACard(CardDB.cardIDEnum.CS2_120, m.own, true);
         }
 
 	}

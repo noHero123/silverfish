@@ -13,7 +13,7 @@ namespace HREngine.Bots
             {
                 for (int i = 0; i < triggerEffectMinion.anzGotDmg; i++)
                 {
-                    p.drawACard(CardDB.cardName.unknown, triggerEffectMinion.own);
+                    p.drawACard(CardDB.cardIDEnum.None, triggerEffectMinion.own);
                 }
                 triggerEffectMinion.anzGotDmg = 0;
             }

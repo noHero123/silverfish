@@ -17,7 +17,11 @@ namespace HREngine.Bots
             bool haveAMech = false;
             foreach (Minion m in temp1)
             {
-                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) haveAMech = true;
+                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL)
+                {
+                    haveAMech = true;
+                    break;
+                }
             }
             if (!haveAMech) return;
 

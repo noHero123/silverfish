@@ -20,6 +20,7 @@ namespace HREngine.Bots
                 p.ownHero.maxHp = own.maxHp;
 
                 p.equipWeapon(weapon, own.own);
+                p.ownAbilityReady = true;
             }
             else 
             {

@@ -47,11 +47,11 @@ namespace HREngine.Bots
 
             foreach (Minion m in p.ownMinions)
             {
-                p.drawACard(m.name, true, true);
+                p.drawACard(m.handcard.card.cardIDenum, true, true);
             }
             foreach (Minion m in p.enemyMinions)
             {
-                p.drawACard(m.name, false, true);
+                p.drawACard(m.handcard.card.cardIDenum, false, true);
             }
             p.ownMinions.Clear();
             p.enemyMinions.Clear();

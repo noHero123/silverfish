@@ -89,8 +89,9 @@
 
 
 
-        public void setHandcards(List<Handcard> hc, int anzown, int anzenemy)
+        public void setHandcards(List<Handcard> hc, int anzowncards, int anzenemycards)
         {
+            
             this.handCards.Clear();
             foreach (Handcard h in hc)
             {
@@ -98,8 +99,8 @@
             }
             //this.handCards.AddRange(hc);
             this.handCards.Sort((a, b) => a.position.CompareTo(b.position));
-            this.anzcards = anzown;
-            this.enemyAnzCards = anzenemy;
+            this.anzcards = anzowncards;
+            this.enemyAnzCards = anzenemycards;
         }
 
 

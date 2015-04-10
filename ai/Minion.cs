@@ -435,6 +435,7 @@
                 GraveYardItem gyi = new GraveYardItem(this.handcard.card.cardIDenum, this.entitiyID, this.own);
                 p.diedMinions.Add(gyi);
             }
+            p.anzMinionsDiedThisTurn++;
         }
 
         public void updateReadyness()

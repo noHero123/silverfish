@@ -13,51 +13,13 @@ namespace HREngine.Bots
         {
             if (ownplay)
             {
-                if (p.ownMaxMana >= 10)
-                {
-                    //p.drawACard(CardDB.cardName.excessmana, true);
-                    if(p.mana <10)p.mana++;
-                }
-                else
-                {
-                    p.ownMaxMana++;
-                    p.mana++;
-                }
-                if (p.ownMaxMana >= 10)
-                {
-                    //this.owncarddraw++;
-                    //p.drawACard(CardDB.cardName.excessmana, true);
-                    if (p.mana < 10) p.mana++;
-                }
-                else
-                {
-                    p.ownMaxMana++;
-                    p.mana++;
-                }
+                p.mana = Math.Min(10, p.mana + 2);
+                p.ownMaxMana = Math.Min(10, p.ownMaxMana + 2);
             }
             else
             {
-                if (p.enemyMaxMana == 10)
-                {
-                    //p.drawACard(CardDB.cardName.excessmana, false);
-                    if (p.mana < 10) p.mana++;
-                }
-                else
-                {
-                    p.enemyMaxMana++;
-                    p.mana++;
-                }
-                if (p.enemyMaxMana == 10)
-                {
-                    //this.owncarddraw++;
-                    //p.drawACard(CardDB.cardName.excessmana, false);
-                    if (p.mana < 10) p.mana++;
-                }
-                else
-                {
-                    p.enemyMaxMana++;
-                    p.mana++;
-                }
+                p.mana = Math.Min(10, p.mana + 2);
+                p.enemyMaxMana = Math.Min(10, p.enemyMaxMana + 2);
             }
         }
 

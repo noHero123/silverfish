@@ -18,7 +18,7 @@ namespace HREngine.Bots
                 if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL)
                 {
                     p.minionGetBuffed(own, 1, 1);
-                    p.drawACard(CardDB.cardName.armorplating, own.own, true);
+                    p.drawACard(CardDB.cardIDEnum.PART_001, own.own, true);
                     return;
                 }
             }

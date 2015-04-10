@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
         public override void onAMinionGotHealedTrigger(Playfield p, Minion triggerEffectMinion, bool ownerOfMinionGotHealed)
         {
-            p.drawACard(CardDB.cardName.unknown, triggerEffectMinion.own);
+            p.drawACard(CardDB.cardIDEnum.None, triggerEffectMinion.own);
         }
 
 	}

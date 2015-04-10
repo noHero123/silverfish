@@ -11,13 +11,16 @@ namespace HREngine.Bots
 
         public override void onTurnEndsTrigger(Playfield p, Minion triggerEffectMinion, bool turnEndOfOwner)
         {
-            List<Minion> temp2 = new List<Minion>((turnEndOfOwner) ? p.ownMinions: p.enemyMinions);
-            temp2.Sort((a, b) => a.Hp.CompareTo(b.Hp));//buff the weakest
-            foreach (Minion mins in temp2)
+            if (triggerEffectMinion.own == turnEndOfOwner)
             {
-                if (triggerEffectMinion.entitiyID == mins.entitiyID) continue;
-                p.minionGetBuffed(mins, 0, 1);
-                break;
+                List<Minion> temp2 = new List<Minion>((turnEndOfOwner) ? p.ownMinions : p.enemyMinions);
+                temp2.Sort((a, b) => a.Hp.CompareTo(b.Hp));//buff the weakest
+                foreach (Minion mins in temp2)
+                {
+                    if (triggerEffectMinion.entitiyID == mins.entitiyID) continue;
+                    p.minionGetBuffed(mins, 0, 1);
+                    break;
+                }
             }
         }
 

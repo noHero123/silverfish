@@ -17,8 +17,8 @@ namespace HREngine.Bots
             }
             else
             {
-                p.drawACard(CardDB.cardName.unknown, own.own);
-                p.drawACard(CardDB.cardName.unknown, own.own);
+                p.drawACard(CardDB.cardIDEnum.None, own.own);
+                p.drawACard(CardDB.cardIDEnum.None, own.own);
             }
         }
 

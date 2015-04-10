@@ -100,6 +100,17 @@
                         c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_165t2);
                     }
                 }
+                if (c.name == CardDB.cardName.druidoftheflame)
+                {
+                    if (i == 1)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.BRM_010t);
+                    }
+                    if (i == 2)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.BRM_010t2);
+                    }
+                }
                 //cenarius dont need
                 if (c.name == CardDB.cardName.keeperofthegrove)//keeper of the grove
                 {
@@ -623,7 +634,7 @@
 
 
             //if he can use ability use it on his turnstart or never!###########################################################################################
-            if (turndeep == 0 && p.enemyAbilityReady && p.mana >= 2 && p.enemyHeroAblility.card.canplayCard(p, 0) && !p.loatheb)
+            if (turndeep == 0 && p.enemyAbilityReady && p.mana >= 2 && p.enemyHeroAblility.card.canplayCard(p, 0) && p.ownloatheb==0)
             {
                 int abilityPenality = 0;
 

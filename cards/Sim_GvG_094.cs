@@ -20,7 +20,7 @@ namespace HREngine.Bots
 
             for (int i = 0; i < cardstodraw; i++)
             {
-                p.drawACard(CardDB.cardName.unknown, true);
+                p.drawACard(CardDB.cardIDEnum.None, true);
             }
             cardstodraw = 0;
 
@@ -32,7 +32,7 @@ namespace HREngine.Bots
 
             for (int i = 0; i < cardstodraw; i++)
             {
-                p.drawACard(CardDB.cardName.unknown, false);
+                p.drawACard(CardDB.cardIDEnum.None, false);
             }
 
         }

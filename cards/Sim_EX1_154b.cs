@@ -15,7 +15,7 @@ namespace HREngine.Bots
             //this.owncarddraw++;
 
             p.minionGetDamageOrHeal(target, damage);
-            p.drawACard(CardDB.cardName.unknown, ownplay);
+            p.drawACard(CardDB.cardIDEnum.None, ownplay);
         }
 
 	}

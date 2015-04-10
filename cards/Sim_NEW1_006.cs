@@ -11,8 +11,8 @@ namespace HREngine.Bots
 
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-            p.drawACard(CardDB.cardName.unknown, ownplay);
-            if (p.cardsPlayedThisTurn >= 1) p.drawACard(CardDB.cardName.unknown, ownplay);
+            p.drawACard(CardDB.cardIDEnum.None, ownplay);
+            if (p.cardsPlayedThisTurn >= 1) p.drawACard(CardDB.cardIDEnum.None, ownplay);
 		}
 
 	}

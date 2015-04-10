@@ -13,15 +13,15 @@ namespace HREngine.Bots
         {
             if (choice == 1)
             {
-                p.mana++;
-                p.ownMaxMana++;
-                p.enemyMaxMana++;
+                p.mana = Math.Min(10, p.mana + 1);
+                p.ownMaxMana = Math.Min(10, p.ownMaxMana + 1);
+                p.enemyMaxMana = Math.Min(10, p.enemyMaxMana + 1);
             }
 
             if (choice == 2)
             {
-                p.drawACard(CardDB.cardName.unknown, true);
-                p.drawACard(CardDB.cardName.unknown, false);
+                p.drawACard(CardDB.cardIDEnum.None, true);
+                p.drawACard(CardDB.cardIDEnum.None, false);
             }
         }
 

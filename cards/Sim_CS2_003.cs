@@ -12,7 +12,7 @@ namespace HREngine.Bots
             int anz = (ownplay) ? p.enemyAnzCards : p.owncards.Count;
             if (anz >= 1)
             {
-                p.drawACard(CardDB.cardName.unknown, ownplay,true);
+                p.drawACard(CardDB.cardIDEnum.None, ownplay, true);
             }
         }
 

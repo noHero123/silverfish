@@ -230,6 +230,14 @@
 
         public List<SecretItem> enemySecrets = new List<SecretItem>();
 
+        public int ownGraveYardCommonAttack = 0;
+        public int ownGraveYardCommonHP = 0;
+        public int ownGraveYardCommonTaunt = 0;
+
+        public int enemyGraveYardCommonAttack = 0;
+        public int enemyGraveYardCommonHP = 0;
+        public int enemyGraveYardCommonTaunt = 0;
+
         public bool feugenDead = false;
         public bool stalaggDead = false;
 
@@ -453,29 +461,78 @@
             string temp = owngrave.Replace("og: ", "");
             this.stalaggDead = false;
             this.feugenDead = false;
+
+            double tempattack = 0;
+            double temphp = 0;
+            int tempamount = 0;
+            int temptaunt = 0;
             foreach (string s in temp.Split(';'))
             {
                 if (s == "" || s == " ") continue;
                 string id = s.Split(',')[0];
-                string anz = s.Split(',')[1];
+                int anz = Convert.ToInt32(s.Split(',')[1]);
                 CardDB.cardIDEnum cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
-                this.ownCardsPlayed.Add(cdbe, Convert.ToInt32(anz));
+                this.ownCardsPlayed.Add(cdbe, anz);
                 if (cdbe == CardDB.cardIDEnum.FP1_015)
                 {
                     this.feugenDead = true;
                 }
                 if (cdbe == CardDB.cardIDEnum.FP1_014) this.stalaggDead = true;
+
+                CardDB.Card tempcard = CardDB.Instance.getCardDataFromID(cdbe);
+                if (tempcard.type == CardDB.cardtype.MOB)
+                {
+                    tempamount++;
+                    tempattack += tempcard.Attack * anz;
+                    temphp += tempcard.Health * anz;
+                    if (tempcard.tank) temptaunt += anz;
+                }
             }
+            this.ownGraveYardCommonAttack = 0;
+            this.ownGraveYardCommonAttack = 0;
+            this.ownGraveYardCommonTaunt = 0;
+            if(tempamount>=1)
+            {
+            this.ownGraveYardCommonAttack =  (int)(tempattack / tempamount);
+            this.ownGraveYardCommonAttack = (int)(temphp / tempamount);
+            if (2 * temptaunt >= tempamount) this.ownGraveYardCommonTaunt = 1;
+            }
+
+            tempamount = 0;
+            tempattack = 0;
+            temphp = 0;
+            temptaunt = 0;
+
             temp = enemygrave.Replace("eg: ", "");
             foreach (string s in temp.Split(';'))
             {
                 if (s == "" || s == " ") continue;
                 string id = s.Split(',')[0];
-                string anz = s.Split(',')[1];
+                int anz = Convert.ToInt32(s.Split(',')[1]);
                 CardDB.cardIDEnum cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
-                this.enemyCardsPlayed.Add(cdbe, Convert.ToInt32(anz));
+                this.enemyCardsPlayed.Add(cdbe, anz);
                 if (cdbe == CardDB.cardIDEnum.FP1_015) this.feugenDead = true;
                 if (cdbe == CardDB.cardIDEnum.FP1_014) this.stalaggDead = true;
+
+                CardDB.Card tempcard = CardDB.Instance.getCardDataFromID(cdbe);
+                if (tempcard.type == CardDB.cardtype.MOB)
+                {
+                    tempamount++;
+                    tempattack += tempcard.Attack * anz;
+                    temphp += tempcard.Health * anz;
+                    if (tempcard.tank) temptaunt += anz;
+                }
+
+            }
+
+            this.enemyGraveYardCommonAttack = 0;
+            this.enemyGraveYardCommonHP = 0;
+            this.enemyGraveYardCommonTaunt = 0;
+            if (tempamount >= 1)
+            {
+                this.enemyGraveYardCommonAttack = (int)(tempattack / tempamount);
+                this.enemyGraveYardCommonHP = (int)(temphp / tempamount);
+                if (2 * temptaunt >= tempamount) this.enemyGraveYardCommonTaunt = 1;
             }
 
         }

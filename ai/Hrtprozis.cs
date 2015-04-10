@@ -16,7 +16,8 @@
         warrior,
         shaman,
         mage,
-        lordjaraxxus
+        lordjaraxxus,
+        ragnarosthefirelord
     }
 
     public class Hrtprozis
@@ -55,8 +56,13 @@
         public int numOptionsPlayedThisTurn = 0;
         public int numMinionsPlayedThisTurn = 0;
 
+        public int numberMinionsDiedThisTurn = 0;
+        
+
         public int cardsPlayedThisTurn = 0;
-        public int ueberladung = 0;
+        public int owedRecall = 0;
+        public int ownCurrentRecall = 0;
+        public int enemyRecall;
 
         public int ownMaxMana = 0;
         public int enemyMaxMana = 0;
@@ -78,6 +84,15 @@
         public List<Minion> enemyMinions = new List<Minion>();
         public Minion ownHero = new Minion();
         public Minion enemyHero = new Minion();
+
+        public int ownDragonConsort = 0;
+        public int enemyDragonConsort = 0;
+        public int ownLoatheb = 0;
+        public int enemyLoatheb = 0;
+        public int ownMillhouse=0;
+        public int enemyMillhouse = 0;
+        public int ownKirinTorEffect = 0;
+        public int ownPreparation = 0;
 
         Helpfunctions help = Helpfunctions.Instance;
         //Imagecomparer icom = Imagecomparer.Instance;
@@ -131,7 +146,7 @@
             enemyfrozen = false;
             numMinionsPlayedThisTurn = 0;
             cardsPlayedThisTurn = 0;
-            ueberladung = 0;
+            owedRecall = 0;
             ownMaxMana = 0;
             enemyMaxMana = 0;
             enemyWeaponDurability = 0;
@@ -143,6 +158,8 @@
             enemyMinions.Clear();
             heroImmune = false;
             enemyHeroImmune = false;
+            numberMinionsDiedThisTurn = 0;
+            ownCurrentRecall = 0;
             this.ownHeroWeapon = CardDB.cardName.unknown;
             this.enemyHeroWeapon = CardDB.cardName.unknown;
         }
@@ -202,6 +219,10 @@
             {
                 retval = "mage";
             }
+            if (s == "BRM_027h")
+            {
+                retval = "ragnarosthefirelord";
+            }
             if (s == "EX1_323h")
             {
                 retval = "lordjaraxxus";
@@ -257,6 +278,10 @@
             {
                 return HeroEnum.lordjaraxxus;
             }
+            if (s == "ragnarosthefirelord")
+            {
+                return HeroEnum.ragnarosthefirelord;
+            }
 
             return HeroEnum.None;
         }
@@ -291,16 +316,40 @@
             this.enemySecretCount = numEnemSec;
         }
 
-        public void updatePlayer(int maxmana, int currentmana, int cardsplayedthisturn, int numMinionsplayed, int optionsPlayedThisTurn, int recall, int heroentity, int enemyentity)
+        public void updatePlayer(int maxmana, int currentmana, int cardsplayedthisturn, int numMinionsplayed, int optionsPlayedThisTurn, int recall, int heroentity, int enemyentity, int numMinsDied, int currentRecall, int enemRecall)
         {
             this.currentMana = currentmana;
             this.ownMaxMana = maxmana;
             this.cardsPlayedThisTurn = cardsplayedthisturn;
             this.numMinionsPlayedThisTurn = numMinionsplayed;
-            this.ueberladung = recall;
+            
             this.ownHeroEntity = heroentity;
             this.enemyHeroEntitiy = enemyentity;
             this.numOptionsPlayedThisTurn = optionsPlayedThisTurn;
+
+            this.numberMinionsDiedThisTurn = numMinsDied;
+            this.ownCurrentRecall= currentRecall;
+            this.owedRecall = recall;
+            this.enemyRecall = enemRecall;
+
+            
+        }
+
+        public void setPlayereffects(int ownDragonConsorts, int enemyDragonConsorts, int ownLoathebs, int enemyLoathebs, int ownMillhouses, int enemyMillhouses, int ownKirin, int ownPrep)
+        {
+            this.ownDragonConsort = ownDragonConsorts;
+            this.enemyDragonConsort = enemyDragonConsorts;
+
+            this.ownLoatheb = ownLoathebs;
+            this.enemyLoatheb = enemyLoathebs;
+
+            this.ownMillhouse = ownMillhouses;
+            this.enemyMillhouse = enemyMillhouses;
+
+            this.ownKirinTorEffect = ownKirin;
+
+            this.ownPreparation = ownPrep;
+
         }
 
         public void updateOwnHero(string weapon, int watt, int wdur, string heron, CardDB.Card hab, bool habrdy, Minion Hero)
@@ -412,8 +461,8 @@
         public void printHero(bool writetobuffer = false)
         {
             help.logg("player:");
-            help.logg(this.numMinionsPlayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.ueberladung + " " + this.ownPlayerController);
-
+            help.logg(this.numMinionsPlayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.owedRecall + " " + this.ownPlayerController + " " + this.numberMinionsDiedThisTurn + " " + this.ownCurrentRecall + " " + this.enemyRecall);
+            help.logg(this.ownDragonConsort + " " + this.enemyDragonConsort + " " + this.ownLoatheb + " " + this.enemyLoatheb + " " + this.ownMillhouse + " " + this.enemyMillhouse + " " + this.ownKirinTorEffect + " "  + this.ownPreparation);
             help.logg("ownhero:");
             help.logg(this.heroname + " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entitiyID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack);
             help.logg("weapon: " + heroWeaponAttack + " " + heroWeaponDurability + " " + ownHeroWeapon);
@@ -433,8 +482,8 @@
             if (writetobuffer)
             {
                 help.writeToBuffer("player:");
-                help.writeToBuffer(this.numMinionsPlayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.ueberladung + " " + this.ownPlayerController);
-
+                help.writeToBuffer(this.numMinionsPlayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.owedRecall + " " + this.ownPlayerController + " " + this.numberMinionsDiedThisTurn + " " + this.ownCurrentRecall + " " + this.enemyRecall);
+                help.writeToBuffer(this.ownDragonConsort + " " + this.enemyDragonConsort + " " + this.ownLoatheb + " " + this.enemyLoatheb + " " + this.ownMillhouse + " " + this.enemyMillhouse + " " + this.ownKirinTorEffect + " " + this.ownPreparation);
                 help.writeToBuffer("ownhero:");
                 help.writeToBuffer(this.heroname + " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entitiyID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack);
                 help.writeToBuffer("weapon: " + heroWeaponAttack + " " + heroWeaponDurability + " " + ownHeroWeapon);
@@ -458,7 +507,8 @@
         {
             help.logg("OwnMinions:");
             if (writetobuffer) help.writeToBuffer("OwnMinions:");
-            foreach (Minion m in this.ownMinions)
+            Playfield p = new Playfield();
+            foreach (Minion m in p.ownMinions)
             {
                 string mini = m.name + " " + m.handcard.card.cardIDenum + " zp:" + m.zonepos + " e:" + m.entitiyID + " A:" + m.Angr + " H:" + m.Hp + " mH:" + m.maxHp + " rdy:" + m.Ready + " natt:" + m.numAttacksThisTurn;
                 if (m.exhausted) mini += " ex";
@@ -503,7 +553,8 @@
         {
             help.logg("EnemyMinions:");
             if (writetobuffer) help.writeToBuffer("EnemyMinions:");
-            foreach (Minion m in this.enemyMinions)
+            Playfield p = new Playfield();
+            foreach (Minion m in p.enemyMinions)
             {
                 string mini = m.name + " " + m.handcard.card.cardIDenum + " zp:" + m.zonepos + " e:" + m.entitiyID + " A:" + m.Angr + " H:" + m.Hp + " mH:" + m.maxHp + " rdy:" + m.Ready;// +" natt:" + m.numAttacksThisTurn;
                 if (m.exhausted) mini += " ex";

@@ -14,7 +14,7 @@ namespace HREngine.Bots
             if (c.type == CardDB.cardtype.SPELL && c.name != CardDB.cardName.gallywixscoin && wasOwnCard != triggerEffectMinion.own)
             {
                 p.drawACard(c.cardIDenum, triggerEffectMinion.own, true);
-                p.drawACard(CardDB.cardName.gallywixscoin, wasOwnCard, true);
+                p.drawACard(CardDB.cardIDEnum.GVG_028t, wasOwnCard, true);
             }
         }
 

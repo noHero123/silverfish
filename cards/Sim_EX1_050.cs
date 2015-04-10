@@ -10,10 +10,10 @@ namespace HREngine.Bots
 //    kampfschrei:/ jeder spieler zieht 2 karten.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            p.drawACard(CardDB.cardName.unknown, true);
-            p.drawACard(CardDB.cardName.unknown, true);
-            p.drawACard(CardDB.cardName.unknown, false);
-            p.drawACard(CardDB.cardName.unknown, false);
+            p.drawACard(CardDB.cardIDEnum.None, true);
+            p.drawACard(CardDB.cardIDEnum.None, true);
+            p.drawACard(CardDB.cardIDEnum.None, false);
+            p.drawACard(CardDB.cardIDEnum.None, false);
 
 		}
 

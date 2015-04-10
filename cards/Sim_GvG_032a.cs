@@ -12,9 +12,9 @@ namespace HREngine.Bots
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
 
-                p.mana++;
-                p.ownMaxMana++;
-                p.enemyMaxMana++;
+            p.mana = Math.Min(10, p.mana + 1);
+            p.ownMaxMana = Math.Min(10, p.ownMaxMana + 1);
+            p.enemyMaxMana = Math.Min(10, p.enemyMaxMana + 1);
             
         }
 

@@ -10,8 +10,8 @@ namespace HREngine.Bots
 //    zieht 2 karten.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            p.drawACard(CardDB.cardName.unknown, own.own);
-            p.drawACard(CardDB.cardName.unknown, own.own);
+            p.drawACard(CardDB.cardIDEnum.None, own.own);
+            p.drawACard(CardDB.cardIDEnum.None, own.own);
 		}
 	}
 }

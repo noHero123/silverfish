@@ -1,0 +1,6 @@
+search for 
+//Reading new values:###########################
+
+and give the new variables a value! :D
+replace the existing silver_HB.cs file and the the two folders: ai + cards
+(take the newest version of these folder from my github)

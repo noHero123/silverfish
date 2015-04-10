@@ -10,7 +10,7 @@ namespace HREngine.Bots
 //    kampfschrei:/ fügt eurer hand einen zufälligen piraten aus eurem deck hinzu.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            p.drawACard(CardDB.cardName.unknown, true, true);
+            p.drawACard(CardDB.cardIDEnum.None, true, true);
 		}
 
 

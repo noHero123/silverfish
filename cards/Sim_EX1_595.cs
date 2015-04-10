@@ -13,7 +13,7 @@ namespace HREngine.Bots
         {
             if (triggerEffectMinion.own == diedMinion.own)
             {
-                p.drawACard(CardDB.cardName.unknown, triggerEffectMinion.own);
+                p.drawACard(CardDB.cardIDEnum.None, triggerEffectMinion.own);
             }
         }
 

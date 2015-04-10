@@ -10,7 +10,7 @@ namespace HREngine.Bots
 //    combo:/ verursacht 2 schaden.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            if ( p.cardsPlayedThisTurn >= 1)
+            if ( p.cardsPlayedThisTurn >= 1 && target != null)
             {
                 p.minionGetDamageOrHeal(target, 2);
             }

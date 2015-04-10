@@ -65,6 +65,51 @@
         public enum cardIDEnum
         {
             None,
+            //Blackrock#############################
+            BRM_001,
+            BRM_002,
+            BRM_003,
+            BRM_004,
+            BRM_005,
+            BRM_006,
+            BRM_006t,
+            BRM_007,
+            BRM_008,
+            BRM_009,
+            BRM_010,
+            BRM_010a,
+            BRM_010b,
+            BRM_010t,
+            BRM_010t2,
+            BRM_011,
+            BRM_012,
+            BRM_013,
+            BRM_014,
+            BRM_015,
+            BRM_016,
+            BRM_017,
+            BRM_018,
+            BRM_018e,
+            BRM_019,
+            BRM_020,
+            BRM_022,
+            BRM_022t,
+            BRM_024,
+            BRM_025,
+            BRM_026,
+            BRM_027,
+            BRM_027h,
+            BRM_027p,
+            BRM_027pH,
+            BRM_028,
+            BRM_028e,
+            BRM_029,
+            BRM_030,
+            BRM_030t,
+            BRM_031,
+            BRM_033,
+            BRM_034,
+            //#Blackrock#############################
             CS1h_001,
             CS1_042,
             CS1_112,
@@ -1127,11 +1172,57 @@
             PART_006a,
             PART_007,
             PART_007e,
-            PlaceholderCard,
+            PlaceholderCard
+            
         }
 
         public cardIDEnum cardIdstringToEnum(string s)
         {
+            //brock
+            if (s == "BRM_001") return CardDB.cardIDEnum.BRM_001;
+            if (s == "BRM_002") return CardDB.cardIDEnum.BRM_002;
+            if (s == "BRM_003") return CardDB.cardIDEnum.BRM_003;
+            if (s == "BRM_004") return CardDB.cardIDEnum.BRM_004;
+            if (s == "BRM_005") return CardDB.cardIDEnum.BRM_005;
+            if (s == "BRM_006") return CardDB.cardIDEnum.BRM_006;
+            if (s == "BRM_006t") return CardDB.cardIDEnum.BRM_006t;
+            if (s == "BRM_007") return CardDB.cardIDEnum.BRM_007;
+            if (s == "BRM_008") return CardDB.cardIDEnum.BRM_008;
+            if (s == "BRM_009") return CardDB.cardIDEnum.BRM_009;
+            if (s == "BRM_010") return CardDB.cardIDEnum.BRM_010;
+            if (s == "BRM_010a") return CardDB.cardIDEnum.BRM_010a;
+            if (s == "BRM_010b") return CardDB.cardIDEnum.BRM_010b;
+            if (s == "BRM_010t") return CardDB.cardIDEnum.BRM_010t;
+            if (s == "BRM_010t2") return CardDB.cardIDEnum.BRM_010t2;
+            if (s == "BRM_011") return CardDB.cardIDEnum.BRM_011;
+            if (s == "BRM_012") return CardDB.cardIDEnum.BRM_012;
+            if (s == "BRM_013") return CardDB.cardIDEnum.BRM_013;
+            if (s == "BRM_014") return CardDB.cardIDEnum.BRM_014;
+            if (s == "BRM_015") return CardDB.cardIDEnum.BRM_015;
+            if (s == "BRM_016") return CardDB.cardIDEnum.BRM_016;
+            if (s == "BRM_017") return CardDB.cardIDEnum.BRM_017;
+            if (s == "BRM_018") return CardDB.cardIDEnum.BRM_018;
+            if (s == "BRM_018e") return CardDB.cardIDEnum.BRM_018e;
+            if (s == "BRM_019") return CardDB.cardIDEnum.BRM_019;
+            if (s == "BRM_020") return CardDB.cardIDEnum.BRM_020;
+            if (s == "BRM_022") return CardDB.cardIDEnum.BRM_022;
+            if (s == "BRM_022t") return CardDB.cardIDEnum.BRM_022t;
+            if (s == "BRM_024") return CardDB.cardIDEnum.BRM_024;
+            if (s == "BRM_025") return CardDB.cardIDEnum.BRM_025;
+            if (s == "BRM_026") return CardDB.cardIDEnum.BRM_026;
+            if (s == "BRM_027") return CardDB.cardIDEnum.BRM_027;
+            if (s == "BRM_027h") return CardDB.cardIDEnum.BRM_027h;
+            if (s == "BRM_027p") return CardDB.cardIDEnum.BRM_027p;
+            if (s == "BRM_027pH") return CardDB.cardIDEnum.BRM_027pH;
+            if (s == "BRM_028") return CardDB.cardIDEnum.BRM_028;
+            if (s == "BRM_028e") return CardDB.cardIDEnum.BRM_028e;
+            if (s == "BRM_029") return CardDB.cardIDEnum.BRM_029;
+            if (s == "BRM_030") return CardDB.cardIDEnum.BRM_030;
+            if (s == "BRM_030t") return CardDB.cardIDEnum.BRM_030t;
+            if (s == "BRM_031") return CardDB.cardIDEnum.BRM_031;
+            if (s == "BRM_033") return CardDB.cardIDEnum.BRM_033;
+            if (s == "BRM_034") return CardDB.cardIDEnum.BRM_034;
+            
             if (s == "CS1h_001") return CardDB.cardIDEnum.CS1h_001;
             if (s == "CS1_042") return CardDB.cardIDEnum.CS1_042;
             if (s == "CS1_112") return CardDB.cardIDEnum.CS1_112;
@@ -2195,12 +2286,55 @@
             if (s == "PART_007") return CardDB.cardIDEnum.PART_007;
             if (s == "PART_007e") return CardDB.cardIDEnum.PART_007e;
             if (s == "PlaceholderCard") return CardDB.cardIDEnum.PlaceholderCard;
+            
             return CardDB.cardIDEnum.None;
         }
 
         public enum cardName
         {
             unknown,
+            //#####################################blackrockcards
+            solemnvigil,
+            flamewaker,
+            dragonsbreath,
+            twilightwhelp,
+            demonwrath,
+            impgangboss,
+            gangup,
+            darkironskulker,
+            volcaniclumberer,
+            druidoftheflame,
+            firecatform,
+            firehawkform,
+            lavashock,
+            fireguarddestroyer,
+            quickshot,
+            corerager,
+            revenge,
+            axeflinger,
+            resurrect,
+            dragonconsort,
+            unchained,
+            grimpatron,
+            dragonkinsorcerer,
+            dragonegg,
+            blackwhelp,
+            drakonidcrusher,
+            volcanicdrake,
+            hungrydragon,
+            majordomoexecutus,
+            //ragnarosthefirelord,
+            dieinsect,
+            dieinsects,
+            emperorthaurissan,
+            imperialfavor,
+            rendblackhand,
+            nefarian,
+            tailswipe,
+            chromaggus,
+            blackwingtechnician,
+            blackwingcorruptor,
+            //######################################
             lesserheal,
             goldshirefootman,
             holynova,
@@ -3005,6 +3139,48 @@
 
         public cardName cardNamestringToEnum(string s)
         {
+
+            //brock:
+            if (s == "solemnvigil") return CardDB.cardName.solemnvigil;
+            if (s == "flamewaker") return CardDB.cardName.flamewaker;
+            if (s == "dragonsbreath") return CardDB.cardName.dragonsbreath;
+            if (s == "twilightwhelp") return CardDB.cardName.twilightwhelp;
+            if (s == "demonwrath") return CardDB.cardName.demonwrath;
+            if (s == "impgangboss") return CardDB.cardName.impgangboss;
+            if (s == "gangup") return CardDB.cardName.gangup;
+            if (s == "darkironskulker") return CardDB.cardName.darkironskulker;
+            if (s == "volcaniclumberer") return CardDB.cardName.volcaniclumberer;
+            if (s == "druidoftheflame") return CardDB.cardName.druidoftheflame;
+            if (s == "firecatform") return CardDB.cardName.firecatform;
+            if (s == "firehawkform") return CardDB.cardName.firehawkform;
+            if (s == "lavashock") return CardDB.cardName.lavashock;
+            if (s == "fireguarddestroyer") return CardDB.cardName.fireguarddestroyer;
+            if (s == "quickshot") return CardDB.cardName.quickshot;
+            if (s == "corerager") return CardDB.cardName.corerager;
+            if (s == "revenge") return CardDB.cardName.revenge;
+            if (s == "axeflinger") return CardDB.cardName.axeflinger;
+            if (s == "resurrect") return CardDB.cardName.resurrect;
+            if (s == "dragonconsort") return CardDB.cardName.dragonconsort;
+            if (s == "unchained") return CardDB.cardName.unchained;
+            if (s == "grimpatron") return CardDB.cardName.grimpatron;
+            if (s == "dragonkinsorcerer") return CardDB.cardName.dragonkinsorcerer;
+            if (s == "dragonegg") return CardDB.cardName.dragonegg;
+            if (s == "blackwhelp") return CardDB.cardName.blackwhelp;
+            if (s == "drakonidcrusher") return CardDB.cardName.drakonidcrusher;
+            if (s == "volcanicdrake") return CardDB.cardName.volcanicdrake;
+            if (s == "hungrydragon") return CardDB.cardName.hungrydragon;
+            if (s == "majordomoexecutus") return CardDB.cardName.majordomoexecutus;
+            if (s == "dieinsect") return CardDB.cardName.dieinsect;
+            if (s == "dieinsects") return CardDB.cardName.dieinsects;
+            if (s == "emperorthaurissan") return CardDB.cardName.emperorthaurissan;
+            if (s == "imperialfavor") return CardDB.cardName.imperialfavor;
+            if (s == "rendblackhand") return CardDB.cardName.rendblackhand;
+            if (s == "nefarian") return CardDB.cardName.nefarian;
+            if (s == "tailswipe") return CardDB.cardName.tailswipe;
+            if (s == "chromaggus") return CardDB.cardName.chromaggus;
+            if (s == "blackwingtechnician") return CardDB.cardName.blackwingtechnician;
+            if (s == "blackwingcorruptor") return CardDB.cardName.blackwingcorruptor;
+         
             if (s == "unknown") return CardDB.cardName.unknown;
             if (s == "lesserheal") return CardDB.cardName.lesserheal;
             if (s == "goldshirefootman") return CardDB.cardName.goldshirefootman;
@@ -3806,6 +3982,7 @@
             if (s == "reversingswitch") return CardDB.cardName.reversingswitch;
             if (s == "whirlingblades") return CardDB.cardName.whirlingblades;
             if (s == "placeholdercard") return CardDB.cardName.placeholdercard;
+            
             return CardDB.cardName.unknown;
         }
 
@@ -3862,6 +4039,9 @@
             REQ_CAN_BE_TARGETED_BY_BATTLECRIES,
             REQ_STEADY_SHOT,//49
             REQ_MINION_OR_ENEMY_HERO,//50
+            REQ_TARGET_IF_AVAILABLE_AND_DRAGON_IN_HAND,//51
+            REQ_LEGENDARY_TARGET,//52
+            REQ_FRIENDLY_MINION_DIED_THIS_TURN,
             REQ_DRAG_TO_PLAY
         }
 
@@ -4036,6 +4216,37 @@
 
                 }
 
+                if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE_AND_DRAGON_IN_HAND))
+                {
+                    bool dragonInHand = false;
+                    foreach (Handmanager.Handcard hc in p.owncards)
+                    {
+                        if (hc.card.race == 24)
+                        {
+                            dragonInHand = true;
+                            break;
+                        }
+                    }
+                    if (dragonInHand == false) return retval;
+                    //you have dragon on hand!
+                    k = -1;
+                    foreach (Minion m in p.ownMinions)
+                    {
+                        k++;
+                        if ((this.type == cardtype.SPELL || this.type == cardtype.HEROPWR) && (m.cantBeTargetedBySpellsOrHeroPowers)) continue;
+                        ownMins[k] = true;
+
+                    }
+                    k = -1;
+                    foreach (Minion m in p.enemyMinions)
+                    {
+                        k++;
+                        if (((this.type == cardtype.SPELL || this.type == cardtype.HEROPWR) && (m.cantBeTargetedBySpellsOrHeroPowers)) || m.stealth) continue;
+                        enemyMins[k] = true;
+                    }
+
+                }
+
                 if (moreh)
                 {
                     addEnemyHero = true;//moreh = req_minion_or_enemyHero
@@ -4084,6 +4295,30 @@
                     for (int i = 0; i < ownMins.Length; i++) ownMins[i] = false;
                 }
 
+                
+                if (isRequirementInList(CardDB.ErrorType2.REQ_LEGENDARY_TARGET))
+                {
+                    addOwnHero = false;
+                    addEnemyHero = false;
+                    k = -1;
+                    foreach (Minion m in p.ownMinions)
+                    {
+                        k++;
+                        if ((m.handcard.card.rarity < 5))
+                        {
+                            ownMins[k] = false;
+                        }
+                    }
+                    k = -1;
+                    foreach (Minion m in p.enemyMinions)
+                    {
+                        k++;
+                        if ((m.handcard.card.rarity < 5))
+                        {
+                            enemyMins[k] = false;
+                        }
+                    }
+                }
 
 
                 if (isRequirementInList(CardDB.ErrorType2.REQ_DAMAGED_TARGET))
@@ -4335,6 +4570,31 @@
                     for (int i = 0; i < enemyMins.Length; i++) enemyMins[i] = false;
                 }
 
+                
+                if (isRequirementInList(CardDB.ErrorType2.REQ_LEGENDARY_TARGET))
+                {
+                    addOwnHero = false;
+                    addEnemyHero = false;
+                    k = -1;
+                    foreach (Minion m in p.ownMinions)
+                    {
+                        k++;
+                        if ((m.handcard.card.rarity < 5))
+                        {
+                            ownMins[k] = false;
+                        }
+                    }
+                    k = -1;
+                    foreach (Minion m in p.enemyMinions)
+                    {
+                        k++;
+                        if ((m.handcard.card.rarity < 5))
+                        {
+                            enemyMins[k] = false;
+                        }
+                    }
+                }
+
 
 
                 if (isRequirementInList(CardDB.ErrorType2.REQ_DAMAGED_TARGET))
@@ -4503,47 +4763,67 @@
 
             }
 
-            public int calculateManaCost(Playfield p)//calculates the mana from orginal mana, needed for back-to hand effects
+            public int getManaCost(Playfield p, int currentcost)//calculates mana from cleaned up mana!
             {
-                int retval = this.cost;
-                int offset = 0;
+                int retval = currentcost;
 
+
+                int offset = 0; // if offset < 0 costs become lower, if >0 costs are higher at the end
+
+                // CARDS that increase the manacosts of others ##############################
+                
                 if (this.type == cardtype.MOB)
                 {
+                    //Manacosts changes with soeldner der venture co.
                     offset += p.soeldnerDerVenture * 3;
-
+                    //Manacosts changes with mana-ghost
                     offset += p.managespenst;
-
-                    int temp = -(p.startedWithbeschwoerungsportal) * 2;
-                    if (retval + temp <= 0) temp = -retval + 1;
-                    offset = offset + temp;
-
-                    if (p.mobsplayedThisTurn == 0)
-                    {
-                        offset -= p.winzigebeschwoererin;
-                    }
 
                     if (this.battlecry)
                     {
                         offset += p.nerubarweblord * 2;
                     }
+                }
 
+                // CARDS that decrease the manacosts of others ##############################
+
+                if (this.type == cardtype.MOB)
+                {
+                    //Manacosts changes with the summoning-portal >_>
+                    int temp = - p.beschwoerungsportal * 2;
+                    if (retval + temp <= 0) temp = -retval + 1;
+                    offset = offset + temp;
+
+                    //Manacosts changes with the pint-sized summoner
+                    if (p.mobsplayedThisTurn == 0)
+                    { 
+                        offset -= p.winzigebeschwoererin;
+                    }
+
+                    //manacosts changes with Mechwarper
                     if ((TAG_RACE)this.race == TAG_RACE.MECHANICAL)
-                    { //if the number of zauberlehrlings change
+                    {
                         offset -= p.anzOwnMechwarper;
                     }
 
                 }
 
+
+                
                 if (this.type == cardtype.SPELL)
-                { //if the number of zauberlehrlings change
-                    offset -= (p.anzOwnsorcerersapprentice);
+                { 
+                    //Manacosts changes with the zauberlehrling summoner
+                    offset -= p.anzOwnsorcerersapprentice;
+
+                    //manacosts are lowered, after we played preparation
                     if (p.playedPreparation)
-                    { //if the number of zauberlehrlings change
+                    { 
                         offset -= 3;
                     }
-
                 }
+
+                
+
 
                 switch (this.name)
                 {
@@ -4564,6 +4844,7 @@
                         break;
                     case CardDB.cardName.crush:
                         // cost 4 less if we have a dmged minion
+                        retval = retval + offset;
                         bool dmgedminions = false;
                         foreach (Minion m in p.ownMinions)
                         {
@@ -4571,8 +4852,17 @@
                         }
                         if (dmgedminions)
                         {
-                            retval = retval + offset - 4;
+                            retval  -= 4;
                         }
+                        break;
+
+                    //Costs (1) less for each minion that died this turn. - cards:
+                    // dont forget to add them in    Handmanager->setHandcards !!!
+                    case CardDB.cardName.volcanicdrake:
+                    case CardDB.cardName.volcaniclumberer:
+                    case CardDB.cardName.dragonsbreath:
+                    case CardDB.cardName.solemnvigil:
+                        retval = retval - p.anzMinionsDiedThisTurn;
                         break;
                     default:
                         retval = retval + offset;
@@ -4580,6 +4870,21 @@
                 }
 
                 if (this.Secret && p.playedmagierinderkirintor)
+                {
+                    retval = 0;
+                }
+
+                if (this.type == cardtype.MOB && this.race == 24)
+                {
+                    retval -= (p.isOwnTurn) ? p.ownDragonConsort * 2 : p.enemyDragonConsort * 2;
+                }
+
+                if (this.type == cardtype.SPELL )
+                {
+                    retval += (p.isOwnTurn) ? p.enemyloatheb*5 : p.ownloatheb * 5;
+                }
+
+                if (this.type == cardtype.SPELL && ((p.isOwnTurn && p.enemyHavePlayedMillhouseManastorm) || (!p.isOwnTurn && p.weHavePlayedMillhouseManastorm)))
                 {
                     retval = 0;
                 }
@@ -4589,88 +4894,83 @@
                 return retval;
             }
 
-            public int getManaCost(Playfield p, int currentcost)//calculates mana from current mana
+            //calculate the manacosts without the changing effects
+            //we calculate the "orginal"-manacosts, because we dont know of effects like icetrap, prep and stuff
+            public int getStartManaCosts(Playfield p, int currentcost) //only call this with p = new Playfield()!
             {
                 int retval = currentcost;
-
 
                 int offset = 0; // if offset < 0 costs become lower, if >0 costs are higher at the end
 
                 // CARDS that increase the manacosts of others ##############################
-                //Manacosts changes with soeldner der venture co.
-                if (p.soeldnerDerVenture != p.startedWithsoeldnerDerVenture && this.type == cardtype.MOB)
+                
+                if (this.type == cardtype.MOB)
                 {
-                    offset += (p.soeldnerDerVenture - p.startedWithsoeldnerDerVenture) * 3;
+                    //Manacosts changes with soeldner der venture co.
+                    offset +=  - p.soeldnerDerVenture * 3;
+                    //Manacosts changes with mana-ghost
+                    offset += - p.managespenst;
+                    //weblord
+                    if (this.battlecry)
+                    {
+                        offset += -p.nerubarweblord * 2;
+                    }
                 }
-
-                //Manacosts changes with mana-ghost
-                if (p.managespenst != p.startedWithManagespenst && this.type == cardtype.MOB)
-                {
-                    offset += (p.managespenst - p.startedWithManagespenst);
-                }
-
-                if (this.battlecry && p.nerubarweblord != p.startedWithnerubarweblord && this.type == cardtype.MOB)
-                {
-                    offset += (p.nerubarweblord - p.startedWithnerubarweblord) * 2;
-                }
-
 
                 // CARDS that decrease the manacosts of others ##############################
 
-                //Manacosts changes with the summoning-portal >_>
-                if (p.startedWithbeschwoerungsportal != p.beschwoerungsportal && this.type == cardtype.MOB)
-                { //cant lower the mana to 0
-                    int temp = (p.startedWithbeschwoerungsportal - p.beschwoerungsportal) * 2;
-                    if (retval + temp <= 0) temp = -retval + 1;
-                    offset = offset + temp;
-                }
+                if (this.type == cardtype.MOB)
+                { 
 
-                //Manacosts changes with the pint-sized summoner
-                if (p.winzigebeschwoererin >= 1 && p.mobsplayedThisTurn >= 1 && p.startedWithMobsPlayedThisTurn == 0 && this.type == cardtype.MOB)
-                { // if we start oure calculations with 0 mobs played, then the cardcost are 1 mana to low in the further calculations (with the little summoner on field)
-                    offset += p.winzigebeschwoererin;
-                }
-                if (p.mobsplayedThisTurn == 0 && p.winzigebeschwoererin <= p.startedWithWinzigebeschwoererin && this.type == cardtype.MOB)
-                { // one pint-sized summoner got killed, before we played the first mob -> the manacost are higher of all mobs
-                    offset += (p.startedWithWinzigebeschwoererin - p.winzigebeschwoererin);
-                }
+                    //Manacosts changes with the summoning-portal >_>
+                    //cant lower the mana to 0
+                    offset += p.beschwoerungsportal * 2;
 
-                //Manacosts changes with the zauberlehrling summoner
-                if (p.anzOwnsorcerersapprentice != p.anzOwnsorcerersapprenticeStarted && this.type == cardtype.SPELL)
-                { //if the number of zauberlehrlings change
-                    offset += (p.anzOwnsorcerersapprenticeStarted - p.anzOwnsorcerersapprentice);
-                }
+                    //Manacosts changes with the pint-sized summoner
+                    if (p.mobsplayedThisTurn == 0)
+                    { 
+                        offset += p.winzigebeschwoererin;
+                    }
 
-                //manacosts changes with Mechwarper
-                if (p.anzOwnMechwarper != p.anzOwnMechwarperStarted && this.type == cardtype.MOB && (TAG_RACE)this.race == TAG_RACE.MECHANICAL)
-                { //if the number of zauberlehrlings change
-                    offset += (p.anzOwnMechwarperStarted - p.anzOwnMechwarper);
+                    //manacosts changes with Mechwarper
+                    if ((TAG_RACE)this.race == TAG_RACE.MECHANICAL)
+                    {
+                        offset +=  p.anzOwnMechwarper;
+                    }
                 }
 
 
-                //manacosts are lowered, after we played preparation
-                if (p.playedPreparation && this.type == cardtype.SPELL)
-                { //if the number of zauberlehrlings change
-                    offset -= 3;
+                if (this.type == cardtype.SPELL)
+                {
+
+                    //manacosts are lowered, after we played preparation
+                    if (p.playedPreparation )
+                    { 
+                        offset += 3;
+                    }
+
+                    //Manacosts changes with the zauberlehrling summoner
+                    offset += p.anzOwnsorcerersapprentice;
+
                 }
 
-
+                
                 switch (this.name)
                 {
                     case CardDB.cardName.dreadcorsair:
-                        retval = retval + offset - p.ownWeaponAttack + p.ownWeaponAttackStarted; // if weapon attack change we change manacost
+                        retval = retval + offset + p.ownWeaponAttack;
                         break;
                     case CardDB.cardName.seagiant:
-                        retval = retval + offset - p.ownMinions.Count - p.enemyMinions.Count + p.ownMobsCountStarted;
+                        retval = retval + offset + p.ownMinions.Count + p.enemyMinions.Count;
                         break;
                     case CardDB.cardName.mountaingiant:
-                        retval = retval + offset - p.owncards.Count + p.ownCardsCountStarted;
+                        retval = retval + offset + p.owncards.Count;
                         break;
                     case CardDB.cardName.clockworkgiant:
-                        retval = retval + offset - p.enemyAnzCards + p.enemyCardsCountStarted;
+                        retval = retval + offset + p.enemyAnzCards;
                         break;
                     case CardDB.cardName.moltengiant:
-                        retval = retval + offset - p.ownHero.Hp + p.ownHeroHpStarted;
+                        retval = retval + offset + p.ownHero.Hp;
                         break;
                     case CardDB.cardName.crush:
                         // cost 4 less if we have a dmged minion
@@ -4679,17 +4979,15 @@
                         {
                             if (m.wounded) dmgedminions = true;
                         }
-                        if (dmgedminions != p.startedWithDamagedMinions)
-                        {
-                            if (dmgedminions)
-                            {
-                                retval = retval + offset - 4;
-                            }
-                            else
-                            {
-                                retval = retval + offset + 4;
-                            }
-                        }
+                        if(dmgedminions) retval = retval + offset + 4;
+                        break;
+
+                    //Cards with effect: Costs (1) less for each minion that died this turn.
+                    case CardDB.cardName.volcanicdrake:
+                    case CardDB.cardName.volcaniclumberer:
+                    case CardDB.cardName.dragonsbreath:
+                    case CardDB.cardName.solemnvigil:
+                        retval = retval + p.anzMinionsDiedThisTurn;
                         break;
                     default:
                         retval = retval + offset;
@@ -4698,7 +4996,22 @@
 
                 if (this.Secret && p.playedmagierinderkirintor)
                 {
-                    retval = 0;
+                    retval = this.cost;
+                }
+
+                if (this.type == cardtype.MOB && this.race == 24)
+                {
+                    retval += (p.isOwnTurn) ? p.ownDragonConsort * 2 : p.enemyDragonConsort * 2;
+                }
+
+                if (this.type == cardtype.SPELL)
+                {
+                    retval -= (p.isOwnTurn) ? p.enemyloatheb * 5 : p.ownloatheb * 5;
+                }
+
+                if (this.type == cardtype.SPELL && ((p.isOwnTurn && p.enemyHavePlayedMillhouseManastorm) || (!p.isOwnTurn && p.weHavePlayedMillhouseManastorm)))
+                {
+                    retval = this.cost;
                 }
 
                 retval = Math.Max(0, retval);
@@ -4736,6 +5049,8 @@
                 {
                     if (this.needMinTotalMinions > p.ownMinions.Count + p.enemyMinions.Count) return false;
                 }
+
+                
 
                 if (haveToDoRequires)
                 {
@@ -4785,6 +5100,9 @@
         public Card illidanminion;
         public Card lepergnome;
         public Card burlyrockjaw;
+        public Card grimpatron;
+        public Card whelp2a1h;
+        public Card imp;
         private static CardDB instance;
 
         public static CardDB Instance
@@ -5022,6 +5340,7 @@
                     temp = temp.Replace(" ", "");
                     temp = temp.Replace(":", "");
                     temp = temp.Replace(".", "");
+                    temp = temp.Replace(",", "");
                     temp = temp.Replace("!", "");
                     temp = temp.Replace("-", "");
 
@@ -5372,7 +5691,9 @@
             this.illidanminion = this.getCardDataFromID(CardDB.cardIDEnum.EX1_614t);
             this.lepergnome = this.getCardDataFromID(CardDB.cardIDEnum.EX1_029);
             this.burlyrockjaw = this.getCardDataFromID(CardDB.cardIDEnum.GVG_068);
-
+            this.grimpatron = this.getCardDataFromID(CardDB.cardIDEnum.BRM_019);
+            this.whelp2a1h = this.getCardDataFromID(CardDB.cardIDEnum.BRM_022t);//whelptoken from blackrock
+            this.imp = this.getCardDataFromID(CardDB.cardIDEnum.BRM_006t);//imp from blackrock
         }
 
         public Card getCardData(CardDB.cardName cardname)
@@ -5398,6 +5719,88 @@
         {
             switch (id)
             {
+
+                case cardIDEnum.BRM_001:
+                    return new Sim_BRM_001();
+                case cardIDEnum.BRM_002:
+                    return new Sim_BRM_002();
+                case cardIDEnum.BRM_003:
+                    return new Sim_BRM_003();
+                case cardIDEnum.BRM_004:
+                    return new Sim_BRM_004();
+                case cardIDEnum.BRM_005:
+                    return new Sim_BRM_005();
+                case cardIDEnum.BRM_006:
+                    return new Sim_BRM_006();
+                case cardIDEnum.BRM_007:
+                    return new Sim_BRM_007();
+                case cardIDEnum.BRM_008:
+                    return new Sim_BRM_008();
+                case cardIDEnum.BRM_009:
+                    return new Sim_BRM_009();
+                case cardIDEnum.BRM_010:
+                    return new Sim_BRM_010();
+                case cardIDEnum.BRM_010a:
+                    return new Sim_BRM_010a();
+                case cardIDEnum.BRM_010b:
+                    return new Sim_BRM_010b();
+                case cardIDEnum.BRM_010t:
+                    return new Sim_BRM_010t();
+                case cardIDEnum.BRM_010t2:
+                    return new Sim_BRM_010t2();
+                case cardIDEnum.BRM_011:
+                    return new Sim_BRM_011();
+                case cardIDEnum.BRM_012:
+                    return new Sim_BRM_012();
+                case cardIDEnum.BRM_013:
+                    return new Sim_BRM_013();
+                case cardIDEnum.BRM_014:
+                    return new Sim_BRM_014();
+                case cardIDEnum.BRM_015:
+                    return new Sim_BRM_015();
+                case cardIDEnum.BRM_016:
+                    return new Sim_BRM_016();
+                case cardIDEnum.BRM_017:
+                    return new Sim_BRM_017();
+                case cardIDEnum.BRM_018:
+                    return new Sim_BRM_018();
+                case cardIDEnum.BRM_019:
+                    return new Sim_BRM_019();
+                case cardIDEnum.BRM_020:
+                    return new Sim_BRM_020();
+                case cardIDEnum.BRM_022:
+                    return new Sim_BRM_022();
+                case cardIDEnum.BRM_024:
+                    return new Sim_BRM_024();
+                case cardIDEnum.BRM_025:
+                    return new Sim_BRM_025();
+                case cardIDEnum.BRM_026:
+                    return new Sim_BRM_026();
+                case cardIDEnum.BRM_027:
+                    return new Sim_BRM_027();
+                case cardIDEnum.BRM_027h:
+                    return new Sim_BRM_027h();
+                case cardIDEnum.BRM_027p:
+                    return new Sim_BRM_027p();
+                case cardIDEnum.BRM_027pH:
+                    return new Sim_BRM_027pH();
+                case cardIDEnum.BRM_028:
+                    return new Sim_BRM_028();
+                case cardIDEnum.BRM_029:
+                    return new Sim_BRM_029();
+                case cardIDEnum.BRM_030:
+                    return new Sim_BRM_030();
+                case cardIDEnum.BRM_030t:
+                    return new Sim_BRM_030t();
+                case cardIDEnum.BRM_031:
+                    return new Sim_BRM_031();
+                case cardIDEnum.BRM_033:
+                    return new Sim_BRM_033();
+                case cardIDEnum.BRM_034:
+                    return new Sim_BRM_034();
+
+
+
                 case cardIDEnum.NEW1_007b:
                     return new Sim_NEW1_007b();
                 case cardIDEnum.EX1_613:

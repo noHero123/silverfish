@@ -22,8 +22,11 @@ namespace HREngine.Bots
             }
             if (choice == 2)
             {
-                p.minionGetBuffed(target, 5, 5);
-                target.taunt = true;
+                if (target != null)
+                {
+                    p.minionGetBuffed(target, 5, 5);
+                    target.taunt = true;
+                }
             }
         }
 

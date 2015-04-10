@@ -10,7 +10,15 @@ namespace HREngine.Bots
 //    kampfschrei:/ im nächsten zug kosten zauber für euren gegner (5) mehr.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            p.loatheb = true;
+            if (own.own)
+            {
+                p.ownloatheb++;
+            }
+            else
+            {
+                p.enemyloatheb++;
+            }
+
 		}
 
 	

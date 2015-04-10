@@ -18,7 +18,7 @@ namespace HREngine.Bots
                 }
                 else
                 {
-                    p.drawACard(CardDB.cardName.excessmana, true, true);
+                    p.drawACard(CardDB.cardIDEnum.CS2_013t, true, true);
                 }
 
             }
@@ -30,7 +30,7 @@ namespace HREngine.Bots
                 }
                 else
                 {
-                    p.drawACard(CardDB.cardName.excessmana, false, true);
+                    p.drawACard(CardDB.cardIDEnum.CS2_013t, false, true);
                 }
             }
 		}

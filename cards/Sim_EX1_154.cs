@@ -24,7 +24,7 @@ namespace HREngine.Bots
 
             if (choice == 2)
             {
-                p.drawACard(CardDB.cardName.unknown, ownplay);
+                p.drawACard(CardDB.cardIDEnum.None, ownplay);
             }
 		}
 

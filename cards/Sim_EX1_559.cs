@@ -13,7 +13,7 @@ namespace HREngine.Bots
         {
             if (wasOwnCard == triggerEffectMinion.own && c.type == CardDB.cardtype.SPELL)
             {
-                p.drawACard(CardDB.cardName.fireball, wasOwnCard, true);
+                p.drawACard(CardDB.cardIDEnum.CS2_029, wasOwnCard, true);
             }
         }
 

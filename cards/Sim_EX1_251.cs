@@ -21,7 +21,7 @@ namespace HREngine.Bots
                 i++;
                 if (i == 2) break;
             }
-            if (ownplay) p.ueberladung += 2;
+            if (ownplay) { p.owedRecall += 2; } else { p.enemyRecall += 2; };
 		}
 
 	}

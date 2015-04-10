@@ -29,6 +29,7 @@ namespace HREngine.Bots
             else
             {
                 p.enemyHeroAblility.card = p.enemyHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001 ? this.mindspike : this.shatter;
+
             }
         }
 

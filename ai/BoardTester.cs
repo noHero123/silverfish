@@ -43,6 +43,18 @@
         int numMinionsPlayedThisTurn = 0;
         int cardsPlayedThisTurn = 0;
         int overdrive = 0;
+        int numberMinionsDiedThisturn = 0;
+        int owncurrentRecall = 0;
+        int enemyRecall = 0;
+
+        int ownDragonConsort = 0;
+        int enemyDragonConsort = 0;
+        int ownLoathebs = 0;
+        int enemyLoathebs = 0;
+        int ownMillhouse = 0;
+        int enemyMillhouse = 0;
+        int ownKirintor = 0;
+        int ownPrep = 0;
 
         int ownDecksize = 30;
         int enemyDecksize = 30;
@@ -146,6 +158,49 @@
                 {
                     continue;
                 }
+
+                if (s.StartsWith("ownhero:"))
+                {
+                    readstate = 1;
+                    counter = 1;
+                    continue;
+                }
+
+                if (s.StartsWith("enemyhero:"))
+                {
+                    readstate = 2;
+                    counter = 1;
+                    continue;
+                }
+
+                if (s.StartsWith("OwnMinions:"))
+                {
+                    readstate = 3;
+                    counter = 1;
+                    continue;
+                }
+
+                if (s.StartsWith("EnemyMinions:"))
+                {
+                    readstate = 4;
+                    counter = 1;
+                    continue;
+                }
+
+                if (s.StartsWith("Own Handcards:"))
+                {
+                    readstate = 5;
+                    counter = 1;
+                    continue;
+                }
+
+                if (s.StartsWith("player:"))
+                {
+                    readstate = 42;
+                    counter = 1;
+                    continue;
+                }
+
                 if (s.StartsWith("start calculations, current time: "))
                 {
                     Ai.Instance.currentCalculatedBoard = s.Split(' ')[4].Split(' ')[0];
@@ -373,6 +428,33 @@
                     this.numMinionsPlayedThisTurn = Convert.ToInt32(s.Split(' ')[0]);
                     this.cardsPlayedThisTurn = Convert.ToInt32(s.Split(' ')[1]);
                     this.ownPlayer = Convert.ToInt32(s.Split(' ')[3]);
+                    this.numberMinionsDiedThisturn = 0;
+                    this.owncurrentRecall = 0;
+                    this.enemyRecall = 0;
+                    try
+                    {
+                        //for old log files a try and catch :D
+                        this.numberMinionsDiedThisturn = Convert.ToInt32(s.Split(' ')[4]);
+                        this.owncurrentRecall = Convert.ToInt32(s.Split(' ')[5]);
+                        this.enemyRecall = Convert.ToInt32(s.Split(' ')[6]);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+                if (readstate == 42 && counter == 2) // player enchantmens
+                {
+                    this.ownDragonConsort = Convert.ToInt32(s.Split(' ')[0]);
+                    this.enemyDragonConsort = Convert.ToInt32(s.Split(' ')[1]);
+                    this.ownLoathebs = Convert.ToInt32(s.Split(' ')[2]);
+                    this.enemyLoathebs = Convert.ToInt32(s.Split(' ')[3]);
+                    this.ownMillhouse = Convert.ToInt32(s.Split(' ')[4]);
+                    this.enemyMillhouse = Convert.ToInt32(s.Split(' ')[5]);
+                    this.ownKirintor = Convert.ToInt32(s.Split(' ')[6]);
+                    this.ownPrep = Convert.ToInt32(s.Split(' ')[7]);
+
                 }
 
                 if (readstate == 1 && counter == 1) // class + hp + defence + immunewhile attacking + immune
@@ -709,41 +791,7 @@
                 }
 
 
-                if (s.StartsWith("ownhero:"))
-                {
-                    readstate = 1;
-                    counter = 0;
-                }
 
-                if (s.StartsWith("enemyhero:"))
-                {
-                    readstate = 2;
-                    counter = 0;
-                }
-
-                if (s.StartsWith("OwnMinions:"))
-                {
-                    readstate = 3;
-                    counter = 0;
-                }
-
-                if (s.StartsWith("EnemyMinions:"))
-                {
-                    readstate = 4;
-                    counter = 0;
-                }
-
-                if (s.StartsWith("Own Handcards:"))
-                {
-                    readstate = 5;
-                    counter = 0;
-                }
-
-                if (s.StartsWith("player:"))
-                {
-                    readstate = 42;
-                    counter = 0;
-                }
 
 
 
@@ -764,7 +812,10 @@
             }
 
 
-            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, ownHEntity, enemyHEntity);
+            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, ownHEntity, enemyHEntity, this.numberMinionsDiedThisturn, this.owncurrentRecall, this.enemyRecall);
+            Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrep);
+
+
             Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);
 
             bool herowindfury = false;

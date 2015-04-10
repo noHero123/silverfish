@@ -13,7 +13,7 @@ namespace HREngine.Bots
         {
             if (triggerEffectMinion.own == turnEndOfOwner)
             {
-                p.drawACard(CardDB.cardName.yseraawakens, turnEndOfOwner, true);
+                p.drawACard(CardDB.cardIDEnum.DREAM_02, turnEndOfOwner, true);
             }
         }
 

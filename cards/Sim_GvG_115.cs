@@ -11,12 +11,12 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            p.drawACard(CardDB.cardName.armorplating, own.own, true);
+            p.drawACard(CardDB.cardIDEnum.PART_001, own.own, true);
         }
 
         public override void onDeathrattle(Playfield p, Minion m)
         {
-            p.drawACard(CardDB.cardName.armorplating, m.own, true);
+            p.drawACard(CardDB.cardIDEnum.PART_001, m.own, true);
         }
 
 

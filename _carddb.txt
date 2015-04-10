@@ -17185,4 +17185,807 @@ Destroy a minion.</Tag>
     <Tag enumID="47" type="" value="6" />
     <Tag enumID="184" type="String">Battlecry: Someone remembers to publish this card.</Tag>
   </Entity>
+  <Entity version="2" CardID="BRM_001">
+    <MasterPower>d108222b-8e61-4b5c-8f39-085e495e3a0e</MasterPower>
+    <Tag enumID="185" type="String">Solemn Vigil</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="199" type="" value="5" />
+    <Tag enumID="184" type="String">Draw 2 cards. Costs (1) less for each minion that died this turn.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Each year, folk gather in front of Blackrock Mountain to mourn those who were mind-controlled into the lava.</Tag>
+    <Tag enumID="342" type="String">Jaime Jones</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing the Paladin Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing the Paladin Class Challenge in Blackrock Mountain.</Tag>
+    <Power definition="d108222b-8e61-4b5c-8f39-085e495e3a0e" />
+    <Power definition="34bb39b6-1916-4e7a-be4c-9f3fde5ad1ac" />
+  </Entity>
+  <Entity version="2" CardID="BRM_002">
+    <Tag enumID="185" type="String">Flamewaker</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="199" type="" value="4" />
+    <Tag enumID="184" type="String">After you cast a spell, deal 2 damage randomly split among all enemies.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Flamewakers HATE being confused for Flamewalkers. They just wake up fire, they donâ€™t walk on it. Walking on fire is CRAZY.</Tag>
+    <Tag enumID="342" type="String">Alex Horley Orlandelli</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Vaelastrasz in Blackwing Lair.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Vaelastrasz in Blackwing Lair.</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="29edb729-aa77-4fa8-b280-e54b041955ab" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="True" />
+  </Entity>
+  <Entity version="2" CardID="BRM_003">
+    <Tag enumID="185" type="String">Dragon's Breath</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="199" type="" value="4" />
+    <Tag enumID="184" type="String">Deal $4 damage. Costs (1) less for each minion that died this turn.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Dragons breathe fire, sure, but did you know they can also breathe Cotton Candy?  It's harder to give them a reason to do that, though.</Tag>
+    <Tag enumID="342" type="String">Mauricio Herrera</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing the Mage Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing the Mage Class Challenge in Blackrock Mountain.</Tag>
+    <Power definition="f3c8fe7e-06f0-489b-9735-610ee2daf6c5" />
+    <Power definition="6788395a-36ff-4705-8b96-b86a56aea5ab">
+      <PlayRequirement reqID="11" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="BRM_004">
+    <MasterPower>77f9c4bd-752c-434d-a7a1-8a4cc05a269d</MasterPower>
+    <Tag enumID="185" type="String">Twilight Whelp</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="1" />
+    <Tag enumID="199" type="" value="6" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; If you're holding a Dragon, gain +2 Health.</Tag>
+    <Tag enumID="200" type="" value="24" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">The twilight whelps are basically magic-vampires. Despite this, they are not a reference to any popular series of novels.</Tag>
+    <Tag enumID="342" type="String">Sam Nielson</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing the Priest Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing the Priest Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="77f9c4bd-752c-434d-a7a1-8a4cc05a269d" />
+    <Power definition="f47b7464-df94-40db-abad-6f65df155d92" />
+  </Entity>
+  <Entity version="2" CardID="BRM_005">
+    <MasterPower>c06cfe2a-7e57-44ae-b876-b82fda0598c9</MasterPower>
+    <Tag enumID="185" type="String">Demonwrath</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="199" type="" value="9" />
+    <Tag enumID="184" type="String">Deal $2 damage to all non-Demon minions.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Demons are not angry most of the time. You have to play this card in order to really bring it out of them.</Tag>
+    <Tag enumID="342" type="String">Raymond Swanland</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing the Warlock Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing the Warlock Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="370" type="" value="1" />
+    <Power definition="c06cfe2a-7e57-44ae-b876-b82fda0598c9" />
+  </Entity>
+  <Entity version="2" CardID="BRM_006">
+    <Tag enumID="185" type="String">Imp Gang Boss</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="199" type="" value="9" />
+    <Tag enumID="184" type="String">Whenever this minion takes damage, summon a 1/1 Imp.</Tag>
+    <Tag enumID="200" type="" value="15" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">His imp gang likes to sneak into Stormwind to spraypaint "Ragnaros Rulez" on the Mage Tower.</Tag>
+    <Tag enumID="342" type="String">Steve Prescott</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Majordomo Executus in Molten Core.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Majordomo Executus in Molten Core.</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="b382470d-1906-4502-ad82-84ebc29c3d89" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="BRM_006t">
+    <Tag enumID="185" type="String">Imp</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="47" type="" value="1" />
+    <Tag enumID="45" type="" value="1" />
+    <Tag enumID="199" type="" value="9" />
+    <Tag enumID="200" type="" value="15" />
+    <Tag enumID="202" type="" value="4" />
+  </Entity>
+  <Entity version="2" CardID="BRM_007">
+    <MasterPower>30e432f2-6a20-43ff-920c-c6b49b3ed261</MasterPower>
+    <Tag enumID="185" type="String">Gang Up</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="199" type="" value="7" />
+    <Tag enumID="184" type="String">Choose a minion. Shuffle 3 copies of it into your deck.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">If you are thinking about visiting Moonbrook, you better roll deep.</Tag>
+    <Tag enumID="342" type="String">Jim Nelson</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating the Dark Iron Arena in Blackrock Depths.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating the Dark Iron Arena in Blackrock Depths.</Tag>
+    <Power definition="30e432f2-6a20-43ff-920c-c6b49b3ed261">
+      <PlayRequirement reqID="11" param="" />
+      <PlayRequirement reqID="1" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="BRM_008">
+    <MasterPower>f8986e64-348f-477e-988f-180c1697150e</MasterPower>
+    <Tag enumID="185" type="String">Dark Iron Skulker</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="47" type="" value="4" />
+    <Tag enumID="45" type="" value="3" />
+    <Tag enumID="199" type="" value="7" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; Deal 2 damage to all undamaged enemy minions.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">He loves skulking. He skulks after hours just for the joy of it, but his friends are pretty worried he'll get burnt out.</Tag>
+    <Tag enumID="342" type="String">Eric Braddock</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing the Rogue Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing the Rogue Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="f8986e64-348f-477e-988f-180c1697150e" />
+  </Entity>
+  <Entity version="2" CardID="BRM_009">
+    <MasterPower>a89e833a-4236-485d-918e-e47d13e9b1b3</MasterPower>
+    <Tag enumID="185" type="String">Volcanic Lumberer</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="9" />
+    <Tag enumID="199" type="" value="2" />
+    <Tag enumID="184" type="String">&lt;b&gt;Taunt&lt;/b&gt;
+Costs (1) less for each minion that died this turn.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="47" type="" value="7" />
+    <Tag enumID="45" type="" value="8" />
+    <Tag enumID="351" type="String">The roots, the roots, the roots is on fire!</Tag>
+    <Tag enumID="342" type="String">Trent Kaniuga</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing the Druid Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing the Druid Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="190" type="" value="1" />
+    <Power definition="a89e833a-4236-485d-918e-e47d13e9b1b3" />
+    <Power definition="1c31a5f6-317a-4bda-af8a-96fec8c5d506" />
+    <Power definition="eba3c0af-234d-45c7-86a2-630fa89569f0" />
+  </Entity>
+  <Entity version="2" CardID="BRM_010">
+    <Tag enumID="185" type="String">Druid of the Flame</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="2" />
+    <Tag enumID="199" type="" value="2" />
+    <Tag enumID="184" type="String">&lt;b&gt;Choose One&lt;/b&gt; - Transform into a 5/2 minion; or a 2/5 minion.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Druids who fought too long in Northrend were easily seduced by Ragnaros; a mug of hot chocolate was generally all it took.</Tag>
+    <Tag enumID="342" type="String">Stanley Lau</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Garr in Molten Core.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Garr in Molten Core.</Tag>
+  </Entity>
+  <Entity version="2" CardID="BRM_010a">
+    <MasterPower>029c40d0-0087-4dc6-93cd-d9ee871c04ea</MasterPower>
+    <Tag enumID="185" type="String">Firecat Form</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="199" type="" value="2" />
+    <Tag enumID="184" type="String">Transform into a 5/2 minion.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="200" type="" value="20" />
+    <Power definition="029c40d0-0087-4dc6-93cd-d9ee871c04ea" />
+  </Entity>
+  <Entity version="2" CardID="BRM_010b">
+    <MasterPower>21261a4a-b830-42d1-b02f-b003820815dc</MasterPower>
+    <Tag enumID="185" type="String">Fire Hawk Form</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="199" type="" value="2" />
+    <Tag enumID="184" type="String">Transform into a 2/5 minion.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="200" type="" value="20" />
+    <Power definition="21261a4a-b830-42d1-b02f-b003820815dc" />
+  </Entity>
+  <Entity version="2" CardID="BRM_010t">
+    <Tag enumID="185" type="String">Druid of the Flame</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="47" type="" value="5" />
+    <Tag enumID="45" type="" value="2" />
+    <Tag enumID="199" type="" value="2" />
+    <Tag enumID="200" type="" value="20" />
+    <Tag enumID="342" type="String">Ben Zhang</Tag>
+  </Entity>
+  <Entity version="2" CardID="BRM_010t2">
+    <Tag enumID="185" type="String">Druid of the Flame</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="5" />
+    <Tag enumID="199" type="" value="2" />
+    <Tag enumID="200" type="" value="20" />
+    <Tag enumID="342" type="String">Hideaki Takamura</Tag>
+  </Entity>
+  <Entity version="2" CardID="BRM_011">
+    <MasterPower>c2f09ca9-5327-4123-80cf-93ab98b3c4cd</MasterPower>
+    <Tag enumID="185" type="String">Lava Shock</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="199" type="" value="8" />
+    <Tag enumID="184" type="String">Deal $2 damage.
+Unlock your &lt;b&gt;Overloaded&lt;/b&gt; Mana Crystals.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Chocolate lava cake is shockingly delicious.</Tag>
+    <Tag enumID="342" type="String">Zoltan Boros</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing the Shaman Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing the Shaman Class Challenge in Blackrock Mountain.</Tag>
+    <ReferencedTag name="Recall" enumID="215" type="Number" value="1" />
+    <Power definition="c2f09ca9-5327-4123-80cf-93ab98b3c4cd">
+      <PlayRequirement reqID="11" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="BRM_012">
+    <MasterPower>8e9b14dc-7937-49ba-a14c-cd7075c32aa1</MasterPower>
+    <Tag enumID="185" type="String">Fireguard Destroyer</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="6" />
+    <Tag enumID="199" type="" value="8" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; Gain 1-4 Attack. &lt;b&gt;Overload:&lt;/b&gt; (1)</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Ragnaros interviews hundreds of Fire Elementals for the position of "Destroyer" but very few have what it takes.</Tag>
+    <Tag enumID="342" type="String">Paul Mafayon</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Lord Victor Nefarius in Blackwing Lair.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Lord Victor Nefarius in Blackwing Lair.</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Tag enumID="215" type="" value="1" />
+    <Power definition="8e9b14dc-7937-49ba-a14c-cd7075c32aa1" />
+    <Power definition="ee676058-4563-49b3-8273-c0e7ed6ba098" />
+  </Entity>
+  <Entity version="2" CardID="BRM_013">
+    <MasterPower>bb198bde-42b9-4831-a6af-73be0e748aa8</MasterPower>
+    <Tag enumID="185" type="String">Quick Shot</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="199" type="" value="3" />
+    <Tag enumID="184" type="String">Deal $3 damage.
+If your hand is empty, draw a card.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Han shot first.</Tag>
+    <Tag enumID="342" type="String">Jonboy Meyers</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing the Hunter Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing the Hunter Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="370" type="" value="1" />
+    <Power definition="bb198bde-42b9-4831-a6af-73be0e748aa8">
+      <PlayRequirement reqID="11" param="" />
+    </Power>
+    <Power definition="7468ccaa-cdc1-4085-9ff8-a01793981316" />
+  </Entity>
+  <Entity version="2" CardID="BRM_014">
+    <MasterPower>50e2844d-425b-43df-8927-b06066dd65a4</MasterPower>
+    <Tag enumID="185" type="String">Core Rager</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="4" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="199" type="" value="3" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; If your hand is empty, gain +3/+3.</Tag>
+    <Tag enumID="200" type="" value="20" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">It takes a special kind of hunter to venture deep into a firey lava pit and convince a monster who lives there to come home and be a cuddly housepet.</Tag>
+    <Tag enumID="342" type="String">Jomaro Kindred</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Highlord Omokk in Blackrock Spire.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Highlord Omokk in Blackrock Spire.</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="50e2844d-425b-43df-8927-b06066dd65a4" />
+    <Power definition="10eaff0e-740d-4860-b512-cb6d5631c6c5" />
+  </Entity>
+  <Entity version="2" CardID="BRM_015">
+    <MasterPower>8723c146-b0ef-49ca-8d4e-8bed192ccc09</MasterPower>
+    <Tag enumID="185" type="String">Revenge</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="199" type="" value="10" />
+    <Tag enumID="184" type="String">Deal $1 damage to all minions. If you have 12 or less Health, deal $3 damage instead.</Tag>
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">This is better than Arcane Explosion, so I guess warriors are finally getting revenge on mages for Mortal Strike being worse than Fireball.</Tag>
+    <Tag enumID="342" type="String">Ben Olson</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Razorgore in Blackwing Lair.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Razorgore in Blackwing Lair.</Tag>
+    <Power definition="8723c146-b0ef-49ca-8d4e-8bed192ccc09" />
+    <Power definition="3c731c27-c509-4723-8adf-2da0129b74d3" />
+  </Entity>
+  <Entity version="2" CardID="BRM_016">
+    <Tag enumID="185" type="String">Axe Flinger</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="5" />
+    <Tag enumID="199" type="" value="10" />
+    <Tag enumID="184" type="String">Whenever this minion takes damage, deal 2 damage to the enemy hero.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Once a lowly "Stick Flinger", he's been relentless on the path to his ultimate dream: "Tauren Flinger".</Tag>
+    <Tag enumID="342" type="String">Efrem Palacios</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing the Warrior Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing the Warrior Class Challenge in Blackrock Mountain.</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="c2f68c55-8797-4208-ae78-f790665689ea" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="True" />
+  </Entity>
+  <Entity version="2" CardID="BRM_017">
+    <MasterPower>307341a9-9e63-422b-b3e0-64520504ee7f</MasterPower>
+    <Tag enumID="185" type="String">Resurrect</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="199" type="" value="6" />
+    <Tag enumID="184" type="String">Summon a random friendly minion that died this game.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">I walked into the dungeon and noticed a slain adventurer. In his final moments, he had scrawled out a message in the dust on the wall beside him. Two words: "rez plz"</Tag>
+    <Tag enumID="342" type="String">Luke Mancini</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Emperor Thaurissan in Blackrock Depths.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Emperor Thaurissan in Blackrock Depths.</Tag>
+    <Power definition="307341a9-9e63-422b-b3e0-64520504ee7f">
+      <PlayRequirement reqID="12" param="1" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="BRM_018">
+    <MasterPower>cb922037-0640-489f-a62c-5f00a606f6d9</MasterPower>
+    <Tag enumID="185" type="String">Dragon Consort</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="47" type="" value="5" />
+    <Tag enumID="45" type="" value="5" />
+    <Tag enumID="199" type="" value="5" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; The next Dragon you play costs (2) less.</Tag>
+    <Tag enumID="200" type="" value="24" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Everybody wants someone to snuggle with. Even giant armored scaly draconic beasts of destruction.</Tag>
+    <Tag enumID="342" type="String">Raymond Swanland</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating General Drakkisath in Blackrock Spire.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating General Drakkisath in Blackrock Spire.</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="cb922037-0640-489f-a62c-5f00a606f6d9" />
+  </Entity>
+  <Entity version="2" CardID="BRM_018e">
+    <Tag enumID="185" type="String">Unchained!</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="202" type="" value="6" />
+    <Tag enumID="199" type="" value="5" />
+    <Tag enumID="184" type="String">Your next Dragon costs (2) less.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Power definition="f42aa4ac-d9ee-474c-a160-a7ad81a5e295" />
+    <Power definition="1f42c581-7140-4208-99c1-fcc72272be11" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="BRM_019">
+    <Tag enumID="185" type="String">Grim Patron</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="3" />
+    <Tag enumID="184" type="String">Whenever this minion survives damage, summon another Grim Patron.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">If you love getting your face punched, come to the Grim Guzzler!</Tag>
+    <Tag enumID="342" type="String">Bobby Chiu</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating The Grim Guzzler in Blackrock Depths.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating The Grim Guzzler in Blackrock Depths.</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="2f688989-28f2-4e13-8c73-c51d960256a3" />
+    <Power definition="838c52ff-a769-43a8-8338-14618ddd8aa9" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="True" />
+  </Entity>
+  <Entity version="2" CardID="BRM_020">
+    <Tag enumID="185" type="String">Dragonkin Sorcerer</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="5" />
+    <Tag enumID="184" type="String">Whenever you target this minion with a spell, gain +1/+1.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="200" type="" value="24" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="351" type="String">Dragonkin Sorcerers be all "I'm a wizard" and everyone else be all "daaaaang".</Tag>
+    <Tag enumID="342" type="String">Edouard Guiton &amp; Stuido HIVE</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Nefarian in the Hidden Laboratory.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Nefarian in the Hidden Laboratory.</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="6ed10337-6784-4627-aa1e-d09998306b6c" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="BRM_022">
+    <Tag enumID="185" type="String">Dragon Egg</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="47" type="" value="0" />
+    <Tag enumID="45" type="" value="2" />
+    <Tag enumID="184" type="String">Whenever this minion takes damage, summon a 2/1 Whelp.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Think of them as bullets for your dragon gun.</Tag>
+    <Tag enumID="342" type="String">Jaemin Kim</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Rend Blackhand in Blackrock Spire.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Rend Blackhand in Blackrock Spire.</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="8c385f8c-3063-44f8-9ce9-b9f39c677fb0" />
+    <Power definition="4e2af0df-689f-439b-96ab-df719f12d6a9" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="BRM_022t">
+    <Tag enumID="185" type="String">Black Whelp</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="1" />
+    <Tag enumID="200" type="" value="24" />
+    <Tag enumID="342" type="String">Jaemin Kim</Tag>
+  </Entity>
+  <Entity version="2" CardID="BRM_024">
+    <Tag enumID="185" type="String">Drakonid Crusher</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="6" />
+    <Tag enumID="47" type="" value="6" />
+    <Tag enumID="45" type="" value="6" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; If your opponent has 15 or less Health, gain +3/+3.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="200" type="" value="24" />
+    <Tag enumID="351" type="String">Drakonids were created to have all the bad parts of a dragon in the form of a humaniod. But, like, why?</Tag>
+    <Tag enumID="342" type="String">Slawomir Maniak</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Atramedes in the Hidden Laboratory.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Atramedes in the Hidden Laboratory.</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="e42a93cb-5e2c-4a03-a412-f7c558666910" />
+    <Power definition="c2968bcd-05d4-48e1-8485-c0c33274083c" />
+  </Entity>
+  <Entity version="2" CardID="BRM_025">
+    <Tag enumID="185" type="String">Volcanic Drake</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="6" />
+    <Tag enumID="47" type="" value="6" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="200" type="" value="24" />
+    <Tag enumID="184" type="String">Costs (1) less for each minion that died this turn.</Tag>
+    <Tag enumID="351" type="String">Volcanic Drakes breathe lava instead of fire. The antacid vendor at Thorium Point does a brisk business with them.</Tag>
+    <Tag enumID="342" type="String">Lucas Graciano</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Omnotron Defense System in the Hidden Laboratory.</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Omnotron Defense System in the Hidden Laboratory.</Tag>
+    <Power definition="7765d650-0a64-42a1-b9e8-64e8b7eee7cd" />
+  </Entity>
+  <Entity version="2" CardID="BRM_026">
+    <MasterPower>b4fdb4df-17ae-45fd-a77a-31ea2cbf9169</MasterPower>
+    <Tag enumID="185" type="String">Hungry Dragon</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="5" />
+    <Tag enumID="45" type="" value="6" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; Summon a random 1-Cost minion for your opponent.</Tag>
+    <Tag enumID="200" type="" value="24" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="351" type="String">Hungry Hungry Dragon is NOT a fun game.</Tag>
+    <Tag enumID="342" type="String">John Polidora</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Chromaggus in Blackwing Lair.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Chromaggus in Blackwing Lair.</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="b4fdb4df-17ae-45fd-a77a-31ea2cbf9169" />
+  </Entity>
+  <Entity version="2" CardID="BRM_027">
+    <Tag enumID="185" type="String">Majordomo Executus</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="5" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="9" />
+    <Tag enumID="47" type="" value="9" />
+    <Tag enumID="45" type="" value="7" />
+    <Tag enumID="114" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Deathrattle:&lt;/b&gt; Replace your hero with Ragnaros, the Firelord.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">You thought Executus turned you into Ragnaros, but really Ragnaros was in you the whole time.</Tag>
+    <Tag enumID="342" type="String">Alex Horley Orlandelli</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing Molten Core.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing Molten Core.</Tag>
+    <Tag enumID="217" type="" value="1" />
+    <Power definition="c796fb00-9c91-4e0f-8881-e36dd2c13952" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="BRM_027h">
+    <Tag enumID="185" type="String">Ragnaros the Firelord</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="202" type="" value="3" />
+    <Tag enumID="45" type="" value="8" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+  </Entity>
+  <Entity version="2" CardID="BRM_027p">
+    <MasterPower>cd017d6f-ce26-4684-8084-2d20f6206b26</MasterPower>
+    <Tag enumID="185" type="String">DIE, INSECT!</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="202" type="" value="10" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="184" type="String">&lt;b&gt;Hero Power&lt;/b&gt;
+Deal 8 damage to a random enemy.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Power definition="cd017d6f-ce26-4684-8084-2d20f6206b26" />
+  </Entity>
+  <Entity version="2" CardID="BRM_027pH">
+    <MasterPower>b3116152-764c-46b9-a42a-5f9b5861aa15</MasterPower>
+    <Tag enumID="185" type="String">DIE, INSECTS!</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="202" type="" value="10" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="184" type="String">&lt;b&gt;Hero Power&lt;/b&gt;
+Deal 8 damage to a random enemy. TWICE.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Power definition="b3116152-764c-46b9-a42a-5f9b5861aa15" />
+  </Entity>
+  <Entity version="2" CardID="BRM_028">
+    <Tag enumID="185" type="String">Emperor Thaurissan</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="5" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="6" />
+    <Tag enumID="47" type="" value="5" />
+    <Tag enumID="45" type="" value="5" />
+    <Tag enumID="114" type="" value="1" />
+    <Tag enumID="184" type="String">At the end of your turn, reduce the Cost of cards in your hand by (1).</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">His second greatest regret is summoning an evil Firelord who enslaved his entire people.</Tag>
+    <Tag enumID="342" type="String">Wayne Reynolds</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing Blackrock Depths.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing Blackrock Depths.</Tag>
+    <Power definition="61826561-9d9d-4565-8e6e-6bac9c578cc5" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="BRM_028e">
+    <Tag enumID="185" type="String">Imperial Favor</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="202" type="" value="6" />
+    <Tag enumID="184" type="String">Costs (1) less.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Power definition="83c5012c-47df-4d74-8f62-eedc48821ca4" />
+  </Entity>
+  <Entity version="2" CardID="BRM_029">
+    <MasterPower>b73f789f-49d4-4ce7-9575-7dac07d943c5</MasterPower>
+    <Tag enumID="185" type="String">Rend Blackhand</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="5" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="47" type="" value="8" />
+    <Tag enumID="114" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; If you're holding a Dragon, destroy a &lt;b&gt;Legendary&lt;/b&gt; minion.</Tag>
+    <Tag enumID="325" type="String">Destroy a Legend.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="48" type="" value="7" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="351" type="String">Rend believes he is the True Warchief of the Horde and he keeps editing the wikipedia page for "Warchief of the Horde" to include his picture.</Tag>
+    <Tag enumID="342" type="String">Alex Horley</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing Blackrock Spire.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing Blackrock Spire.</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="b73f789f-49d4-4ce7-9575-7dac07d943c5">
+      <PlayRequirement reqID="51" param="" />
+      <PlayRequirement reqID="52" param="" />
+      <PlayRequirement reqID="1" param="" />
+    </Power>
+    <Power definition="fd2a7882-ee03-4244-89bc-9de9cbdaae9a" />
+  </Entity>
+  <Entity version="2" CardID="BRM_030">
+    <MasterPower>53314cea-d1cd-4427-b81f-3656d2483a6a</MasterPower>
+    <Tag enumID="185" type="String">Nefarian</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="5" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="9" />
+    <Tag enumID="47" type="" value="8" />
+    <Tag enumID="45" type="" value="8" />
+    <Tag enumID="114" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; Add 2 random spells to your hand &lt;i&gt;(from your opponent's class)&lt;/i&gt;.</Tag>
+    <Tag enumID="200" type="" value="24" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">They call him "Blackwing" because he's a black dragon...... and he's got wings.</Tag>
+    <Tag enumID="342" type="String">Ruan Jia</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing the Hidden Laboratory.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating every boss in Blackrock Mountain!</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="53314cea-d1cd-4427-b81f-3656d2483a6a" />
+  </Entity>
+  <Entity version="2" CardID="BRM_030t">
+    <MasterPower>08f9c982-ce76-4607-811e-8be046b930d8</MasterPower>
+    <Tag enumID="185" type="String">Tail Swipe</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="184" type="String">Deal $4 damage.</Tag>
+    <Power definition="08f9c982-ce76-4607-811e-8be046b930d8">
+      <PlayRequirement reqID="11" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="BRM_031">
+    <Tag enumID="185" type="String">Chromaggus</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="5" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="8" />
+    <Tag enumID="47" type="" value="6" />
+    <Tag enumID="45" type="" value="8" />
+    <Tag enumID="114" type="" value="1" />
+    <Tag enumID="184" type="String">Whenever you draw a card, put another copy into your hand.</Tag>
+    <Tag enumID="200" type="" value="24" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Left head and right head can never agree about what to eat for dinner, so they always end up just eating ramen again.</Tag>
+    <Tag enumID="342" type="String">Todd Lockwood</Tag>
+    <Tag enumID="365" type="String">Can be crafted after completing Blackwing Lair.</Tag>
+    <Tag enumID="364" type="String">Unlocked by completing Blackwing Lair.</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="1e34bafa-8083-4223-a031-2c5b0ffdcbad" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="BRM_033">
+    <MasterPower>26d8ee9b-29bd-4623-a247-a9ca4febbabe</MasterPower>
+    <Tag enumID="185" type="String">Blackwing Technician</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; If you're holding a Dragon, gain +1/+1. </Tag>
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="201" type="" value="3" />
+    <Tag enumID="351" type="String">This is who you go to when your Blackwing needs a tune up. Don't go to a cut rate Blackwing tune up shop!</Tag>
+    <Tag enumID="342" type="String">Matt Dixon</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Baron Geddon in Molten Core.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Baron Geddon in Molten Core.</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="26d8ee9b-29bd-4623-a247-a9ca4febbabe" />
+    <Power definition="8f248cb1-3f5f-44fa-936c-9abbac311881" />
+  </Entity>
+  <Entity version="2" CardID="BRM_034">
+    <MasterPower>a86449fe-3ea4-4fee-97cb-ea8df777e2b1</MasterPower>
+    <Tag enumID="185" type="String">Blackwing Corruptor</Tag>
+    <Tag enumID="183" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="47" type="" value="5" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry&lt;/b&gt;: If you're holding a Dragon, deal 3 damage.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="201" type="" value="3" />
+    <Tag enumID="351" type="String">He got his name when he gave Blackwing some comic books and rock &amp; roll records.</Tag>
+    <Tag enumID="342" type="String">Greg Staples</Tag>
+    <Tag enumID="325" type="String">Deal 3 damage.</Tag>
+    <Tag enumID="365" type="String">Can be crafted after defeating Maloriak in the Hidden Laboratory.</Tag>
+    <Tag enumID="364" type="String">Unlocked by defeating Maloriak in the Hidden Laboratory.</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="a86449fe-3ea4-4fee-97cb-ea8df777e2b1">
+      <PlayRequirement reqID="51" param="" />
+    </Power>
+    <Power definition="c290df70-1f57-419a-b1b4-6f9c6ec1cc06" />
+  </Entity>
 </CardDefs> 

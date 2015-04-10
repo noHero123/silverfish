@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "114.1";
+        public string versionnumber = "115.0";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -62,6 +62,26 @@ namespace HREngine.Bots
 
         Minion ownHero;
         Minion enemyHero;
+
+
+        // NEW VALUES#################################################################################################################
+        // NEW VALUES#################################################################################################################
+        // NEW VALUES#################################################################################################################
+
+        int numberMinionsDiedThisTurn = 0;//todo need that value
+        int ownCurrentOverload = 0;//todo get them! = number of overloaded Manacrystals for CURRENT turn (NOT RECALL_OWED !)
+        int enemyOverload = 0;//todo need that value maybe
+        int ownDragonConsort = 0;
+        int enemyDragonConsort = 0;
+        int ownLoathebs = 0;
+        int enemyLoathebs = 0;
+        int ownMillhouse = 0;
+        int enemyMillhouse = 0;
+        int ownKirintor = 0;
+        int enemyKirintor = 0;
+        int ownPrepa = 0;
+        int enemyPrepa = 0;
+
 
         private static Silverfish instance;
 
@@ -142,7 +162,10 @@ namespace HREngine.Bots
                 if (m.Hp >= 1) this.numOptionPlayedThisTurn += m.numAttacksThisTurn;
             }
 
-            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ueberladung, ownPlayer.GetHero().GetEntityId(), enemyPlayer.GetHero().GetEntityId());
+            
+
+            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ueberladung, ownPlayer.GetHero().GetEntityId(), enemyPlayer.GetHero().GetEntityId(), this.numberMinionsDiedThisTurn, this.ownCurrentOverload, this.enemyOverload);
+            Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrepa);
             Hrtprozis.Instance.updateSecretStuff(this.ownSecretList, this.enemySecretCount);
 
             Hrtprozis.Instance.updateOwnHero(this.ownHeroWeapon, this.heroWeaponAttack, this.heroWeaponDurability, this.heroname, this.heroAbility, this.ownAbilityisReady, this.ownHero);
@@ -245,7 +268,7 @@ namespace HREngine.Bots
             this.numMinionsPlayedThisTurn = ownPlayer.GetTag(HRGameTag.NUM_MINIONS_PLAYED_THIS_TURN);
             this.cardsPlayedThisTurn = ownPlayer.GetTag(HRGameTag.NUM_CARDS_PLAYED_THIS_TURN);
             //if (ownPlayer.HasCombo()) this.cardsPlayedThisTurn = 1;
-            this.ueberladung = ownPlayer.GetTag(HRGameTag.RECALL_OWED);
+            
 
             //get weapon stuff
             this.ownHeroWeapon = "";
@@ -375,6 +398,49 @@ namespace HREngine.Bots
             }
 
             this.ownHero.loadEnchantments(miniEnchlist, ownhero.GetTag(HRGameTag.CONTROLLER));
+
+            ueberladung = ownhero.GetTag(HRGameTag.RECALL_OWED);//was at the start, but copied it over here :D , its german for overload :D
+            //Reading new values:###################################################################################################
+            //ToDo:
+            this.numberMinionsDiedThisTurn = 0;// HRGameTag.NUM_MINIONS_KILLED_THIS_TURN;
+
+            //this should work (hope i didnt oversee a value :D)
+            this.ownCurrentOverload = ownhero.GetTag(HRGameTag.RECALL);
+            this.enemyOverload = enemyhero.GetTag(HRGameTag.RECALL_OWED);
+
+            //count buffs off !!players!! (players and not heros) (like preparation, kirintor-buff and stuff)
+            // hope this works, dont own these cards to test where its attached
+            int owncontrollerblubb = ownhero.GetTag(HRGameTag.CONTROLLER) + 1; // controller = 1 or 2, but entity with 1 is the board -> +1
+            int enemycontrollerblubb = enemyhero.GetTag(HRGameTag.CONTROLLER) + 1;// controller = 1 or 2, but entity with 1 is the board -> +1
+            foreach (HREntity ent in allEntitys.Values)
+            {
+                if (ent.GetTag(HRGameTag.ATTACHED) == owncontrollerblubb && ent.GetTag(HRGameTag.ZONE) == 1) //1==play
+                {
+                    CardDB.cardIDEnum id = CardDB.Instance.cardIdstringToEnum(ent.GetCardId());
+                    if (id == CardDB.cardIDEnum.NEW1_029t) this.ownMillhouse++;
+                    if (id == CardDB.cardIDEnum.FP1_030e) this.ownLoathebs++;
+                    if (id == CardDB.cardIDEnum.BRM_018e) this.ownDragonConsort++;
+                    if (id == CardDB.cardIDEnum.EX1_612o) this.ownKirintor++;
+                    if (id == CardDB.cardIDEnum.EX1_145o) this.ownPrepa++;
+                }
+
+                if (ent.GetTag(HRGameTag.ATTACHED) == enemycontrollerblubb && ent.GetTag(HRGameTag.ZONE) == 1) //1==play
+                {
+                    CardDB.cardIDEnum id = CardDB.Instance.cardIdstringToEnum(ent.GetCardId());
+                    if (id == CardDB.cardIDEnum.NEW1_029t) this.enemyMillhouse++;
+                    if (id == CardDB.cardIDEnum.FP1_030e) this.enemyLoathebs++;
+                    if (id == CardDB.cardIDEnum.BRM_018e) this.enemyDragonConsort++;
+                    // not needef for enemy, because its lasting only for his turn
+                    //if (id == CardDB.cardIDEnum.EX1_612o) this.enemyKirintor++;
+                    //if (id == CardDB.cardIDEnum.EX1_145o) this.enemyPrepa++;
+                }
+
+            }
+
+            //TODO test Bolvar Fordragon but it will be on his card :D
+            //Reading new values end################################
+
+            
 
             miniEnchlist.Clear();
 
@@ -615,7 +681,7 @@ namespace HREngine.Bots
                     handCards.Add(hc);
                     this.anzcards++;
                 }
-
+                //maybe check if it has BRM_028e on it?
 
             }
 

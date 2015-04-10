@@ -13,7 +13,7 @@ namespace HREngine.Bots
         {
             int dmg = (ownplay) ? p.getSpellDamageDamage(5) : p.getEnemySpellDamageDamage(5);
             p.minionGetDamageOrHeal(target, dmg);
-            if (ownplay) p.ueberladung += 2;
+            if (ownplay) { p.owedRecall+=2; } else { p.enemyRecall+=2; };
 		}
 
 	}

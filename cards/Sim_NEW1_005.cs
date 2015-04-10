@@ -10,7 +10,7 @@ namespace HREngine.Bots
 //    combo:/ lasst einen diener auf die hand seines besitzers zurückkehren.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            if (p.cardsPlayedThisTurn >= 1) p.minionReturnToHand(target,target.own, 0);
+            if (p.cardsPlayedThisTurn >= 1 && target != null) p.minionReturnToHand(target,target.own, 0);
 		}
 
 

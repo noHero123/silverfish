@@ -15,7 +15,7 @@ namespace HREngine.Bots
             {
                 if (c.type == CardDB.cardtype.SPELL && c.cost == 1)
                 {
-                    p.drawACard(CardDB.cardName.shieldedminibot, wasOwnCard, true);
+                    p.drawACard(CardDB.cardIDEnum.GVG_058, wasOwnCard, true);
                 }
             }
         }

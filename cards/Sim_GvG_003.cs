@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            p.drawACard(CardDB.cardName.unknown, ownplay, true);
+            p.drawACard(CardDB.cardIDEnum.None, ownplay, true);
         }
 
     }

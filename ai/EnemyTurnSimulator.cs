@@ -41,7 +41,7 @@
             int deep = 0;
             int enemMana = Math.Min(rootfield.enemyMaxMana + 1, 10);
 
-            if (playaround && !rootfield.loatheb)
+            if (playaround && rootfield.ownloatheb == 0)
             {
                 float oldval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
                 posmoves[0].value = int.MinValue;
@@ -60,7 +60,7 @@
 
 
             //play ability!
-            if (posmoves[0].enemyAbilityReady && enemMana >= 2 && posmoves[0].enemyHeroAblility.card.canplayCard(posmoves[0], 0) && !rootfield.loatheb)
+            if (posmoves[0].enemyAbilityReady && enemMana >= 2 && posmoves[0].enemyHeroAblility.card.canplayCard(posmoves[0], 0) && rootfield.ownloatheb == 0)
             {
                 int abilityPenality = 0;
 
@@ -235,7 +235,7 @@
                 {
                     if (p.enemyDeckSize >= 1)
                     {
-                        p.drawACard(CardDB.cardName.unknown, false);
+                        p.drawACard(CardDB.cardIDEnum.None, false);
                     }
                 }
                 if (m.name == CardDB.cardName.northshirecleric)
@@ -250,7 +250,7 @@
                     {
                         if (p.enemyDeckSize >= 1)
                         {
-                            p.drawACard(CardDB.cardName.unknown, false);
+                            p.drawACard(CardDB.cardIDEnum.None, false);
                         }
                     }
                 }
@@ -304,7 +304,7 @@
 
                 if (m.name == CardDB.cardName.undertaker && p.enemyAnzCards >= 2)
                 {
-                    p.minionGetBuffed(m, 1, 1);
+                    p.minionGetBuffed(m, 1, 0);
                 }
 
                 if (m.name == CardDB.cardName.frothingberserker && p.enemyMinions.Count + p.ownMinions.Count >= 3)

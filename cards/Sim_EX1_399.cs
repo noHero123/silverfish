@@ -12,7 +12,7 @@ namespace HREngine.Bots
         {
             if (triggerEffectMinion.anzGotDmg>=1)
             {
-                triggerEffectMinion.Angr += 3 * triggerEffectMinion.anzGotDmg;
+                p.minionGetBuffed(triggerEffectMinion, 3 * triggerEffectMinion.anzGotDmg, 0);
                 triggerEffectMinion.anzGotDmg = 0;
             }
         }
