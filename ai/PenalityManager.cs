@@ -272,7 +272,7 @@
             int pen = 0;
             //buff enemy?
             if (!this.healthBuffDatabase.ContainsKey(name)) return 0;
-            if (!target.own && !this.tauntBuffDatabase.ContainsKey(name))
+            if (target!=null && !target.own && !this.tauntBuffDatabase.ContainsKey(name))
             {
                 pen = 500;
             }
