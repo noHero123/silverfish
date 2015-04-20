@@ -168,7 +168,7 @@ namespace HREngine.Bots
                 if (m.Hp >= 1) this.numOptionPlayedThisTurn += m.numAttacksThisTurn;
             }
 
-            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ueberladung, ownPlayer.GetHero().GetEntityId(), enemyPlayer.GetHero().GetEntityId(), this.numberMinionsDiedThisTurn, this.ownCurrentOverload, this.enemyOverload);
+            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ueberladung, TritonHs.OurHero.EntityId, TritonHs.EnemyHero.EntityId, this.numberMinionsDiedThisTurn, this.ownCurrentOverload, this.enemyOverload);
             Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrepa);
             Hrtprozis.Instance.updateSecretStuff(this.ownSecretList, this.enemySecretCount);
 
@@ -440,8 +440,9 @@ namespace HREngine.Bots
             this.numberMinionsDiedThisTurn = 0;// GameTag.NUM_MINIONS_KILLED_THIS_TURN;
 
             //this should work (hope i didnt oversee a value :D)
-            this.ownCurrentOverload = ownhero.GetTag(GAME_TAG.RECALL);
-            this.enemyOverload = enemyhero.GetTag(GAME_TAG.RECALL_OWED);
+            //THIS IS WRONG CHANGE THIS (should be the ownPLAYER and enemyPLAYER
+            this.ownCurrentOverload = ownHeroCard.GetTag(GAME_TAG.RECALL);
+            this.enemyOverload = enemHeroCard.GetTag(GAME_TAG.RECALL_OWED);
             
             //count buffs off !!players!! (players and not heros) (like preparation, kirintor-buff and stuff)
             // hope this works, dont own these cards to test where its attached
@@ -459,7 +460,7 @@ namespace HREngine.Bots
                     if (id == CardDB.cardIDEnum.EX1_145o) this.ownPrepa++;
                 }
 
-                if (ent.GetTag(HRGameTag.ATTACHED) == enemycontrollerblubb && ent.GetTag(GAME_TAG.ZONE) == 1) //1==play
+                if (ent.GetTag(GAME_TAG.ATTACHED) == enemycontrollerblubb && ent.GetTag(GAME_TAG.ZONE) == 1) //1==play
                 {
                     CardDB.cardIDEnum id = CardDB.Instance.cardIdstringToEnum(ent.Id);
                     if (id == CardDB.cardIDEnum.NEW1_029t) this.enemyMillhouse++;
