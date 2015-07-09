@@ -471,7 +471,15 @@
                 if (s == "" || s == " ") continue;
                 string id = s.Split(',')[0];
                 int anz = Convert.ToInt32(s.Split(',')[1]);
-                CardDB.cardIDEnum cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
+                CardDB.cardIDEnum cdbe = CardDB.cardIDEnum.None;
+                try
+                {
+                    cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
+                }
+                catch
+                {
+
+                }
                 this.ownCardsPlayed.Add(cdbe, anz);
                 if (cdbe == CardDB.cardIDEnum.FP1_015)
                 {
@@ -509,7 +517,15 @@
                 if (s == "" || s == " ") continue;
                 string id = s.Split(',')[0];
                 int anz = Convert.ToInt32(s.Split(',')[1]);
-                CardDB.cardIDEnum cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
+                CardDB.cardIDEnum cdbe = CardDB.cardIDEnum.None;
+                try
+                {
+                    cdbe = (CardDB.cardIDEnum)Convert.ToInt32(id);
+                }
+                catch
+                {
+ 
+                }
                 this.enemyCardsPlayed.Add(cdbe, anz);
                 if (cdbe == CardDB.cardIDEnum.FP1_015) this.feugenDead = true;
                 if (cdbe == CardDB.cardIDEnum.FP1_014) this.stalaggDead = true;
