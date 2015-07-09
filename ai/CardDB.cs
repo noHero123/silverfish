@@ -309,6 +309,15 @@
             HERO_07,
             HERO_08,
             HERO_09,
+            HERO_01a,
+            HERO_02a,
+            HERO_03a,
+            HERO_04a,
+            HERO_05a,
+            HERO_06a,
+            HERO_07a,
+            HERO_08a,
+            HERO_09a,
             hexfrog,
             NEW1_003,
             NEW1_004,
@@ -1422,6 +1431,15 @@
             if (s == "HERO_07") return CardDB.cardIDEnum.HERO_07;
             if (s == "HERO_08") return CardDB.cardIDEnum.HERO_08;
             if (s == "HERO_09") return CardDB.cardIDEnum.HERO_09;
+            if (s == "HERO_01a") return CardDB.cardIDEnum.HERO_01a;
+            if (s == "HERO_02a") return CardDB.cardIDEnum.HERO_02a;
+            if (s == "HERO_03a") return CardDB.cardIDEnum.HERO_03a;
+            if (s == "HERO_04a") return CardDB.cardIDEnum.HERO_04a;
+            if (s == "HERO_05a") return CardDB.cardIDEnum.HERO_05a;
+            if (s == "HERO_06a") return CardDB.cardIDEnum.HERO_06a;
+            if (s == "HERO_07a") return CardDB.cardIDEnum.HERO_07a;
+            if (s == "HERO_08a") return CardDB.cardIDEnum.HERO_08a;
+            if (s == "HERO_09a") return CardDB.cardIDEnum.HERO_09a;
             if (s == "hexfrog") return CardDB.cardIDEnum.hexfrog;
             if (s == "NEW1_003") return CardDB.cardIDEnum.NEW1_003;
             if (s == "NEW1_004") return CardDB.cardIDEnum.NEW1_004;
@@ -6650,6 +6668,24 @@
                 case cardIDEnum.EX1_303:
                     return new Sim_EX1_303();
                 case cardIDEnum.HERO_09:
+                    return new Sim_HERO_09();
+                case cardIDEnum.HERO_01a://hero_xxa is same as hero_xx
+                    return new Sim_HERO_01();
+                case cardIDEnum.HERO_02a:
+                    return new Sim_HERO_02();
+                case cardIDEnum.HERO_03a:
+                    return new Sim_HERO_03();
+                case cardIDEnum.HERO_04a:
+                    return new Sim_HERO_04();
+                case cardIDEnum.HERO_05a:
+                    return new Sim_HERO_05();
+                case cardIDEnum.HERO_06a:
+                    return new Sim_HERO_06();
+                case cardIDEnum.HERO_07a:
+                    return new Sim_HERO_07();
+                case cardIDEnum.HERO_08a:
+                    return new Sim_HERO_08();
+                case cardIDEnum.HERO_09a:
                     return new Sim_HERO_09();
                 case cardIDEnum.EX1_067:
                     return new Sim_EX1_067();

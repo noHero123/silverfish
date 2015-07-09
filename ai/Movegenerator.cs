@@ -30,6 +30,19 @@
             for (int i = 1; i < 3; i++)
             {
                 CardDB.Card c = hc.card;
+
+                if (c.name == CardDB.cardName.darkwispers)
+                {
+                    if (i == 1)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_041a);
+                    }
+                    if (i == 2)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GVG_041b);
+                    }
+                }
+
                 if (c.name == CardDB.cardName.keeperofthegrove)
                 {
                     if (i == 1)

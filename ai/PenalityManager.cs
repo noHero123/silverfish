@@ -195,7 +195,7 @@
         private int getAttackBuffPenality(CardDB.Card card, Minion target, Playfield p, int choice, bool lethal)
         {
             CardDB.cardName name = card.name;
-            if (name == CardDB.cardName.darkwispers && choice != 2) return 0;
+            if (name == CardDB.cardName.darkwispers && choice != 1) return 0;
             int pen = 0;
             //buff enemy?
 
@@ -268,7 +268,7 @@
         private int getHPBuffPenality(CardDB.Card card, Minion target, Playfield p, int choice)
         {
             CardDB.cardName name = card.name;
-            if (name == CardDB.cardName.darkwispers && choice != 2) return 0;
+            if (name == CardDB.cardName.darkwispers && choice != 1) return 0;
             int pen = 0;
             //buff enemy?
             if (!this.healthBuffDatabase.ContainsKey(name)) return 0;
@@ -287,7 +287,7 @@
             //buff enemy?
             if (!this.tauntBuffDatabase.ContainsKey(name)) return 0;
             if (name == CardDB.cardName.markofnature && choice != 2) return 0;
-            if (name == CardDB.cardName.darkwispers && choice != 2) return 0;
+            if (name == CardDB.cardName.darkwispers && choice != 1) return 0;
 
             if (!target.isHero && !target.own)
             {
@@ -2211,7 +2211,7 @@
             this.attackBuffDatabase.Add(CardDB.cardName.uproot, 5);
             this.attackBuffDatabase.Add(CardDB.cardName.velenschosen, 2);
 
-            this.attackBuffDatabase.Add(CardDB.cardName.darkwispers, 5);//choice 2
+            this.attackBuffDatabase.Add(CardDB.cardName.darkwispers, 5);//choice 1
             this.attackBuffDatabase.Add(CardDB.cardName.whirlingblades, 1);
 
         }
@@ -2228,7 +2228,7 @@
             this.healthBuffDatabase.Add(CardDB.cardName.powerwordshield, 2);
             this.healthBuffDatabase.Add(CardDB.cardName.rampage, 3);
             this.healthBuffDatabase.Add(CardDB.cardName.velenschosen, 4);
-            this.healthBuffDatabase.Add(CardDB.cardName.darkwispers, 5);//choice2
+            this.healthBuffDatabase.Add(CardDB.cardName.darkwispers, 5);//choice1
             this.healthBuffDatabase.Add(CardDB.cardName.upgradedrepairbot, 4);
             this.healthBuffDatabase.Add(CardDB.cardName.armorplating, 1);
             //this.healthBuffDatabase.Add(CardDB.cardName.rooted, 5);

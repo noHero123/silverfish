@@ -139,7 +139,7 @@
                 if (p.ownHeroName == HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (a.target.isHero && !a.target.own)) retval -= 11;
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
-            if (usecoin) retval -= 5 * p.manaTurnEnd;
+            if (usecoin) retval -= 20 * p.manaTurnEnd;
             if (p.manaTurnEnd >= 2 && !useAbili)
             {
                 retval -= 10;

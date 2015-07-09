@@ -4,20 +4,20 @@ using System.Text;
 
 namespace HREngine.Bots
 {
+
     class Sim_GVG_041a : SimTemplate //Dark Wispers
     {
 
-        //   Summon 5 Wisps;
+        //   Give a minion +5/+5 and Taunt&lt.
 
-        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_231);
+
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            for (int i = 0; i < 5; i++)
+            if (target != null)
             {
-                int posi = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
-                p.callKid(kid, posi, ownplay);
+                p.minionGetBuffed(target, 5, 5);
+                target.taunt = true;
             }
-            
         }
 
 

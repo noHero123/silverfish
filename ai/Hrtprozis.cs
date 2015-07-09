@@ -183,39 +183,39 @@
             {
                 retval = "hogger";
             }
-            if (s == "HERO_05")
+            if (s == "HERO_05" || s == "HERO_05a")
             {
                 retval = "hunter";
             }
-            if (s == "HERO_09")
+            if (s == "HERO_09" || s == "HERO_09a")
             {
                 retval = "priest";
             }
-            if (s == "HERO_06")
+            if (s == "HERO_06" || s == "HERO_06a")
             {
                 retval = "druid";
             }
-            if (s == "HERO_07")
+            if (s == "HERO_07" || s == "HERO_07a")
             {
                 retval = "warlock";
             }
-            if (s == "HERO_03")
+            if (s == "HERO_03" || s == "HERO_03a")
             {
                 retval = "thief";
             }
-            if (s == "HERO_04")
+            if (s == "HERO_04" || s == "HERO_04a")
             {
                 retval = "pala";
             }
-            if (s == "HERO_01")
+            if (s == "HERO_01" || s == "HERO_01a")
             {
                 retval = "warrior";
             }
-            if (s == "HERO_02")
+            if (s == "HERO_02" || s == "HERO_02a")
             {
                 retval = "shaman";
             }
-            if (s == "HERO_08")
+            if (s == "HERO_08" || s == "HERO_08a")
             {
                 retval = "mage";
             }

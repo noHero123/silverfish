@@ -1,2 +1,3 @@
+-take programm.cs + add ai + cards folder from github
 -just build a console-execute out of that :D
 -add ai and cards-folders from this github to that project to compile

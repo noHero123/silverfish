@@ -3428,6 +3428,48 @@
     <Tag enumID="184" type="String">Somehow, the card you USED to have has been deleted.  Here, have this one instead!</Tag>
     <Tag enumID="351" type="String">Even your flavor text has been deleted. Dang.</Tag>
   </Entity>
+  <Entity version="2" CardID="HERO_01a">
+    <MasterPower>0a338004-0e43-43b8-a3e0-c69ff9e268d9</MasterPower>
+    <Tag enumID="185" type="String">Magni Barbabronce</Tag>
+    <Tag enumID="183" type="" value="17" />
+    <Tag enumID="203" type="" value="4" />
+    <Tag enumID="202" type="" value="3" />
+    <Tag enumID="45" type="" value="30" />
+    <Tag enumID="199" type="" value="10" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="380" type="" value="725" />
+    <Power definition="0a338004-0e43-43b8-a3e0-c69ff9e268d9" />
+  </Entity>
+  <Entity version="2" CardID="HERO_05a">
+    <MasterPower>d21de576-161d-495c-bcf3-d28f18a6aefe</MasterPower>
+    <Tag enumID="185" type="String">Alleria Brisaveloz</Tag>
+    <Tag enumID="183" type="" value="17" />
+    <Tag enumID="203" type="" value="4" />
+    <Tag enumID="202" type="" value="3" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="45" type="" value="30" />
+    <Tag enumID="199" type="" value="3" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="380" type="" value="229" />
+    <Power definition="d21de576-161d-495c-bcf3-d28f18a6aefe" />
+  </Entity>
+  <Entity version="2" CardID="HERO_08a">
+    <MasterPower>c79bc681-e960-455b-a38d-a5c0b35aad99</MasterPower>
+    <Tag enumID="185" type="String">Medivh</Tag>
+    <Tag enumID="183" type="" value="17" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="4" />
+    <Tag enumID="202" type="" value="3" />
+    <Tag enumID="45" type="" value="30" />
+    <Tag enumID="199" type="" value="4" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="380" type="" value="807" />
+    <Power definition="c79bc681-e960-455b-a38d-a5c0b35aad99" />
+  </Entity>
   <Entity version="2" CardID="HERO_01">
     <MasterPower>5652cff6-0c7b-4f82-855d-7042d8f775fb</MasterPower>
     <Tag enumID="185" type="String">Garrosh Hellscream</Tag>
