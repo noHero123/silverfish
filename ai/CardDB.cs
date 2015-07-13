@@ -1431,15 +1431,17 @@
             if (s == "HERO_07") return CardDB.cardIDEnum.HERO_07;
             if (s == "HERO_08") return CardDB.cardIDEnum.HERO_08;
             if (s == "HERO_09") return CardDB.cardIDEnum.HERO_09;
-            if (s == "HERO_01a") return CardDB.cardIDEnum.HERO_01a;
-            if (s == "HERO_02a") return CardDB.cardIDEnum.HERO_02a;
-            if (s == "HERO_03a") return CardDB.cardIDEnum.HERO_03a;
-            if (s == "HERO_04a") return CardDB.cardIDEnum.HERO_04a;
-            if (s == "HERO_05a") return CardDB.cardIDEnum.HERO_05a;
-            if (s == "HERO_06a") return CardDB.cardIDEnum.HERO_06a;
-            if (s == "HERO_07a") return CardDB.cardIDEnum.HERO_07a;
-            if (s == "HERO_08a") return CardDB.cardIDEnum.HERO_08a;
-            if (s == "HERO_09a") return CardDB.cardIDEnum.HERO_09a;
+
+            if (s == "HERO_01a") return CardDB.cardIDEnum.HERO_01;
+            if (s == "HERO_02a") return CardDB.cardIDEnum.HERO_02;
+            if (s == "HERO_03a") return CardDB.cardIDEnum.HERO_03;
+            if (s == "HERO_04a") return CardDB.cardIDEnum.HERO_04;
+            if (s == "HERO_05a") return CardDB.cardIDEnum.HERO_05;
+            if (s == "HERO_06a") return CardDB.cardIDEnum.HERO_06;
+            if (s == "HERO_07a") return CardDB.cardIDEnum.HERO_07;
+            if (s == "HERO_08a") return CardDB.cardIDEnum.HERO_08;
+            if (s == "HERO_09a") return CardDB.cardIDEnum.HERO_09;
+
             if (s == "hexfrog") return CardDB.cardIDEnum.hexfrog;
             if (s == "NEW1_003") return CardDB.cardIDEnum.NEW1_003;
             if (s == "NEW1_004") return CardDB.cardIDEnum.NEW1_004;
@@ -2311,6 +2313,10 @@
         public enum cardName
         {
             unknown,
+            //new Heros################
+            magnibronzebeard,
+            alleriawindrunner,
+            medivh,
             //#####################################blackrockcards
             solemnvigil,
             flamewaker,
@@ -3157,6 +3163,10 @@
 
         public cardName cardNamestringToEnum(string s)
         {
+            //new heros:
+            if (s == "magnibronzebeard") return CardDB.cardName.garroshhellscream;
+            if (s == "alleriawindrunner") return CardDB.cardName.rexxar;
+            if (s == "medivh") return CardDB.cardName.jainaproudmoore;
 
             //brock:
             if (s == "solemnvigil") return CardDB.cardName.solemnvigil;

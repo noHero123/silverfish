@@ -3430,7 +3430,7 @@
   </Entity>
   <Entity version="2" CardID="HERO_01a">
     <MasterPower>0a338004-0e43-43b8-a3e0-c69ff9e268d9</MasterPower>
-    <Tag enumID="185" type="String">Magni Barbabronce</Tag>
+    <Tag enumID="185" type="String">Magni Bronzebeard</Tag>
     <Tag enumID="183" type="" value="17" />
     <Tag enumID="203" type="" value="4" />
     <Tag enumID="202" type="" value="3" />
@@ -3444,7 +3444,7 @@
   </Entity>
   <Entity version="2" CardID="HERO_05a">
     <MasterPower>d21de576-161d-495c-bcf3-d28f18a6aefe</MasterPower>
-    <Tag enumID="185" type="String">Alleria Brisaveloz</Tag>
+    <Tag enumID="185" type="String">Alleria Windrunner</Tag>
     <Tag enumID="183" type="" value="17" />
     <Tag enumID="203" type="" value="4" />
     <Tag enumID="202" type="" value="3" />
