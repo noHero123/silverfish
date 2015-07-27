@@ -1289,6 +1289,7 @@
                 else
                 {
                     if (!target.own) { return 500; }
+                    if (target.divineshild) { pen = 15; }
                     if (!target.Ready && !target.handcard.card.isSpecialMinion) { pen = 10; }
                     if (!target.Ready && !target.handcard.card.isSpecialMinion && target.Angr <= 2 && target.Hp <= 2) { pen = 15; }
                 }
@@ -2151,6 +2152,7 @@
             DamageTargetDatabase.Add(CardDB.cardName.crackle, 3);
             DamageTargetDatabase.Add(CardDB.cardName.implosion, 2);
             DamageTargetDatabase.Add(CardDB.cardName.cobrashot, 3);
+            DamageTargetDatabase.Add(CardDB.cardName.blackwingcorruptor, 3);
 
 
 
