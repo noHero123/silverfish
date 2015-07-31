@@ -103,7 +103,7 @@
             this.enemyAnzCards = anzenemycards;
         }
 
-
+        //not updated anymore!
         public void printcards(bool writeTobuffer = false)
         {
             help.logg("Own Handcards: ");

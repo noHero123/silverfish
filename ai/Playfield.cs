@@ -39,6 +39,16 @@
         public bool logging = false;
         public bool complete = false;
 
+        public bool isServer = false;
+        public Random randomGenerator = new Random();
+
+        //dont have to be copied! (server doesnt copy)
+        public List<Handmanager.Handcard> myDeck ;
+        public List<Handmanager.Handcard> enemyDeck ;
+        public List<Handmanager.Handcard> EnemyCards ;
+        public List<CardDB.cardIDEnum> EnemySecretsIDList ;
+        
+
         public int nextEntity = 70;
 
         public triggerCounter tempTrigger = new triggerCounter();
@@ -515,7 +525,7 @@
 
         public Playfield(Playfield p)
         {
-
+            this.isServer = p.isServer;
             this.nextEntity = p.nextEntity;
 
             this.isOwnTurn = p.isOwnTurn;
@@ -664,6 +674,155 @@
             this.tempanzEnemyCards = this.enemyAnzCards;
 
         }
+
+        public void swapAll()
+        {
+            ////copied form dfreelan (thx :D)
+
+            // minion counters----------------------------------------------------------------------
+
+            Swap(ref anzOwnRaidleader, ref anzEnemyRaidleader);
+            Swap(ref anzOwnStormwindChamps, ref anzEnemyStormwindChamps);
+            Swap(ref anzOwnTundrarhino, ref anzEnemyTundrarhino);
+            Swap(ref anzOwnTimberWolfs, ref anzEnemyTimberWolfs);
+            //Swap(ref anzMurlocWarleader, ref anzMurlocWarleader);//dont need to swapped, we have one int for both players
+            //Swap(ref anzGrimscaleOracle, ref anzGrimscaleOracle);//dont need to swapped, we have one int for both players
+            Swap(ref anzOwnAuchenaiSoulpriest, ref anzEnemyAuchenaiSoulpriest);
+            Swap(ref anzOwnsorcerersapprentice, ref anzEnemysorcerersapprentice);
+            Swap(ref anzOwnsorcerersapprenticeStarted, ref anzEnemysorcerersapprenticeStarted);
+            Swap(ref anzOwnSouthseacaptain, ref anzEnemySouthseacaptain);
+            Swap(ref anzOwnMalGanis, ref anzEnemyMalGanis);
+            Swap(ref anzOwnMechwarper, ref anzEnemyMechwarper);
+            Swap(ref anzOwnMechwarperStarted, ref anzEnemyMechwarperStarted);
+            Swap(ref weHavePlayedMillhouseManastorm, ref enemyHavePlayedMillhouseManastorm);
+            Swap(ref weHaveSteamwheedleSniper, ref enemyHaveSteamwheedleSniper);
+            Swap(ref doublepriest, ref enemydoublepriest);
+            Swap(ref ownDragonConsort, ref enemyDragonConsort);
+            Swap(ref ownBaronRivendare, ref enemyBaronRivendare);
+
+            Swap(ref tempanzOwnCards, ref tempanzEnemyCards);// for Goblin Sapper NEEDED?
+            Swap(ref this.ownSecretsIDList, ref EnemySecretsIDList);
+            enemySecretList.Clear();
+            enemySecretCount = this.EnemySecretsIDList.Count;
+
+            
+
+            //TODO: feugenDead = false;
+            //TODO: stalaggDead = false;
+
+            //TODO: public bool needGraveyard = false;
+
+            if(ownController == 1) 
+            {
+                ownController = 2;
+            }
+            else
+            {
+                ownController = 1;
+            }
+
+            Swap(ref enemyDeck, ref myDeck);
+            //swap mana
+            
+             Swap(ref ownHero, ref enemyHero);
+            Swap(ref ownHeroName, ref enemyHeroName);
+            swapReferences(ownWeaponName, enemyWeaponName);
+            Swap(ref ownWeaponAttack, ref enemyWeaponAttack);
+            Swap(ref ownWeaponDurability, ref enemyWeaponDurability);
+
+            // swap minions
+            Swap(ref ownMinions, ref enemyMinions);
+
+            if(diedMinions!=null) diedMinions.Clear();
+            Swap(ref owncards, ref EnemyCards);
+
+            Swap(ref spellpower, ref enemyspellpower);
+            Swap(ref ownloatheb, ref enemyloatheb);
+
+            ownloatheb = 0;
+            Swap(ref ownMaxMana, ref enemyMaxMana);
+
+            
+
+
+
+            anzMinionsDiedThisTurn = 0;
+            owncarddraw = 0;
+            enemycarddraw = 0;
+            playactions.Clear();
+            enemyAnzCards = owncards.Count;
+
+            playedmagierinderkirintor = false;
+            playedPreparation = false;
+            winzigebeschwoererin = 0;
+
+            //managespenst = 0;
+            
+
+        mobsplayedThisTurn = 0;
+        optionsPlayedThisTurn = 0;
+        cardsPlayedThisTurn = 0;
+
+        /*public int owedRecall = 0; //=recall
+        public int currentRecall = 0;
+        public int enemyRecall = 0;
+        public int enemyCurrentRecall = 0;//only needed for enemys turn sim.
+            */
+
+        enemyOptionsDoneThisTurn = 0;
+
+        lostDamage = 0;
+        lostHeal = 0;
+        lostWeaponDamage = 0;
+        Swap(ref ownDeckSize, ref enemyDeckSize);
+        
+            
+        Swap(ref ownHeroFatigue, ref enemyHeroFatigue);
+
+        ownAbilityReady = true;
+        enemyAbilityReady = true;
+
+        Swap(ref ownHeroAblility, ref enemyHeroAblility);
+        // just for saving which minion to revive with secrets (=the first one that died);
+        swapReferences(revivingOwnMinion, revivingEnemyMinion);
+
+
+            //count...
+            soeldnerDerVenture = 0;
+            beschwoerungsportal = 0;
+            nerubarweblord = 0;
+
+
+            foreach(Minion m in this.ownMinions)
+            {
+                if (m.silenced) continue;
+                if (m.name == CardDB.cardName.nerubarweblord) nerubarweblord++;
+                if (m.name == CardDB.cardName.summoningportal) beschwoerungsportal++;
+                if (m.name == CardDB.cardName.venturecomercenary) soeldnerDerVenture++;
+            }
+        }
+
+        static void Swap<T>(ref T lhs, ref T rhs)
+        {
+            T temp;
+            temp = lhs;
+            lhs = rhs;
+            rhs = temp;
+        }
+        public void swapReferences(Object obj1, Object obj2)
+        {
+            Object temp = obj1;
+            obj1 = obj2;
+            obj2 = temp;
+        }
+        public void setDecksAndHands(List<Handmanager.Handcard> ownDeck, List<Handmanager.Handcard> oppDeck, List<Handmanager.Handcard> oppCards)
+        {
+            this.myDeck = new List<Handmanager.Handcard>(ownDeck);
+            this.enemyDeck = new List<Handmanager.Handcard>(oppDeck);
+            this.EnemyCards = new List<Handmanager.Handcard>(oppCards);
+            this.EnemySecretsIDList = new List<CardDB.cardIDEnum>();
+        }
+
 
         public void copyValuesFrom(Playfield p)
         {
@@ -1837,42 +1996,59 @@
         //old one, will be replaced soon
         public void endTurn(bool simulateTwoTurns, bool playaround, bool print = false, int pprob = 0, int pprob2 = 0)
         {
-            this.value = int.MinValue;
-            if (this.turnCounter == 0) this.manaTurnEnd = this.mana;
+            bool doServerstuff = this.isServer;
+
+            if (!doServerstuff)
+            {
+                this.value = int.MinValue;
+                if (this.turnCounter == 0) this.manaTurnEnd = this.mana;
+            }
             this.turnCounter++;
             //penalty for destroying combo
 
-            this.evaluatePenality += ComboBreaker.Instance.checkIfComboWasPlayed(this.playactions, this.ownWeaponName, this.ownHeroName);
+            if (!doServerstuff)
+            {
+                this.evaluatePenality += ComboBreaker.Instance.checkIfComboWasPlayed(this.playactions, this.ownWeaponName, this.ownHeroName);
+                if (this.complete) return;
+            }
+            
 
-            if (this.complete) return;
+            
             this.triggerEndTurn(this.isOwnTurn);
             this.isOwnTurn = !this.isOwnTurn;
             this.triggerStartTurn(this.isOwnTurn);
             this.optionsPlayedThisTurn = 0;
-            if (!this.isOwnTurn) simulateTraps();
-
-            if (!sEnemTurn)
+            if (doServerstuff)
             {
-                guessHeroDamage();
-                this.triggerEndTurn(false);
-                this.triggerStartTurn(true);
-                this.complete = true;
+                this.isOwnTurn = !this.isOwnTurn;
             }
-            else
+            if (!doServerstuff)
             {
-                guessHeroDamage();
-                /*
-                if (this.guessingHeroHP >= 1)
-                {
-                    //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
-                    this.prepareNextTurn(this.isOwnTurn);
+                if (!this.isOwnTurn) simulateTraps();
 
-                    if (this.turnCounter >= 2)
-                        Ai.Instance.enemySecondTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
-                    else
-                        Ai.Instance.enemyTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
+                if (!sEnemTurn)
+                {
+                    guessHeroDamage();
+                    this.triggerEndTurn(false);
+                    this.triggerStartTurn(true);
+                    this.complete = true;
                 }
-                this.complete = true;*/
+                else
+                {
+                    guessHeroDamage();
+                    /*
+                    if (this.guessingHeroHP >= 1)
+                    {
+                        //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
+                        this.prepareNextTurn(this.isOwnTurn);
+
+                        if (this.turnCounter >= 2)
+                            Ai.Instance.enemySecondTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
+                        else
+                            Ai.Instance.enemyTurnSim.simulateEnemysTurn(this, simulateTwoTurns, playaround, print, pprob, pprob2);
+                    }
+                    this.complete = true;*/
+                }
             }
 
         }
@@ -1963,6 +2139,7 @@
                 this.sEnemTurn = false;
             }
 
+            this.attacked = false;
             this.optionsPlayedThisTurn = 0;
             this.cardsPlayedThisTurn = 0;
             this.mobsplayedThisTurn = 0;
@@ -1985,6 +2162,7 @@
             //Ai.Instance.botBase.getPlayfieldValue(this);
 
         }
+
 
         //spelldamage calculation---------------------------------------------------
         public int getSpellDamageDamage(int dmg)
@@ -2152,7 +2330,9 @@
                 if (a.actionType == actionEnum.attackWithHero)
                 {
                     //secret trigger is inside
+                    //Console.WriteLine("HERO ATTACK:::::::::::::###################################");
                     attackWithWeapon(a.own, a.target, a.penalty);
+                    //Console.WriteLine("HERO ATTACK:::::::::::::###################################");
                 }
                 else
                 {
@@ -4184,6 +4364,8 @@
 
         public void updateBoards()
         {
+            //TODO fix bug!!
+            this.tempTrigger.ownMinionsChanged = this.tempTrigger.enemyMininsChanged = true;
             if (!this.tempTrigger.ownMinionsChanged && !this.tempTrigger.enemyMininsChanged) return;
             List<Minion> deathrattles = new List<Minion>();
 
@@ -4647,7 +4829,7 @@
             CardDB.cardIDEnum s = ss;
 
             // cant hold more than 10 cards
-            int draw = 1;
+            int draw = 1;//number of card drawn!
             if (!no_pen)
             {
                 List<Minion> temp = (own) ? this.ownMinions : this.enemyMinions;
@@ -4656,8 +4838,12 @@
                     if (m.name == CardDB.cardName.chromaggus && !m.silenced) draw++;
                 }
             }
+            int oldenemyanz = this.enemyAnzCards;
+
             if (own)
             {
+                oldenemyanz = this.owncards.Count;
+
                 if (s == CardDB.cardIDEnum.None && !no_pen) // draw a card from deck :D
                 {
                     if (ownDeckSize == 0)
@@ -4670,10 +4856,13 @@
                         this.ownDeckSize--;
                         if (this.owncards.Count >= 10)
                         {
-                            this.evaluatePenality += 15*draw;
-                            return;
+                            this.evaluatePenality += 15 * draw;
+                            //return;
                         }
-                        this.owncarddraw += draw;
+                        else
+                        {
+                            this.owncarddraw += draw;
+                        }
                     }
 
                 }
@@ -4682,9 +4871,12 @@
                     if (this.owncards.Count >= 10)
                     {
                         this.evaluatePenality += 5;
-                        return;
+                        //return;
                     }
-                    this.owncarddraw++;
+                    else
+                    {
+                        this.owncarddraw++;
+                    }
 
                 }
 
@@ -4692,7 +4884,7 @@
             }
             else
             {
-                int oldenemyanz = this.enemyAnzCards;
+                
                 if (s == CardDB.cardIDEnum.None && !no_pen) // draw a card from deck :D
                 {
                     if (enemyDeckSize == 0)
@@ -4706,10 +4898,13 @@
                         if (this.enemyAnzCards >= 10)
                         {
                             this.evaluatePenality -= 50;
-                            return;
+                            //return;
                         }
-                        this.enemycarddraw += draw;
-                        this.enemyAnzCards += draw;
+                        else
+                        {
+                            this.enemycarddraw += draw;
+                            this.enemyAnzCards += draw;
+                        }
                     }
 
                 }
@@ -4718,36 +4913,118 @@
                     if (this.enemyAnzCards >= 10)
                     {
                         this.evaluatePenality -= 50;
-                        return;
+                        //return;
                     }
-                    this.enemycarddraw ++;
-                    this.enemyAnzCards ++;
+                    else
+                    {
+                        this.enemycarddraw++;
+                        this.enemyAnzCards++;
+                    }
 
                 }
-                if (this.enemyAnzCards != oldenemyanz) this.triggerCardsChanged(false);
-                return;
+                //if (this.enemyAnzCards != oldenemyanz) this.triggerCardsChanged(false);
+                //return;
             }
 
-            if (s == CardDB.cardIDEnum.None)
+            if (this.isServer)
             {
-                CardDB.Card plchldr = new CardDB.Card { name = CardDB.cardName.unknown };
-                Handmanager.Handcard hc = new Handmanager.Handcard { card = plchldr, position = this.owncards.Count + 1, manacost = 1000, entity = this.getNextEntity() };
+                //we are a server, we know what we draw! :D
+
                 for (int i = 0; i < draw; i++)
                 {
-                    this.owncards.Add(hc);
+
+                    if (own)
+                    {
+
+                        if (s == CardDB.cardIDEnum.None && !no_pen) // draw a card random card from deck :D
+                        {
+                            drawFirstCardFromDeck(own);
+                        }
+                        else
+                        {
+                            CardDB.Card c = CardDB.Instance.getCardDataFromID(s);
+                            Handmanager.Handcard hc = new Handmanager.Handcard { card = c, position = this.owncards.Count + 1, manacost = c.cost, entity = this.getNextEntity() };
+                            this.owncards.Add(hc);
+                        }
+
+                    }
+                    else
+                    {
+                        //ENEMY DRAWS A CARD
+                        if (s == CardDB.cardIDEnum.None && !no_pen) // draw a card random card from deck :D
+                        {
+                            drawFirstCardFromDeck(own);
+                        }
+                        else
+                        {
+                            CardDB.Card c = CardDB.Instance.getCardDataFromID(s);
+                            Handmanager.Handcard hc = new Handmanager.Handcard { card = c, position = this.EnemyCards.Count + 1, manacost = c.cost, entity = this.getNextEntity() };
+                            this.EnemyCards.Add(hc);
+                        }
+                    }
                 }
-                this.triggerCardsChanged(true);
+
+
             }
             else
             {
-                CardDB.Card c = CardDB.Instance.getCardDataFromID(s);
-                Handmanager.Handcard hc = new Handmanager.Handcard { card = c, position = this.owncards.Count + 1, manacost = c.cost, entity = this.getNextEntity() };
-                this.owncards.Add(hc);
-                this.triggerCardsChanged(true);
+                //simulated draw:
+                if (own)
+                {
+                    if (s == CardDB.cardIDEnum.None)
+                    {
+                        CardDB.Card plchldr = new CardDB.Card { name = CardDB.cardName.unknown };
+                        Handmanager.Handcard hc = new Handmanager.Handcard { card = plchldr, position = this.owncards.Count + 1, manacost = 1000, entity = this.getNextEntity() };
+                        for (int i = 0; i < draw; i++)
+                        {
+                            this.owncards.Add(hc);
+                        }
+                    }
+                    else
+                    {
+                        CardDB.Card c = CardDB.Instance.getCardDataFromID(s);
+                        Handmanager.Handcard hc = new Handmanager.Handcard { card = c, position = this.owncards.Count + 1, manacost = c.cost, entity = this.getNextEntity() };
+                        this.owncards.Add(hc);
+                    }
+                }
+            }
+
+            if (own)
+            {
+                if (this.owncards.Count != oldenemyanz) this.triggerCardsChanged(true);
+            }
+            else
+            {
+                if (this.enemyAnzCards != oldenemyanz) this.triggerCardsChanged(false);
             }
 
         }
 
+        private void drawFirstCardFromDeck(bool own)
+        {
+            List<Handmanager.Handcard> tempdeck = this.enemyDeck;
+            List<Handmanager.Handcard> temphand = this.EnemyCards;
+            //List<Handmanager.Handcard> tempgrave = this.Enemygrave;
+            if (own)
+            {
+                tempdeck = this.myDeck;
+                temphand = this.owncards;
+            }
+
+            if (tempdeck.Count >= 1) 
+            {
+                Handmanager.Handcard hc = tempdeck[0];
+                tempdeck.RemoveAt(0);
+                if (temphand.Count <= 9)
+                {
+                    hc.position = temphand.Count + 1;
+                    temphand.Add(hc);
+                }
+
+            }
+
+
+        }
 
         public void removeCard(Handmanager.Handcard hcc)
         {
@@ -4831,7 +5108,24 @@
             }
             else
             {
-                this.drawACard(CardDB.cardIDEnum.None, true);
+                if (this.isServer)
+                {
+                    CardDB.Card c = m.handcard.card;
+                    Handmanager.Handcard hc = new Handmanager.Handcard { card = c, position = this.owncards.Count + 1, entity = m.entitiyID, manacost = c.cost + manachange };
+                    if (this.EnemyCards.Count < 10)
+                    {
+                        this.EnemyCards.Add(hc);
+                        this.triggerCardsChanged(false);
+                    }
+                    else
+                    {
+                        this.drawACard(CardDB.cardIDEnum.None, false);
+                    }
+                    this.tempTrigger.enemyMininsChanged = true;
+                    return;
+                }
+
+                this.drawACard(CardDB.cardIDEnum.None, false);
                 this.tempTrigger.enemyMininsChanged = true;
             }
 
@@ -5338,6 +5632,208 @@
             }
             Helpfunctions.Instance.ErrorLog("");
 
+        }
+
+        public string getCompleteBoardForSimulating(String settings, String version, String time)
+        {
+            //returns same string as: 
+            /*
+            string dtimes = DateTime.Now.ToString("HH:mm:ss:ffff");
+            hpf.writeToBuffer("#######################################################################");
+            hpf.writeToBuffer("#######################################################################");
+            hpf.writeToBuffer("start calculations, current time: " + dtimes + " V" + "115.55" + " " + p.settings);
+            hpf.writeToBuffer("#######################################################################");
+            hpf.writeToBuffer("mana " + p.curMana + "/" + p.maxMana);
+            hpf.writeToBuffer("emana " + opponent.maxMana);
+            hpf.writeToBuffer("own secretsCount: " + ownsecretcount);
+            hpf.writeToBuffer("enemy secretsCount: " + enemySecretCount + " ;" + enemysecretIds);
+
+            Hrtprozis.Instance.printHero(runEx);
+            Hrtprozis.Instance.printOwnMinions(runEx);
+            Hrtprozis.Instance.printEnemyMinions(runEx);
+            
+            Handmanager.Instance.printcards(runEx);
+            
+            Probabilitymaker.Instance.printTurnGraveYard(runEx);
+            Probabilitymaker.Instance.printGraveyards(runEx);
+            */
+            Probabilitymaker probm = Probabilitymaker.Instance;
+            String data = "#######################################################################"+"\r\n";
+            data += "start calculations, current time: " + time + " V" + version + " " + settings + "\r\n";
+            data += "#######################################################################" + "\r\n";
+            data +="mana " + this.mana + "/" + this.ownMaxMana+"\r\n";
+            data +="emana " + this.enemyMaxMana+"\r\n";
+            data +="own secretsCount: " + this.ownSecretsIDList.Count+"\r\n";
+            data += "enemy secretsCount: " + this.enemySecretCount + " ;" + probm.getEnemySecretData() + "\r\n";
+
+            //print hero:-------------------------------------------------------------------------------
+            data += "player:" + "\r\n";
+            
+            int ownPlayerController= this.ownController;
+
+            int ownmillhouse = (this.weHavePlayedMillhouseManastorm)? 1:0;
+            int enemymillhouse = (this.enemyHavePlayedMillhouseManastorm)? 1:0;
+            int ownKirinTorEffect = (this.playedmagierinderkirintor) ? 1:0;
+            int ownPreparation = (this.playedPreparation) ? 1:0;
+
+            data += this.mobsplayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.owedRecall + " " + ownPlayerController + " " + this.anzMinionsDiedThisTurn + " " + this.currentRecall + " " + this.enemyRecall+ "\r\n";
+            data += this.ownDragonConsort + " " + this.enemyDragonConsort + " " + this.ownloatheb + " " + this.enemyloatheb + " " + ownmillhouse + " " + enemymillhouse + " " + ownKirinTorEffect + " " + ownPreparation+ "\r\n";
+            data += "ownhero:" + "\r\n";
+            data += Hrtprozis.heroEnumtoName(this.ownHeroName)+ " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entitiyID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack+ "\r\n";
+            data += "weapon: " + this.ownWeaponAttack + " " + this.ownWeaponDurability  + " " + this.ownWeaponName + "\r\n";
+            data += "ability: " + this.ownAbilityReady + " " + this.ownHeroAblility.card.cardIDenum + "\r\n";
+            string secs = "";
+            foreach (CardDB.cardIDEnum sec in this.ownSecretsIDList)
+            {
+                secs += sec + " ";
+            }
+            data += "osecrets: " + secs+ "\r\n";
+            data += "enemyhero:"+ "\r\n";
+            data += Hrtprozis.heroEnumtoName(this.enemyHeroName) + " " + this.enemyHero.Hp + " " + this.enemyHero.maxHp + " " + this.enemyHero.armor + " " + this.enemyHero.frozen + " " + this.enemyHero.immune + " " + this.enemyHero.entitiyID+ "\r\n";
+            data += "weapon: " + this.enemyWeaponAttack + " " + this.enemyWeaponDurability + " " + this.enemyWeaponName+ "\r\n";
+            data += "ability: " + "True" + " " + this.enemyHeroAblility.card.cardIDenum+ "\r\n";
+            data += "fatigue: " + this.ownDeckSize + " " + this.ownHeroFatigue + " " + this.enemyDeckSize + " " + this.enemyHeroFatigue+ "\r\n";
+
+            //print own Minions
+
+            data += "OwnMinions:" + "\r\n";
+            foreach (Minion m in this.ownMinions)
+            {
+                String mini = this.getMinionString(m);
+                data += mini + "\r\n";
+
+            }
+
+            //print enemy Minions
+            data += "EnemyMinions:" + "\r\n";
+            foreach (Minion m in this.enemyMinions)
+            {
+                String mini = this.getMinionString(m);
+                data += mini + "\r\n";
+
+            }
+
+            //print cards!
+
+            data +="Own Handcards: "+ "\r\n";
+            foreach (Handmanager.Handcard c in this.owncards)
+            {
+                data +="pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum + " " + c.addattack+ "\r\n";
+            }
+            data += "Enemy cards: " + this.enemyAnzCards + "\r\n";
+
+            //Probabilitymaker.Instance.printTurnGraveYard(runEx)
+            data += Probabilitymaker.Instance.printTurnGraveYard(false, true); //dont need \r\n
+
+            //Probabilitymaker.Instance.printGraveyards(runEx);
+            data += Probabilitymaker.Instance.printGraveyards(false, true); //dont need \r\n
+
+            return data;
+        }
+
+        public string getMinionString(Minion m)
+        {
+            string mini = m.name + " " + m.handcard.card.cardIDenum + " zp:" + m.zonepos + " e:" + m.entitiyID + " A:" + m.Angr + " H:" + m.Hp + " mH:" + m.maxHp + " rdy:" + m.Ready + " natt:" + m.numAttacksThisTurn;
+            if (m.exhausted) mini += " ex";
+            if (m.taunt) mini += " tnt";
+            if (m.frozen) mini += " frz";
+            if (m.silenced) mini += " silenced";
+            if (m.divineshild) mini += " divshield";
+            if (m.playedThisTurn) mini += " ptt";
+            if (m.windfury) mini += " wndfr";
+            if (m.stealth) mini += " stlth";
+            if (m.poisonous) mini += " poi";
+            if (m.immune) mini += " imm";
+            if (m.concedal) mini += " cncdl";
+            if (m.destroyOnOwnTurnStart) mini += " dstrOwnTrnStrt";
+            if (m.destroyOnOwnTurnEnd) mini += " dstrOwnTrnnd";
+            if (m.destroyOnEnemyTurnStart) mini += " dstrEnmTrnStrt";
+            if (m.destroyOnEnemyTurnEnd) mini += " dstrEnmTrnnd";
+            if (m.shadowmadnessed) mini += " shdwmdnssd";
+            if (m.cantLowerHPbelowONE) mini += " cantLowerHpBelowOne";
+            if (m.cantBeTargetedBySpellsOrHeroPowers) mini += " canttarget";
+
+            if (m.charge >= 1) mini += " chrg(" + m.charge + ")";
+            if (m.AdjacentAngr >= 1) mini += " adjaattk(" + m.AdjacentAngr + ")";
+            if (m.tempAttack >= 1) mini += " tmpattck(" + m.tempAttack + ")";
+            if (m.spellpower >= 1) mini += " spllpwr(" + m.spellpower + ")";
+
+            if (m.ancestralspirit >= 1) mini += " ancstrl(" + m.ancestralspirit + ")";
+            if (m.ownBlessingOfWisdom >= 1) mini += " ownBlssng(" + m.ownBlessingOfWisdom + ")";
+            if (m.enemyBlessingOfWisdom >= 1) mini += " enemyBlssng(" + m.enemyBlessingOfWisdom + ")";
+            if (m.souloftheforest >= 1) mini += " souloffrst(" + m.souloftheforest + ")";
+
+            return mini;
+        }
+
+        //can return null
+        public Minion getRandomMinionFromSide_SERVER(bool own, bool includeHero)
+        {
+            List<Minion> temp = new List<Minion>();
+
+            foreach(Minion m in  (own) ? this.ownMinions : this.enemyMinions)
+            {
+                if (m.Hp >= 1) temp.Add(m);
+            }
+
+            if (includeHero) temp.Add((own) ? this.ownHero : this.enemyHero);
+
+            if (temp.Count == 0) return null;
+
+            return temp[this.randomGenerator.Next(0, temp.Count)];
+        }
+
+        public Minion getRandomCharExcept_SERVER(Minion thisNot, bool includeHero)
+        {
+            List<Minion> temp = new List<Minion>();
+
+            foreach (Minion m in this.ownMinions)
+            {
+                if (m == thisNot) continue;
+                if (m.Hp >= 1) temp.Add(m);
+            }
+
+            foreach (Minion m in this.enemyMinions)
+            {
+                if (m == thisNot) continue;
+                if (m.Hp >= 1) temp.Add(m);
+            }
+
+            if (includeHero) temp.Add(this.ownHero);
+            if (includeHero) temp.Add(this.enemyHero);
+
+            if (temp.Count == 0) return null;
+
+            return temp[this.randomGenerator.Next(0, temp.Count)];
+        }
+
+        public int getRandomNumber_SERVER(int minInclude, int maxInclude)
+        {
+            return this.randomGenerator.Next(minInclude, maxInclude + 1);
+
+        }
+
+        public void discardRandomCard_SERVER(bool own)
+        {
+            if (!this.isServer) return;
+            if (own)
+            {
+                if(this.owncards.Count >=1)
+                {
+                    int start = this.getRandomNumber_SERVER(0, this.owncards.Count-1);
+                    this.owncards.RemoveRange(start, 1);
+                    this.triggerCardsChanged(true);
+                }
+            }
+            else
+            {
+                if (this.EnemyCards.Count >= 1)
+                {
+                    int start = this.getRandomNumber_SERVER(0, this.EnemyCards.Count - 1);
+                    this.EnemyCards.RemoveRange(start, 1);
+                    this.triggerCardsChanged(false);
+                }
+            }
         }
 
 

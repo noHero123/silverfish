@@ -265,7 +265,7 @@
             setupDeck(list, enemyDeckGuessed, enemyCardsPlayed);
         }
 
-        public void printTurnGraveYard(bool writetobuffer = false)
+        public string printTurnGraveYard(bool writetobuffer = false, bool dontwrite=false)
         {
             /*string g = "";
             if (Probabilitymaker.Instance.feugenDead) g += " fgn";
@@ -273,21 +273,35 @@
             Helpfunctions.Instance.logg("GraveYard:" + g);
             if (writetobuffer) Helpfunctions.Instance.writeToBuffer("GraveYard:" + g);*/
 
+            string data = "";
             string s = "ownDiedMinions: ";
             foreach (GraveYardItem gyi in this.turngraveyard)
             {
                 if (gyi.own) s += gyi.cardid + "," + gyi.entity + ";";
             }
-            Helpfunctions.Instance.logg(s);
-            if (writetobuffer) Helpfunctions.Instance.writeToBuffer(s);
+
+            if (!dontwrite)
+            {
+                Helpfunctions.Instance.logg(s);
+                if (writetobuffer) Helpfunctions.Instance.writeToBuffer(s);
+            }
+
+            data += s + "\r\n";
 
             s = "enemyDiedMinions: ";
             foreach (GraveYardItem gyi in this.turngraveyard)
             {
                 if (!gyi.own) s += gyi.cardid + "," + gyi.entity + ";";
             }
-            Helpfunctions.Instance.logg(s);
-            if (writetobuffer) Helpfunctions.Instance.writeToBuffer(s);
+
+            if (!dontwrite)
+            {
+                Helpfunctions.Instance.logg(s);
+                if (writetobuffer) Helpfunctions.Instance.writeToBuffer(s);
+            }
+
+            data += s + "\r\n";
+            return data;
         }
 
         public void readTurnGraveYard(string own, string enemy)
@@ -433,7 +447,7 @@
 
         }
 
-        public void printGraveyards(bool writetobuffer = false)
+        public string printGraveyards(bool writetobuffer = false, bool dontwrite = false)
         {
             string og = "og: ";
             foreach (KeyValuePair<CardDB.cardIDEnum, int> e in this.ownCardsPlayed)
@@ -445,13 +459,17 @@
             {
                 eg += (int)e.Key + "," + e.Value + ";";
             }
-            Helpfunctions.Instance.logg(og);
-            Helpfunctions.Instance.logg(eg);
-            if (writetobuffer)
+            if (!dontwrite)
             {
-                Helpfunctions.Instance.writeToBuffer(og);
-                Helpfunctions.Instance.writeToBuffer(eg);
+                Helpfunctions.Instance.logg(og);
+                Helpfunctions.Instance.logg(eg);
+                if (writetobuffer)
+                {
+                    Helpfunctions.Instance.writeToBuffer(og);
+                    Helpfunctions.Instance.writeToBuffer(eg);
+                }
             }
+            return og + "\r\n" + eg + "\r\n";
         }
 
         public void readGraveyards(string owngrave, string enemygrave)

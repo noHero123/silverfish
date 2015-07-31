@@ -1,0 +1,1 @@
+control 5000 face 15 twoturnsim 1000 ntss 6 20 200 ets 40 ets2 200 ents 40 plcmnt

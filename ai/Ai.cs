@@ -318,23 +318,29 @@
 
         }
 
-        public void autoTester(bool printstuff, string data = "")
+        public void autoTester(bool printstuff, string data = "", bool logg=true)
         {
             help.logg("simulating board ");
 
             BoardTester bt = new BoardTester(data);
             if (!bt.datareaded) return;
-            hp.printHero();
-            hp.printOwnMinions();
-            hp.printEnemyMinions();
-            hm.printcards();
+            if (logg)
+            {
+                hp.printHero();
+                hp.printOwnMinions();
+                hp.printEnemyMinions();
+                hm.printcards();
+            }
             //calculate the stuff
             posmoves.Clear();
             posmoves.Add(new Playfield());
             posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
-            foreach (Playfield p in this.posmoves)
+            if (logg)
             {
-                p.printBoard();
+                foreach (Playfield p in this.posmoves)
+                {
+                    p.printBoard();
+                }
             }
             help.logg("ownminionscount " + posmoves[0].ownMinions.Count);
             help.logg("owncardscount " + posmoves[0].owncards.Count);

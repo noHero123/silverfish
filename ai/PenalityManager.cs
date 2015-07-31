@@ -1319,6 +1319,14 @@
                 return 20;
             }
 
+            if (name == CardDB.cardName.gangup && target!=null)
+            {
+                if(target.handcard.card.isToken) return 20;
+                if (target.handcard.card.isSpecialMinion) return -20;
+                
+                
+            }
+
             if (name == CardDB.cardName.theblackknight)
             {
                 if (target == null)

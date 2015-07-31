@@ -835,6 +835,7 @@
             this.enemyHero.entitiyID = enemyHEntity;
 
             this.ownHero.Angr = ownHeroAttack;
+            this.ownHero.tempAttack = ownHeroTempAttack;//fix
             this.ownHero.Hp = ownherohp;
             this.ownHero.armor = ownherodefence;
             this.ownHero.frozen = ownHeroFrozen;

@@ -231,6 +231,62 @@
             return retval;
         }
 
+
+        public static string heroEnumtoName(HeroEnum s)
+        {
+
+            if (s ==HeroEnum.hogger )
+            {
+                return "hogger";
+            }
+            if (s == HeroEnum.hunter)
+            {
+                return "hunter";
+            }
+            if (s == HeroEnum.priest)
+            {
+                return "priest";
+            }
+            if (s == HeroEnum.druid)
+            {
+                return "druid";
+            }
+            if (s == HeroEnum.warlock)
+            {
+                return "warlock";
+            }
+            if (s == HeroEnum.thief)
+            {
+                return "thief";
+            }
+            if (s == HeroEnum.pala)
+            {
+                return "pala";
+            }
+            if (s == HeroEnum.warrior)
+            {
+                return "warrior";
+            }
+            if (s == HeroEnum.shaman)
+            {
+                return "shaman";
+            }
+            if (s == HeroEnum.mage)
+            {
+                return "mage";
+            }
+            if (s == HeroEnum.lordjaraxxus)
+            {
+                return "lordjaraxxus";
+            }
+            if (s == HeroEnum.ragnarosthefirelord)
+            {
+                return "ragnarosthefirelord";
+            }
+
+            return "druid";
+        }
+
         public HeroEnum heroNametoEnum(string s)
         {
 
@@ -457,7 +513,7 @@
             return m;
         }
 
-
+        //these functions are not longer updated (moved to playfield.getCompleteBoardForSimulating)
         public void printHero(bool writetobuffer = false)
         {
             help.logg("player:");
