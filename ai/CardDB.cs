@@ -1265,6 +1265,7 @@
             if (s == "CS2_032") return CardDB.cardIDEnum.CS2_032;
             if (s == "CS2_033") return CardDB.cardIDEnum.CS2_033;
             if (s == "CS2_034") return CardDB.cardIDEnum.CS2_034;
+            
             if (s == "CS2_037") return CardDB.cardIDEnum.CS2_037;
             if (s == "CS2_039") return CardDB.cardIDEnum.CS2_039;
             if (s == "CS2_041") return CardDB.cardIDEnum.CS2_041;
@@ -1275,10 +1276,12 @@
             if (s == "CS2_046") return CardDB.cardIDEnum.CS2_046;
             if (s == "CS2_046e") return CardDB.cardIDEnum.CS2_046e;
             if (s == "CS2_049") return CardDB.cardIDEnum.CS2_049;
+            
             if (s == "CS2_050") return CardDB.cardIDEnum.CS2_050;
             if (s == "CS2_051") return CardDB.cardIDEnum.CS2_051;
             if (s == "CS2_052") return CardDB.cardIDEnum.CS2_052;
             if (s == "CS2_056") return CardDB.cardIDEnum.CS2_056;
+            
             if (s == "CS2_057") return CardDB.cardIDEnum.CS2_057;
             if (s == "CS2_061") return CardDB.cardIDEnum.CS2_061;
             if (s == "CS2_062") return CardDB.cardIDEnum.CS2_062;
@@ -1311,6 +1314,7 @@
             if (s == "CS2_101") return CardDB.cardIDEnum.CS2_101;
             if (s == "CS2_101t") return CardDB.cardIDEnum.CS2_101t;
             if (s == "CS2_102") return CardDB.cardIDEnum.CS2_102;
+            
             if (s == "CS2_103") return CardDB.cardIDEnum.CS2_103;
             if (s == "CS2_103e2") return CardDB.cardIDEnum.CS2_103e2;
             if (s == "CS2_105") return CardDB.cardIDEnum.CS2_105;
@@ -1363,6 +1367,7 @@
             if (s == "CS2_mirror") return CardDB.cardIDEnum.CS2_mirror;
             if (s == "CS2_tk1") return CardDB.cardIDEnum.CS2_tk1;
             if (s == "DS1h_292") return CardDB.cardIDEnum.DS1h_292;
+            
             if (s == "DS1_055") return CardDB.cardIDEnum.DS1_055;
             if (s == "DS1_070") return CardDB.cardIDEnum.DS1_070;
             if (s == "DS1_070o") return CardDB.cardIDEnum.DS1_070o;
@@ -2305,6 +2310,13 @@
             if (s == "PART_006a") return CardDB.cardIDEnum.PART_006a;
             if (s == "PART_007") return CardDB.cardIDEnum.PART_007;
             if (s == "PART_007e") return CardDB.cardIDEnum.PART_007e;
+
+            if (s == "DS1h_292_H1") return CardDB.cardIDEnum.DS1h_292;
+            if (s == "CS2_034_H1") return CardDB.cardIDEnum.CS2_034;
+            if (s == "CS2_049_H1") return CardDB.cardIDEnum.CS2_049;
+            if (s == "CS2_056_H1") return CardDB.cardIDEnum.CS2_056;
+            if (s == "CS2_102_H1") return CardDB.cardIDEnum.CS2_102;
+
             if (s == "PlaceholderCard") return CardDB.cardIDEnum.PlaceholderCard;
             
             return CardDB.cardIDEnum.None;
