@@ -11,6 +11,51 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
+            if (p.isServer)
+            {
+                List<Handmanager.Handcard> temp = new List<Handmanager.Handcard>();
+                List<Handmanager.Handcard> cards = p.owncards;
+
+                foreach (Handmanager.Handcard hc in cards)
+                {
+                    if ((TAG_RACE)hc.card.race == TAG_RACE.DEMON)
+                    {
+                        temp.Add(hc);
+                    }
+                }
+
+                if (temp.Count >= 1)
+                {
+
+                    int rand = p.getRandomNumber_SERVER(0, temp.Count - 1);
+
+                    p.callKid(cards[rand].card, p.ownMinions.Count, true);
+                    p.removeCard_SERVER(cards[rand], true);
+                }
+
+                temp.Clear();
+                cards = p.EnemyCards;
+
+                foreach (Handmanager.Handcard hc in cards)
+                {
+                    if ((TAG_RACE)hc.card.race == TAG_RACE.DEMON)
+                    {
+                        temp.Add(hc);
+                    }
+                }
+
+                if (temp.Count >= 1)
+                {
+
+                    int rand = p.getRandomNumber_SERVER(0, temp.Count - 1);
+
+                    p.callKid(cards[rand].card, p.ownMinions.Count, false);
+                    p.removeCard_SERVER(cards[rand], false);
+                }
+
+                return;
+            }
+
             Handmanager.Handcard c = null;
             int sum = 10000;
             foreach (Handmanager.Handcard hc in p.owncards)

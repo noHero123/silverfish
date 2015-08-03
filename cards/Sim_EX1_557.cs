@@ -12,6 +12,15 @@ namespace HREngine.Bots
         {
             if (triggerEffectMinion.own == turnStartOfOwner)
             {
+                if (p.isServer)
+                {
+                    int random = p.getRandomNumber_SERVER(0, 1);
+                    if (random == 0)
+                    {
+                        p.drawACard(CardDB.cardIDEnum.None, turnStartOfOwner);
+                    }
+                    return;
+                }
                 p.drawACard(CardDB.cardIDEnum.None, turnStartOfOwner);
             }
         }

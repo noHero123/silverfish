@@ -11,6 +11,29 @@ namespace HREngine.Bots
 
         public override void onTurnEndsTrigger(Playfield p, Minion triggerEffectMinion, bool turnEndOfOwner)
         {
+            if (p.isServer)
+            {
+                List<Minion> nonmech = new List<Minion>();
+                foreach (Minion m in p.ownMinions)
+                {
+                    if ((TAG_RACE)m.handcard.card.race != TAG_RACE.MECHANICAL)
+                    {
+                        nonmech.Add(m);
+                    }
+                }
+                foreach (Minion m in p.enemyMinions)
+                {
+                    if ((TAG_RACE)m.handcard.card.race != TAG_RACE.MECHANICAL)
+                    {
+                        nonmech.Add(m);
+                    }
+                }
+
+                Minion choosen = p.getRandomMinionOfThatList(nonmech);
+                if (choosen != null) p.minionGetDamageOrHeal(choosen, 2, true);
+                
+                return;
+            }
             //count non-mechs
             int ownNonMechs = 0;
             Minion ownTemp = null;

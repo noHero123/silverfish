@@ -12,6 +12,19 @@ namespace HREngine.Bots
 //    kampfschrei:/ verwandelt einen anderen zufälligen diener in einen teufelssaurier (5/5) oder ein eichhörnchen (1/1).
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
+            if (p.isServer)
+            {
+                Minion choosen = p.getRandomCharExcept_SERVER(null, false);
+                if (choosen != null)
+                {
+                    int rand = p.getRandomNumber_SERVER(0, 1);
+                    if (rand == 0) p.minionTransform(choosen, card1);
+                    if (rand == 1) p.minionTransform(choosen, card2);
+                }
+                return;
+            }
+
+
             int oc = p.ownMinions.Count;
             int ec = p.enemyMinions.Count;
             if (oc == 0 && ec == 0) return;

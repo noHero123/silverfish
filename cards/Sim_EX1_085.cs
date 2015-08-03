@@ -10,6 +10,18 @@ namespace HREngine.Bots
 //    kampfschrei:/ falls euer gegner mind. 4 diener hat, übernehmt zufällig die kontrolle über einen davon.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
+            if (p.isServer)
+            {
+                List<Minion> temp = (own.own) ? p.enemyMinions : p.ownMinions;
+                if (temp.Count >= 4)
+                {
+                    Minion choosen = p.getRandomMinionFromSide_SERVER(!own.own, false);
+                    if (choosen != null) p.minionGetControlled(choosen, own.own, false);
+                }
+
+                return;
+            }
+
             if (own.own)
             {
                 if (p.enemyMinions.Count >= 4)

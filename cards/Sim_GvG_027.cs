@@ -14,9 +14,23 @@ namespace HREngine.Bots
             if (turnEndOfOwner == triggerEffectMinion.own)
             {
                 List<Minion> temp = (turnEndOfOwner) ? p.ownMinions : p.enemyMinions;
-                if (temp.Count >= 1)
+                List<Minion> tempmech = new List<Minion>();
+                foreach (Minion m in temp)
                 {
-                    p.minionGetBuffed(p.searchRandomMinion(temp, Playfield.searchmode.searchHighestAttack), 2, 2);
+                    if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL)
+                    {
+                        tempmech.Add(m);
+                    }
+                }
+                if (tempmech.Count >= 1)
+                {
+                    if (p.isServer)
+                    {
+                        int random = p.getRandomNumber_SERVER(0, tempmech.Count - 1);
+                        p.minionGetBuffed(tempmech[random], 2, 2);
+                        return;
+                    }
+                    p.minionGetBuffed(p.searchRandomMinion(tempmech, Playfield.searchmode.searchHighestAttack), 2, 2);
                 }
             }
         }

@@ -11,6 +11,18 @@ namespace HREngine.Bots
         //todo for enemy
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
+
+            if (p.isServer)
+            {
+                int timesS = (ownplay) ? p.getSpellDamageDamage(8) : p.getEnemySpellDamageDamage(8);
+                for (int iS = 0; iS < timesS; iS++)
+                {
+                    Minion poortarget = p.getRandomMinionFromSide_SERVER(!ownplay, true);
+                    if (poortarget != null) p.minionGetDamageOrHeal(poortarget, 1);
+                }
+                return;
+            }
+
             // optimistic
 
             int i = 0;

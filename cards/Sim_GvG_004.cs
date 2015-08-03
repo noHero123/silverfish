@@ -11,6 +11,7 @@ namespace HREngine.Bots
 
         public override void  getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
+
             // optimistic
             bool ownplay = own.own;
             List<Minion> temp1 = (ownplay) ? p.ownMinions : p.enemyMinions;
@@ -24,6 +25,17 @@ namespace HREngine.Bots
                 }
             }
             if (!haveAMech) return;
+
+            if (p.isServer)
+            {
+                int timesS = 4;
+                for (int iS = 0; iS < timesS; iS++)
+                {
+                    Minion poortarget = p.getRandomMinionFromSide_SERVER(!ownplay, true);
+                    if (poortarget != null) p.minionGetDamageOrHeal(poortarget, 1);
+                }
+                return;
+            }
 
             int i = 0;
             List<Minion> temp = (ownplay) ? p.enemyMinions : p.ownMinions;

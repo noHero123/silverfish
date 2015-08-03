@@ -11,6 +11,23 @@ namespace HREngine.Bots
 
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
+
+            if (p.isServer)
+            {
+                Minion choosen = p.getRandomCharExcept_SERVER(null, false);
+
+                foreach (Minion m in p.ownMinions)
+                {
+                    if (m == choosen) continue;
+                    p.minionGetDestroyed(m);
+                }
+                foreach (Minion m in p.enemyMinions)
+                {
+                    if (m == choosen) continue;
+                    p.minionGetDestroyed(m);
+                }
+            }
+
             p.allMinionsGetDestroyed();
 		}
 

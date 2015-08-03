@@ -14,6 +14,18 @@ namespace HREngine.Bots
             p.equipWeapon(w, ownplay);
             List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
             if (temp.Count <= 0) return;
+
+            if (p.isServer)
+            {
+                Minion choosen = p.getRandomMinionFromSide_SERVER(ownplay, false);
+                if (choosen != null)
+                {
+                    choosen.divineshild = true;
+                    choosen.taunt = true;
+                }
+                return;
+            }
+
             Minion m = p.searchRandomMinion(temp, Playfield.searchmode.searchLowestHP);
             m.divineshild = true;
             m.taunt = true;

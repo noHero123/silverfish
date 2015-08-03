@@ -12,6 +12,14 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
+            if(p.isServer)
+            {
+                Minion choosen = p.getRandomMinionFromSide_SERVER(!ownplay, false);
+                if (choosen != null) p.minionGetDestroyed(choosen);
+                if (p.cardsPlayedThisTurn >= 1) p.lowerWeaponDurability(1000, !ownplay);
+                return;
+            }
+
             List<Minion> temp = (ownplay)? p.enemyMinions : p.ownMinions;
             if (temp.Count >= 1)
             {

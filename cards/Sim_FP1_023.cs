@@ -9,6 +9,14 @@ namespace HREngine.Bots
         //todo list
         public override void onDeathrattle(Playfield p, Minion m)
         {
+
+            if (p.isServer)
+            {
+                Minion tempS = p.getRandomMinionFromSide_SERVER(m.own, false);
+                if(tempS!=null)p.minionGetBuffed(tempS, 0, 3);
+                return;
+            }
+
             List<Minion> temp = new List<Minion>();
 
             if (m.own)

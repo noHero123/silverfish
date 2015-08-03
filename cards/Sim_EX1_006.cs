@@ -11,6 +11,25 @@ namespace HREngine.Bots
 
         public override void onTurnStartTrigger(Playfield p, Minion triggerEffectMinion, bool turnStartOfOwner)
         {
+            if (p.isServer && triggerEffectMinion.own == turnStartOfOwner)
+            {
+                List<Handmanager.Handcard> temp2 = new List<Handmanager.Handcard>();
+                List<Handmanager.Handcard> hand = (turnStartOfOwner) ? p.owncards : p.EnemyCards;
+                foreach (Handmanager.Handcard hc in hand)
+                {
+                    if (hc.card.type == CardDB.cardtype.MOB) temp2.Add(hc);
+                }
+                if (temp2.Count == 0) return;
+
+                int random = p.getRandomNumber_SERVER(0, temp2.Count - 1);
+                p.minionTransform(triggerEffectMinion, temp2[random].card);
+                p.removeCard(temp2[random]);
+                p.drawACard(CardDB.cardIDEnum.EX1_006, turnStartOfOwner, true);
+
+                return;
+            }
+
+
             if (turnStartOfOwner && triggerEffectMinion.own == turnStartOfOwner)
             {
                 List<Handmanager.Handcard> temp2 = new List<Handmanager.Handcard>();

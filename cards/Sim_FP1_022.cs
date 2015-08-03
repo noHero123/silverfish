@@ -11,6 +11,29 @@ namespace HREngine.Bots
 
         public override void onDeathrattle(Playfield p, Minion m)
         {
+            if (p.isServer)
+            {
+                List<Handmanager.Handcard> temp = new List<Handmanager.Handcard>();
+                List<Handmanager.Handcard> cards = (m.own) ? p.owncards : p.EnemyCards;
+
+                foreach (Handmanager.Handcard hc in cards)
+                {
+                    if ((TAG_RACE)hc.card.race == TAG_RACE.DEMON)
+                    {
+                        temp.Add(hc);
+                    }
+                }
+
+                if (temp.Count == 0) return;
+
+                int rand = p.getRandomNumber_SERVER(0, temp.Count - 1);
+
+                p.callKid(cards[rand].card, p.ownMinions.Count, m.own);
+                p.removeCard_SERVER(cards[rand], m.own);
+
+                return;
+            }
+
             if (m.own)
             {
                 List<Handmanager.Handcard> temp = new List<Handmanager.Handcard>();

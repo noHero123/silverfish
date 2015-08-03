@@ -6,10 +6,17 @@ namespace HREngine.Bots
 {
     class Sim_BRM_030 : SimTemplate //Nefarian
     {
-
+        //TODO
         //   Add 2 random spells to your hand (from your opponent's class).
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
+            if (p.isServer)
+            {
+                p.drawACard(CardDB.cardIDEnum.BRM_030t, own.own, true);
+                p.drawACard(CardDB.cardIDEnum.BRM_030t, own.own, true);
+                return;
+            }
+
             if (own.own)
             {
                 /*if (p.enemyHeroName == HeroEnum.druid)

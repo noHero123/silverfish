@@ -10,7 +10,11 @@ namespace HREngine.Bots
 {
     class Program
     {
-        //todo (later) hungry dragon, ogre brut
+        //todo (later)
+        //hungry dragon, ogre brut, piloted shredder, power of the horde, webspinner,
+        // dunemaul shaman, kezan mystic, ogre ninja, resurrect, unstable portal, bane of doom, captains parrot, 
+        //piloted sky golem, recombobulator, blingtron 3000, gazlowe, mogor the ogre, Nefarian, neptulon, sneeds old shredder
+
         // minions to do: 
         //http://hearthstone.gamepedia.com/Random_effect
 

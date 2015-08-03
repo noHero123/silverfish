@@ -13,6 +13,14 @@ namespace HREngine.Bots
         {
             if (triggerEffectMinion.own == turnStartOfOwner)
             {
+
+                if (p.isServer)
+                {
+                    Minion choosen = p.getRandomMinionFromSide_SERVER(!triggerEffectMinion.own, true);
+                    if (choosen != null) p.minionGetDamageOrHeal( choosen, 2);
+                    return;
+                }
+
                 List<Minion> temp2 = (turnStartOfOwner) ? p.enemyMinions : p.ownMinions;
                 bool dmgdone = false;
                 foreach (Minion mins in temp2)

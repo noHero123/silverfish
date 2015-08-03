@@ -500,7 +500,7 @@
                         break;
                     }
 
-                    if (!attackordermatters) break;
+                    if (!attackordermatters && !m.stealth) break;
                 }
 
             }

@@ -11,8 +11,15 @@ namespace HREngine.Bots
 
         public override void onMinionIsSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
-            if (triggerEffectMinion.own == summonedMinion.own)
+            if (triggerEffectMinion.own == summonedMinion.own && summonedMinion.handcard.card.race == 23)
             {
+                if (p.isServer)
+                {
+                    Minion randomguy = p.getRandomMinionFromSide_SERVER(!triggerEffectMinion.own, true);
+                    if (randomguy != null) p.minionGetDamageOrHeal(randomguy, 2, true);
+                    return;
+                }
+
                 List<Minion> temp = (triggerEffectMinion.own) ? p.enemyMinions : p.ownMinions;
                 Minion m = p.searchRandomMinion(temp, Playfield.searchmode.searchHighestHP);
                 if (m == null) return;

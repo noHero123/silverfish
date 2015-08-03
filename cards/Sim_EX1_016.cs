@@ -10,6 +10,13 @@ namespace HREngine.Bots
 //    todesröcheln:/ übernehmt die kontrolle über einen zufälligen feindlichen diener.
         public override void onDeathrattle(Playfield p, Minion m)
         {
+            if (p.isServer)
+            {
+                Minion choosen = p.getRandomMinionFromSide_SERVER(!m.own, false);
+                if (choosen != null) p.minionGetControlled(choosen, m.own, false);
+                return;
+            }
+
                 List<Minion> tmp = (m.own) ? p.enemyMinions : p.ownMinions;
                 if (tmp.Count >= 1)
                 {

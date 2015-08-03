@@ -12,6 +12,14 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
 
+            if (p.isServer)
+            {
+                Minion poortarget = p.getRandomMinionFromSide_SERVER(!ownplay, true);
+                if (poortarget != null) p.minionGetDamageOrHeal(poortarget, 8);
+                return;
+            }
+
+
             int count = (ownplay) ? p.enemyMinions.Count : p.ownMinions.Count;
             if (count >= 1)
             {

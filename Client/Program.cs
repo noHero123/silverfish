@@ -123,8 +123,8 @@ namespace HREngine.Bots
                             if (data != "" && data != "<EoF>")
                             {
                                 data = data.Replace("<EoF>", "");
-                                Helpfunctions.Instance.resetBuffer();
-                                Helpfunctions.Instance.writeBufferToFile();
+                                //Helpfunctions.Instance.resetBuffer();
+                                //Helpfunctions.Instance.writeBufferToFile();
                                 //readed = true;
                                 b.doData(data, client);
                             }

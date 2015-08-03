@@ -13,6 +13,16 @@ namespace HREngine.Bots
         {
             if (triggerEffectMinion.own == turnEndOfOwner)
             {
+
+                if (p.isServer)
+                {
+                    int random = p.getRandomNumber_SERVER(0, 4);
+                    if (random == 0) p.drawACard(CardDB.cardIDEnum.DREAM_01, turnEndOfOwner, true);
+                    if (random == 1) p.drawACard(CardDB.cardIDEnum.DREAM_02, turnEndOfOwner, true);
+                    if (random == 2) p.drawACard(CardDB.cardIDEnum.DREAM_03, turnEndOfOwner, true);
+                    if (random == 3) p.drawACard(CardDB.cardIDEnum.DREAM_04, turnEndOfOwner, true);
+                    if (random == 4) p.drawACard(CardDB.cardIDEnum.DREAM_05, turnEndOfOwner, true);
+                }
                 p.drawACard(CardDB.cardIDEnum.DREAM_02, turnEndOfOwner, true);
             }
         }
