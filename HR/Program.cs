@@ -900,7 +900,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "115.0";
+        public string versionnumber = "115.14";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1171,8 +1171,8 @@ namespace HREngine.Bots
             this.currentMana = rangerbot.gameState.CurrentMana;
             this.ownMaxMana = rangerbot.gameState.LocalMaxMana;
             this.enemyMaxMana = rangerbot.gameState.RemoteMaxMana;
-            enemySecretCount = rangerbot.EnemySecrets.Count;
-            enemySecretCount = 0;
+            //enemySecretCount = rangerbot.EnemySecrets.Count;
+            //enemySecretCount = 0;
             //count enemy secrets
             enemySecretList.Clear();
 
@@ -1180,8 +1180,7 @@ namespace HREngine.Bots
             {
                 enemySecretList.Add(item.EntityId);
             }
-
-
+            enemySecretCount = enemySecretList.Count;
 
             this.ownSecretList.Clear();
 

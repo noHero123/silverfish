@@ -125,27 +125,34 @@
 
             bool useAbili = false;
             bool usecoin = false;
+            //bool lastCoin = false;
             foreach (Action a in p.playactions)
             {
+                //lastCoin = false;
                 if (a.actionType == actionEnum.attackWithHero && p.enemyHero.Hp <= p.attackFaceHP) retval++;
                 if (a.actionType == actionEnum.useHeroPower) useAbili = true;
                 if (p.ownHeroName == HeroEnum.warrior && a.actionType == actionEnum.attackWithHero && useAbili) retval -= 1;
                 //if (a.actionType == actionEnum.useHeroPower && a.card.card.name == CardDB.cardName.lesserheal && (!a.target.own)) retval -= 5;
                 if (a.actionType != actionEnum.playcard) continue;
-                if ((a.card.card.name == CardDB.cardName.thecoin || a.card.card.name == CardDB.cardName.innervate)) usecoin = true;
+                if ((a.card.card.name == CardDB.cardName.thecoin || a.card.card.name == CardDB.cardName.innervate))
+                {
+                    usecoin = true;
+                    //lastCoin = true;
+                }
                 //save spell for all classes: (except for rouge if he has no combo)
                 if (a.target == null) continue;
                 if (p.ownHeroName != HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (!a.target.own && a.target.isHero) && a.card.card.name != CardDB.cardName.shieldblock) retval -= 11;
                 if (p.ownHeroName == HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (a.target.isHero && !a.target.own)) retval -= 11;
             }
+            //dont waste mana!!
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
-            if (usecoin) retval -= 20 * p.manaTurnEnd;
+            if (usecoin && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 100 * p.manaTurnEnd;
             if (p.manaTurnEnd >= 2 && !useAbili)
             {
-                retval -= 10;
-                if (p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2)) retval += 10;
+                retval -= 20;
+                if (p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2)) retval += 20;
             }
-            //if (usecoin && p.mana >= 1) retval -= 20;
+            //if (usecoin && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 100;
 
             int mobsInHand = 0;
             int bigMobsInHand = 0;

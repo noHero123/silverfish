@@ -52,9 +52,23 @@ namespace HREngine.Bots
                 return;
             }
 
+            List<CardDB.cardIDEnum> availa = new List<CardDB.cardIDEnum>();
+            availa.Add(CardDB.cardIDEnum.CS2_052);
+            availa.Add(CardDB.cardIDEnum.CS2_051);
+            availa.Add(CardDB.cardIDEnum.NEW1_009);
+            availa.Add(CardDB.cardIDEnum.CS2_050);
+
+                foreach (Minion m in (ownplay) ? p.ownMinions : p.enemyMinions)
+                {
+                    if (availa.Contains(m.handcard.card.cardIDenum))
+                    {
+                        availa.Remove(m.handcard.card.cardIDenum);
+                    }
+                }
+
             int posi = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
             bool spawnspellpower = true;
-            foreach (Minion m in (ownplay) ? p.ownMinions : p.enemyMinions)
+            /*foreach (Minion m in (ownplay) ? p.ownMinions : p.enemyMinions)
             {
                 if (m.handcard.card.cardIDenum == CardDB.cardIDEnum.CS2_052)
                 {
@@ -62,7 +76,32 @@ namespace HREngine.Bots
                     break;
                 }
             }
-            p.callKid((spawnspellpower) ? kid2 : kid, posi, ownplay);
+            p.callKid((spawnspellpower) ? kid2 : kid, posi, ownplay);*/
+
+            if (availa.Contains( CardDB.cardIDEnum.CS2_052))
+            {
+                p.callKid(kid2, posi, ownplay);
+                return;
+            }
+
+            if (availa.Contains(CardDB.cardIDEnum.CS2_050))
+            {
+                p.callKid(kid, posi, ownplay);
+                return;
+            }
+
+            if (availa.Contains( CardDB.cardIDEnum.CS2_051))
+            {
+                p.callKid(kid4taunt, posi, ownplay);
+                
+                return;
+            }
+            if (availa.Contains( CardDB.cardIDEnum.NEW1_009))
+            {
+                p.callKid(kid3heal, posi, ownplay);
+                return;
+            }
+            
         }
     }
 
