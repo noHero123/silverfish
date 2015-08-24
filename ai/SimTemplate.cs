@@ -41,6 +41,10 @@
             return;
         }
 
+        public virtual void onInspire(Playfield p, Minion m)
+        {
+            return;
+        }
 
         public virtual void onEnrageStart(Playfield p, Minion m)
         {
@@ -98,12 +102,23 @@
             return;
         }
 
-        public virtual void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        public virtual void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion, Minion target)
         {
             return;
         }
 
         public virtual void onCardWasPlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        {
+            return;
+        }
+
+
+        public virtual void onCardWasDiscarded(Playfield p, bool wasOwnCard, Minion triggerEffectMinion)
+        {
+            return;
+        }
+
+        public virtual void onCardIsDiscarded(Playfield p, CardDB.Card card, bool own)
         {
             return;
         }

@@ -11,7 +11,7 @@ namespace HREngine.Bots
             List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
             foreach (Minion t in temp)
             {
-                if (t.handcard.card.race == 21) // if minion is a totem, buff it
+                if (t.handcard.card.race == TAG_RACE.TOTEM) // if minion is a totem, buff it
                 {
                     p.minionGetBuffed(t, 0, 2);
                 }

@@ -27,9 +27,32 @@
 
             if (hc.card.type == CardDB.cardtype.MOB && p.ownMinions.Count >= 7) return returnlist;
 
-            for (int i = 1; i < 3; i++)
+            int max = 3;
+            if (hc.card.cardIDenum == CardDB.cardIDEnum.AT_132_SHAMAN) max = 5;
+
+            for (int i = 1; i < max; i++)
             {
                 CardDB.Card c = hc.card;
+
+                if (c.cardIDenum == CardDB.cardIDEnum.AT_132_SHAMAN)
+                {
+                    if (i == 1)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_132_SHAMANa);
+                    }
+                    if (i == 2)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_132_SHAMANb);
+                    }
+                    if (i == 3)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_132_SHAMANc);
+                    }
+                    if (i == 4)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_132_SHAMANd);
+                    }
+                }
 
                 if (c.name == CardDB.cardName.darkwispers)
                 {
@@ -168,6 +191,28 @@
                     if (i == 2)
                     {
                         c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_154b);
+                    }
+                }
+                if (c.name == CardDB.cardName.livingroots)
+                {
+                    if (i == 1)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_037a);
+                    }
+                    if (i == 2)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_037b);
+                    }
+                }
+                if (c.name == CardDB.cardName.druidofthesaber)
+                {
+                    if (i == 1)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_042a);
+                    }
+                    if (i == 2)
+                    {
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_042b);
                     }
                 }
 
@@ -443,7 +488,7 @@
 
                     //help.logg(m.name + " is going to attack!");
                     List<Minion> trgts = p.getAttackTargets(true);
-
+                    
 
                     if (isLethalCheck)// only target enemy hero during Lethal check!
                     {
@@ -470,7 +515,10 @@
 
                     foreach (Minion trgt in trgts)
                     {
-
+                        if (!m.silenced && m.name == CardDB.cardName.icehowl && trgt.isHero)
+                        {
+                            continue; //this minion cant attack heros!
+                        }
 
                         int attackPenality = 0;
 
@@ -550,7 +598,7 @@
 
             // use ability
             /// TODO check if ready after manaup
-            if (p.ownAbilityReady && p.mana >= 2 && p.ownHeroAblility.card.canplayCard(p, 2))
+            if (p.ownAbilityReady && p.ownHeroAblility.card.canplayCard(p, 2))
             {
                 int abilityPenality = 0;
                 // if we have mage or priest, we have to target something####################################################
@@ -734,6 +782,11 @@
 
                     foreach (Minion trgt in trgts)
                     {
+                        if (!m.silenced && m.name == CardDB.cardName.icehowl && trgt.isHero)
+                        {
+                            continue; //this minion cant attack heros!
+                        }
+
                         Action a = new Action(actionEnum.attackWithMinion, null, m, 0, trgt, this.pen.getAttackWithMininonPenality(m, p, trgt, false), 0);
                         ret.Add(a);
                     }
@@ -891,7 +944,7 @@
 
 
                     if (m.name == CardDB.cardName.scavenginghyena) hashyena = true;
-                    if (m.handcard.card.race == 20) haspets++;
+                    if (m.handcard.card.race == TAG_RACE.PET) haspets++;
                     if (m.name == CardDB.cardName.harvestgolem || m.name == CardDB.cardName.hauntedcreeper || m.souloftheforest >= 1 || m.ancestralspirit >= 1 || m.name == CardDB.cardName.nerubianegg || m.name == CardDB.cardName.savannahhighmane || m.name == CardDB.cardName.sludgebelcher || m.name == CardDB.cardName.cairnebloodhoof || m.name == CardDB.cardName.feugen || m.name == CardDB.cardName.stalagg || m.name == CardDB.cardName.thebeast) spawnminions = true;
 
                 }

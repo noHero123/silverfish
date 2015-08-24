@@ -11,12 +11,12 @@ namespace HREngine.Bots
 //    der erste diener, den ihr in einem zug ausspielt, kostet (1) weniger.
         public override void onAuraStarts(Playfield p, Minion own)
 		{
-            if (own.own) p.winzigebeschwoererin++;
+            if (own.own) p.pintsizedsummoner++;
 		}
 
         public override void onAuraEnds(Playfield p, Minion m)
         {
-            if (m.own) p.winzigebeschwoererin--;
+            if (m.own) p.pintsizedsummoner--;
         }
 
 	}

@@ -17,14 +17,14 @@ namespace HREngine.Bots
 
             foreach (Minion m in p.ownMinions)
             {
-                if (m.handcard.card.race != 15)
+                if (m.handcard.card.race != TAG_RACE.DEMON)
                 {
                     p.minionGetDamageOrHeal(m, dmg);
                 }
             }
             foreach (Minion m in p.enemyMinions)
             {
-                if (m.handcard.card.race != 15)
+                if (m.handcard.card.race != TAG_RACE.DEMON)
                 {
                     p.minionGetDamageOrHeal(m, dmg);
                 }

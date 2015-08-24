@@ -16,6 +16,7 @@ namespace HREngine.Bots
 
         public override void onAuraStarts(Playfield p, Minion m)
         {
+            m.spellpower = 1;
             if (m.own)
             {
                 p.spellpower++;
@@ -26,18 +27,7 @@ namespace HREngine.Bots
             }
         }
 
-        public override void onAuraEnds(Playfield p, Minion m)
-        {
-            if (m.own)
-            {
-                p.spellpower--;
-            }
-            else
-            {
-                p.enemyspellpower--;
-            }
-        }
-
+      
 
 	}
 }

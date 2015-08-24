@@ -9,7 +9,7 @@ namespace HREngine.Bots
 
         //    Whenever your opponent plays a card, discard the top 3 cards of your deck.
 
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion, Minion target)
         {
             if (wasOwnCard == triggerEffectMinion.own) return; //owner of card = owner of minion -> no effect
 

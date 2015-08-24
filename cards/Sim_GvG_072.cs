@@ -9,7 +9,27 @@ namespace HREngine.Bots
 
         // Whenever a character is healed, deal 1 damage to a random enemy.  
 
-        // done in playfield -> triggerACharGotHealed
+        public override void onAHeroGotHealedTrigger(Playfield p, Minion triggerEffectMinion, bool ownerOfHeroGotHealed)
+        {
+            if (p.isServer)
+            {
+                
+                Minion choosen = p.getRandomMinionFromSide_SERVER(!triggerEffectMinion.own, true);
+                if (choosen != null) p.minionGetDamageOrHeal(choosen, 1);
+            }
+            else
+            {
+                Minion t = p.searchRandomMinion((triggerEffectMinion.own) ? p.enemyMinions : p.ownMinions, Playfield.searchmode.searchHighestHP);
+                if (t != null)
+                {
+                    p.minionGetDamageOrHeal(t, 1);
+                }
+                else
+                {
+                    p.minionGetDamageOrHeal((triggerEffectMinion.own) ? p.enemyHero : p.ownHero, 1);
+                }
+            }
+        }
 
     }
 

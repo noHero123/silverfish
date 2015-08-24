@@ -9,7 +9,7 @@ namespace HREngine.Bots
 
         //   Whenever your opponent casts a spell, gain +2 Attack.
 
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion, Minion target)
         {
             if (c.type == CardDB.cardtype.SPELL && wasOwnCard != triggerEffectMinion.own)
             {

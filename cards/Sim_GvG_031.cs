@@ -12,7 +12,7 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
-            target.handcard.card.sim_card.onAuraEnds(p, target);
+            target.endAura(p);
             temp.Remove(target);
 
             if (ownplay)

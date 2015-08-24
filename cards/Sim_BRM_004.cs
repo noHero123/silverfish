@@ -16,7 +16,7 @@ namespace HREngine.Bots
             bool owndragons = (own.own) ? false : true;
             foreach (Handmanager.Handcard hc in temp)
             {
-                if (hc.card.race == 24) owndragons = true;
+                if (hc.card.race == TAG_RACE.DRAGON) owndragons = true;
             }
             if (owndragons) p.minionGetBuffed(own, 0, 2);
         }
