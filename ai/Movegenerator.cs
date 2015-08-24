@@ -95,11 +95,11 @@
 
                     if (i == 1)
                     {
-                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_178a);
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_178b);
                     }
                     if (i == 2)
                     {
-                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_178b);
+                        c = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_178a);
                     }
                 }
                 if (c.name == CardDB.cardName.druidoftheclaw)
