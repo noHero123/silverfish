@@ -1,4 +1,4 @@
-﻿namespace HREngine.Bots
+namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
@@ -1311,14 +1311,14 @@
 
             if (name == CardDB.cardName.ancientofwar)
             {
-                if (p.enemyMinions.Count > 0 && choice == 1) return 50;
+                if (p.enemyMinions.Count > 0 && choice == 1) return 200;
                 if (p.enemyMinions.Count == 0 && choice == 2) return 50;
             }
 
             if (name == CardDB.cardName.druidoftheflame && choice == 1)
             {
-                if (p.enemyMinions.Count > 0 && choice == 2) return 20;
-                if (p.enemyMinions.Count == 0 && choice == 1) return 20;
+                if (p.enemyMinions.Count > 0 && choice == 2) return 40;
+                if (p.enemyMinions.Count == 0 && choice == 1) return 40;
             }
 
             if (name == CardDB.cardName.gangup && target!=null)
@@ -1712,6 +1712,24 @@
                 if (ready == 0)
                 {
                     pen = 5;
+                }
+            }
+
+            if (name == CardDB.cardName.madbomber || name == CardDB.cardName.madderbomber)
+            {
+                //penalize for any own minions with health equal to potential attack amount
+                //to lessen risk of losing your own minion
+                bool haveready;
+                int maxAtk = 3;
+                if (name == CardDB.cardName.madderbomber) maxAtk = 5;
+                foreach (Minion mins in p.ownMinions)
+                {
+                    if (mins.Hp <= maxAtk)
+                    {
+                        haveready = false;
+                        if (mins.Ready) haveready = true;
+                        if (haveready) pen += 20;
+                    }
                 }
             }
 
@@ -2743,7 +2761,7 @@
             this.randomEffects.Add(CardDB.cardName.gelbinmekkatorque, 1);
             this.randomEffects.Add(CardDB.cardName.iammurloc, 3);
             this.randomEffects.Add(CardDB.cardName.lightningstorm, 1);
-            this.randomEffects.Add(CardDB.cardName.madbomber, 3);
+            this.randomEffects.Add(CardDB.cardName.madbomber, 1);
             this.randomEffects.Add(CardDB.cardName.mindgames, 1);
             this.randomEffects.Add(CardDB.cardName.mindcontroltech, 1);
             this.randomEffects.Add(CardDB.cardName.mindvision, 1);
