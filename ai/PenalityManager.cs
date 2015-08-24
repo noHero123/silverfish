@@ -1311,14 +1311,14 @@
 
             if (name == CardDB.cardName.ancientofwar)
             {
-                if (p.enemyMinions.Count > 0 && choice == 2) return 50;
-                if (p.enemyMinions.Count == 0 && choice == 1) return 50;
+                if (p.enemyMinions.Count > 0 && choice == 1) return 50;
+                if (p.enemyMinions.Count == 0 && choice == 2) return 50;
             }
 
             if (name == CardDB.cardName.druidoftheflame && choice == 1)
             {
-                if (p.enemyMinions.Count > 0 && choice == 1) return 20;
-                if (p.enemyMinions.Count == 0 && choice == 2) return 20;
+                if (p.enemyMinions.Count > 0 && choice == 2) return 20;
+                if (p.enemyMinions.Count == 0 && choice == 1) return 20;
             }
 
             if (name == CardDB.cardName.gangup && target!=null)
