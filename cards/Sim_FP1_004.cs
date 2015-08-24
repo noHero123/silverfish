@@ -10,6 +10,8 @@ namespace HREngine.Bots
 
         public override void onDeathrattle(Playfield p, Minion m)
         {
+            //if(p.isServer)
+
             if (m.own)
             {
                 if (p.ownHeroName == HeroEnum.mage)

@@ -11,47 +11,16 @@ namespace HREngine.Bots
         //todo clear playfield
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            p.anzOwnRaidleader = 0;
-            p.anzEnemyRaidleader = 0;
-            p.anzOwnStormwindChamps = 0;
-            p.anzEnemyStormwindChamps = 0;
-            p.anzOwnTundrarhino = 0;
-            p.anzEnemyTundrarhino = 0;
-            p.anzOwnTimberWolfs = 0;
-            p.anzEnemyTimberWolfs = 0;
-            p.anzMurlocWarleader = 0;
-            p.anzGrimscaleOracle = 0;
-            p.anzOwnAuchenaiSoulpriest = 0;
-            p.anzEnemyAuchenaiSoulpriest = 0;
-            p.anzOwnsorcerersapprentice = 0;
-            p.anzOwnsorcerersapprenticeStarted = 0;
-            p.anzEnemysorcerersapprentice = 0;
-            p.anzEnemysorcerersapprenticeStarted = 0;
-            p.anzOwnSouthseacaptain = 0;
-            p.anzEnemySouthseacaptain = 0;
-            p.doublepriest = 0;
-            p.enemydoublepriest = 0;
-            p.ownBaronRivendare = 0;
-            p.enemyBaronRivendare = 0;
-
-            p.spellpower = 0;
-            p.enemyspellpower = 0;
-
-
-
-            p.winzigebeschwoererin = 0;
-            p.managespenst = 0;
-            p.soeldnerDerVenture = 0;
-            p.beschwoerungsportal = 0;
-            p.nerubarweblord = 0;
-
-            foreach (Minion m in p.ownMinions)
+            List<Minion> temp = new List<Minion>( p.ownMinions);
+            foreach (Minion m in temp)
             {
-                p.drawACard(m.handcard.card.cardIDenum, true, true);
+                p.minionReturnToHand(m, true, 0);
             }
-            foreach (Minion m in p.enemyMinions)
+            temp.Clear();
+            temp.AddRange(p.enemyMinions);
+            foreach (Minion m in temp)
             {
-                p.drawACard(m.handcard.card.cardIDenum, false, true);
+                p.minionReturnToHand(m, false, 0);
             }
             p.ownMinions.Clear();
             p.enemyMinions.Clear();

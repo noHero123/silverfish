@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
         public override void onMinionIsSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
-            if (triggerEffectMinion.own == summonedMinion.own && summonedMinion.handcard.card.race == 23)
+            if (triggerEffectMinion.own == summonedMinion.own && summonedMinion.handcard.card.race == TAG_RACE.PIRATE)
             {
                 if (p.isServer)
                 {

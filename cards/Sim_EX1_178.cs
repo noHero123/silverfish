@@ -10,11 +10,11 @@ namespace HREngine.Bots
         //    wählt aus:/ +5 angriff; oder +5 leben und spott/.
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (choice == 2)
+            if (choice == 1)
             {
                 p.minionGetBuffed(own, 5, 0);
             }
-            if (choice == 1)
+            if (choice == 2)
             {
                 p.minionGetBuffed(own, 0, 5);
                 own.taunt = true;

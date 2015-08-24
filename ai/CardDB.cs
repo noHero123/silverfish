@@ -65,6 +65,212 @@
         public enum cardIDEnum
         {
             None,
+            //TGT####################################
+
+            AT_001,
+            AT_002,
+            AT_003,
+            AT_004,
+            AT_005,
+            AT_005t,
+            AT_006,
+            AT_006e,
+            AT_007,
+            AT_008,
+            AT_009,
+            AT_010,
+            AT_011,
+            AT_011e,
+            AT_012,
+            AT_013,
+            AT_013e,
+            AT_014,
+            AT_014e,
+            AT_015,
+            AT_016,
+            AT_016e,
+            AT_017,
+            AT_017e,
+            AT_018,
+            AT_019,
+            AT_020,
+            AT_021,
+            AT_021e,
+            AT_022,
+            AT_023,
+            AT_024,
+            AT_024e,
+            AT_025,
+            AT_026,
+            AT_027,
+            AT_027e,
+            AT_028,
+            AT_028e,
+            AT_029,
+            AT_029e,
+            AT_030,
+            AT_031,
+            AT_032,
+            AT_032e,
+            AT_033,
+            AT_034,
+            AT_034e,
+            AT_035,
+            AT_035t,
+            AT_036,
+            AT_036t,
+            AT_037,
+            AT_037a,
+            AT_037b,
+            AT_037t,
+            AT_038,
+            AT_039,
+            AT_039e,
+            AT_040,
+            AT_040e,
+            AT_041,
+            AT_041e,
+            AT_042,
+            AT_042a,
+            AT_042b,
+            AT_042t,
+            AT_042t2,
+            AT_043,
+            AT_044,
+            AT_045,
+            AT_045e,
+            AT_045ee,
+            AT_046,
+            AT_047,
+            AT_047e,
+            AT_048,
+            AT_049,
+            AT_049e,
+            AT_050,
+            AT_050t,
+            AT_051,
+            AT_052,
+            AT_053,
+            AT_054,
+            AT_055,
+            AT_056,
+            AT_057,
+            AT_057o,
+            AT_058,
+            AT_059,
+            AT_060,
+            AT_061,
+            AT_061e,
+            AT_062,
+            AT_063,
+            AT_064,
+            AT_065,
+            AT_065e,
+            AT_066,
+            AT_066e,
+            AT_067,
+            AT_068,
+            AT_068e,
+            AT_069,
+            AT_069e,
+            AT_070,
+            AT_071,
+            AT_071e,
+            AT_072,
+            AT_073,
+            AT_073e,
+            AT_074,
+            AT_074e2,
+            AT_075,
+            AT_075e,
+            AT_076,
+            AT_077,
+            AT_077e,
+            AT_078,
+            AT_079,
+            AT_080,
+            AT_081,
+            AT_081e,
+            AT_082,
+            AT_082e,
+            AT_083,
+            AT_083e,
+            AT_084,
+            AT_084e,
+            AT_085,
+            AT_086,
+            AT_086e,
+            AT_087,
+            AT_088,
+            AT_089,
+            AT_089e,
+            AT_090,
+            AT_090e,
+            AT_091,
+            AT_092,
+            AT_093,
+            AT_094,
+            AT_095,
+            AT_096,
+            AT_096e,
+            AT_097,
+            AT_098,
+            AT_099,
+            AT_099t,
+            AT_100,
+            AT_101,
+            AT_102,
+            AT_103,
+            AT_104,
+            AT_105,
+            AT_106,
+            AT_108,
+            AT_109,
+            AT_109e,
+            AT_110,
+            AT_111,
+            AT_112,
+            AT_113,
+            AT_114,
+            AT_115,
+            AT_115e,
+            AT_116,
+            AT_116e,
+            AT_117,
+            AT_117e,
+            AT_118,
+            AT_119,
+            AT_119e,
+            AT_120,
+            AT_121,
+            AT_121e,
+            AT_122,
+            AT_123,
+            AT_124,
+            AT_125,
+            AT_127,
+            AT_128,
+            AT_129,
+            AT_130,
+            AT_131,
+            AT_132,
+            AT_132_DRUID,
+            AT_132_DRUIDe,
+            AT_132_HUNTER,
+            AT_132_MAGE,
+            AT_132_PALADIN,
+            AT_132_PRIEST,
+            AT_132_ROGUE,
+            AT_132_ROGUEt,
+            AT_132_SHAMAN,
+            AT_132_SHAMANa,
+            AT_132_SHAMANb,
+            AT_132_SHAMANc,
+            AT_132_SHAMANd,
+            AT_132_WARLOCK,
+            AT_132_WARRIOR,
+            AT_133,
+            AT_133e,
             //Blackrock#############################
             BRM_001,
             BRM_002,
@@ -1187,6 +1393,210 @@
 
         public cardIDEnum cardIdstringToEnum(string s)
         {
+            if (s == "AT_001") return CardDB.cardIDEnum.AT_001;
+            if (s == "AT_002") return CardDB.cardIDEnum.AT_002;
+            if (s == "AT_003") return CardDB.cardIDEnum.AT_003;
+            if (s == "AT_004") return CardDB.cardIDEnum.AT_004;
+            if (s == "AT_005") return CardDB.cardIDEnum.AT_005;
+            if (s == "AT_005t") return CardDB.cardIDEnum.AT_005t;
+            if (s == "AT_006") return CardDB.cardIDEnum.AT_006;
+            if (s == "AT_006e") return CardDB.cardIDEnum.AT_006e;
+            if (s == "AT_007") return CardDB.cardIDEnum.AT_007;
+            if (s == "AT_008") return CardDB.cardIDEnum.AT_008;
+            if (s == "AT_009") return CardDB.cardIDEnum.AT_009;
+            if (s == "AT_010") return CardDB.cardIDEnum.AT_010;
+            if (s == "AT_011") return CardDB.cardIDEnum.AT_011;
+            if (s == "AT_011e") return CardDB.cardIDEnum.AT_011e;
+            if (s == "AT_012") return CardDB.cardIDEnum.AT_012;
+            if (s == "AT_013") return CardDB.cardIDEnum.AT_013;
+            if (s == "AT_013e") return CardDB.cardIDEnum.AT_013e;
+            if (s == "AT_014") return CardDB.cardIDEnum.AT_014;
+            if (s == "AT_014e") return CardDB.cardIDEnum.AT_014e;
+            if (s == "AT_015") return CardDB.cardIDEnum.AT_015;
+            if (s == "AT_016") return CardDB.cardIDEnum.AT_016;
+            if (s == "AT_016e") return CardDB.cardIDEnum.AT_016e;
+            if (s == "AT_017") return CardDB.cardIDEnum.AT_017;
+            if (s == "AT_017e") return CardDB.cardIDEnum.AT_017e;
+            if (s == "AT_018") return CardDB.cardIDEnum.AT_018;
+            if (s == "AT_019") return CardDB.cardIDEnum.AT_019;
+            if (s == "AT_020") return CardDB.cardIDEnum.AT_020;
+            if (s == "AT_021") return CardDB.cardIDEnum.AT_021;
+            if (s == "AT_021e") return CardDB.cardIDEnum.AT_021e;
+            if (s == "AT_022") return CardDB.cardIDEnum.AT_022;
+            if (s == "AT_023") return CardDB.cardIDEnum.AT_023;
+            if (s == "AT_024") return CardDB.cardIDEnum.AT_024;
+            if (s == "AT_024e") return CardDB.cardIDEnum.AT_024e;
+            if (s == "AT_025") return CardDB.cardIDEnum.AT_025;
+            if (s == "AT_026") return CardDB.cardIDEnum.AT_026;
+            if (s == "AT_027") return CardDB.cardIDEnum.AT_027;
+            if (s == "AT_027e") return CardDB.cardIDEnum.AT_027e;
+            if (s == "AT_028") return CardDB.cardIDEnum.AT_028;
+            if (s == "AT_028e") return CardDB.cardIDEnum.AT_028e;
+            if (s == "AT_029") return CardDB.cardIDEnum.AT_029;
+            if (s == "AT_029e") return CardDB.cardIDEnum.AT_029e;
+            if (s == "AT_030") return CardDB.cardIDEnum.AT_030;
+            if (s == "AT_031") return CardDB.cardIDEnum.AT_031;
+            if (s == "AT_032") return CardDB.cardIDEnum.AT_032;
+            if (s == "AT_032e") return CardDB.cardIDEnum.AT_032e;
+            if (s == "AT_033") return CardDB.cardIDEnum.AT_033;
+            if (s == "AT_034") return CardDB.cardIDEnum.AT_034;
+            if (s == "AT_034e") return CardDB.cardIDEnum.AT_034e;
+            if (s == "AT_035") return CardDB.cardIDEnum.AT_035;
+            if (s == "AT_035t") return CardDB.cardIDEnum.AT_035t;
+            if (s == "AT_036") return CardDB.cardIDEnum.AT_036;
+            if (s == "AT_036t") return CardDB.cardIDEnum.AT_036t;
+            if (s == "AT_037") return CardDB.cardIDEnum.AT_037;
+            if (s == "AT_037a") return CardDB.cardIDEnum.AT_037a;
+            if (s == "AT_037b") return CardDB.cardIDEnum.AT_037b;
+            if (s == "AT_037t") return CardDB.cardIDEnum.AT_037t;
+            if (s == "AT_038") return CardDB.cardIDEnum.AT_038;
+            if (s == "AT_039") return CardDB.cardIDEnum.AT_039;
+            if (s == "AT_039e") return CardDB.cardIDEnum.AT_039e;
+            if (s == "AT_040") return CardDB.cardIDEnum.AT_040;
+            if (s == "AT_040e") return CardDB.cardIDEnum.AT_040e;
+            if (s == "AT_041") return CardDB.cardIDEnum.AT_041;
+            if (s == "AT_041e") return CardDB.cardIDEnum.AT_041e;
+            if (s == "AT_042") return CardDB.cardIDEnum.AT_042;
+            if (s == "AT_042a") return CardDB.cardIDEnum.AT_042a;
+            if (s == "AT_042b") return CardDB.cardIDEnum.AT_042b;
+            if (s == "AT_042t") return CardDB.cardIDEnum.AT_042t;
+            if (s == "AT_042t2") return CardDB.cardIDEnum.AT_042t2;
+            if (s == "AT_043") return CardDB.cardIDEnum.AT_043;
+            if (s == "AT_044") return CardDB.cardIDEnum.AT_044;
+            if (s == "AT_045") return CardDB.cardIDEnum.AT_045;
+            if (s == "AT_045e") return CardDB.cardIDEnum.AT_045e;
+            if (s == "AT_045ee") return CardDB.cardIDEnum.AT_045ee;
+            if (s == "AT_046") return CardDB.cardIDEnum.AT_046;
+            if (s == "AT_047") return CardDB.cardIDEnum.AT_047;
+            if (s == "AT_047e") return CardDB.cardIDEnum.AT_047e;
+            if (s == "AT_048") return CardDB.cardIDEnum.AT_048;
+            if (s == "AT_049") return CardDB.cardIDEnum.AT_049;
+            if (s == "AT_049e") return CardDB.cardIDEnum.AT_049e;
+            if (s == "AT_050") return CardDB.cardIDEnum.AT_050;
+            if (s == "AT_050t") return CardDB.cardIDEnum.AT_050t;
+            if (s == "AT_051") return CardDB.cardIDEnum.AT_051;
+            if (s == "AT_052") return CardDB.cardIDEnum.AT_052;
+            if (s == "AT_053") return CardDB.cardIDEnum.AT_053;
+            if (s == "AT_054") return CardDB.cardIDEnum.AT_054;
+            if (s == "AT_055") return CardDB.cardIDEnum.AT_055;
+            if (s == "AT_056") return CardDB.cardIDEnum.AT_056;
+            if (s == "AT_057") return CardDB.cardIDEnum.AT_057;
+            if (s == "AT_057o") return CardDB.cardIDEnum.AT_057o;
+            if (s == "AT_058") return CardDB.cardIDEnum.AT_058;
+            if (s == "AT_059") return CardDB.cardIDEnum.AT_059;
+            if (s == "AT_060") return CardDB.cardIDEnum.AT_060;
+            if (s == "AT_061") return CardDB.cardIDEnum.AT_061;
+            if (s == "AT_061e") return CardDB.cardIDEnum.AT_061e;
+            if (s == "AT_062") return CardDB.cardIDEnum.AT_062;
+            if (s == "AT_063") return CardDB.cardIDEnum.AT_063;
+            if (s == "AT_064") return CardDB.cardIDEnum.AT_064;
+            if (s == "AT_065") return CardDB.cardIDEnum.AT_065;
+            if (s == "AT_065e") return CardDB.cardIDEnum.AT_065e;
+            if (s == "AT_066") return CardDB.cardIDEnum.AT_066;
+            if (s == "AT_066e") return CardDB.cardIDEnum.AT_066e;
+            if (s == "AT_067") return CardDB.cardIDEnum.AT_067;
+            if (s == "AT_068") return CardDB.cardIDEnum.AT_068;
+            if (s == "AT_068e") return CardDB.cardIDEnum.AT_068e;
+            if (s == "AT_069") return CardDB.cardIDEnum.AT_069;
+            if (s == "AT_069e") return CardDB.cardIDEnum.AT_069e;
+            if (s == "AT_070") return CardDB.cardIDEnum.AT_070;
+            if (s == "AT_071") return CardDB.cardIDEnum.AT_071;
+            if (s == "AT_071e") return CardDB.cardIDEnum.AT_071e;
+            if (s == "AT_072") return CardDB.cardIDEnum.AT_072;
+            if (s == "AT_073") return CardDB.cardIDEnum.AT_073;
+            if (s == "AT_073e") return CardDB.cardIDEnum.AT_073e;
+            if (s == "AT_074") return CardDB.cardIDEnum.AT_074;
+            if (s == "AT_074e2") return CardDB.cardIDEnum.AT_074e2;
+            if (s == "AT_075") return CardDB.cardIDEnum.AT_075;
+            if (s == "AT_075e") return CardDB.cardIDEnum.AT_075e;
+            if (s == "AT_076") return CardDB.cardIDEnum.AT_076;
+            if (s == "AT_077") return CardDB.cardIDEnum.AT_077;
+            if (s == "AT_077e") return CardDB.cardIDEnum.AT_077e;
+            if (s == "AT_078") return CardDB.cardIDEnum.AT_078;
+            if (s == "AT_079") return CardDB.cardIDEnum.AT_079;
+            if (s == "AT_080") return CardDB.cardIDEnum.AT_080;
+            if (s == "AT_081") return CardDB.cardIDEnum.AT_081;
+            if (s == "AT_081e") return CardDB.cardIDEnum.AT_081e;
+            if (s == "AT_082") return CardDB.cardIDEnum.AT_082;
+            if (s == "AT_082e") return CardDB.cardIDEnum.AT_082e;
+            if (s == "AT_083") return CardDB.cardIDEnum.AT_083;
+            if (s == "AT_083e") return CardDB.cardIDEnum.AT_083e;
+            if (s == "AT_084") return CardDB.cardIDEnum.AT_084;
+            if (s == "AT_084e") return CardDB.cardIDEnum.AT_084e;
+            if (s == "AT_085") return CardDB.cardIDEnum.AT_085;
+            if (s == "AT_086") return CardDB.cardIDEnum.AT_086;
+            if (s == "AT_086e") return CardDB.cardIDEnum.AT_086e;
+            if (s == "AT_087") return CardDB.cardIDEnum.AT_087;
+            if (s == "AT_088") return CardDB.cardIDEnum.AT_088;
+            if (s == "AT_089") return CardDB.cardIDEnum.AT_089;
+            if (s == "AT_089e") return CardDB.cardIDEnum.AT_089e;
+            if (s == "AT_090") return CardDB.cardIDEnum.AT_090;
+            if (s == "AT_090e") return CardDB.cardIDEnum.AT_090e;
+            if (s == "AT_091") return CardDB.cardIDEnum.AT_091;
+            if (s == "AT_092") return CardDB.cardIDEnum.AT_092;
+            if (s == "AT_093") return CardDB.cardIDEnum.AT_093;
+            if (s == "AT_094") return CardDB.cardIDEnum.AT_094;
+            if (s == "AT_095") return CardDB.cardIDEnum.AT_095;
+            if (s == "AT_096") return CardDB.cardIDEnum.AT_096;
+            if (s == "AT_096e") return CardDB.cardIDEnum.AT_096e;
+            if (s == "AT_097") return CardDB.cardIDEnum.AT_097;
+            if (s == "AT_098") return CardDB.cardIDEnum.AT_098;
+            if (s == "AT_099") return CardDB.cardIDEnum.AT_099;
+            if (s == "AT_099t") return CardDB.cardIDEnum.AT_099t;
+            if (s == "AT_100") return CardDB.cardIDEnum.AT_100;
+            if (s == "AT_101") return CardDB.cardIDEnum.AT_101;
+            if (s == "AT_102") return CardDB.cardIDEnum.AT_102;
+            if (s == "AT_103") return CardDB.cardIDEnum.AT_103;
+            if (s == "AT_104") return CardDB.cardIDEnum.AT_104;
+            if (s == "AT_105") return CardDB.cardIDEnum.AT_105;
+            if (s == "AT_106") return CardDB.cardIDEnum.AT_106;
+            if (s == "AT_108") return CardDB.cardIDEnum.AT_108;
+            if (s == "AT_109") return CardDB.cardIDEnum.AT_109;
+            if (s == "AT_109e") return CardDB.cardIDEnum.AT_109e;
+            if (s == "AT_110") return CardDB.cardIDEnum.AT_110;
+            if (s == "AT_111") return CardDB.cardIDEnum.AT_111;
+            if (s == "AT_112") return CardDB.cardIDEnum.AT_112;
+            if (s == "AT_113") return CardDB.cardIDEnum.AT_113;
+            if (s == "AT_114") return CardDB.cardIDEnum.AT_114;
+            if (s == "AT_115") return CardDB.cardIDEnum.AT_115;
+            if (s == "AT_115e") return CardDB.cardIDEnum.AT_115e;
+            if (s == "AT_116") return CardDB.cardIDEnum.AT_116;
+            if (s == "AT_116e") return CardDB.cardIDEnum.AT_116e;
+            if (s == "AT_117") return CardDB.cardIDEnum.AT_117;
+            if (s == "AT_117e") return CardDB.cardIDEnum.AT_117e;
+            if (s == "AT_118") return CardDB.cardIDEnum.AT_118;
+            if (s == "AT_119") return CardDB.cardIDEnum.AT_119;
+            if (s == "AT_119e") return CardDB.cardIDEnum.AT_119e;
+            if (s == "AT_120") return CardDB.cardIDEnum.AT_120;
+            if (s == "AT_121") return CardDB.cardIDEnum.AT_121;
+            if (s == "AT_121e") return CardDB.cardIDEnum.AT_121e;
+            if (s == "AT_122") return CardDB.cardIDEnum.AT_122;
+            if (s == "AT_123") return CardDB.cardIDEnum.AT_123;
+            if (s == "AT_124") return CardDB.cardIDEnum.AT_124;
+            if (s == "AT_125") return CardDB.cardIDEnum.AT_125;
+            if (s == "AT_127") return CardDB.cardIDEnum.AT_127;
+            if (s == "AT_128") return CardDB.cardIDEnum.AT_128;
+            if (s == "AT_129") return CardDB.cardIDEnum.AT_129;
+            if (s == "AT_130") return CardDB.cardIDEnum.AT_130;
+            if (s == "AT_131") return CardDB.cardIDEnum.AT_131;
+            if (s == "AT_132") return CardDB.cardIDEnum.AT_132;
+            if (s == "AT_132_DRUID") return CardDB.cardIDEnum.AT_132_DRUID;
+            if (s == "AT_132_DRUIDe") return CardDB.cardIDEnum.AT_132_DRUIDe;
+            if (s == "AT_132_HUNTER") return CardDB.cardIDEnum.AT_132_HUNTER;
+            if (s == "AT_132_MAGE") return CardDB.cardIDEnum.AT_132_MAGE;
+            if (s == "AT_132_PALADIN") return CardDB.cardIDEnum.AT_132_PALADIN;
+            if (s == "AT_132_PRIEST") return CardDB.cardIDEnum.AT_132_PRIEST;
+            if (s == "AT_132_ROGUE") return CardDB.cardIDEnum.AT_132_ROGUE;
+            if (s == "AT_132_ROGUEt") return CardDB.cardIDEnum.AT_132_ROGUEt;
+            if (s == "AT_132_SHAMAN") return CardDB.cardIDEnum.AT_132_SHAMAN;
+            if (s == "AT_132_SHAMANa") return CardDB.cardIDEnum.AT_132_SHAMANa;
+            if (s == "AT_132_SHAMANb") return CardDB.cardIDEnum.AT_132_SHAMANb;
+            if (s == "AT_132_SHAMANc") return CardDB.cardIDEnum.AT_132_SHAMANc;
+            if (s == "AT_132_SHAMANd") return CardDB.cardIDEnum.AT_132_SHAMANd;
+            if (s == "AT_132_WARLOCK") return CardDB.cardIDEnum.AT_132_WARLOCK;
+            if (s == "AT_132_WARRIOR") return CardDB.cardIDEnum.AT_132_WARRIOR;
+            if (s == "AT_133") return CardDB.cardIDEnum.AT_133;
+            if (s == "AT_133e") return CardDB.cardIDEnum.AT_133e;
             //brock
             if (s == "BRM_001") return CardDB.cardIDEnum.BRM_001;
             if (s == "BRM_002") return CardDB.cardIDEnum.BRM_002;
@@ -2311,11 +2721,43 @@
             if (s == "PART_007") return CardDB.cardIDEnum.PART_007;
             if (s == "PART_007e") return CardDB.cardIDEnum.PART_007e;
 
-            if (s == "DS1h_292_H1") return CardDB.cardIDEnum.DS1h_292;
+            //alternativ hero-powers
             if (s == "CS2_034_H1") return CardDB.cardIDEnum.CS2_034;
+            if (s == "DS1h_292_H1") return CardDB.cardIDEnum.DS1h_292;
             if (s == "CS2_049_H1") return CardDB.cardIDEnum.CS2_049;
             if (s == "CS2_056_H1") return CardDB.cardIDEnum.CS2_056;
+            if (s == "CS2_101_H1") return CardDB.cardIDEnum.CS2_101;
             if (s == "CS2_102_H1") return CardDB.cardIDEnum.CS2_102;
+
+            //better version of heropowers
+            if (s == "AT_132_DRUID") return CardDB.cardIDEnum.AT_132_DRUID;
+            if (s == "AT_132_HUNTER") return CardDB.cardIDEnum.AT_132_HUNTER;
+            if (s == "AT_132_MAGE") return CardDB.cardIDEnum.AT_132_MAGE;
+            if (s == "AT_132_PALADIN") return CardDB.cardIDEnum.AT_132_PALADIN;
+            if (s == "AT_132_PRIEST") return CardDB.cardIDEnum.AT_132_PRIEST;
+            if (s == "AT_132_ROGUE") return CardDB.cardIDEnum.AT_132_ROGUE;
+            if (s == "AT_132_SHAMAN") return CardDB.cardIDEnum.AT_132_SHAMAN;
+            if (s == "AT_132_WARLOCK") return CardDB.cardIDEnum.AT_132_WARLOCK;
+            if (s == "AT_132_WARRIOR") return CardDB.cardIDEnum.AT_132_WARRIOR;
+
+            // totems
+            if (s == "AT_132_SHAMANa") return CardDB.cardIDEnum.NEW1_009;//Healing Totem
+            if (s == "AT_132_SHAMANb") return CardDB.cardIDEnum.CS2_050;//searing
+            if (s == "AT_132_SHAMANc") return CardDB.cardIDEnum.CS2_051;//stonwclaw
+            if (s == "AT_132_SHAMANd") return CardDB.cardIDEnum.CS2_052;//wrath of air
+
+            //better hero powers of alternative heros
+            if (s == "CS2_034_H1_AT_132") return CardDB.cardIDEnum.AT_132_MAGE;
+            if (s == "CS2_102_H1_AT_132") return CardDB.cardIDEnum.AT_132_WARRIOR;
+            if (s == "DS1h_292_H1_AT_132") return CardDB.cardIDEnum.AT_132_HUNTER;
+            
+                
+                
+                    
+                    
+                       
+                                   
+                                       
 
             if (s == "PlaceholderCard") return CardDB.cardIDEnum.PlaceholderCard;
             
@@ -2325,6 +2767,157 @@
         public enum cardName
         {
             unknown,
+            //TGT
+            flamelance,
+            effigy,
+            fallenhero,
+            arcaneblast,
+            polymorphboar,
+            dalaranaspirant,
+            spellslinger,
+            coldarradrake,
+            rhonin,
+            ramwrangler,
+            holychampion,
+            spawnofshadows,
+            powerwordglory,
+            shadowfiend,
+            convert,
+            confuse,
+            twilightguardian,
+            confessorpaletress,
+            dreadsteed,
+            fearsomedoomguard,
+            tinyknightofevil,
+            fistofjaraxxus,
+            voidcrusher,
+            demonfuse,
+            darkbargain,
+            wrathguard,
+            wilfredfizzlebang,
+            shadopanrider,
+            buccaneer,
+            undercityvaliant,
+            cutpurse,
+            shadydealer,
+            burgle,
+            poisonedblade,
+            beneaththegrounds,
+            ambush,
+            anubarak,
+            livingroots,
+            sapling,
+            darnassusaspirant,
+            savagecombatant,
+            wildwalker,
+            knightofthewild,
+            druidofthesaber,
+            lionform,
+            pantherform,
+            sabertoothlion,
+            sabertoothpanther,
+            astralcommunion,
+            mulch,
+            aviana,
+            tuskarrtotemic,
+            draeneitotemcarver,
+            healingwave,
+            thunderbluffvaliant,
+            chargedhammer,
+            lightningjolt,
+            elementaldestruction,
+            totemgolem,
+            ancestralknowledge,
+            themistcaller,
+            flashheal,
+            powershot,
+            stablemaster,
+            kingselekk,
+            bravearcher,
+            beartrap,
+            lockandload,
+            ballofspiders,
+            acidmaw,
+            dreadscale,
+            bash,
+            kingsdefender,
+            orgrimmaraspirant,
+            magnatauralpha,
+            bolster,
+            sparringpartner,
+            skycapnkragg,
+            alexstraszaschampion,
+            varianwrynn,
+            competitivespirit,
+            sealofchampions,
+            warhorsetrainer,
+            murlocknight,
+            argentlance,
+            enterthecoliseum,
+            mysteriouschallenger,
+            garrisoncommander,
+            eadricthepure,
+            lowlysquire,
+            dragonhawkrider,
+            lancecarrier,
+            maidenofthelake,
+            saboteur,
+            argenthorserider,
+            mogorschampion,
+            boneguardlieutenant,
+            muklaschampion,
+            tournamentmedic,
+            icerager,
+            frigidsnobold,
+            flamejuggler,
+            silentknight,
+            clockworkknight,
+            tournamentattendee,
+            sideshowspelleater,
+            kodorider,
+            warkodo,
+            silverhandregent,
+            pitfighter,
+            capturedjormungar,
+            northseakraken,
+            tuskarrjouster,
+            injuredkvaldir,
+            lightschampion,
+            armoredwarhorse,
+            argentwatchman,
+            coliseummanager,
+            refreshmentvendor,
+            masterjouster,
+            recruiter,
+            evilheckler,
+            fencingcoach,
+            wyrmrestagent,
+            masterofceremonies,
+            grandcrusader,
+            kvaldirraider,
+            frostgiant,
+            crowdfavorite,
+            gormoktheimpaler,
+            chillmaw,
+            bolframshield,
+            icehowl,
+            nexuschampionsaraad,
+            theskeletonknight,
+            fjolalightbane,
+            seareaver,
+            eydisdarkbane,
+            justicartrueheart,
+            direshapeshift,
+            ballistashot,
+            fireblastrank2,
+            thesilverhand,
+            heal,
+            poisoneddaggers,
+            poisoneddagger,
+            totemicslam,
+            soultap,
+            tankup,
+            gadgetzanjouster,
             //new Heros################
             magnibronzebeard,
             alleriawindrunner,
@@ -3175,6 +3768,166 @@
 
         public cardName cardNamestringToEnum(string s)
         {
+            //tgt:
+            if (s == "flamelance") return CardDB.cardName.flamelance;
+            if (s == "effigy") return CardDB.cardName.effigy;
+            if (s == "fallenhero") return CardDB.cardName.fallenhero;
+            if (s == "arcaneblast") return CardDB.cardName.arcaneblast;
+            if (s == "polymorphboar") return CardDB.cardName.polymorphboar;
+            if (s == "dalaranaspirant") return CardDB.cardName.dalaranaspirant;
+            if (s == "spellslinger") return CardDB.cardName.spellslinger;
+            if (s == "coldarradrake") return CardDB.cardName.coldarradrake;
+            if (s == "rhonin") return CardDB.cardName.rhonin;
+            if (s == "ramwrangler") return CardDB.cardName.ramwrangler;
+            if (s == "holychampion") return CardDB.cardName.holychampion;
+            if (s == "spawnofshadows") return CardDB.cardName.spawnofshadows;
+            if (s == "powerwordglory") return CardDB.cardName.powerwordglory;
+            if (s == "shadowfiend") return CardDB.cardName.shadowfiend;
+            if (s == "convert") return CardDB.cardName.convert;
+            if (s == "confuse") return CardDB.cardName.confuse;
+            if (s == "twilightguardian") return CardDB.cardName.twilightguardian;
+            if (s == "confessorpaletress") return CardDB.cardName.confessorpaletress;
+            if (s == "dreadsteed") return CardDB.cardName.dreadsteed;
+            if (s == "fearsomedoomguard") return CardDB.cardName.fearsomedoomguard;
+            if (s == "tinyknightofevil") return CardDB.cardName.tinyknightofevil;
+            if (s == "fistofjaraxxus") return CardDB.cardName.fistofjaraxxus;
+            if (s == "voidcrusher") return CardDB.cardName.voidcrusher;
+            if (s == "demonfuse") return CardDB.cardName.demonfuse;
+            if (s == "darkbargain") return CardDB.cardName.darkbargain;
+            if (s == "wrathguard") return CardDB.cardName.wrathguard;
+            if (s == "wilfredfizzlebang") return CardDB.cardName.wilfredfizzlebang;
+            if (s == "shadopanrider") return CardDB.cardName.shadopanrider;
+            if (s == "buccaneer") return CardDB.cardName.buccaneer;
+            if (s == "undercityvaliant") return CardDB.cardName.undercityvaliant;
+            if (s == "cutpurse") return CardDB.cardName.cutpurse;
+            if (s == "shadydealer") return CardDB.cardName.shadydealer;
+            if (s == "burgle") return CardDB.cardName.burgle;
+            if (s == "poisonedblade") return CardDB.cardName.poisonedblade;
+            if (s == "beneaththegrounds") return CardDB.cardName.beneaththegrounds;
+            if (s == "ambush") return CardDB.cardName.ambush;
+            if (s == "anubarak") return CardDB.cardName.anubarak;
+            if (s == "nerubian") return CardDB.cardName.nerubian;
+            if (s == "livingroots") return CardDB.cardName.livingroots;
+            if (s == "livingroots") return CardDB.cardName.livingroots;
+            if (s == "livingroots") return CardDB.cardName.livingroots;
+            if (s == "sapling") return CardDB.cardName.sapling;
+            if (s == "darnassusaspirant") return CardDB.cardName.darnassusaspirant;
+            if (s == "savagecombatant") return CardDB.cardName.savagecombatant;
+            if (s == "wildwalker") return CardDB.cardName.wildwalker;
+            if (s == "knightofthewild") return CardDB.cardName.knightofthewild;
+            if (s == "druidofthesaber") return CardDB.cardName.druidofthesaber;
+            if (s == "lionform") return CardDB.cardName.lionform;
+            if (s == "pantherform") return CardDB.cardName.pantherform;
+            if (s == "sabertoothlion") return CardDB.cardName.sabertoothlion;
+            if (s == "sabertoothpanther") return CardDB.cardName.sabertoothpanther;
+            if (s == "astralcommunion") return CardDB.cardName.astralcommunion;
+            if (s == "mulch") return CardDB.cardName.mulch;
+            if (s == "aviana") return CardDB.cardName.aviana;
+            if (s == "tuskarrtotemic") return CardDB.cardName.tuskarrtotemic;
+            if (s == "draeneitotemcarver") return CardDB.cardName.draeneitotemcarver;
+            if (s == "healingwave") return CardDB.cardName.healingwave;
+            if (s == "thunderbluffvaliant") return CardDB.cardName.thunderbluffvaliant;
+            if (s == "chargedhammer") return CardDB.cardName.chargedhammer;
+            if (s == "lightningjolt") return CardDB.cardName.lightningjolt;
+            if (s == "elementaldestruction") return CardDB.cardName.elementaldestruction;
+            if (s == "totemgolem") return CardDB.cardName.totemgolem;
+            if (s == "ancestralknowledge") return CardDB.cardName.ancestralknowledge;
+            if (s == "themistcaller") return CardDB.cardName.themistcaller;
+            if (s == "flashheal") return CardDB.cardName.flashheal;
+            if (s == "powershot") return CardDB.cardName.powershot;
+            if (s == "stablemaster") return CardDB.cardName.stablemaster;
+            if (s == "kingselekk") return CardDB.cardName.kingselekk;
+            if (s == "bravearcher") return CardDB.cardName.bravearcher;
+            if (s == "beartrap") return CardDB.cardName.beartrap;
+            if (s == "lockandload") return CardDB.cardName.lockandload;
+            if (s == "ballofspiders") return CardDB.cardName.ballofspiders;
+            if (s == "acidmaw") return CardDB.cardName.acidmaw;
+            if (s == "dreadscale") return CardDB.cardName.dreadscale;
+            if (s == "bash") return CardDB.cardName.bash;
+            if (s == "kingsdefender") return CardDB.cardName.kingsdefender;
+            if (s == "orgrimmaraspirant") return CardDB.cardName.orgrimmaraspirant;
+            if (s == "magnatauralpha") return CardDB.cardName.magnatauralpha;
+            if (s == "bolster") return CardDB.cardName.bolster;
+            if (s == "sparringpartner") return CardDB.cardName.sparringpartner;
+            if (s == "skycapnkragg") return CardDB.cardName.skycapnkragg;
+            if (s == "alexstraszaschampion") return CardDB.cardName.alexstraszaschampion;
+            if (s == "varianwrynn") return CardDB.cardName.varianwrynn;
+            if (s == "competitivespirit") return CardDB.cardName.competitivespirit;
+            if (s == "sealofchampions") return CardDB.cardName.sealofchampions;
+            if (s == "warhorsetrainer") return CardDB.cardName.warhorsetrainer;
+            if (s == "murlocknight") return CardDB.cardName.murlocknight;
+            if (s == "argentlance") return CardDB.cardName.argentlance;
+            if (s == "enterthecoliseum") return CardDB.cardName.enterthecoliseum;
+            if (s == "mysteriouschallenger") return CardDB.cardName.mysteriouschallenger;
+            if (s == "garrisoncommander") return CardDB.cardName.garrisoncommander;
+            if (s == "eadricthepure") return CardDB.cardName.eadricthepure;
+            if (s == "lowlysquire") return CardDB.cardName.lowlysquire;
+            if (s == "dragonhawkrider") return CardDB.cardName.dragonhawkrider;
+            if (s == "lancecarrier") return CardDB.cardName.lancecarrier;
+            if (s == "maidenofthelake") return CardDB.cardName.maidenofthelake;
+            if (s == "saboteur") return CardDB.cardName.saboteur;
+            if (s == "argenthorserider") return CardDB.cardName.argenthorserider;
+            if (s == "mogorschampion") return CardDB.cardName.mogorschampion;
+            if (s == "boneguardlieutenant") return CardDB.cardName.boneguardlieutenant;
+            if (s == "muklaschampion") return CardDB.cardName.muklaschampion;
+            if (s == "tournamentmedic") return CardDB.cardName.tournamentmedic;
+            if (s == "icerager") return CardDB.cardName.icerager;
+            if (s == "frigidsnobold") return CardDB.cardName.frigidsnobold;
+            if (s == "flamejuggler") return CardDB.cardName.flamejuggler;
+            if (s == "silentknight") return CardDB.cardName.silentknight;
+            if (s == "clockworkknight") return CardDB.cardName.clockworkknight;
+            if (s == "tournamentattendee") return CardDB.cardName.tournamentattendee;
+            if (s == "sideshowspelleater") return CardDB.cardName.sideshowspelleater;
+            if (s == "kodorider") return CardDB.cardName.kodorider;
+            if (s == "warkodo") return CardDB.cardName.warkodo;
+            if (s == "silverhandregent") return CardDB.cardName.silverhandregent;
+            if (s == "pitfighter") return CardDB.cardName.pitfighter;
+            if (s == "capturedjormungar") return CardDB.cardName.capturedjormungar;
+            if (s == "northseakraken") return CardDB.cardName.northseakraken;
+            if (s == "tuskarrjouster") return CardDB.cardName.tuskarrjouster;
+            if (s == "injuredkvaldir") return CardDB.cardName.injuredkvaldir;
+            if (s == "lightschampion") return CardDB.cardName.lightschampion;
+            if (s == "armoredwarhorse") return CardDB.cardName.armoredwarhorse;
+            if (s == "argentwatchman") return CardDB.cardName.argentwatchman;
+            if (s == "coliseummanager") return CardDB.cardName.coliseummanager;
+            if (s == "refreshmentvendor") return CardDB.cardName.refreshmentvendor;
+            if (s == "masterjouster") return CardDB.cardName.masterjouster;
+            if (s == "recruiter") return CardDB.cardName.recruiter;
+            if (s == "evilheckler") return CardDB.cardName.evilheckler;
+            if (s == "fencingcoach") return CardDB.cardName.fencingcoach;
+            if (s == "wyrmrestagent") return CardDB.cardName.wyrmrestagent;
+            if (s == "masterofceremonies") return CardDB.cardName.masterofceremonies;
+            if (s == "grandcrusader") return CardDB.cardName.grandcrusader;
+            if (s == "kvaldirraider") return CardDB.cardName.kvaldirraider;
+            if (s == "frostgiant") return CardDB.cardName.frostgiant;
+            if (s == "crowdfavorite") return CardDB.cardName.crowdfavorite;
+            if (s == "gormoktheimpaler") return CardDB.cardName.gormoktheimpaler;
+            if (s == "chillmaw") return CardDB.cardName.chillmaw;
+            if (s == "bolframshield") return CardDB.cardName.bolframshield;
+            if (s == "icehowl") return CardDB.cardName.icehowl;
+            if (s == "nexuschampionsaraad") return CardDB.cardName.nexuschampionsaraad;
+            if (s == "theskeletonknight") return CardDB.cardName.theskeletonknight;
+            if (s == "fjolalightbane") return CardDB.cardName.fjolalightbane;
+            if (s == "seareaver") return CardDB.cardName.seareaver;
+            if (s == "eydisdarkbane") return CardDB.cardName.eydisdarkbane;
+            if (s == "justicartrueheart") return CardDB.cardName.justicartrueheart;
+            if (s == "direshapeshift") return CardDB.cardName.direshapeshift;
+            if (s == "ballistashot") return CardDB.cardName.ballistashot;
+            if (s == "fireblastrank2") return CardDB.cardName.fireblastrank2;
+            if (s == "thesilverhand") return CardDB.cardName.thesilverhand;
+            if (s == "heal") return CardDB.cardName.heal;
+            if (s == "poisoneddaggers") return CardDB.cardName.poisoneddaggers;
+            if (s == "poisoneddagger") return CardDB.cardName.poisoneddagger;
+            if (s == "totemicslam") return CardDB.cardName.totemicslam;
+            if (s == "healingtotem") return CardDB.cardName.healingtotem;
+            if (s == "searingtotem") return CardDB.cardName.searingtotem;
+            if (s == "stoneclawtotem") return CardDB.cardName.stoneclawtotem;
+            if (s == "wrathofairtotem") return CardDB.cardName.wrathofairtotem;
+            if (s == "soultap") return CardDB.cardName.soultap;
+            if (s == "tankup") return CardDB.cardName.tankup;
+            if (s == "gadgetzanjouster") return CardDB.cardName.gadgetzanjouster;
+
+
             //new heros:
             if (s == "magnibronzebeard") return CardDB.cardName.garroshhellscream;
             if (s == "alleriawindrunner") return CardDB.cardName.rexxar;
@@ -4081,15 +4834,20 @@
             REQ_MINION_OR_ENEMY_HERO,//50
             REQ_TARGET_IF_AVAILABLE_AND_DRAGON_IN_HAND,//51
             REQ_LEGENDARY_TARGET,//52
-            REQ_FRIENDLY_MINION_DIED_THIS_TURN,
-            REQ_DRAG_TO_PLAY
+            REQ_FRIENDLY_MINION_DIED_THIS_TURN,//53
+            REQ_FRIENDLY_MINION_DIED_THIS_GAME,//54
+		    REQ_ENEMY_WEAPON_EQUIPPED,//55
+		    REQ_TARGET_IF_AVAILABLE_AND_MINIMUM_FRIENDLY_MINIONS,//56
+		    REQ_TARGET_WITH_BATTLECRY,//57
+		    REQ_TARGET_WITH_DEATHRATTLE,//58
+		    REQ_DRAG_TO_PLAY
         }
 
         public class Card
         {
             //public string CardID = "";
             public cardName name = cardName.unknown;
-            public int race = 0;
+            public TAG_RACE race = TAG_RACE.INVALID;
             public int rarity = 0;
             public int cost = 0;
             public int Class = 0;
@@ -4135,6 +4893,7 @@
             public int needMinNumberOfEnemy = 0;
             public int needMinTotalMinions = 0;
             public int needMinionsCapIfAvailable = 0;
+            public int needMinNumberOfOwnForTarget = -1;
 
 
             //additional data
@@ -4232,8 +4991,10 @@
 
                 if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO) && p.cardsPlayedThisTurn == 0) return retval;
 
+                if ((isRequirementInList(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE_AND_MINIMUM_FRIENDLY_MINIONS) && p.ownMinions.Count < this.needMinNumberOfOwnForTarget)) return retval;
+
                 bool moreh = isRequirementInList(CardDB.ErrorType2.REQ_MINION_OR_ENEMY_HERO);
-                if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_TO_PLAY) || isRequirementInList(CardDB.ErrorType2.REQ_NONSELF_TARGET) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO))
+                if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_TO_PLAY) || isRequirementInList(CardDB.ErrorType2.REQ_NONSELF_TARGET) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE) || isRequirementInList(CardDB.ErrorType2.REQ_TARGET_FOR_COMBO) || (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE_AND_MINIMUM_FRIENDLY_MINIONS) && p.ownMinions.Count >= this.needMinNumberOfOwnForTarget))
                 {
                     addEnemyHero = true;
                     addOwnHero = true;
@@ -4261,7 +5022,7 @@
                     bool dragonInHand = false;
                     foreach (Handmanager.Handcard hc in p.owncards)
                     {
-                        if (hc.card.race == 24)
+                        if (hc.card.race == TAG_RACE.DRAGON)
                         {
                             dragonInHand = true;
                             break;
@@ -4467,7 +5228,7 @@
                     foreach (Minion m in p.ownMinions)
                     {
                         k++;
-                        if ((m.handcard.card.race != this.needRaceForPlaying))
+                        if ((m.handcard.card.race != (TAG_RACE)this.needRaceForPlaying))
                         {
                             ownMins[k] = false;
                         }
@@ -4476,7 +5237,7 @@
                     foreach (Minion m in p.enemyMinions)
                     {
                         k++;
-                        if ((m.handcard.card.race != this.needRaceForPlaying))
+                        if ((m.handcard.card.race != (TAG_RACE)this.needRaceForPlaying))
                         {
                             enemyMins[k] = false;
                         }
@@ -4743,7 +5504,7 @@
                     foreach (Minion m in p.ownMinions)
                     {
                         k++;
-                        if ((m.handcard.card.race != this.needRaceForPlaying))
+                        if ((m.handcard.card.race != (TAG_RACE)this.needRaceForPlaying))
                         {
                             ownMins[k] = false;
                         }
@@ -4752,7 +5513,7 @@
                     foreach (Minion m in p.enemyMinions)
                     {
                         k++;
-                        if ((m.handcard.card.race != this.needRaceForPlaying))
+                        if ((m.handcard.card.race != (TAG_RACE)this.needRaceForPlaying))
                         {
                             enemyMins[k] = false;
                         }
@@ -4823,6 +5584,8 @@
                     {
                         offset += p.nerubarweblord * 2;
                     }
+
+                    
                 }
 
                 // CARDS that decrease the manacosts of others ##############################
@@ -4837,7 +5600,7 @@
                     //Manacosts changes with the pint-sized summoner
                     if (p.mobsplayedThisTurn == 0)
                     { 
-                        offset -= p.winzigebeschwoererin;
+                        offset -= p.pintsizedsummoner;
                     }
 
                     //manacosts changes with Mechwarper
@@ -4862,11 +5625,26 @@
                     }
                 }
 
-                
+                if (this.type == cardtype.MOB)
+                {
+                    if (p.anzOwnAviana >= 1) retval = 1;
+                }
 
 
                 switch (this.name)
                 {
+                    case CardDB.cardName.frostgiant:
+                        retval = retval + offset - p.own_TIMES_HERO_POWER_USED_THIS_GAME;
+                        break;
+                    case CardDB.cardName.skycapnkragg:
+                        int pirates = 0;
+                        foreach (Minion m in p.ownMinions)
+                        {
+                            if (m.handcard.card.race == TAG_RACE.PIRATE) pirates++;
+                        }
+                        retval = retval + offset - pirates;
+                        break;
+
                     case CardDB.cardName.dreadcorsair:
                         retval = retval + offset - p.ownWeaponAttack;
                         break;
@@ -4914,7 +5692,7 @@
                     retval = 0;
                 }
 
-                if (this.type == cardtype.MOB && this.race == 24)
+                if (this.type == cardtype.MOB && this.race == TAG_RACE.DRAGON)
                 {
                     retval -= (p.isOwnTurn) ? p.ownDragonConsort * 2 : p.enemyDragonConsort * 2;
                 }
@@ -4923,10 +5701,26 @@
                 {
                     retval += (p.isOwnTurn) ? p.enemyloatheb*5 : p.ownloatheb * 5;
                 }
+                
 
                 if (this.type == cardtype.SPELL && ((p.isOwnTurn && p.enemyHavePlayedMillhouseManastorm) || (!p.isOwnTurn && p.weHavePlayedMillhouseManastorm)))
                 {
                     retval = 0;
+                }
+
+                if (this.type == cardtype.HEROPWR )
+                {
+                    retval += (p.isOwnTurn) ? p.enemySaboteur * 5 : p.ownSaboteur * 5; ;
+                }
+
+                if (this.type == cardtype.HEROPWR && p.anzOwnMaidenOfTheLake >=1)
+                {
+                    retval = 1;
+                }
+
+                if (this.type == cardtype.HEROPWR && p.anzOwnFencingCoach >= 1)
+                {
+                    retval -= 2* p.anzOwnFencingCoach;
                 }
 
                 retval = Math.Max(0, retval);
@@ -4946,6 +5740,7 @@
                 
                 if (this.type == cardtype.MOB)
                 {
+
                     //Manacosts changes with soeldner der venture co.
                     offset +=  - p.soeldnerDerVenture * 3;
                     //Manacosts changes with mana-ghost
@@ -4955,6 +5750,8 @@
                     {
                         offset += -p.nerubarweblord * 2;
                     }
+
+                    if (p.anzOwnAviana >= 1) offset += this.cost - 1;
                 }
 
                 // CARDS that decrease the manacosts of others ##############################
@@ -4968,8 +5765,8 @@
 
                     //Manacosts changes with the pint-sized summoner
                     if (p.mobsplayedThisTurn == 0)
-                    { 
-                        offset += p.winzigebeschwoererin;
+                    {
+                        offset += p.pintsizedsummoner;
                     }
 
                     //manacosts changes with Mechwarper
@@ -4997,6 +5794,19 @@
                 
                 switch (this.name)
                 {
+
+                    case CardDB.cardName.frostgiant:
+                        retval = retval + offset + p.own_TIMES_HERO_POWER_USED_THIS_GAME;
+                        break;
+
+                    case CardDB.cardName.skycapnkragg:
+                        int pirates = 0;
+                        foreach(Minion m in p.ownMinions)
+                        {
+                            if (m.handcard.card.race == TAG_RACE.PIRATE) pirates++;
+                        }
+                        retval = retval + offset + pirates;
+                        break;
                     case CardDB.cardName.dreadcorsair:
                         retval = retval + offset + p.ownWeaponAttack;
                         break;
@@ -5039,7 +5849,7 @@
                     retval = this.cost;
                 }
 
-                if (this.type == cardtype.MOB && this.race == 24)
+                if (this.type == cardtype.MOB && this.race == TAG_RACE.DRAGON)
                 {
                     retval += (p.isOwnTurn) ? p.ownDragonConsort * 2 : p.enemyDragonConsort * 2;
                 }
@@ -5075,6 +5885,12 @@
                 {
                     if (p.enemyMinions.Count < this.needMinNumberOfEnemy) return false;
                 }
+
+                if (isRequirementInList(CardDB.ErrorType2.REQ_FRIENDLY_MINION_DIED_THIS_GAME))
+                {
+                    if (Probabilitymaker.Instance.anzMinionSinGrave == 0) return false;
+                }
+
                 if (isRequirementInList(CardDB.ErrorType2.REQ_NUM_MINION_SLOTS))
                 {
                     if (p.ownMinions.Count > 7 - this.needEmptyPlacesForPlaying) return false;
@@ -5121,6 +5937,7 @@
                     if (p.ownSecretsIDList.Count >= 5) return false;
                 }
 
+                
 
                 return true;
             }
@@ -5143,6 +5960,8 @@
         public Card grimpatron;
         public Card whelp2a1h;
         public Card imp;
+        public Card ligthningJolt;
+
         private static CardDB instance;
 
         public static CardDB Instance
@@ -5265,6 +6084,8 @@
                     if (temp.Equals("EX1_finkle")) c.isToken = true;
                     if (temp.Equals("EX1_598")) c.isToken = true;
                     if (temp.Equals("EX1_tk34")) c.isToken = true;
+                    if (temp.Equals("AT_132_SHAMAN")) c.choice = true; // its a choice card
+
                     //if (c.isToken) Helpfunctions.Instance.ErrorLog(temp +" is token");
 
                     continue;
@@ -5313,7 +6134,7 @@
                 {
                     string temp = s.Split(new string[] { "value=\"" }, StringSplitOptions.RemoveEmptyEntries)[1];
                     temp = temp.Split('\"')[0];
-                    c.race = Convert.ToInt32(temp);
+                    c.race = (TAG_RACE)Convert.ToInt32(temp);
                     continue;
                 }
                 //rarity
@@ -5407,6 +6228,7 @@
                         c.choice = true;
                         //Helpfunctions.Instance.logg(c.name + " is choice");
                     }
+                   
                     continue;
                 }
                 //targetingarrowtext
@@ -5698,6 +6520,14 @@
                     c.needMinNumberOfEnemy = Convert.ToInt32(temp);
                     continue;
                 }
+
+                if (s.Contains("PlayRequirement reqID=\"56\" param=\""))
+                {
+                    string temp = s.Split(new string[] { "param=\"" }, StringSplitOptions.RemoveEmptyEntries)[1];
+                    temp = temp.Split('\"')[0];
+                    c.needMinNumberOfOwnForTarget = Convert.ToInt32(temp);
+                    continue;
+                }
                 if (s.Contains("PlayRequirement reqID=\"45\" param=\""))
                 {
                     string temp = s.Split(new string[] { "param=\"" }, StringSplitOptions.RemoveEmptyEntries)[1];
@@ -5734,6 +6564,7 @@
             this.grimpatron = this.getCardDataFromID(CardDB.cardIDEnum.BRM_019);
             this.whelp2a1h = this.getCardDataFromID(CardDB.cardIDEnum.BRM_022t);//whelptoken from blackrock
             this.imp = this.getCardDataFromID(CardDB.cardIDEnum.BRM_006t);//imp from blackrock
+            this.ligthningJolt = this.getCardDataFromID(CardDB.cardIDEnum.AT_050t);//deal 2 dmg hero power
         }
 
         public Card getCardData(CardDB.cardName cardname)
@@ -5759,6 +6590,322 @@
         {
             switch (id)
             {
+
+                //TGT---------------------------------
+                case cardIDEnum.AT_001:
+                    return new Sim_AT_001();
+                case cardIDEnum.AT_002:
+                    return new Sim_AT_002();
+                case cardIDEnum.AT_003:
+                    return new Sim_AT_003();
+                case cardIDEnum.AT_004:
+                    return new Sim_AT_004();
+                case cardIDEnum.AT_005:
+                    return new Sim_AT_005();
+                case cardIDEnum.AT_005t:
+                    return new Sim_AT_005t();
+                case cardIDEnum.AT_006:
+                    return new Sim_AT_006();
+                case cardIDEnum.AT_007:
+                    return new Sim_AT_007();
+                case cardIDEnum.AT_008:
+                    return new Sim_AT_008();
+                case cardIDEnum.AT_009:
+                    return new Sim_AT_009();
+                case cardIDEnum.AT_010:
+                    return new Sim_AT_010();
+                case cardIDEnum.AT_011:
+                    return new Sim_AT_011();
+                case cardIDEnum.AT_012:
+                    return new Sim_AT_012();
+                case cardIDEnum.AT_013:
+                    return new Sim_AT_013();
+                case cardIDEnum.AT_014:
+                    return new Sim_AT_014();
+                case cardIDEnum.AT_015:
+                    return new Sim_AT_015();
+                case cardIDEnum.AT_016:
+                    return new Sim_AT_016();
+                case cardIDEnum.AT_017:
+                    return new Sim_AT_017();
+                case cardIDEnum.AT_018:
+                    return new Sim_AT_018();
+                case cardIDEnum.AT_019:
+                    return new Sim_AT_019();
+                case cardIDEnum.AT_020:
+                    return new Sim_AT_020();
+                case cardIDEnum.AT_021:
+                    return new Sim_AT_021();
+                case cardIDEnum.AT_022:
+                    return new Sim_AT_022();
+                case cardIDEnum.AT_023:
+                    return new Sim_AT_023();
+                case cardIDEnum.AT_024:
+                    return new Sim_AT_024();
+                case cardIDEnum.AT_025:
+                    return new Sim_AT_025();
+                case cardIDEnum.AT_026:
+                    return new Sim_AT_026();
+                case cardIDEnum.AT_027:
+                    return new Sim_AT_027();
+                case cardIDEnum.AT_028:
+                    return new Sim_AT_028();
+                case cardIDEnum.AT_029:
+                    return new Sim_AT_029();
+                case cardIDEnum.AT_030:
+                    return new Sim_AT_030();
+                case cardIDEnum.AT_031:
+                    return new Sim_AT_031();
+                case cardIDEnum.AT_032:
+                    return new Sim_AT_032();
+                case cardIDEnum.AT_033:
+                    return new Sim_AT_033();
+                case cardIDEnum.AT_034:
+                    return new Sim_AT_034();
+                case cardIDEnum.AT_035:
+                    return new Sim_AT_035();
+                case cardIDEnum.AT_035t:
+                    return new Sim_AT_035t();
+                case cardIDEnum.AT_036:
+                    return new Sim_AT_036();
+                case cardIDEnum.AT_036t:
+                    return new Sim_AT_036t();
+                case cardIDEnum.AT_037:
+                    return new Sim_AT_037();
+                case cardIDEnum.AT_037a:
+                    return new Sim_AT_037a();
+                case cardIDEnum.AT_037b:
+                    return new Sim_AT_037b();
+                case cardIDEnum.AT_037t:
+                    return new Sim_AT_037t();
+                case cardIDEnum.AT_038:
+                    return new Sim_AT_038();
+                case cardIDEnum.AT_039:
+                    return new Sim_AT_039();
+                case cardIDEnum.AT_040:
+                    return new Sim_AT_040();
+                case cardIDEnum.AT_041:
+                    return new Sim_AT_041();
+                case cardIDEnum.AT_042:
+                    return new Sim_AT_042();
+                case cardIDEnum.AT_042a:
+                    return new Sim_AT_042a();
+                case cardIDEnum.AT_042b:
+                    return new Sim_AT_042b();
+                case cardIDEnum.AT_042t:
+                    return new Sim_AT_042t();
+                case cardIDEnum.AT_042t2:
+                    return new Sim_AT_042t2();
+                case cardIDEnum.AT_043:
+                    return new Sim_AT_043();
+                case cardIDEnum.AT_044:
+                    return new Sim_AT_044();
+                case cardIDEnum.AT_045:
+                    return new Sim_AT_045();
+                case cardIDEnum.AT_046:
+                    return new Sim_AT_046();
+                case cardIDEnum.AT_047:
+                    return new Sim_AT_047();
+                case cardIDEnum.AT_048:
+                    return new Sim_AT_048();
+                case cardIDEnum.AT_049:
+                    return new Sim_AT_049();
+                case cardIDEnum.AT_050:
+                    return new Sim_AT_050();
+                case cardIDEnum.AT_050t:
+                    return new Sim_AT_050t();
+                case cardIDEnum.AT_051:
+                    return new Sim_AT_051();
+                case cardIDEnum.AT_052:
+                    return new Sim_AT_052();
+                case cardIDEnum.AT_053:
+                    return new Sim_AT_053();
+                case cardIDEnum.AT_054:
+                    return new Sim_AT_054();
+                case cardIDEnum.AT_055:
+                    return new Sim_AT_055();
+                case cardIDEnum.AT_056:
+                    return new Sim_AT_056();
+                case cardIDEnum.AT_057:
+                    return new Sim_AT_057();
+                case cardIDEnum.AT_058:
+                    return new Sim_AT_058();
+                case cardIDEnum.AT_059:
+                    return new Sim_AT_059();
+                case cardIDEnum.AT_060:
+                    return new Sim_AT_060();
+                case cardIDEnum.AT_061:
+                    return new Sim_AT_061();
+                case cardIDEnum.AT_062:
+                    return new Sim_AT_062();
+                case cardIDEnum.AT_063:
+                    return new Sim_AT_063();
+                case cardIDEnum.AT_064:
+                    return new Sim_AT_064();
+                case cardIDEnum.AT_065:
+                    return new Sim_AT_065();
+                case cardIDEnum.AT_066:
+                    return new Sim_AT_066();
+                case cardIDEnum.AT_067:
+                    return new Sim_AT_067();
+                case cardIDEnum.AT_068:
+                    return new Sim_AT_068();
+                case cardIDEnum.AT_069:
+                    return new Sim_AT_069();
+                case cardIDEnum.AT_070:
+                    return new Sim_AT_070();
+                case cardIDEnum.AT_071:
+                    return new Sim_AT_071();
+                case cardIDEnum.AT_072:
+                    return new Sim_AT_072();
+                case cardIDEnum.AT_073:
+                    return new Sim_AT_073();
+                case cardIDEnum.AT_074:
+                    return new Sim_AT_074();
+                case cardIDEnum.AT_075:
+                    return new Sim_AT_075();
+                case cardIDEnum.AT_076:
+                    return new Sim_AT_076();
+                case cardIDEnum.AT_077:
+                    return new Sim_AT_077();
+                case cardIDEnum.AT_078:
+                    return new Sim_AT_078();
+                case cardIDEnum.AT_079:
+                    return new Sim_AT_079();
+                case cardIDEnum.AT_080:
+                    return new Sim_AT_080();
+                case cardIDEnum.AT_081:
+                    return new Sim_AT_081();
+                case cardIDEnum.AT_082:
+                    return new Sim_AT_082();
+                case cardIDEnum.AT_083:
+                    return new Sim_AT_083();
+                case cardIDEnum.AT_084:
+                    return new Sim_AT_084();
+                case cardIDEnum.AT_085:
+                    return new Sim_AT_085();
+                case cardIDEnum.AT_086:
+                    return new Sim_AT_086();
+                case cardIDEnum.AT_087:
+                    return new Sim_AT_087();
+                case cardIDEnum.AT_088:
+                    return new Sim_AT_088();
+                case cardIDEnum.AT_089:
+                    return new Sim_AT_089();
+                case cardIDEnum.AT_090:
+                    return new Sim_AT_090();
+                case cardIDEnum.AT_091:
+                    return new Sim_AT_091();
+                case cardIDEnum.AT_092:
+                    return new Sim_AT_092();
+                case cardIDEnum.AT_093:
+                    return new Sim_AT_093();
+                case cardIDEnum.AT_094:
+                    return new Sim_AT_094();
+                case cardIDEnum.AT_095:
+                    return new Sim_AT_095();
+                case cardIDEnum.AT_096:
+                    return new Sim_AT_096();
+                case cardIDEnum.AT_097:
+                    return new Sim_AT_097();
+                case cardIDEnum.AT_098:
+                    return new Sim_AT_098();
+                case cardIDEnum.AT_099:
+                    return new Sim_AT_099();
+                case cardIDEnum.AT_099t:
+                    return new Sim_AT_099t();
+                case cardIDEnum.AT_100:
+                    return new Sim_AT_100();
+                case cardIDEnum.AT_101:
+                    return new Sim_AT_101();
+                case cardIDEnum.AT_102:
+                    return new Sim_AT_102();
+                case cardIDEnum.AT_103:
+                    return new Sim_AT_103();
+                case cardIDEnum.AT_104:
+                    return new Sim_AT_104();
+                case cardIDEnum.AT_105:
+                    return new Sim_AT_105();
+                case cardIDEnum.AT_106:
+                    return new Sim_AT_106();
+                case cardIDEnum.AT_108:
+                    return new Sim_AT_108();
+                case cardIDEnum.AT_109:
+                    return new Sim_AT_109();
+                case cardIDEnum.AT_110:
+                    return new Sim_AT_110();
+                case cardIDEnum.AT_111:
+                    return new Sim_AT_111();
+                case cardIDEnum.AT_112:
+                    return new Sim_AT_112();
+                case cardIDEnum.AT_113:
+                    return new Sim_AT_113();
+                case cardIDEnum.AT_114:
+                    return new Sim_AT_114();
+                case cardIDEnum.AT_115:
+                    return new Sim_AT_115();
+                case cardIDEnum.AT_116:
+                    return new Sim_AT_116();
+                case cardIDEnum.AT_117:
+                    return new Sim_AT_117();
+                case cardIDEnum.AT_118:
+                    return new Sim_AT_118();
+                case cardIDEnum.AT_119:
+                    return new Sim_AT_119();
+                case cardIDEnum.AT_120:
+                    return new Sim_AT_120();
+                case cardIDEnum.AT_121:
+                    return new Sim_AT_121();
+                case cardIDEnum.AT_122:
+                    return new Sim_AT_122();
+                case cardIDEnum.AT_123:
+                    return new Sim_AT_123();
+                case cardIDEnum.AT_124:
+                    return new Sim_AT_124();
+                case cardIDEnum.AT_125:
+                    return new Sim_AT_125();
+                case cardIDEnum.AT_127:
+                    return new Sim_AT_127();
+                case cardIDEnum.AT_128:
+                    return new Sim_AT_128();
+                case cardIDEnum.AT_129:
+                    return new Sim_AT_129();
+                case cardIDEnum.AT_130:
+                    return new Sim_AT_130();
+                case cardIDEnum.AT_131:
+                    return new Sim_AT_131();
+                case cardIDEnum.AT_132:
+                    return new Sim_AT_132();
+                case cardIDEnum.AT_132_DRUID:
+                    return new Sim_AT_132_DRUID();
+                case cardIDEnum.AT_132_HUNTER:
+                    return new Sim_AT_132_HUNTER();
+                case cardIDEnum.AT_132_MAGE:
+                    return new Sim_AT_132_MAGE();
+                case cardIDEnum.AT_132_PALADIN:
+                    return new Sim_AT_132_PALADIN();
+                case cardIDEnum.AT_132_PRIEST:
+                    return new Sim_AT_132_PRIEST();
+                case cardIDEnum.AT_132_ROGUE:
+                    return new Sim_AT_132_ROGUE();
+                case cardIDEnum.AT_132_ROGUEt:
+                    return new Sim_AT_132_ROGUEt();
+                case cardIDEnum.AT_132_SHAMAN:
+                    return new Sim_AT_132_SHAMAN();
+                case cardIDEnum.AT_132_SHAMANa:
+                    return new Sim_AT_132_SHAMANa();
+                case cardIDEnum.AT_132_SHAMANb:
+                    return new Sim_AT_132_SHAMANb();
+                case cardIDEnum.AT_132_SHAMANc:
+                    return new Sim_AT_132_SHAMANc();
+                case cardIDEnum.AT_132_SHAMANd:
+                    return new Sim_AT_132_SHAMANd();
+                case cardIDEnum.AT_132_WARLOCK:
+                    return new Sim_AT_132_WARLOCK();
+                case cardIDEnum.AT_132_WARRIOR:
+                    return new Sim_AT_132_WARRIOR();
+                case cardIDEnum.AT_133:
+                    return new Sim_AT_133();
 
                 case cardIDEnum.BRM_001:
                     return new Sim_BRM_001();

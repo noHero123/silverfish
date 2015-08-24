@@ -10,6 +10,7 @@ namespace HREngine.Bots
 //    zauberschaden +1/
 		public override void  onAuraStarts(Playfield p, Minion m)
         {
+            m.spellpower = 1;
             if (m.own)
             {
                 p.spellpower++;
@@ -19,19 +20,8 @@ namespace HREngine.Bots
                 p.enemyspellpower++;
             }
         }
-		
 
-        public override void onAuraEnds(Playfield p, Minion m)
-        {
-            if (m.own)
-            {
-                p.spellpower--;
-            }
-            else
-            {
-                p.enemyspellpower--;
-            }
-        }
+        
 
 	}
 }

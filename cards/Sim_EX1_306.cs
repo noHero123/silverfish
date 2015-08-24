@@ -17,21 +17,7 @@ namespace HREngine.Bots
                 return;
             }
 
-            if (own.own)
-            {
-                p.owncarddraw -= Math.Min(1, p.owncards.Count);
-                p.owncards.RemoveRange(0, Math.Min(1, p.owncards.Count));
-                p.triggerCardsChanged(true);
-            }
-            else
-            {
-                if (p.enemyAnzCards >= 1)
-                {
-                    p.enemycarddraw--;
-                    p.enemyAnzCards--;
-                    p.triggerCardsChanged(false);
-                }
-            }
+            p.disCardACard(own.own);
 		}
 
 	}

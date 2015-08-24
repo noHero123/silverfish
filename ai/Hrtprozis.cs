@@ -22,7 +22,9 @@
 
     public class Hrtprozis
     {
-
+        public int ownFenciCoaches=0;
+        public int ownSaboteur=0;
+        public int enemySaboteur=0;
 
         public int attackFaceHp = 15;
         public int ownHeroFatigue = 0;
@@ -55,6 +57,11 @@
         public CardDB.Card enemyAbility;
         public int numOptionsPlayedThisTurn = 0;
         public int numMinionsPlayedThisTurn = 0;
+
+        public int heroPowerUsesThisTurn = 0;
+        public int ownHeroPowerUsesThisGame = 0;
+        public int enemyHeroPowerUsesThisGame = 0;
+        public int lockAndLoads = 0;
 
         public int numberMinionsDiedThisTurn = 0;
         
@@ -372,7 +379,7 @@
             this.enemySecretCount = numEnemSec;
         }
 
-        public void updatePlayer(int maxmana, int currentmana, int cardsplayedthisturn, int numMinionsplayed, int optionsPlayedThisTurn, int recall, int heroentity, int enemyentity, int numMinsDied, int currentRecall, int enemRecall)
+        public void updatePlayer(int maxmana, int currentmana, int cardsplayedthisturn, int numMinionsplayed, int optionsPlayedThisTurn, int recall, int heroentity, int enemyentity, int numMinsDied, int currentRecall, int enemRecall, int hrpwrUsesThisTurn, int locknload)
         {
             this.currentMana = currentmana;
             this.ownMaxMana = maxmana;
@@ -388,10 +395,12 @@
             this.owedRecall = recall;
             this.enemyRecall = enemRecall;
 
+            this.heroPowerUsesThisTurn = hrpwrUsesThisTurn;
+            this.lockAndLoads = locknload;
             
         }
 
-        public void setPlayereffects(int ownDragonConsorts, int enemyDragonConsorts, int ownLoathebs, int enemyLoathebs, int ownMillhouses, int enemyMillhouses, int ownKirin, int ownPrep)
+        public void setPlayereffects(int ownDragonConsorts, int enemyDragonConsorts, int ownLoathebs, int enemyLoathebs, int ownMillhouses, int enemyMillhouses, int ownKirin, int ownPrep, int ownSabo, int enemySabo, int ownFenciCoachess)
         {
             this.ownDragonConsort = ownDragonConsorts;
             this.enemyDragonConsort = enemyDragonConsorts;
@@ -406,9 +415,13 @@
 
             this.ownPreparation = ownPrep;
 
+            this.ownSaboteur = ownSabo;
+            this.enemySaboteur = enemySabo;
+
+            this.ownFenciCoaches = ownFenciCoachess;
         }
 
-        public void updateOwnHero(string weapon, int watt, int wdur, string heron, CardDB.Card hab, bool habrdy, Minion Hero)
+        public void updateOwnHero(string weapon, int watt, int wdur, string heron, CardDB.Card hab, bool habrdy, Minion Hero, int heroPowerUsesThisGame)
         {
             this.ownHeroWeapon = CardDB.Instance.cardNamestringToEnum(weapon);
             this.heroWeaponAttack = watt;
@@ -421,9 +434,11 @@
 
             this.ownHero = new Minion(Hero);
             this.ownHero.updateReadyness();
+
+            this.ownHeroPowerUsesThisGame = heroPowerUsesThisGame;
         }
 
-        public void updateEnemyHero(string weapon, int weaponAttack, int weaponDurability, string heron, int enemMaxMana, CardDB.Card eab, Minion enemyHero)
+        public void updateEnemyHero(string weapon, int weaponAttack, int weaponDurability, string heron, int enemMaxMana, CardDB.Card eab, Minion enemyHero, int heroPowerUsesThisGame)
         {
             this.enemyHeroWeapon = CardDB.Instance.cardNamestringToEnum(weapon);
             this.enemyWeaponAttack = weaponAttack;
@@ -436,6 +451,8 @@
             this.enemyAbility = eab;
 
             this.enemyHero = new Minion(enemyHero);
+
+            this.enemyHeroPowerUsesThisGame = heroPowerUsesThisGame;
 
         }
 
@@ -516,136 +533,17 @@
         //these functions are not longer updated (moved to playfield.getCompleteBoardForSimulating)
         public void printHero(bool writetobuffer = false)
         {
-            help.logg("player:");
-            help.logg(this.numMinionsPlayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.owedRecall + " " + this.ownPlayerController + " " + this.numberMinionsDiedThisTurn + " " + this.ownCurrentRecall + " " + this.enemyRecall);
-            help.logg(this.ownDragonConsort + " " + this.enemyDragonConsort + " " + this.ownLoatheb + " " + this.enemyLoatheb + " " + this.ownMillhouse + " " + this.enemyMillhouse + " " + this.ownKirinTorEffect + " "  + this.ownPreparation);
-            help.logg("ownhero:");
-            help.logg(this.heroname + " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entitiyID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack);
-            help.logg("weapon: " + heroWeaponAttack + " " + heroWeaponDurability + " " + ownHeroWeapon);
-            help.logg("ability: " + this.ownAbilityisReady + " " + this.heroAbility.cardIDenum);
-            string secs = "";
-            foreach (CardDB.cardIDEnum sec in this.ownSecretList)
-            {
-                secs += sec + " ";
-            }
-            help.logg("osecrets: " + secs);
-            help.logg("enemyhero:");
-            help.logg(this.enemyHeroname + " " + this.enemyHero.Hp + " " + this.enemyHero.maxHp + " " + this.enemyHero.armor + " " + this.enemyHero.frozen + " " + this.enemyHero.immune + " " + this.enemyHero.entitiyID);
-            help.logg("weapon: " + this.enemyWeaponAttack + " " + this.enemyWeaponDurability + " " + this.enemyHeroWeapon);
-            help.logg("ability: " + "true" + " " + this.enemyAbility.cardIDenum);
-            help.logg("fatigue: " + this.ownDeckSize + " " + this.ownHeroFatigue + " " + this.enemyDeckSize + " " + this.enemyHeroFatigue);
-
-            if (writetobuffer)
-            {
-                help.writeToBuffer("player:");
-                help.writeToBuffer(this.numMinionsPlayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.owedRecall + " " + this.ownPlayerController + " " + this.numberMinionsDiedThisTurn + " " + this.ownCurrentRecall + " " + this.enemyRecall);
-                help.writeToBuffer(this.ownDragonConsort + " " + this.enemyDragonConsort + " " + this.ownLoatheb + " " + this.enemyLoatheb + " " + this.ownMillhouse + " " + this.enemyMillhouse + " " + this.ownKirinTorEffect + " " + this.ownPreparation);
-                help.writeToBuffer("ownhero:");
-                help.writeToBuffer(this.heroname + " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entitiyID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack);
-                help.writeToBuffer("weapon: " + heroWeaponAttack + " " + heroWeaponDurability + " " + ownHeroWeapon);
-                help.writeToBuffer("ability: " + this.ownAbilityisReady + " " + this.heroAbility.cardIDenum);
-                secs = "";
-                foreach (CardDB.cardIDEnum sec in this.ownSecretList)
-                {
-                    secs += sec + " ";
-                }
-                help.writeToBuffer("osecrets: " + secs);
-                help.writeToBuffer("enemyhero:");
-                help.writeToBuffer(this.enemyHeroname + " " + this.enemyHero.Hp + " " + this.enemyHero.maxHp + " " + this.enemyHero.armor + " " + this.enemyHero.frozen + " " + this.enemyHero.immune + " " + this.enemyHero.entitiyID);
-                help.writeToBuffer("weapon: " + this.enemyWeaponAttack + " " + this.enemyWeaponDurability + " " + this.enemyHeroWeapon);
-                help.writeToBuffer("ability: " + "true" + " " + this.enemyAbility.cardIDenum);
-                help.writeToBuffer("fatigue: " + this.ownDeckSize + " " + this.ownHeroFatigue + " " + this.enemyDeckSize + " " + this.enemyHeroFatigue);
-            }
+           
         }
-
 
         public void printOwnMinions(bool writetobuffer = false)
         {
-            help.logg("OwnMinions:");
-            if (writetobuffer) help.writeToBuffer("OwnMinions:");
-            Playfield p = new Playfield();
-            foreach (Minion m in p.ownMinions)
-            {
-                string mini = m.name + " " + m.handcard.card.cardIDenum + " zp:" + m.zonepos + " e:" + m.entitiyID + " A:" + m.Angr + " H:" + m.Hp + " mH:" + m.maxHp + " rdy:" + m.Ready + " natt:" + m.numAttacksThisTurn;
-                if (m.exhausted) mini += " ex";
-                if (m.taunt) mini += " tnt";
-                if (m.frozen) mini += " frz";
-                if (m.silenced) mini += " silenced";
-                if (m.divineshild) mini += " divshield";
-                if (m.playedThisTurn) mini += " ptt";
-                if (m.windfury) mini += " wndfr";
-                if (m.stealth) mini += " stlth";
-                if (m.poisonous) mini += " poi";
-                if (m.immune) mini += " imm";
-                if (m.concedal) mini += " cncdl";
-                if (m.destroyOnOwnTurnStart) mini += " dstrOwnTrnStrt";
-                if (m.destroyOnOwnTurnEnd) mini += " dstrOwnTrnnd";
-                if (m.destroyOnEnemyTurnStart) mini += " dstrEnmTrnStrt";
-                if (m.destroyOnEnemyTurnEnd) mini += " dstrEnmTrnnd";
-                if (m.shadowmadnessed) mini += " shdwmdnssd";
-                if (m.cantLowerHPbelowONE) mini += " cantLowerHpBelowOne";
-                if (m.cantBeTargetedBySpellsOrHeroPowers) mini += " canttarget";
-
-                if (m.charge >= 1) mini += " chrg(" + m.charge + ")";
-                if (m.AdjacentAngr >= 1) mini += " adjaattk(" + m.AdjacentAngr + ")";
-                if (m.tempAttack >= 1) mini += " tmpattck(" + m.tempAttack + ")";
-                if (m.spellpower >= 1) mini += " spllpwr(" + m.spellpower + ")";
-
-                if (m.ancestralspirit >= 1) mini += " ancstrl(" + m.ancestralspirit + ")";
-                if (m.ownBlessingOfWisdom >= 1) mini += " ownBlssng(" + m.ownBlessingOfWisdom + ")";
-                if (m.enemyBlessingOfWisdom >= 1) mini += " enemyBlssng(" + m.enemyBlessingOfWisdom + ")";
-                if (m.souloftheforest >= 1) mini += " souloffrst(" + m.souloftheforest + ")";
-
-
-
-
-                help.logg(mini);
-                if (writetobuffer) help.writeToBuffer(mini);
-            }
-
+            
         }
 
         public void printEnemyMinions(bool writetobuffer = false)
         {
-            help.logg("EnemyMinions:");
-            if (writetobuffer) help.writeToBuffer("EnemyMinions:");
-            Playfield p = new Playfield();
-            foreach (Minion m in p.enemyMinions)
-            {
-                string mini = m.name + " " + m.handcard.card.cardIDenum + " zp:" + m.zonepos + " e:" + m.entitiyID + " A:" + m.Angr + " H:" + m.Hp + " mH:" + m.maxHp + " rdy:" + m.Ready;// +" natt:" + m.numAttacksThisTurn;
-                if (m.exhausted) mini += " ex";
-                if (m.taunt) mini += " tnt";
-                if (m.frozen) mini += " frz";
-                if (m.silenced) mini += " silenced";
-                if (m.divineshild) mini += " divshield";
-                if (m.playedThisTurn) mini += " ptt";
-                if (m.windfury) mini += " wndfr";
-                if (m.stealth) mini += " stlth";
-                if (m.poisonous) mini += " poi";
-                if (m.immune) mini += " imm";
-                if (m.concedal) mini += " cncdl";
-                if (m.destroyOnOwnTurnStart) mini += " dstrOwnTrnStrt";
-                if (m.destroyOnOwnTurnEnd) mini += " dstrOwnTrnnd";
-                if (m.destroyOnEnemyTurnStart) mini += " dstrEnmTrnStrt";
-                if (m.destroyOnEnemyTurnEnd) mini += " dstrEnmTrnnd";
-                if (m.shadowmadnessed) mini += " shdwmdnssd";
-                if (m.cantLowerHPbelowONE) mini += " cantLowerHpBelowOne";
-                if (m.cantBeTargetedBySpellsOrHeroPowers) mini += " canttarget";
-
-                if (m.charge >= 1) mini += " chrg(" + m.charge + ")";
-                if (m.AdjacentAngr >= 1) mini += " adjaattk(" + m.AdjacentAngr + ")";
-                if (m.tempAttack >= 1) mini += " tmpattck(" + m.tempAttack + ")";
-                if (m.spellpower >= 1) mini += " spllpwr(" + m.spellpower + ")";
-
-                if (m.ancestralspirit >= 1) mini += " ancstrl(" + m.ancestralspirit + ")";
-                if (m.ownBlessingOfWisdom >= 1) mini += " ownBlssng(" + m.ownBlessingOfWisdom + ")";
-                if (m.enemyBlessingOfWisdom >= 1) mini += " enemyBlssng(" + m.enemyBlessingOfWisdom + ")";
-                if (m.souloftheforest >= 1) mini += " souloffrst(" + m.souloftheforest + ")";
-
-                help.logg(mini);
-                if (writetobuffer) help.writeToBuffer(mini);
-            }
-
+            
         }
 
 

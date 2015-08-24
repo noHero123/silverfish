@@ -24,6 +24,9 @@
         public bool canbeTriggeredWithAttackingHero = true;
         public bool canbeTriggeredWithAttackingMinion = true;
         public bool canbeTriggeredWithPlayingMinion = true;
+        public bool canbeTriggeredWithKillingMinion = true;
+
+
 
         public bool canBe_snaketrap = true;
         public bool canBe_snipe = true;
@@ -45,6 +48,11 @@
         public bool canBe_repentance = true;
         public bool canBe_avenge = true;
 
+        //new TGT---
+        public bool canBe_effigy = true;
+        public bool canBe_beartrap = true;
+        public bool canBe_competivespirit = true;
+
         public int entityId = 0;
 
         public SecretItem()
@@ -57,6 +65,7 @@
             this.canbeTriggeredWithAttackingHero = sec.canbeTriggeredWithAttackingHero;
             this.canbeTriggeredWithAttackingMinion = sec.canbeTriggeredWithAttackingMinion;
             this.canbeTriggeredWithPlayingMinion = sec.canbeTriggeredWithPlayingMinion;
+            this.canbeTriggeredWithKillingMinion = sec.canbeTriggeredWithKillingMinion;
 
             this.canBe_avenge = sec.canBe_avenge;
             this.canBe_counterspell = sec.canBe_counterspell;
@@ -110,6 +119,18 @@
             this.canBe_repentance = (canbe[15] == '1');
             this.canBe_avenge = (canbe[16] == '1');
 
+            //update TGT
+            try
+            {
+                this.canBe_effigy = (canbe[17] == '1');
+                this.canBe_beartrap = (canbe[18] == '1');
+                this.canBe_competivespirit = (canbe[19] == '1');
+            }
+            catch
+            { 
+
+            }
+
             this.updateCanBeTriggered();
         }
 
@@ -118,12 +139,17 @@
             this.canbeTriggeredWithAttackingHero = false;
             this.canbeTriggeredWithAttackingMinion = false;
             this.canbeTriggeredWithPlayingMinion = false;
+            this.canbeTriggeredWithKillingMinion = false;
+            
 
             if (this.canBe_snipe || this.canBe_mirrorentity || this.canBe_repentance) this.canbeTriggeredWithPlayingMinion = true;
 
-            if (this.canBe_explosive || this.canBe_missdirection || this.canBe_freezing || this.canBe_icebarrier || this.canBe_vaporize || this.canBe_noblesacrifice) this.canbeTriggeredWithAttackingHero = true;
+            if (this.canBe_explosive || this.canBe_missdirection || this.canBe_freezing || this.canBe_icebarrier || this.canBe_vaporize || this.canBe_noblesacrifice || this.canBe_beartrap) this.canbeTriggeredWithAttackingHero = true;
 
             if (this.canBe_snaketrap || this.canBe_freezing || this.canBe_noblesacrifice) this.canbeTriggeredWithAttackingMinion = true;
+
+            if (this.canBe_avenge || this.canBe_redemption || this.canBe_duplicate || this.canBe_effigy) this.canbeTriggeredWithKillingMinion = true;
+
 
         }
 
@@ -136,6 +162,8 @@
 
                 this.canBe_icebarrier = false;
                 this.canBe_vaporize = false;
+
+                this.canBe_beartrap = false;
 
             }
             else
@@ -170,6 +198,8 @@
             this.canBe_avenge = false;
             this.canBe_redemption = false;
             this.canBe_duplicate = false;
+            this.canBe_effigy = false;
+
             updateCanBeTriggered();
         }
 
@@ -177,6 +207,13 @@
         {
             this.canBe_eyeforaneye = false;
             if (deadly) this.canBe_iceblock = false;
+            updateCanBeTriggered();
+        }
+
+        public void usedTrigger_EndTurn()
+        {
+
+            this.canBe_competivespirit = false;
             updateCanBeTriggered();
         }
 
@@ -237,6 +274,8 @@
         public int enemyGraveYardCommonAttack = 0;
         public int enemyGraveYardCommonHP = 0;
         public int enemyGraveYardCommonTaunt = 0;
+
+        public int anzMinionSinGrave = 0;
 
         public bool feugenDead = false;
         public bool stalaggDead = false;
@@ -508,6 +547,7 @@
                 CardDB.Card tempcard = CardDB.Instance.getCardDataFromID(cdbe);
                 if (tempcard.type == CardDB.cardtype.MOB)
                 {
+                    this.anzMinionSinGrave++;
                     tempamount++;
                     tempattack += tempcard.Attack * anz;
                     temphp += tempcard.Health * anz;
@@ -646,6 +686,10 @@
                 sec.canBe_repentance = false;
                 sec.canBe_avenge = false;
 
+                sec.canBe_competivespirit = false;
+                sec.canBe_effigy = false;
+
+
                 if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_554) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_554] >= 2)
                 {
                     sec.canBe_snaketrap = false;
@@ -685,6 +729,9 @@
                 sec.canBe_redemption = false;
                 sec.canBe_repentance = false;
                 sec.canBe_avenge = false;
+
+                sec.canBe_competivespirit = false;
+                sec.canBe_beartrap = false;
 
                 if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_287) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_287] >= 2)
                 {
@@ -738,6 +785,10 @@
                 sec.canBe_spellbender = false;
                 sec.canBe_vaporize = false;
                 sec.canBe_duplicate = false;
+
+                sec.canBe_effigy = false;
+                sec.canBe_beartrap = false;
+
 
                 if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_132) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_132] >= 2)
                 {
@@ -840,6 +891,8 @@
             int attackTargetIsMinion = 0;
             bool enemyHeroGotDmg = false;
 
+            bool endedTurn = false;
+
             Handmanager.Handcard hcard = null;
             if (p.cardsPlayedThisTurn > old.cardsPlayedThisTurn)
             {
@@ -941,6 +994,7 @@
                 if (newDefenders < oldDefenders) attackTargetIsMinion = 2;
             }
 
+            if (old.optionsPlayedThisTurn >= 0 && p.optionsPlayedThisTurn == 0) endedTurn = true;
 
             foreach (SecretItem si in this.enemySecrets)
             {
@@ -954,6 +1008,8 @@
                 if (playedMob) si.usedTrigger_MinionIsPlayed();
 
                 if (usedspell) si.usedTrigger_SpellIsPlayed(lastEffectedIsMinion == 2);
+
+                if (endedTurn) si.usedTrigger_EndTurn();
 
             }
         }

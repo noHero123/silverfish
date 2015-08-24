@@ -18,7 +18,7 @@ namespace HREngine.Bots
                 int count = 0;
                 foreach (Handmanager.Handcard hc in tempdeck)
                 {
-                    if (hc.card.race == 15)
+                    if (hc.card.race == TAG_RACE.DEMON)
                     {
 
                         p.drawACard(hc.card.cardIDenum, ownplay);
