@@ -900,7 +900,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "115.14";
+        public string versionnumber = "116.00";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -952,23 +952,31 @@ namespace HREngine.Bots
         Minion ownHero;
         Minion enemyHero;
 
-        // NEW VALUES#################################################################################################################
-        // NEW VALUES#################################################################################################################
-        // NEW VALUES#################################################################################################################
+        // NEW VALUES--
 
         int numberMinionsDiedThisTurn = 0;//todo need that value
         int ownCurrentOverload = 0;//todo get them! = number of overloaded Manacrystals for CURRENT turn (NOT RECALL_OWED !)
         int enemyOverload = 0;//todo need that value maybe
         int ownDragonConsort = 0;
         int enemyDragonConsort = 0;
-        int ownLoathebs = 0;
+        int ownLoathebs = 0;// number of loathebs WE PLAYED (so enemy has the buff)
         int enemyLoathebs = 0;
-        int ownMillhouse = 0;
+        int ownMillhouse = 0; // number of millhouse-manastorm WE PLAYED (so enemy has the buff)
         int enemyMillhouse = 0;
         int ownKirintor = 0;
         int enemyKirintor = 0;
         int ownPrepa = 0;
         int enemyPrepa = 0;
+
+        // NEW VALUES#TGT#############################################################################################################
+        // NEW VALUES#################################################################################################################
+        int heroPowerUsesThisTurn = 0;
+        int ownHeroPowerUsesThisGame = 0;
+        int enemyHeroPowerUsesThisGame = 0;
+        int lockandload = 0;
+        int ownsabo=0;//number of saboteurplays  of our player (so enemy has the buff)
+        int enemysabo = 0;//number of saboteurplays  of enemy player (so we have the buff)
+        int ownFenciCoaches = 0; // number of Fencing Coach-debuffs on our player 
 
 
         private static HSRangerLib.GameState latestGameState;
@@ -1060,13 +1068,13 @@ namespace HREngine.Bots
                 if (m.Hp >= 1) this.numOptionPlayedThisTurn += m.numAttacksThisTurn;
             }
 
-            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ueberladung, ownHero.entitiyID, enemyHero.entitiyID, this.numberMinionsDiedThisTurn, this.ownCurrentOverload, this.enemyOverload);
-            Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrepa);
+            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ueberladung, ownHero.entitiyID, enemyHero.entitiyID, this.numberMinionsDiedThisTurn, this.ownCurrentOverload, this.enemyOverload, this.heroPowerUsesThisTurn,this.lockandload);
+            Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrepa, this.ownsabo, this.enemysabo, this.ownFenciCoaches);
             Hrtprozis.Instance.updateSecretStuff(this.ownSecretList, this.enemySecretCount);
 
 
-            Hrtprozis.Instance.updateOwnHero(this.ownHeroWeapon, this.heroWeaponAttack, this.heroWeaponDurability, this.heroname, this.heroAbility, this.ownAbilityisReady, this.ownHero);
-            Hrtprozis.Instance.updateEnemyHero(this.enemyHeroWeapon, this.enemyWeaponAttack, this.enemyWeaponDurability, this.enemyHeroname, this.enemyMaxMana, this.enemyAbility, this.enemyHero);
+            Hrtprozis.Instance.updateOwnHero(this.ownHeroWeapon, this.heroWeaponAttack, this.heroWeaponDurability, this.heroname, this.heroAbility, this.ownAbilityisReady, this.ownHero, this.ownHeroPowerUsesThisGame);
+            Hrtprozis.Instance.updateEnemyHero(this.enemyHeroWeapon, this.enemyWeaponAttack, this.enemyWeaponDurability, this.enemyHeroname, this.enemyMaxMana, this.enemyAbility, this.enemyHero, this.enemyHeroPowerUsesThisGame);
 
             Hrtprozis.Instance.updateMinions(this.ownMinions, this.enemyMinions);
             Handmanager.Instance.setHandcards(this.handCards, this.anzcards, this.enemyAnzCards);
@@ -1109,19 +1117,19 @@ namespace HREngine.Bots
                 if (p.isEqual(Ai.Instance.nextMoveGuess, true))
                 {
 
-                    printstuff(rangerbot, false);
+                    printstuff(p, false);
                     Ai.Instance.doNextCalcedMove();
 
                 }
                 else
                 {
-                    printstuff(rangerbot, true);
+                    printstuff(p, true);
                     readActionFile(passiveWait);
                 }
             }
             else
             {
-                printstuff(rangerbot, false);
+                printstuff(p, false);
                 Ai.Instance.dosomethingclever(botbase);
             }
 
@@ -1132,6 +1140,13 @@ namespace HREngine.Bots
 
         private void getHerostuff(HSRangerLib.BotBase rangerbot)
         {
+
+            //TODO GET HERO POWER USES!!!!!!
+            //heroPowerUsesThisTurn = 0;
+            //ownHeroPowerUsesThisGame = 0;
+            //enemyHeroPowerUsesThisGame = 0;
+
+
             Dictionary<int, Entity> allEntitys = new Dictionary<int, Entity>();
 
             foreach (var item in rangerbot.gameState.GameEntityList)
@@ -1146,6 +1161,7 @@ namespace HREngine.Bots
             Entity enemyhero = rangerbot.EnemyHero;
             Entity ownHeroAbility = rangerbot.FriendHeroPower;
 
+            
 
             //TEST
             List<Entity> heroplayers = new List<Entity>();
@@ -1264,10 +1280,15 @@ namespace HREngine.Bots
             }
 
 
-            //own hero ablity stuff###########################################################
+            //own hero power stuff###########################################################
 
             this.heroAbility = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(ownHeroAbility.CardId));
             this.ownAbilityisReady = (ownHeroAbility.IsExhausted) ? false : true; // if exhausted, ability is NOT ready
+
+            //only because hearthranger desnt give me the data ;_; use the tag HEROPOWER_ACTIVATIONS_THIS_TURN instead! (of own player)
+            this.heroPowerUsesThisTurn = 10000;
+            if (this.ownAbilityisReady) this.heroPowerUsesThisTurn = 0;
+
             this.enemyAbility = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(rangerbot.EnemyHeroPower.CardId));
 
             //generate Heros
@@ -1354,27 +1375,34 @@ namespace HREngine.Bots
             int enemycontrollerblubb = enemyhero.ControllerId + 1;// controller = 1 or 2, but entity with 1 is the board -> +1
 
             //will not work in Hearthranger!
+
+
             foreach (Entity ent in allEntitys.Values)
             {
                 if (ent.Attached == owncontrollerblubb && ent.Zone == HSRangerLib.TAG_ZONE.PLAY) //1==play
                 {
                     CardDB.cardIDEnum id = CardDB.Instance.cardIdstringToEnum(ent.CardId);
-                    if (id == CardDB.cardIDEnum.NEW1_029t) this.ownMillhouse++;
-                    if (id == CardDB.cardIDEnum.FP1_030e) this.ownLoathebs++;
+                    if (id == CardDB.cardIDEnum.NEW1_029t) this.enemyMillhouse++;//CHANGED!!!!
+                    if (id == CardDB.cardIDEnum.FP1_030e) this.enemyLoathebs++; //CHANGED!!!!
                     if (id == CardDB.cardIDEnum.BRM_018e) this.ownDragonConsort++;
                     if (id == CardDB.cardIDEnum.EX1_612o) this.ownKirintor++;
                     if (id == CardDB.cardIDEnum.EX1_145o) this.ownPrepa++;
+                    if (id == CardDB.cardIDEnum.AT_061e) this.lockandload++;
+                    if (id == CardDB.cardIDEnum.AT_086e) this.enemysabo++;
+                    if (id == CardDB.cardIDEnum.AT_115e) this.ownFenciCoaches++;
+
                 }
 
                 if (ent.Attached == enemycontrollerblubb && ent.Zone == HSRangerLib.TAG_ZONE.PLAY) //1==play
                 {
                     CardDB.cardIDEnum id = CardDB.Instance.cardIdstringToEnum(ent.CardId);
-                    if (id == CardDB.cardIDEnum.NEW1_029t) this.enemyMillhouse++;
-                    if (id == CardDB.cardIDEnum.FP1_030e) this.enemyLoathebs++;
+                    if (id == CardDB.cardIDEnum.NEW1_029t) this.ownMillhouse++; //CHANGED!!!! (enemy has the buff-> we played millhouse)
+                    if (id == CardDB.cardIDEnum.FP1_030e) this.ownLoathebs++; //CHANGED!!!!
                     if (id == CardDB.cardIDEnum.BRM_018e) this.enemyDragonConsort++;
                     // not needef for enemy, because its lasting only for his turn
                     //if (id == CardDB.cardIDEnum.EX1_612o) this.enemyKirintor++;
                     //if (id == CardDB.cardIDEnum.EX1_145o) this.enemyPrepa++;
+                    if (id == CardDB.cardIDEnum.AT_086e) this.ownsabo++;
                 }
 
             }
@@ -1819,48 +1847,23 @@ namespace HREngine.Bots
         //    readActionFile();
         //}
 
-        private void printstuff(HSRangerLib.BotBase rangerbot, bool runEx)
+        private void printstuff(Playfield p, bool runEx)
         {
-            Entity ownPlayer = rangerbot.FriendHero;
-            int ownsecretcount = rangerbot.FriendSecrets.Count;
             string dtimes = DateTime.Now.ToString("HH:mm:ss:ffff");
-            string enemysecretIds = "";
-            enemysecretIds = Probabilitymaker.Instance.getEnemySecretData();
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("start calculations, current time: " + DateTime.Now.ToString("HH:mm:ss") + " V" + this.versionnumber + " " + this.botbehave);
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("mana " + currentMana + "/" + ownMaxMana);
-            Helpfunctions.Instance.logg("emana " + enemyMaxMana);
-            Helpfunctions.Instance.logg("own secretsCount: " + ownsecretcount);
-
-            Helpfunctions.Instance.logg("enemy secretsCount: " + enemySecretCount + " ;" + enemysecretIds);
-
-            Ai.Instance.currentCalculatedBoard = dtimes;
+            String completeBoardString = p.getCompleteBoardForSimulating(this.botbehave, this.versionnumber, dtimes);
+            
+            Helpfunctions.Instance.logg(completeBoardString);
 
             if (runEx)
             {
+                Ai.Instance.currentCalculatedBoard = dtimes;
                 Helpfunctions.Instance.resetBuffer();
                 Helpfunctions.Instance.writeBufferToActionFile();
                 Helpfunctions.Instance.resetBuffer();
 
-                Helpfunctions.Instance.writeToBuffer("#######################################################################");
-                Helpfunctions.Instance.writeToBuffer("#######################################################################");
-                Helpfunctions.Instance.writeToBuffer("start calculations, current time: " + dtimes + " V" + this.versionnumber + " " + this.botbehave);
-                Helpfunctions.Instance.writeToBuffer("#######################################################################");
-                Helpfunctions.Instance.writeToBuffer("mana " + currentMana + "/" + ownMaxMana);
-                Helpfunctions.Instance.writeToBuffer("emana " + enemyMaxMana);
-                Helpfunctions.Instance.writeToBuffer("own secretsCount: " + ownsecretcount);
-                Helpfunctions.Instance.writeToBuffer("enemy secretsCount: " + enemySecretCount + " ;" + enemysecretIds);
+                Helpfunctions.Instance.writeToBuffer(completeBoardString);
+                Helpfunctions.Instance.writeBufferToFile();
             }
-            Hrtprozis.Instance.printHero(runEx);
-            Hrtprozis.Instance.printOwnMinions(runEx);
-            Hrtprozis.Instance.printEnemyMinions(runEx);
-            Handmanager.Instance.printcards(runEx);
-            Probabilitymaker.Instance.printTurnGraveYard(runEx);
-            Probabilitymaker.Instance.printGraveyards(runEx);
-
-            if (runEx) Helpfunctions.Instance.writeBufferToFile();
 
         }
 
@@ -2055,6 +2058,7 @@ namespace HREngine.Bots
         {
             bool writed = true;
             this.sendbuffer += "<EoF>";
+            //this.ErrorLog("write to crrntbrd file: " + sendbuffer);
             while (writed)
             {
                 try
@@ -2074,7 +2078,7 @@ namespace HREngine.Bots
         {
             bool writed = true;
             this.sendbuffer += "<EoF>";
-            this.ErrorLog("write to action file: "+ sendbuffer);
+            //this.ErrorLog("write to action file: "+ sendbuffer);
             while (writed)
             {
                 try

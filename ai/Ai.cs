@@ -324,17 +324,15 @@
 
             BoardTester bt = new BoardTester(data);
             if (!bt.datareaded) return;
-            if (logg)
-            {
-                hp.printHero();
-                hp.printOwnMinions();
-                hp.printEnemyMinions();
-                hm.printcards();
-            }
             //calculate the stuff
             posmoves.Clear();
             posmoves.Add(new Playfield());
             posmoves[0].sEnemTurn = Settings.Instance.simulateEnemysTurn;
+            if (logg)
+            {
+                help.logg("readed:");
+                help.logg(posmoves[0].getCompleteBoardForSimulating("", "", ""));
+            }
             if (logg)
             {
                 foreach (Playfield p in this.posmoves)

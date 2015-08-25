@@ -11,9 +11,11 @@ namespace HREngine.Bots
     class Program
     {
         //todo (later)
-        //hungry dragon, ogre brut, piloted shredder, power of the horde, webspinner,
-        // dunemaul shaman, kezan mystic, ogre ninja, resurrect, unstable portal, bane of doom, captains parrot, 
-        //piloted sky golem, recombobulator, blingtron 3000, gazlowe, mogor the ogre, Nefarian, neptulon, sneeds old shredder
+        // ogre brut, dunemaul shaman, ogre ninja, mogor the ogre, == game-tag forgetfull
+
+        //TODO secrets
+        // resurrect,
+        // blingtron 3000
 
         // minions to do: 
         //http://hearthstone.gamepedia.com/Random_effect
@@ -138,8 +140,10 @@ namespace HREngine.Bots
             Boolean running = true;
             string oldinstructions = "";
             int instructionCounter = 0;
+            int roundcounter = 0;
             while (running)
             {
+
                 copyList = new ArrayList(sockList);
                 string win = "";
                 if (this.board != null) win = this.board.getWinstring();
@@ -265,10 +269,30 @@ namespace HREngine.Bots
                                 }
                                 else
                                 {
+
+
+                                    roundcounter++;
+                                    if (roundcounter >= 20) running = false;
+
+
                                     Helpfunctions.Instance.ErrorLog("DO ACTION:");
                                     aclist[0].print();
                                     //perform first action!
+                                    
+                                    if (aclist[0].card !=null)
+                                    {
+                                        int id = aclist[0].card.entity;
+                                        Handmanager.Handcard hc = this.board.getcardFromcurrentPlayer(id);
+                                        if (hc.card.Secret)
+                                        {
+                                            this.board.playedSecret(hc.card.cardIDenum, hc.entity);
+                                        }
+                                    }
+
                                     this.board.doAction(aclist[0]);
+
+
+
                                 }
 
                                 if (this.board.winner != "")
@@ -748,6 +772,8 @@ namespace HREngine.Bots
 
     public class player
     {
+
+        public List<SecretItem> enemySecrets = new List<SecretItem>();
         public int wins = 0;
         public Socket client;
         public string settings = "control 5000 face 15 twoturnsim 1000 ntss 6 20 200 ets 40 ets2 200 ents 40 plcmnt";
@@ -970,7 +996,7 @@ namespace HREngine.Bots
 
     public class HSBoard
     {
-        player p1;
+        player p1; //->current player = true!
         player p2;
         int nextentity = 10;
         Random rand = new Random();
@@ -995,6 +1021,7 @@ namespace HREngine.Bots
         {
             return rand.Next(min, max + 1);
         }
+
 
         public HSBoard(player pl1, player pl2)
         {
@@ -1072,6 +1099,43 @@ namespace HREngine.Bots
             sendCurrentBoardToClient();
         }
 
+
+        public void playedSecret(CardDB.cardIDEnum secretid, int entity)
+        {
+            Console.WriteLine("1111111111111111111111111111111111111111111111111111111111111");
+            Console.WriteLine("current player " + this.currentplayer + " played secret " + secretid);
+            Console.WriteLine("1111111111111111111111111111111111111111111111111111111111111");
+            player currentp = this.p2;
+            player currentenemyp = this.p1;
+            if (this.currentplayer)
+            {
+                currentp = this.p1;
+                currentenemyp = this.p2;
+            }
+            SecretItem si = Probabilitymaker.Instance.getNewSecretGuessedItem(entity, currentp.hero);
+            currentenemyp.enemySecrets.Add(si);
+            
+        }
+
+        public void updateSecrets(Playfield old, Playfield newone)
+        {
+
+        }
+
+        public Handmanager.Handcard getcardFromcurrentPlayer(int entityid)
+        {
+            Console.WriteLine("search for " + entityid);
+            foreach (Handmanager.Handcard hc in board.owncards)
+            {
+                if (hc.entity == entityid)
+                {
+                    return hc;
+                }
+            }
+
+            return new Handmanager.Handcard();
+        }
+
         public void endturn()
         {
             this.board.endTurn(false, false);
@@ -1147,8 +1211,8 @@ namespace HREngine.Bots
             }
 
             Hrtprozis.Instance.setOwnPlayer(controler);
-            Hrtprozis.Instance.updatePlayer(p.maxMana, p.curMana, p.cardsPlayedThisTurn, p.numMinionsPlayedThisTurn, p.numOptionPlayedThisTurn, p.overdrive, p.HEntity, opponent.HEntity, p.numberMinionsDiedThisturn, p.owncurrentRecall, opponent.owncurrentRecall);
-            Hrtprozis.Instance.setPlayereffects(p.ownDragonConsort, opponent.ownDragonConsort, p.ownLoathebs, opponent.ownLoathebs, p.ownMillhouse, opponent.ownMillhouse, p.ownKirintor, p.ownPrep);
+            Hrtprozis.Instance.updatePlayer(p.maxMana, p.curMana, p.cardsPlayedThisTurn, p.numMinionsPlayedThisTurn, p.numOptionPlayedThisTurn, p.overdrive, p.HEntity, opponent.HEntity, p.numberMinionsDiedThisturn, p.owncurrentRecall, opponent.owncurrentRecall, 0, 0);//new values a zero at start
+            Hrtprozis.Instance.setPlayereffects(p.ownDragonConsort, opponent.ownDragonConsort, p.ownLoathebs, opponent.ownLoathebs, p.ownMillhouse, opponent.ownMillhouse, p.ownKirintor, p.ownPrep, 0, 0, 0);//new values a zero at start
 
             //TODO
             //Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);
@@ -1185,8 +1249,8 @@ namespace HREngine.Bots
             ownHero.updateReadyness();
 
             Console.WriteLine("herodata:" + p.heroname + " " + ownHero.Hp + " " + ownHero.maxHp);
-            Hrtprozis.Instance.updateOwnHero(p.ownHeroWeapon, p.ownHeroWeaponAttack, p.ownHeroWeaponDurability, p.heroname, p.heroAbility, p.heroAbilityReady, ownHero);
-            Hrtprozis.Instance.updateEnemyHero(opponent.ownHeroWeapon, opponent.ownHeroWeaponAttack, opponent.ownHeroWeaponDurability, opponent.heroname, opponent.maxMana, opponent.heroAbility, enemyHero);
+            Hrtprozis.Instance.updateOwnHero(p.ownHeroWeapon, p.ownHeroWeaponAttack, p.ownHeroWeaponDurability, p.heroname, p.heroAbility, p.heroAbilityReady, ownHero, 0); //at start heropower uses this game = 0
+            Hrtprozis.Instance.updateEnemyHero(opponent.ownHeroWeapon, opponent.ownHeroWeaponAttack, opponent.ownHeroWeaponDurability, opponent.heroname, opponent.maxMana, opponent.heroAbility, enemyHero, 0);//at start heropower uses this game = 0
 
             Hrtprozis.Instance.updateMinions(p.ownminions, opponent.ownminions);
 
@@ -1263,7 +1327,7 @@ namespace HREngine.Bots
             Probabilitymaker.Instance.printTurnGraveYard(runEx);
             Probabilitymaker.Instance.printGraveyards(runEx);*/
 
-            hpf.writeToBuffer(this.board.getCompleteBoardForSimulating(p.settings, "115.55", dtimes));
+            hpf.writeToBuffer(this.board.getCompleteBoardForSimulating(p.settings, "116.00", dtimes));
             hpf.writeBufferToFile(p.client);
             hpf.ErrorLog("sended");
         }

@@ -333,12 +333,12 @@
             this.enemyDragonConsort = Hrtprozis.Instance.enemyDragonConsort;
 
             //tgt---new
-            this.weHavePlayedMillhouseManastorm = (Hrtprozis.Instance.enemyMillhouse >= 1) ? true : false; //jeah... really, enemymillhouse
-            this.enemyHavePlayedMillhouseManastorm = (Hrtprozis.Instance.ownMillhouse >= 1) ? true : false;//jeah... really, ownmillhouse
-            this.ownloatheb = Hrtprozis.Instance.enemyLoatheb;//dont ask...
-            this.enemyloatheb = Hrtprozis.Instance.ownLoatheb;//dont ask... :D
-            this.ownSaboteur = Hrtprozis.Instance.enemySaboteur;//dont ask...
-            this.enemySaboteur = Hrtprozis.Instance.ownSaboteur;//dont ask... :D
+            this.weHavePlayedMillhouseManastorm = (Hrtprozis.Instance.ownMillhouse >= 1) ? true : false;//CHANGED!!!
+            this.enemyHavePlayedMillhouseManastorm = (Hrtprozis.Instance.enemyMillhouse >= 1) ? true : false; //CHANGED!!!
+            this.ownloatheb = Hrtprozis.Instance.ownLoatheb;//CHANGED!!!
+            this.enemyloatheb = Hrtprozis.Instance.enemyLoatheb;//CHANGED!!!
+            this.ownSaboteur = Hrtprozis.Instance.ownSaboteur;
+            this.enemySaboteur = Hrtprozis.Instance.enemySaboteur;
             this.anzOwnFencingCoach = Hrtprozis.Instance.ownFenciCoaches;
             this.anzEnemyFencingCoach = 0; // dont needed yet. D:
             //----
@@ -6557,6 +6557,26 @@
             {
                 Minion m = this.searchRandomMinion((side) ? this.ownMinions : this.enemyMinions, Playfield.searchmode.searchHighestHP);
                 if (m != null) this.minionGetDamageOrHeal(m, dmg);
+            }
+            else
+            {
+                Minion m = this.searchRandomMinion((side) ? this.ownMinions : this.enemyMinions, Playfield.searchmode.searchHighestHP);
+                if (m != null)
+                {
+                    int hp = (side) ? this.ownHero.Hp : this.enemyHero.Hp;
+                    if (m.Hp <= dmg && hp-5 > dmg)
+                    {
+                        this.minionGetDamageOrHeal((side) ? this.ownHero : this.enemyHero, dmg);
+                    }
+                    else
+                    {
+                        this.minionGetDamageOrHeal(m, dmg);
+                    }
+                }
+                else
+                {
+                    this.minionGetDamageOrHeal((side) ? this.ownHero : this.enemyHero, dmg);
+                }
             }
         }
     }
