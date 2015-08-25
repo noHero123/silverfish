@@ -1286,8 +1286,10 @@ namespace HREngine.Bots
             this.ownAbilityisReady = (ownHeroAbility.IsExhausted) ? false : true; // if exhausted, ability is NOT ready
 
             //only because hearthranger desnt give me the data ;_; use the tag HEROPOWER_ACTIVATIONS_THIS_TURN instead! (of own player)
-            this.heroPowerUsesThisTurn = 10000;
-            if (this.ownAbilityisReady) this.heroPowerUsesThisTurn = 0;
+            //this.heroPowerUsesThisTurn = 10000;
+            //if (this.ownAbilityisReady) this.heroPowerUsesThisTurn = 0;
+            this.heroPowerUsesThisTurn = rangerbot.gameState.HeroPowerActivationsThisTurn;
+            this.ownHeroPowerUsesThisGame = rangerbot.gameState.NumTimesHeroPowerUsedThisGame;
 
             this.enemyAbility = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(rangerbot.EnemyHeroPower.CardId));
 
@@ -1406,6 +1408,7 @@ namespace HREngine.Bots
                 }
 
             }
+            this.lockandload = (rangerbot.gameState.LocalPlayerLockAndLoad)? 1 : 0;
 
             //TODO test Bolvar Fordragon but it will be on his card :D
             //Reading new values end################################
@@ -1415,8 +1418,9 @@ namespace HREngine.Bots
         private void getMinions(HSRangerLib.BotBase rangerbot)
         {
             Dictionary<int, Entity> allEntitys = new Dictionary<int, Entity>();
-            /*
-            Helpfunctions.Instance.ErrorLog("# all");
+            
+            //TEST....................
+            /*Helpfunctions.Instance.ErrorLog("# all");
             foreach (var item in rangerbot.gameState.GameEntityList)
             {
                 allEntitys.Add(item.EntityId, item);
@@ -1493,6 +1497,8 @@ namespace HREngine.Bots
 
                     m.silenced = entitiy.IsSilenced;
 
+                    //m.spellpower = entitiy.SpellPower;
+
                     m.charge = 0;
 
                     if (!m.silenced && m.name == CardDB.cardName.southseadeckhand && entitiy.HasCharge) m.charge = 1;
@@ -1503,7 +1509,8 @@ namespace HREngine.Bots
                     m.entitiyID = entitiy.EntityId;
 
 
-                    //Helpfunctions.Instance.ErrorLog(  m.name + " ready params ex: " + m.exhausted + " charge: " +m.charge + " attcksthisturn: " + m.numAttacksThisTurn + " playedthisturn " + m.playedThisTurn );
+                    Helpfunctions.Instance.ErrorLog( m.entitiyID +" " +  m.name + " ready params ex: " + m.exhausted + " charge: " +m.charge + " attcksthisturn: " + m.numAttacksThisTurn + " playedthisturn " + m.playedThisTurn );
+                    //Helpfunctions.Instance.ErrorLog("spellpower check " + entitiy.SpellPowerAttack + " " + entitiy.SpellPowerHealing);
 
 
                     List<miniEnch> enchs = new List<miniEnch>();
@@ -1656,10 +1663,12 @@ namespace HREngine.Bots
                     hc.entity = entitiy.EntityId;
                     hc.manacost = entitiy.Cost;
                     hc.addattack = 0;
-                    if (c.name == CardDB.cardName.bolvarfordragon)
-                    {
-                        hc.addattack = entitiy.ATK - 1; // -1 because it starts with 1, we count only the additional attackvalue
-                    }
+
+                    int attackchange = entitiy.ATK - c.Attack;
+                    int hpchange = entitiy.Health - c.Health;
+                    hc.addattack = attackchange;
+                    hc.addHp = hpchange;
+
                     handCards.Add(hc);
                     this.anzcards++;
                 }
