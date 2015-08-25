@@ -1417,18 +1417,37 @@
             {
                 //penalize for any own minions with health equal to potential attack amount
                 //to lessen risk of losing your own minion
-                bool haveready;
                 int maxAtk = 3;
                 if (name == CardDB.cardName.madderbomber) maxAtk = 5;
-                foreach (Minion mins in p.ownMinions)
+                foreach (Minion mnn in p.ownMinions)
                 {
-                    if (mins.Hp <= maxAtk)
+                    if (mnn.Hp <= maxAtk)
                     {
-                        haveready = false;
-                        if (mins.Ready) haveready = true;
-                        if (haveready) pen += 20;
+                        if (mnn.Ready) pen += 20;
+                    }
+                    if (mnn.divineshild) pen+= (100 / (p.ownMinions.Count + p.enemyMinions.Count + 2));
+                }
+            }
+            
+            //Should resolve Davidmann's issue, in attempting to play a mech card, onto field first, if possible
+            if (name == CardDB.cardName.goblinblastmage)
+            {
+                bool mechOnField = false;
+                foreach (Minion mnn in p.ownMinions)
+                {
+                    if (m.handcard.card.race == TAG_RACE.MECHANICAL) mechOnField = true;
+                    if (mechOnField) break;
+                }
+                if (!mechOnfield) 
+                {
+                    foreach (Handmanager.Handcard hc in p.owncards)
+                    {
+                        if (hc.card.race == TAG_RACE.MECHANICAL && p.mana >= (hc.card.getManaCost(p) + card.getManaCost(p))) return 500;//hc.card.race Should work? Nohero please confirm!
+                        if (hc.card.race == TAG_RACE.MECHANICAL && p.mana >= hc.card.getManaCost(p)) return 50;
+                        
                     }
                 }
+                else return 20;
             }
 
             if (card.name == CardDB.cardName.knifejuggler && p.mobsplayedThisTurn > 1 || (p.ownHeroName == HeroEnum.shaman && p.ownAbilityReady == false))
@@ -2977,7 +2996,7 @@
             this.randomEffects.Add(CardDB.cardName.gelbinmekkatorque, 1);
             this.randomEffects.Add(CardDB.cardName.iammurloc, 3);
             this.randomEffects.Add(CardDB.cardName.lightningstorm, 1);
-            this.randomEffects.Add(CardDB.cardName.madbomber, 3);
+            this.randomEffects.Add(CardDB.cardName.madbomber, 3); //Decreased 
             this.randomEffects.Add(CardDB.cardName.mindgames, 1);
             this.randomEffects.Add(CardDB.cardName.mindcontroltech, 1);
             this.randomEffects.Add(CardDB.cardName.mindvision, 1);
@@ -2992,7 +3011,7 @@
             this.randomEffects.Add(CardDB.cardName.crackle, 1);
             this.randomEffects.Add(CardDB.cardName.bouncingblade, 3);
             this.randomEffects.Add(CardDB.cardName.coghammer, 1);
-            this.randomEffects.Add(CardDB.cardName.madderbomber, 1);
+            this.randomEffects.Add(CardDB.cardName.madderbomber, 5);
             this.randomEffects.Add(CardDB.cardName.bomblobber, 1);
             this.randomEffects.Add(CardDB.cardName.enhanceomechano, 1);
 
