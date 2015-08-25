@@ -535,7 +535,18 @@
                 }
                 catch
                 {
+                    
+                }
+                if (cdbe == CardDB.cardIDEnum.None)
+                {
+                    try
+                    {
+                        cdbe = CardDB.Instance.cardIdstringToEnum(id);
+                    }
+                    catch
+                    {
 
+                    }
                 }
                 this.ownCardsPlayed.Add(cdbe, anz);
                 if (cdbe == CardDB.cardIDEnum.FP1_015)
@@ -584,6 +595,19 @@
                 {
  
                 }
+
+                if (cdbe == CardDB.cardIDEnum.None)
+                {
+                    try
+                    {
+                        cdbe = CardDB.Instance.cardIdstringToEnum(id);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
                 this.enemyCardsPlayed.Add(cdbe, anz);
                 if (cdbe == CardDB.cardIDEnum.FP1_015) this.feugenDead = true;
                 if (cdbe == CardDB.cardIDEnum.FP1_014) this.stalaggDead = true;

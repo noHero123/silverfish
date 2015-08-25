@@ -4885,6 +4885,7 @@
             public bool Spellpower = false;
             public bool GrantCharge = false;
             public bool HealTarget = false;
+            public bool hasInspire = false;
             //playRequirements, reqID= siehe PlayErrors->ErrorType
             public int needEmptyPlacesForPlaying = 0;
             public int needWithMinAttackValueOf = 0;
@@ -6281,6 +6282,13 @@
                     temp = temp.Split('\"')[0];
                     int ti = Convert.ToInt32(temp);
                     if (ti == 1) c.Aura = true;
+                    continue;
+                }
+
+                //hasinspire
+                if (s.Contains("<Tag enumID=\"403\""))
+                {
+                    c.hasInspire = true;
                     continue;
                 }
 

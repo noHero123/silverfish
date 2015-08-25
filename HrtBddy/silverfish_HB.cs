@@ -668,11 +668,10 @@ namespace HREngine.Bots
                     hc.entity = entitiy.EntityId;
                     hc.manacost = entitiy.Cost;
                     hc.addattack = 0;
-                    if (c.name == CardDB.cardName.bolvarfordragon)
-                    {
-                        hc.addattack = entitiy.GetTag(GAME_TAG.ATK) - 1;
-                            // -1 because it starts with 1, we count only the additional attackvalue
-                    }
+                    int attackchange = entitiy.GetTag(GAME_TAG.ATK) - c.Attack;
+                    int hpchange = entitiy.GetTag(GAME_TAG.HEALTH) - c.Health;
+                    hc.addattack = attackchange;
+                    hc.addHp = hpchange;
                     handCards.Add(hc);
                     anzcards++;
                 }
