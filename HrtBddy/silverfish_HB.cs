@@ -861,6 +861,7 @@ namespace HREngine.Bots
 
             if (runEx)
             {
+                Ai.Instance.currentCalculatedBoard = dtimes;
                 Helpfunctions.Instance.resetBuffer();
                 Helpfunctions.Instance.writeBufferToActionFile();
                 Helpfunctions.Instance.resetBuffer();

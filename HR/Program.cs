@@ -900,7 +900,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "115.14";
+        public string versionnumber = "116.00";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1117,19 +1117,19 @@ namespace HREngine.Bots
                 if (p.isEqual(Ai.Instance.nextMoveGuess, true))
                 {
 
-                    printstuff(rangerbot, false);
+                    printstuff(p, false);
                     Ai.Instance.doNextCalcedMove();
 
                 }
                 else
                 {
-                    printstuff(rangerbot, true);
+                    printstuff(p, true);
                     readActionFile(passiveWait);
                 }
             }
             else
             {
-                printstuff(rangerbot, false);
+                printstuff(p, false);
                 Ai.Instance.dosomethingclever(botbase);
             }
 
@@ -1847,48 +1847,23 @@ namespace HREngine.Bots
         //    readActionFile();
         //}
 
-        private void printstuff(HSRangerLib.BotBase rangerbot, bool runEx)
+        private void printstuff(Playfield p, bool runEx)
         {
-            Entity ownPlayer = rangerbot.FriendHero;
-            int ownsecretcount = rangerbot.FriendSecrets.Count;
             string dtimes = DateTime.Now.ToString("HH:mm:ss:ffff");
-            string enemysecretIds = "";
-            enemysecretIds = Probabilitymaker.Instance.getEnemySecretData();
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("start calculations, current time: " + DateTime.Now.ToString("HH:mm:ss") + " V" + this.versionnumber + " " + this.botbehave);
-            Helpfunctions.Instance.logg("#######################################################################");
-            Helpfunctions.Instance.logg("mana " + currentMana + "/" + ownMaxMana);
-            Helpfunctions.Instance.logg("emana " + enemyMaxMana);
-            Helpfunctions.Instance.logg("own secretsCount: " + ownsecretcount);
-
-            Helpfunctions.Instance.logg("enemy secretsCount: " + enemySecretCount + " ;" + enemysecretIds);
-
-            Ai.Instance.currentCalculatedBoard = dtimes;
+            String completeBoardString = p.getCompleteBoardForSimulating(this.botbehave, this.versionnumber, dtimes);
+            
+            Helpfunctions.Instance.logg(completeBoardString);
 
             if (runEx)
             {
+                Ai.Instance.currentCalculatedBoard = dtimes;
                 Helpfunctions.Instance.resetBuffer();
                 Helpfunctions.Instance.writeBufferToActionFile();
                 Helpfunctions.Instance.resetBuffer();
 
-                Helpfunctions.Instance.writeToBuffer("#######################################################################");
-                Helpfunctions.Instance.writeToBuffer("#######################################################################");
-                Helpfunctions.Instance.writeToBuffer("start calculations, current time: " + dtimes + " V" + this.versionnumber + " " + this.botbehave);
-                Helpfunctions.Instance.writeToBuffer("#######################################################################");
-                Helpfunctions.Instance.writeToBuffer("mana " + currentMana + "/" + ownMaxMana);
-                Helpfunctions.Instance.writeToBuffer("emana " + enemyMaxMana);
-                Helpfunctions.Instance.writeToBuffer("own secretsCount: " + ownsecretcount);
-                Helpfunctions.Instance.writeToBuffer("enemy secretsCount: " + enemySecretCount + " ;" + enemysecretIds);
+                Helpfunctions.Instance.writeToBuffer(completeBoardString);
+                Helpfunctions.Instance.writeBufferToFile();
             }
-            Hrtprozis.Instance.printHero(runEx);
-            Hrtprozis.Instance.printOwnMinions(runEx);
-            Hrtprozis.Instance.printEnemyMinions(runEx);
-            Handmanager.Instance.printcards(runEx);
-            Probabilitymaker.Instance.printTurnGraveYard(runEx);
-            Probabilitymaker.Instance.printGraveyards(runEx);
-
-            if (runEx) Helpfunctions.Instance.writeBufferToFile();
 
         }
 
@@ -2083,6 +2058,7 @@ namespace HREngine.Bots
         {
             bool writed = true;
             this.sendbuffer += "<EoF>";
+            //this.ErrorLog("write to crrntbrd file: " + sendbuffer);
             while (writed)
             {
                 try
@@ -2102,7 +2078,7 @@ namespace HREngine.Bots
         {
             bool writed = true;
             this.sendbuffer += "<EoF>";
-            this.ErrorLog("write to action file: "+ sendbuffer);
+            //this.ErrorLog("write to action file: "+ sendbuffer);
             while (writed)
             {
                 try
