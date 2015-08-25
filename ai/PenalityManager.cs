@@ -1350,15 +1350,8 @@ namespace HREngine.Bots
 
             if (name == CardDB.cardName.druidoftheflame)
             {
-<<<<<<< HEAD
                 if (p.enemyMinions.Count > 0 && choice == 2) return 40;
                 if (p.enemyMinions.Count == 0 && choice == 1) return 40;
-=======
-
-                if (p.enemyMinions.Count > 0 && choice == 2) return 40;
-                if (p.enemyMinions.Count == 0 && choice == 1) return 40;
-
->>>>>>> 32f05b6fb176fd09c0cd383c9b0ab4af1002ff93
             }
 
             if (name == CardDB.cardName.gangup && target!=null)
@@ -1759,18 +1752,40 @@ namespace HREngine.Bots
             {
                 //penalize for any own minions with health equal to potential attack amount
                 //to lessen risk of losing your own minion
-                bool haveready;
                 int maxAtk = 3;
                 if (name == CardDB.cardName.madderbomber) maxAtk = 5;
-                foreach (Minion mins in p.ownMinions)
+                foreach (Minion mnn in p.ownMinions)
                 {
-                    if (mins.Hp <= maxAtk)
+                    if (mnn.Hp <= maxAtk)
                     {
-                        haveready = false;
-                        if (mins.Ready) haveready = true;
-                        if (haveready) pen += 20;
+                        if (mnn.Ready) pen += 20;
+                    }
+                    if (mnn.divineshild) pen += (100 / (p.ownMinions.Count + p.enemyMinions.Count + 2));
+                }
+            }
+
+            //Should resolve Davidmann's issue, in attempting to play a mech card, onto field first, if possible
+            if (name == CardDB.cardName.goblinblastmage)
+            {
+                bool mechOnField = false;
+                int castCost = card.getManaCost(p, 4);
+                Helpfunctions.Instance.logg("Current BlastMage cost " + castCost);//Logging to check whether it will show the actual blastmage cost in case of change
+
+                foreach (Minion mnn in p.ownMinions)
+                {
+                    if (m.handcard.card.race == TAG_RACE.MECHANICAL) mechOnField = true;
+                    if (mechOnField) break;
+                }
+                if (!mechOnField)
+                {
+                    foreach (Handmanager.Handcard hc in p.owncards)
+                    {
+                        if (hc.card.race == TAG_RACE.MECHANICAL && p.mana >= (hc.getManaCost(p) + castCost)) return 500;//hc.card.race Should work? Nohero please confirm!
+                        else if (hc.card.race == TAG_RACE.MECHANICAL && p.mana >= hc.getManaCost(p)) return 50;
+
                     }
                 }
+                else return 20;
             }
 
 
@@ -2152,7 +2167,8 @@ namespace HREngine.Bots
             DamageAllEnemysDatabase.Add(CardDB.cardName.holynova, 2);
             DamageAllEnemysDatabase.Add(CardDB.cardName.lightningstorm, 2);
             DamageAllEnemysDatabase.Add(CardDB.cardName.stomp, 1);
-            DamageAllEnemysDatabase.Add(CardDB.cardName.madbomber, 1);
+            //DamageAllEnemysDatabase.Add(CardDB.cardName.madbomber, 1);
+            //DamageAllEnemysDatabase.Add(CardDB.cardName.madderbomber, 1); //Disabled due to having other checks in place
             DamageAllEnemysDatabase.Add(CardDB.cardName.swipe, 4);//1 to others
             DamageAllEnemysDatabase.Add(CardDB.cardName.bladeflurry, 1);
 
