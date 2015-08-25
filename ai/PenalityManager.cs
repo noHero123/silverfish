@@ -289,6 +289,7 @@ namespace HREngine.Bots
             if (name == CardDB.cardName.markofnature && choice != 2) return 0;
             if (name == CardDB.cardName.darkwispers && choice != 1) return 0;
 
+            if (target == null) return 20;
             if (!target.isHero && !target.own)
             {
                 //allow it if you have black knight
@@ -1758,7 +1759,7 @@ namespace HREngine.Bots
                 {
                     if (mnn.Hp <= maxAtk)
                     {
-                        if (mnn.Ready) pen += 20;
+                        if (mnn.Ready) pen += mnn.Angr * 20;
                     }
                     if (mnn.divineshild) pen += (100 / (p.ownMinions.Count + p.enemyMinions.Count + 2));
                 }

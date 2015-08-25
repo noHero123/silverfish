@@ -3060,7 +3060,7 @@
             c.sim_card.onCardPlay(this, ownturn, target, 0);
             this.doDmgTriggers();
 
-            foreach (Minion m in (ownturn) ? this.ownMinions : this.enemyMinions)
+            foreach (Minion m in (ownturn) ? this.ownMinions.ToArray() : this.enemyMinions.ToArray())
             {
                 if (!m.silenced) m.handcard.card.sim_card.onInspire(this, m);
             }
