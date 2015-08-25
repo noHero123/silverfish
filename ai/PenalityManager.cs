@@ -288,7 +288,7 @@
             if (!this.tauntBuffDatabase.ContainsKey(name)) return 0;
             if (name == CardDB.cardName.markofnature && choice != 2) return 0;
             if (name == CardDB.cardName.darkwispers && choice != 1) return 0;
-
+            if (target == null) return 20;
             if (!target.isHero && !target.own)
             {
                 //allow it if you have black knight
