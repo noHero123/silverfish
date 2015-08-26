@@ -22,9 +22,10 @@ namespace HREngine.Bots
             }
         }
 
-        public static  string SettingsPath
+        public static string SettingsPath
         {
-            get{
+            get
+            {
                 string temp = AssemblyDirectory + System.IO.Path.DirectorySeparatorChar + "Common" + System.IO.Path.DirectorySeparatorChar;
                 if (System.IO.Directory.Exists(temp) == false)
                 {
@@ -56,7 +57,7 @@ namespace HREngine.Bots
         {
             get
             {
-                return "Author of HR-Silver-translator: Rush4xDev "+"\r\n" +
+                return "Author of HR-Silver-translator: Rush4xDev " + "\r\n" +
                        "This is silver fish A.I. module.";
             }
         }
@@ -68,7 +69,7 @@ namespace HREngine.Bots
         private string choiceCardId = "";
         DateTime starttime = DateTime.Now;
         Silverfish sf;
-        
+
 
         Behavior behave = new BehaviorControl();
 
@@ -139,7 +140,7 @@ namespace HREngine.Bots
 
             if (Settings.Instance.learnmode)
             {
-                
+
                 e.handled = false;
                 return;
             }
@@ -148,67 +149,67 @@ namespace HREngine.Bots
 
             var list = e.card_list;
 
-             Entity enemyPlayer = base.EnemyHero;
-             Entity ownPlayer = base.FriendHero;
+            Entity enemyPlayer = base.EnemyHero;
+            Entity ownPlayer = base.FriendHero;
 
-                string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.CardId);
-                string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.CardId);
+            string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.CardId);
+            string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.CardId);
 
-                if (Mulligan.Instance.hasmulliganrules(ownName, enemName))
+            if (Mulligan.Instance.hasmulliganrules(ownName, enemName))
+            {
+
+                List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
+                foreach (var item in list)
                 {
-
-                    List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
-                    foreach (var item in list)
+                    if (item.CardId != "GAME_005")// dont mulligan coin
                     {
-                        if (item.CardId != "GAME_005")// dont mulligan coin
-                        {
-                            celist.Add(new Mulligan.CardIDEntity(item.CardId, item.EntityId));
-                        }
+                        celist.Add(new Mulligan.CardIDEntity(item.CardId, item.EntityId));
                     }
-                    List<int> mullientitys = Mulligan.Instance.whatShouldIMulligan(celist, ownName, enemName);
-                    foreach (var item in list)
-                    {
-                        if (mullientitys.Contains(item.EntityId))
-                        {
-                            Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(item.CardId) + " because of your rules");                            
-                            //toggle this card
-                            e.replace_list.Add(item);
-                        }
-                    }
-
                 }
-                else
+                List<int> mullientitys = Mulligan.Instance.whatShouldIMulligan(celist, ownName, enemName);
+                foreach (var item in list)
                 {
-                    foreach (var item in list)
+                    if (mullientitys.Contains(item.EntityId))
                     {
-                        if (item.Cost >= 4)
-                        {
-                            Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(item.CardId) + " because it cost is >= 4.");
-                            
-                            e.replace_list.Add(item);
-
-                        }
-                        if (item.CardId == "EX1_308" || item.CardId == "EX1_622" || item.CardId == "EX1_005")
-                        {
-                            Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(item.CardId) + " because it is soulfire or shadow word: death");
-                            e.replace_list.Add(item);
-                        }
+                        Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(item.CardId) + " because of your rules");
+                        //toggle this card
+                        e.replace_list.Add(item);
                     }
                 }
 
-
-                sf.setnewLoggFile();
-
-                if (Mulligan.Instance.loserLoserLoser)
+            }
+            else
+            {
+                foreach (var item in list)
                 {
-                    if (!autoconcede())
+                    if (item.Cost >= 4)
                     {
-                        concedeVSenemy(ownName, enemName);
-                    }
+                        Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(item.CardId) + " because it cost is >= 4.");
 
-                    //set concede flag
-                    e.concede = this.isgoingtoconcede;
-                }                
+                        e.replace_list.Add(item);
+
+                    }
+                    if (item.CardId == "EX1_308" || item.CardId == "EX1_622" || item.CardId == "EX1_005")
+                    {
+                        Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(item.CardId) + " because it is soulfire or shadow word: death");
+                        e.replace_list.Add(item);
+                    }
+                }
+            }
+
+
+            sf.setnewLoggFile();
+
+            if (Mulligan.Instance.loserLoserLoser)
+            {
+                if (!autoconcede())
+                {
+                    concedeVSenemy(ownName, enemName);
+                }
+
+                //set concede flag
+                e.concede = this.isgoingtoconcede;
+            }
         }
 
         /// <summary>
@@ -239,7 +240,8 @@ namespace HREngine.Bots
             if (e.win)
             {
                 HandleWining();
-            }else if (e.loss || e.concede)
+            }
+            else if (e.loss || e.concede)
             {
                 HandleLosing(e.concede);
             }
@@ -256,7 +258,7 @@ namespace HREngine.Bots
 
         private HSRangerLib.BotActionType GetRangerActionType(Entity actor, Entity target, actionEnum sf_action_type)
         {
-            
+
             if (sf_action_type == actionEnum.endturn)
             {
                 return BotActionType.END_TURN;
@@ -277,7 +279,8 @@ namespace HREngine.Bots
                 if (actor.Zone == HSRangerLib.TAG_ZONE.HAND && actor.IsMinion)
                 {
                     return BotActionType.CAST_MINION;// that should not occour >_>
-                }else if (actor.Zone == HSRangerLib.TAG_ZONE.PLAY && actor.IsMinion)
+                }
+                else if (actor.Zone == HSRangerLib.TAG_ZONE.PLAY && actor.IsMinion)
                 {
                     return BotActionType.MINION_ATTACK;
                 }
@@ -290,19 +293,23 @@ namespace HREngine.Bots
                     if (actor.IsMinion)
                     {
                         return BotActionType.CAST_MINION;
-                    }else if (actor.IsWeapon)
+                    }
+                    else if (actor.IsWeapon)
                     {
                         return BotActionType.CAST_WEAPON;
-                    }else
+                    }
+                    else
                     {
                         return BotActionType.CAST_SPELL;
-                    }                    
-                }else if (actor.Zone == HSRangerLib.TAG_ZONE.PLAY)
+                    }
+                }
+                else if (actor.Zone == HSRangerLib.TAG_ZONE.PLAY)
                 {
                     if (actor.IsMinion)
                     {
                         return BotActionType.MINION_ATTACK;
-                    }else if (actor.IsWeapon)
+                    }
+                    else if (actor.IsWeapon)
                     {
                         return BotActionType.HERO_ATTACK;
                     }
@@ -314,13 +321,14 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.ErrorLog("GetActionType: wrong action type! " +
                                             sf_action_type.ToString() + ": " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(actor.CardId)
                                                          + " target: " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(target.CardId));
-            }else
+            }
+            else
             {
                 Helpfunctions.Instance.ErrorLog("GetActionType: wrong action type! " +
                                             sf_action_type.ToString() + ": " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(actor.CardId)
                                                          + " target none.");
             }
-            
+
 
             return BotActionType.END_TURN;
         }
@@ -349,41 +357,41 @@ namespace HREngine.Bots
                     break;
             }
 
-             if (moveTodo.target != null)
-             {
-                 ranger_action.Target = getEntityWithNumber(moveTodo.target.entitiyID);
-             }
+            if (moveTodo.target != null)
+            {
+                ranger_action.Target = getEntityWithNumber(moveTodo.target.entitiyID);
+            }
 
-             ranger_action.Type = GetRangerActionType(ranger_action.Actor, ranger_action.Target, moveTodo.actionType);
+            ranger_action.Type = GetRangerActionType(ranger_action.Actor, ranger_action.Target, moveTodo.actionType);
 
-             if (moveTodo.druidchoice >= 1)
-             {
-                 ranger_action.Choice = moveTodo.druidchoice;//1=leftcard, 2= rightcard
-             }
+            if (moveTodo.druidchoice >= 1)
+            {
+                ranger_action.Choice = moveTodo.druidchoice;//1=leftcard, 2= rightcard
+            }
 
-             ranger_action.Index = moveTodo.place;
-
-
-             if (moveTodo.target != null)
-             {
-                 Helpfunctions.Instance.ErrorLog(moveTodo.actionType.ToString() + ": " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Actor.CardId)
-                                                  + " target: " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Target.CardId));
-                 Helpfunctions.Instance.logg(moveTodo.actionType.ToString() + ": " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Actor.CardId)
-                                                  + " target: " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Target.CardId)
-                                                  + " choice: " + moveTodo.druidchoice + " place" + moveTodo.place);
+            ranger_action.Index = moveTodo.place;
 
 
-             }
-             else
-             {
-                 Helpfunctions.Instance.ErrorLog(moveTodo.actionType.ToString() + ": " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Actor.CardId)
-                                                  + " target nothing");
-                 Helpfunctions.Instance.logg(moveTodo.actionType.ToString() + ": " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Actor.CardId)
-                                                  + " choice: " + moveTodo.druidchoice + " place" + moveTodo.place);
-             }
+            if (moveTodo.target != null)
+            {
+                Helpfunctions.Instance.ErrorLog(moveTodo.actionType.ToString() + ": " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Actor.CardId)
+                                                 + " target: " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Target.CardId));
+                Helpfunctions.Instance.logg(moveTodo.actionType.ToString() + ": " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Actor.CardId)
+                                                 + " target: " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Target.CardId)
+                                                 + " choice: " + moveTodo.druidchoice + " place" + moveTodo.place);
 
 
-             return ranger_action;
+            }
+            else
+            {
+                Helpfunctions.Instance.ErrorLog(moveTodo.actionType.ToString() + ": " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Actor.CardId)
+                                                 + " target nothing");
+                Helpfunctions.Instance.logg(moveTodo.actionType.ToString() + ": " + HSRangerLib.CardDefDB.Instance.GetCardEnglishName(ranger_action.Actor.CardId)
+                                                 + " choice: " + moveTodo.druidchoice + " place" + moveTodo.place);
+            }
+
+
+            return ranger_action;
         }
 
         /// <summary>
@@ -398,8 +406,8 @@ namespace HREngine.Bots
             //or Hearthranger will never query best move !
             //base.HasBestMoveAI = true;
             e.handled = true;
-            HSRangerLib.BotAction ranger_action ;
-            
+            HSRangerLib.BotAction ranger_action;
+
             try
             {
                 if (this.isgoingtoconcede)
@@ -421,7 +429,7 @@ namespace HREngine.Bots
                     return;
                 }
 
-                bool templearn = sf.updateEverything(this,behave, Settings.Instance.useExternalProcess, false); // cant use passive waiting (in this mode i return nothing)
+                bool templearn = sf.updateEverything(this, behave, Settings.Instance.useExternalProcess, false); // cant use passive waiting (in this mode i return nothing)
                 if (templearn == true) Settings.Instance.printlearnmode = true;
 
 
@@ -440,8 +448,8 @@ namespace HREngine.Bots
 
 
 
-                if (Ai.Instance.bestmoveValue <= -900 && Settings.Instance.enemyConcede) 
-                { 
+                if (Ai.Instance.bestmoveValue <= -900 && Settings.Instance.enemyConcede)
+                {
                     e.action_list.Add(CreateRangerConcedeAction());
                     return;
                 }
@@ -451,7 +459,7 @@ namespace HREngine.Bots
                 if (moveTodo == null || moveTodo.actionType == actionEnum.endturn)
                 {
                     //simply clear action list, hearthranger bot will endturn if no action can do.
-                    e.action_list.Clear();                    
+                    e.action_list.Clear();
                     return;
                 }
 
@@ -470,7 +478,7 @@ namespace HREngine.Bots
                     return;
                 }
             }
-            return ;
+            return;
         }
 
         public override void OnActionDone(ActionDoneEventArgs e)
@@ -784,7 +792,7 @@ namespace HREngine.Bots
                     s = "uai.secondweight=50";
                 }
                 newlines.Add(s);
-                Helpfunctions.Instance.logg("add " +s);
+                Helpfunctions.Instance.logg("add " + s);
 
             }
 
@@ -818,7 +826,7 @@ namespace HREngine.Bots
             else
             {
                 Helpfunctions.Instance.ErrorLog("#info: win:" + totalwin + " concede:" + KeepConcede + " lose:" + (totallose - KeepConcede) + " real winrate: infinity!!!! (division by zero :D)");
-            }            
+            }
         }
 
         private void HandleLosing(bool is_concede)
@@ -891,7 +899,7 @@ namespace HREngine.Bots
         }
 
         private List<Entity> getallHandCards()
-        {            
+        {
             return base.FriendHand;
         }
 
@@ -974,7 +982,7 @@ namespace HREngine.Bots
         int ownHeroPowerUsesThisGame = 0;
         int enemyHeroPowerUsesThisGame = 0;
         int lockandload = 0;
-        int ownsabo=0;//number of saboteurplays  of our player (so enemy has the buff)
+        int ownsabo = 0;//number of saboteurplays  of our player (so enemy has the buff)
         int enemysabo = 0;//number of saboteurplays  of enemy player (so we have the buff)
         int ownFenciCoaches = 0; // number of Fencing Coach-debuffs on our player 
 
@@ -1002,10 +1010,10 @@ namespace HREngine.Bots
             sttngs.setFilePath(SiverFishBotPath.AssemblyDirectory);
 
             Helpfunctions.Instance.ErrorLog(path);
-            
+
             if (!singleLog)
             {
-                
+
                 sttngs.setLoggPath(path);
             }
             else
@@ -1068,7 +1076,7 @@ namespace HREngine.Bots
                 if (m.Hp >= 1) this.numOptionPlayedThisTurn += m.numAttacksThisTurn;
             }
 
-            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ueberladung, ownHero.entitiyID, enemyHero.entitiyID, this.numberMinionsDiedThisTurn, this.ownCurrentOverload, this.enemyOverload, this.heroPowerUsesThisTurn,this.lockandload);
+            Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ueberladung, ownHero.entitiyID, enemyHero.entitiyID, this.numberMinionsDiedThisTurn, this.ownCurrentOverload, this.enemyOverload, this.heroPowerUsesThisTurn, this.lockandload);
             Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrepa, this.ownsabo, this.enemysabo, this.ownFenciCoaches);
             Hrtprozis.Instance.updateSecretStuff(this.ownSecretList, this.enemySecretCount);
 
@@ -1141,10 +1149,7 @@ namespace HREngine.Bots
         private void getHerostuff(HSRangerLib.BotBase rangerbot)
         {
 
-            //TODO GET HERO POWER USES!!!!!!
-            //heroPowerUsesThisTurn = 0;
-            //ownHeroPowerUsesThisGame = 0;
-            //enemyHeroPowerUsesThisGame = 0;
+
 
 
             Dictionary<int, Entity> allEntitys = new Dictionary<int, Entity>();
@@ -1161,7 +1166,11 @@ namespace HREngine.Bots
             Entity enemyhero = rangerbot.EnemyHero;
             Entity ownHeroAbility = rangerbot.FriendHeroPower;
 
-            
+            //TODO GET HERO POWER USES!!!!!!
+            heroPowerUsesThisTurn = ownHeroAbility.NumAttacksThisTurn; //Should work, as ownHeroAbility is an entity;
+            ownHeroPowerUsesThisGame += heroPowerUsesThisTurn;
+            enemyHeroPowerUsesThisGame += rangerbot.EnemyHeroPower.NumAttacksThisTurn;
+
 
             //TEST
             List<Entity> heroplayers = new List<Entity>();
@@ -1208,7 +1217,7 @@ namespace HREngine.Bots
 
             this.numMinionsPlayedThisTurn = rangerbot.gameState.NumMinionsPlayedThisTurn;
             this.cardsPlayedThisTurn = rangerbot.gameState.NumCardsPlayedThisTurn;
-            
+
 
             //get weapon stuff
             this.ownHeroWeapon = "";
@@ -1364,7 +1373,7 @@ namespace HREngine.Bots
             //ToDo:
 
             this.numberMinionsDiedThisTurn = rangerbot.gameState.NumMinionsKilledThisTurn;
-            
+
             //this should work (hope i didnt oversee a value :D)
 
             this.ownCurrentOverload = rangerbot.gameState.RecalledCrystalsOwedNextTurn;// ownhero.GetTag(HRGameTag.RECALL);
@@ -1860,7 +1869,7 @@ namespace HREngine.Bots
         {
             string dtimes = DateTime.Now.ToString("HH:mm:ss:ffff");
             String completeBoardString = p.getCompleteBoardForSimulating(this.botbehave, this.versionnumber, dtimes);
-            
+
             Helpfunctions.Instance.logg(completeBoardString);
 
             if (runEx)
@@ -2001,7 +2010,7 @@ namespace HREngine.Bots
         public void createNewLoggfile()
         {
             filecreated = false;
-            
+
         }
 
         public void logg(string s)
@@ -2046,7 +2055,7 @@ namespace HREngine.Bots
             {
                 using (StreamWriter sw = File.AppendText(Settings.Instance.logpath + "Logging.txt"))
                 {
-                    sw.WriteLine("#ConsoleLog: "+ s);
+                    sw.WriteLine("#ConsoleLog: " + s);
                 }
             }
             catch { }
@@ -2103,7 +2112,7 @@ namespace HREngine.Bots
             this.sendbuffer = "";
 
         }
-   
+
     }
 
 
