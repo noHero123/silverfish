@@ -592,7 +592,7 @@ namespace HREngine.Bots
                     
                     m.charge = 0;
 
-                    m.spellpower = entitiy.GetTag(GAME_TAG.SPELLPOWER) == 0;
+                    m.spellpower = entitiy.GetTag(GAME_TAG.SPELLPOWER);
 
                     if (!m.silenced && m.name == CardDB.cardName.southseadeckhand &&
                         entitiy.GetTag(GAME_TAG.CHARGE) == 1) m.charge = 1;
