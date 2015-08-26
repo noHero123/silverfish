@@ -1497,7 +1497,7 @@ namespace HREngine.Bots
 
                     m.silenced = entitiy.IsSilenced;
 
-                    //m.spellpower = entitiy.SpellPower;
+                    m.spellpower = entitiy.SpellPower;
 
                     m.charge = 0;
 
@@ -1510,7 +1510,7 @@ namespace HREngine.Bots
 
 
                     Helpfunctions.Instance.ErrorLog( m.entitiyID +" " +  m.name + " ready params ex: " + m.exhausted + " charge: " +m.charge + " attcksthisturn: " + m.numAttacksThisTurn + " playedthisturn " + m.playedThisTurn );
-                    //Helpfunctions.Instance.ErrorLog("spellpower check " + entitiy.SpellPowerAttack + " " + entitiy.SpellPowerHealing);
+                    //Helpfunctions.Instance.ErrorLog("spellpower check " + entitiy.SpellPowerAttack + " " + entitiy.SpellPowerHealing + " " + entitiy.SpellPower);
 
 
                     List<miniEnch> enchs = new List<miniEnch>();

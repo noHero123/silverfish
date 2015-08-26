@@ -10,7 +10,7 @@
 
         ComboBreaker cb;
 
-
+        public Dictionary<CardDB.cardIDEnum, int> TargetAbilitysDatabase = new Dictionary<CardDB.cardIDEnum, int>();
         Dictionary<CardDB.cardName, int> HealTargetDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> HealHeroDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> HealAllDatabase = new Dictionary<CardDB.cardName, int>();
@@ -84,6 +84,7 @@
             setupRandomCards();
             setupLethalHelpMinions();
             setupSilenceTargets();
+            setupTargetAbilitys();
         }
 
         public void setCombos()
@@ -3012,6 +3013,21 @@
             this.randomEffects.Add(CardDB.cardName.flamejuggler, 1);
             this.randomEffects.Add(CardDB.cardName.grandcrusader, 1);
             this.randomEffects.Add(CardDB.cardName.spellslinger, 1);
+        }
+
+        private void setupTargetAbilitys()
+        {
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.CS1h_001, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.CS2_034, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.DS1h_292, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.EX1_625t, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.EX1_625t2, 1);
+            //this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.CS2_034_H1, 1);
+            //this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.CS2_034_H1_AT_132, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_050t, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_132_HUNTER, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_132_MAGE, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_132_PRIEST, 1);
         }
 
     }
