@@ -336,13 +336,15 @@
             if (target.own)
             {
 
-                if ((!target.silenced && (target.name == CardDB.cardName.wrathguard || target.name == CardDB.cardName.darnassusaspirant || target.name == CardDB.cardName.icehowl)))
-                {
-                    return 0;
-                }
+                
 
                 if (this.silenceDatabase.ContainsKey(name))
                 {
+                    if ((!target.silenced && (target.name == CardDB.cardName.wrathguard || target.name == CardDB.cardName.darnassusaspirant || target.name == CardDB.cardName.icehowl)))
+                    {
+                        return 0;
+                    }
+
                     // no pen if own is enrage
                     if ((!target.silenced && (target.name == CardDB.cardName.darnassusaspirant || target.name == CardDB.cardName.ancientwatcher || target.name == CardDB.cardName.ragnarosthefirelord || target.name == CardDB.cardName.mogortheogre || target.name == CardDB.cardName.animagolem)) || target.Angr < target.handcard.card.Attack || target.maxHp < target.handcard.card.Health || (target.frozen && !target.playedThisTurn && target.numAttacksThisTurn == 0))
                     {
@@ -351,15 +353,6 @@
 
 
                     pen += 500;
-                }
-                else
-                {
-                    if (target.Angr < target.handcard.card.Attack || target.maxHp < target.handcard.card.Health || (target.frozen && !target.playedThisTurn && target.numAttacksThisTurn == 0))
-                    {
-                        return 0;
-                    }
-
-                    pen += 50;
                 }
                 
             }

@@ -144,6 +144,11 @@
                         havedonesomething = true;
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
+                        /*if (deep == 0)
+                        {
+                            Helpfunctions.Instance.ErrorLog("do action...");
+                            pf.printBoard();
+                        }*/
                         addToPosmoves(pf);
                     }
 
