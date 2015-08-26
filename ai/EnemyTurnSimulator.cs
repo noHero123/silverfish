@@ -13,6 +13,8 @@
         Movegenerator movegen = Movegenerator.Instance;
         public int maxwide = 20;
 
+        private PenalityManager penmanager = PenalityManager.Instance;
+
         public void setMaxwideFirstStep(bool firstTurn)
         {
             maxwide = Settings.Instance.enemyTurnMaxWide;
@@ -68,7 +70,9 @@
 
                 havedonesomething = true;
                 // if we have mage or priest or hunter, we have to target something####################################################
-                if (posmoves[0].enemyHeroName == HeroEnum.mage || posmoves[0].enemyHeroName == HeroEnum.priest || posmoves[0].enemyHeroName == HeroEnum.hunter )
+
+
+                if (penmanager.TargetAbilitysDatabase.ContainsKey(posmoves[0].enemyHeroAblility.card.cardIDenum))
                 {
 
                     List<Minion> trgts = posmoves[0].enemyHeroAblility.card.getTargetsForCardEnemy(posmoves[0]);

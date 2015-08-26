@@ -10,7 +10,7 @@ namespace HREngine.Bots
 
         ComboBreaker cb;
 
-
+        public Dictionary<CardDB.cardIDEnum, int> TargetAbilitysDatabase = new Dictionary<CardDB.cardIDEnum, int>();
         Dictionary<CardDB.cardName, int> HealTargetDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> HealHeroDatabase = new Dictionary<CardDB.cardName, int>();
         Dictionary<CardDB.cardName, int> HealAllDatabase = new Dictionary<CardDB.cardName, int>();
@@ -84,6 +84,7 @@ namespace HREngine.Bots
             setupRandomCards();
             setupLethalHelpMinions();
             setupSilenceTargets();
+            setupTargetAbilitys();
         }
 
         public void setCombos()
@@ -288,7 +289,10 @@ namespace HREngine.Bots
             if (!this.tauntBuffDatabase.ContainsKey(name)) return 0;
             if (name == CardDB.cardName.markofnature && choice != 2) return 0;
             if (name == CardDB.cardName.darkwispers && choice != 1) return 0;
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/master
             if (target == null) return 20;
             if (!target.isHero && !target.own)
             {
@@ -337,13 +341,15 @@ namespace HREngine.Bots
             if (target.own)
             {
 
-                if ((!target.silenced && (target.name == CardDB.cardName.wrathguard || target.name == CardDB.cardName.darnassusaspirant || target.name == CardDB.cardName.icehowl)))
-                {
-                    return 0;
-                }
+                
 
                 if (this.silenceDatabase.ContainsKey(name))
                 {
+                    if ((!target.silenced && (target.name == CardDB.cardName.wrathguard || target.name == CardDB.cardName.darnassusaspirant || target.name == CardDB.cardName.icehowl)))
+                    {
+                        return 0;
+                    }
+
                     // no pen if own is enrage
                     if ((!target.silenced && (target.name == CardDB.cardName.darnassusaspirant || target.name == CardDB.cardName.ancientwatcher || target.name == CardDB.cardName.ragnarosthefirelord || target.name == CardDB.cardName.mogortheogre || target.name == CardDB.cardName.animagolem)) || target.Angr < target.handcard.card.Attack || target.maxHp < target.handcard.card.Health || (target.frozen && !target.playedThisTurn && target.numAttacksThisTurn == 0))
                     {
@@ -352,15 +358,6 @@ namespace HREngine.Bots
 
 
                     pen += 500;
-                }
-                else
-                {
-                    if (target.Angr < target.handcard.card.Attack || target.maxHp < target.handcard.card.Health || (target.frozen && !target.playedThisTurn && target.numAttacksThisTurn == 0))
-                    {
-                        return 0;
-                    }
-
-                    pen += 50;
                 }
                 
             }
@@ -3041,6 +3038,21 @@ namespace HREngine.Bots
             this.randomEffects.Add(CardDB.cardName.flamejuggler, 1);
             this.randomEffects.Add(CardDB.cardName.grandcrusader, 1);
             this.randomEffects.Add(CardDB.cardName.spellslinger, 1);
+        }
+
+        private void setupTargetAbilitys()
+        {
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.CS1h_001, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.CS2_034, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.DS1h_292, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.EX1_625t, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.EX1_625t2, 1);
+            //this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.CS2_034_H1, 1);
+            //this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.CS2_034_H1_AT_132, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_050t, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_132_HUNTER, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_132_MAGE, 1);
+            this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_132_PRIEST, 1);
         }
 
     }
