@@ -175,12 +175,12 @@
         public int enemyWeaponAttack = 0;
         public int enemyWeaponDurability = 0;
 
-        public List<Minion> ownMinions = new List<Minion>();
-        public List<Minion> enemyMinions = new List<Minion>();
+        public List<Minion> ownMinions = new List<Minion>(7);
+        public List<Minion> enemyMinions = new List<Minion>(7);
         public List<GraveYardItem> diedMinions = null;
         public int anzMinionsDiedThisTurn = 0;
 
-        public List<Handmanager.Handcard> owncards = new List<Handmanager.Handcard>();
+        public List<Handmanager.Handcard> owncards = new List<Handmanager.Handcard>(10);
         public int owncarddraw = 0;
 
         public List<Action> playactions = new List<Action>();
@@ -1735,6 +1735,7 @@
             bool placebuff = false;
             if (card.name == CardDB.cardName.flametonguetotem || card.name == CardDB.cardName.direwolfalpha)
             {
+                if (this.ownMinions.Count == 1) return 7; //make placebuffs always move right if only one minion, to take advantage of minions from abilites/spells
                 placebuff = true;
                 if (card.name == CardDB.cardName.flametonguetotem) cardIsBuffer = 2;
                 if (card.name == CardDB.cardName.direwolfalpha) cardIsBuffer = 1;

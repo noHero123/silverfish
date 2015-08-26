@@ -54,6 +54,7 @@ namespace HREngine.Bots
         public Dictionary<CardDB.cardName, int> priorityTargets = new Dictionary<CardDB.cardName, int>();
         public Dictionary<CardDB.cardName, int> specialMinions = new Dictionary<CardDB.cardName, int>(); //minions with cardtext, but no battlecry
 
+        public static bool singleLogCheck = true;
 
         private static PenalityManager instance;
 
@@ -289,10 +290,7 @@ namespace HREngine.Bots
             if (!this.tauntBuffDatabase.ContainsKey(name)) return 0;
             if (name == CardDB.cardName.markofnature && choice != 2) return 0;
             if (name == CardDB.cardName.darkwispers && choice != 1) return 0;
-<<<<<<< HEAD
 
-=======
->>>>>>> upstream/master
             if (target == null) return 20;
             if (!target.isHero && !target.own)
             {
@@ -471,8 +469,17 @@ namespace HREngine.Bots
                         return 30;
                     }
                 }
-
-                if (p.enemyMinions.Count <= 1 || p.enemyMinions.Count + 1 <= p.ownMinions.Count || p.ownMinions.Count >= 3)
+                if (p.ownMinions.Count >= 1)
+                {
+                    int dmg = this.DamageAllDatabase[name];
+                    int hurt = 0;
+                    foreach (Minion m in p.ownMinions)
+                    {
+                        if (m.Hp <= dmg) hurt += m.Angr * 20;
+                    }
+                    return hurt;
+                }
+                if (p.enemyMinions.Count == 1 || p.enemyMinions.Count + 1 <= p.ownMinions.Count)
                 {
                     return 30;
                 }
@@ -1294,6 +1301,13 @@ namespace HREngine.Bots
 
             //some effects, which are bad :D
             int pen = 0;
+
+            //Play inspire cards first, and then use hero ability if possible
+            if (card.hasInspire)
+            {
+                if (!p.ownAbilityReady) pen += 10;
+            }
+
             if (name == CardDB.cardName.houndmaster)
             {
                 if (target == null) return 50;
@@ -1763,11 +1777,10 @@ namespace HREngine.Bots
             }
 
             //Should resolve Davidmann's issue, in attempting to play a mech card, onto field first, if possible
-            if (name == CardDB.cardName.goblinblastmage)
+            if (name == CardDB.cardName.goblinblastmage) //can add other cards that require mechs to be fielded first
             {
                 bool mechOnField = false;
                 int castCost = card.getManaCost(p, 4);
-                Helpfunctions.Instance.logg("Current BlastMage cost " + castCost);//Logging to check whether it will show the actual blastmage cost in case of change
 
                 foreach (Minion mnn in p.ownMinions)
                 {
@@ -1784,6 +1797,19 @@ namespace HREngine.Bots
                     }
                 }
                 else return 20;
+            }
+
+            if (name == CardDB.cardName.draeneitotemcarver)
+            {
+                bool totemOnField = false;
+                if (p.ownHeroName == HeroEnum.shaman && p.ownAbilityReady == true) return 20;
+                foreach (Minion mnn in p.ownMinions)
+                {
+                    if (m.handcard.card.race == TAG_RACE.TOTEM) totemOnField = true;
+                    if (totemOnField) break;
+                }
+                if (!totemOnField) return 20;
+
             }
 
 
