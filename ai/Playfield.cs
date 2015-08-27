@@ -435,7 +435,7 @@
 
                 spellpower = spellpower + m.spellpower;
                 if (m.silenced) continue;
-                spellpower += m.handcard.card.spellpowervalue;
+                //spellpower += m.handcard.card.spellpowervalue; // its allready in m.spellpower! (if you are updating it in silverfish.getMinions() :P)
                 if (m.name == CardDB.cardName.prophetvelen) this.doublepriest++;
 
                 if (m.name == CardDB.cardName.weespellstopper)
@@ -489,7 +489,7 @@
                 if (m.name == CardDB.cardName.warhorsetrainer) this.anzOwnWarhorseTrainer += 1;
                 if (m.name == CardDB.cardName.maidenofthelake) this.anzOwnMaidenOfTheLake += 1;
 
-                if (m.name == CardDB.cardName.raidleader) this.anzOwnRaidleader++;
+                if (m.name == CardDB.cardName.raidleader || m.name == CardDB.cardName.leokk) this.anzOwnRaidleader++;
                 if (m.name == CardDB.cardName.malganis) this.anzOwnMalGanis++;
                 if (m.name == CardDB.cardName.stormwindchampion) this.anzOwnStormwindChamps++;
                 if (m.name == CardDB.cardName.tundrarhino) this.anzOwnTundrarhino++;
@@ -531,7 +531,7 @@
             {
                 i++;
                 this.enemyspellpower = this.enemyspellpower + m.spellpower;
-                enemyspellpower += m.handcard.card.spellpowervalue;
+                //enemyspellpower += m.handcard.card.spellpowervalue;//its allready in m.spellpower!!!
                 
                 if (m.silenced) continue;
 
@@ -576,7 +576,7 @@
                 if (m.name == CardDB.cardName.warhorsetrainer) this.anzEnemyWarhorseTrainer += 1;
                 if (m.name == CardDB.cardName.maidenofthelake) this.anzEnemyMaidenOfTheLake += 1;
 
-                if (m.name == CardDB.cardName.raidleader) this.anzEnemyRaidleader++;
+                if (m.name == CardDB.cardName.raidleader || m.name == CardDB.cardName.leokk) this.anzEnemyRaidleader++;
                 if (m.name == CardDB.cardName.malganis) this.anzEnemyMalGanis++;
                 if (m.name == CardDB.cardName.stormwindchampion) this.anzEnemyStormwindChamps++;
                 if (m.name == CardDB.cardName.tundrarhino) this.anzEnemyTundrarhino++;

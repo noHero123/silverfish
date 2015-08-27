@@ -624,14 +624,17 @@
                 {
                     this.ancestralspirit++;
                 }
+
+                //spellpower is now readed in m.spellpower = entity.getTag(SPELLPOWER)!
                 if (me.CARDID == CardDB.cardIDEnum.EX1_584e) //ancient mage
                 {
-                    this.spellpower++;
+                    //this.spellpower++;
                 }
                 if (me.CARDID == CardDB.cardIDEnum.GVG_010b) //Velen's Chosen (+2+4, +spellpower)
                 {
-                    this.spellpower++;
+                    //this.spellpower++;
                 }
+
                 if (me.CARDID == CardDB.cardIDEnum.EX1_158e) //soul of the forest
                 {
                     this.souloftheforest++;
@@ -714,6 +717,7 @@
                 {
                     //todo Eure Zauber kosten in diesem Zug (5) mehr.
                 }
+
                 if (me.CARDID == CardDB.cardIDEnum.NEW1_029t) //death to millhouse!
                 {
                     // todo spells cost (0) this turn!
@@ -722,6 +726,7 @@
                 {
                     // todo Your next Secret costs (0).
                 }
+
                 if (me.CARDID == CardDB.cardIDEnum.EX1_084e) //warsongcommander
                 {
                     this.charge++;
