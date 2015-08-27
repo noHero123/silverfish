@@ -5046,6 +5046,8 @@
                         if (((this.type == cardtype.SPELL || this.type == cardtype.HEROPWR) && (m.cantBeTargetedBySpellsOrHeroPowers)) || m.stealth) continue;
                         enemyMins[k] = true;
                     }
+                    addEnemyHero = true;
+                    addOwnHero = true;
 
                 }
 

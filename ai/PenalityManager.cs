@@ -1175,6 +1175,11 @@
                     return 0;
                 }
 
+                if (this.DamageTargetDatabase.ContainsKey(name) || this.DamageAllDatabase.ContainsKey(name) )
+                {
+                    return 0;
+                }
+
                 if (this.buffingMinionsDatabase.ContainsKey(name))
                 {
                     if (name == CardDB.cardName.timberwolf || name == CardDB.cardName.houndmaster)
@@ -2141,10 +2146,12 @@
             DamageAllEnemysDatabase.Add(CardDB.cardName.holynova, 2);
             DamageAllEnemysDatabase.Add(CardDB.cardName.lightningstorm, 2);
             DamageAllEnemysDatabase.Add(CardDB.cardName.stomp, 1);
-            DamageAllEnemysDatabase.Add(CardDB.cardName.madbomber, 1);
+            
             DamageAllEnemysDatabase.Add(CardDB.cardName.swipe, 4);//1 to others
             DamageAllEnemysDatabase.Add(CardDB.cardName.bladeflurry, 1);
 
+
+            DamageAllEnemysDatabase.Add(CardDB.cardName.madbomber, 1);
             DamageRandomDatabase.Add(CardDB.cardName.goblinblastmage, 1);
             DamageRandomDatabase.Add(CardDB.cardName.flamecannon, 4);
             DamageRandomDatabase.Add(CardDB.cardName.arcanemissiles, 1);
