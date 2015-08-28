@@ -445,7 +445,7 @@ namespace HREngine.Bots
                     if (a.StartsWith("control")) returnbehav = new BehaviorControl();
                     if (a.StartsWith("rush")) returnbehav = new BehaviorRush();
                     if (a.StartsWith("mana")) returnbehav = new BehaviorMana();
-
+                    if (a.StartsWith("face")) returnbehav = new BehaviorFace();
                 }
 
             }

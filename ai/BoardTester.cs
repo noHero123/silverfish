@@ -943,7 +943,7 @@
 
 
             if (this.evalFunction == "rush") Ai.Instance.botBase = new BehaviorRush();
-
+            if (this.evalFunction == "face") Ai.Instance.botBase = new BehaviorFace();
             if (this.evalFunction == "mana") Ai.Instance.botBase = new BehaviorMana();
 
             Ai.Instance.setMaxWide(this.maxwide);

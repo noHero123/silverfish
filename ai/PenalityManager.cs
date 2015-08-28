@@ -1255,6 +1255,14 @@
 
             //lethal end########################################################
 
+            if (p.ownMaxMana == 1 )
+            {
+                if (card.name == CardDB.cardName.lepergnome) return -10;
+                if (card.name == CardDB.cardName.faeriedragon) return -20;
+                if (card.Attack >= 3 && card.Health >= 2) return -20;
+                
+            }
+
             if (card.name == CardDB.cardName.unstableportal && p.owncards.Count <= 9) return -15;
 
             if (card.name == CardDB.cardName.daggermastery)

@@ -138,6 +138,7 @@
                 {
                     usecoin = true;
                     //lastCoin = true;
+
                 }
                 //save spell for all classes: (except for rouge if he has no combo)
                 if (a.target == null) continue;

@@ -41,8 +41,10 @@
             //posmoves[0].prepareNextTurn(false);
             List<Playfield> temp = new List<Playfield>();
             int deep = 0;
-            int enemMana = Math.Min(rootfield.enemyMaxMana + 1, 10);
+            int enemMana = rootfield.enemyMaxMana;
 
+            if (print)
+            { Console.WriteLine("enemMana "+ enemMana); }
             //playing aoe-effects if activated (and we didnt play loatheb)
             if (playaround && rootfield.ownloatheb == 0)
             {

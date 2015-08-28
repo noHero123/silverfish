@@ -57,7 +57,10 @@ namespace HREngine.Bots
             get
             {
                 return "Author of HR-Silver-translator: Rush4xDev "+"\r\n" +
-                       "This is silver fish A.I. module.";
+                       "This is silver fish A.I. module.\r\nyou are running version V" + Silverfish.Instance.versionnumber +")\r\n" +
+                       "\r\n\r\n\r\n\r\n\r\ni hope you dont see the following version number :P"
+                       ;
+
             }
         }
 
@@ -900,7 +903,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.00";
+        public string versionnumber = "116.01";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
