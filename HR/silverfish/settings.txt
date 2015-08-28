@@ -16,4 +16,4 @@ alpha = 50; // weight of the second turn in calculation (0<= alpha <= 100)
 simulatePlacement = true;  // set this true, and ai will simulate all placements, whether you have a alpha/flametongue/argus
 useExternalProcess = false; // use silver.exe for calculations a lot faster than turning it off (true = recomended)
 passiveWaiting = false; // process will wait passive for silver.exe to finish
-behave = control; // select the behavoir of the ai: control, rush or mana (very experimental)
+behave = control; // select the behavoir of the ai: control, rush, face (new) or mana (very experimental, dont use that :D)
