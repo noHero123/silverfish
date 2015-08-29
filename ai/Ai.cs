@@ -381,7 +381,6 @@
             //this.bestboard.printActions();
 
             Playfield tempbestboard = new Playfield();
-
             tempbestboard.printBoard();
 
             if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!

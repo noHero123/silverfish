@@ -65,7 +65,7 @@
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (usecoin) retval -= 5 * p.manaTurnEnd;
-            if (p.manaTurnEnd >= 2 && !useAbili)
+            if (p.manaTurnEnd >= 2 && !useAbili && p.ownAbilityReady)
             {
                 retval -= 10;
                 if (p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2)) retval += 10;

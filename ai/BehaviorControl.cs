@@ -18,7 +18,7 @@
 
             retval += p.ownMaxMana;
             retval -= p.enemyMaxMana;
-
+            
             retval += p.ownMaxMana * 20 - p.enemyMaxMana * 20;
 
             if (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.druid) retval -= 2 * p.enemyspellpower;
@@ -58,7 +58,7 @@
                     retval += 12;
                 }
             }
-
+            
             //RR card draw value depending on the turn and distance to lethal
             //RR if lethal is close, carddraw value is increased
             if (Ai.Instance.lethalMissing <= 5) //RR
@@ -122,7 +122,6 @@
                 retval += owntaunt * 10 - 11 * anz;
             }*/
 
-
             bool useAbili = false;
             bool usecoin = false;
             //bool lastCoin = false;
@@ -148,10 +147,9 @@
             //dont waste mana!!
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (usecoin && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 100 * p.manaTurnEnd;
-            if (p.manaTurnEnd >= 2 && !useAbili)
+            if (p.manaTurnEnd >= 2 && !useAbili && p.ownAbilityReady)
             {
-                retval -= 20;
-                if (p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2)) retval += 20;
+                if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 20;
             }
             //if (usecoin && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 100;
 

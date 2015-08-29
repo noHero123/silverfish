@@ -903,7 +903,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.01";
+        public string versionnumber = "116.03";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1423,7 +1423,8 @@ namespace HREngine.Bots
             Dictionary<int, Entity> allEntitys = new Dictionary<int, Entity>();
             
             //TEST....................
-            /*Helpfunctions.Instance.ErrorLog("# all");
+            /*
+            Helpfunctions.Instance.ErrorLog("# all");
             foreach (var item in rangerbot.gameState.GameEntityList)
             {
                 allEntitys.Add(item.EntityId, item);
@@ -1511,8 +1512,9 @@ namespace HREngine.Bots
 
                     m.entitiyID = entitiy.EntityId;
 
+                    if(m.name == CardDB.cardName.unknown) Helpfunctions.Instance.ErrorLog("unknown card error");
 
-                    Helpfunctions.Instance.ErrorLog( m.entitiyID +" " +  m.name + " ready params ex: " + m.exhausted + " charge: " +m.charge + " attcksthisturn: " + m.numAttacksThisTurn + " playedthisturn " + m.playedThisTurn );
+                    Helpfunctions.Instance.ErrorLog(m.entitiyID + " ." + entitiy.CardId + ". " + m.name + " ready params ex: " + m.exhausted + " charge: " + m.charge + " attcksthisturn: " + m.numAttacksThisTurn + " playedthisturn " + m.playedThisTurn);
                     //Helpfunctions.Instance.ErrorLog("spellpower check " + entitiy.SpellPowerAttack + " " + entitiy.SpellPowerHealing + " " + entitiy.SpellPower);
 
 
@@ -1769,6 +1771,7 @@ namespace HREngine.Bots
         private void updateBehaveString(Behavior botbase)
         {
             this.botbehave = "rush";
+            if (botbase is BehaviorFace) this.botbehave = "face";
             if (botbase is BehaviorControl) this.botbehave = "control";
             if (botbase is BehaviorMana) this.botbehave = "mana";
             this.botbehave += " " + Ai.Instance.maxwide;

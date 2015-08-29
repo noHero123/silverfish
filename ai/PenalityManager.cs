@@ -85,6 +85,7 @@
             setupLethalHelpMinions();
             setupSilenceTargets();
             setupTargetAbilitys();
+            setupReturnBackToHandCards();
         }
 
         public void setCombos()
@@ -1775,9 +1776,12 @@
                 }
             }
 
+            if (p.turnCounter >= 1 && name == CardDB.cardName.reversingswitch && target.Angr == target.Hp) return 500;
 
             if (returnHandDatabase.ContainsKey(name))
             {
+
+                
                 if (name == CardDB.cardName.vanish)
                 {
                     //dont vanish if we have minons on board wich are ready
@@ -1791,8 +1795,13 @@
 
                 if (target.own && !target.isHero)
                 {
+                    if (p.turnCounter >= 1 && !target.handcard.card.Charge) return 500;
                     Minion mnn = target;
                     if (mnn.Ready) pen += 10;
+                    if (!mnn.handcard.card.battlecry && mnn.Hp == mnn.maxHp && mnn.Angr >= mnn.handcard.card.Attack)
+                    {
+                        pen += 20;
+                    }
                 }
             }
 
