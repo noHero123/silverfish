@@ -8,7 +8,8 @@ namespace HREngine.Bots
     {
 
         //    Put a random minion from each player's hand into the battlefield.
-
+        CardDB.Card enemymob = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_593);
+        
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
             if (p.isServer)
@@ -80,7 +81,7 @@ namespace HREngine.Bots
 
             if (p.enemyAnzCards >= 2)
             {
-                p.callKid(c.card, p.enemyMinions.Count, false);
+                p.callKid(enemymob, p.enemyMinions.Count, false);
                 p.enemyAnzCards--;
                 p.triggerCardsChanged(false);
             }
