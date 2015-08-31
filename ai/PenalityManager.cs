@@ -44,8 +44,6 @@
 
         Dictionary<CardDB.cardName, int> silenceTargets = new Dictionary<CardDB.cardName, int>();
 
-        Dictionary<CardDB.cardName, int> returnHandDatabase = new Dictionary<CardDB.cardName, int>();
-
         Dictionary<CardDB.cardName, int> priorityDatabase = new Dictionary<CardDB.cardName, int>();
 
         public Dictionary<CardDB.cardName, int> DamageTargetDatabase = new Dictionary<CardDB.cardName, int>();
@@ -85,7 +83,6 @@
             setupLethalHelpMinions();
             setupSilenceTargets();
             setupTargetAbilitys();
-            setupReturnBackToHandCards();
         }
 
         public void setCombos()
@@ -1119,20 +1116,41 @@
         {
             if (!this.backToHandDatabase.ContainsKey(name) || lethal) return 0;
             int pen = 0;
+
+            if (name == CardDB.cardName.vanish)
+            {
+                //dont vanish if we have minons on board wich are ready
+                bool haveready = false;
+                foreach (Minion mins in p.ownMinions)
+                {
+                    if (mins.Ready) haveready = true;
+                }
+                if (haveready) pen += 10;
+            }
+
             if (target == null) return 0;
+
             if (target.own && !target.isHero)
             {
+                if (p.turnCounter >= 1 && !target.handcard.card.Charge) return 500;
                 // dont destroy owns ;_; (except mins with deathrattle effects, with battlecry, or to heal)
                 Minion m = target;
                 pen = 500;
+                
+                if (m.handcard.card.deathrattle || m.handcard.card.battlecry || m.handcard.card.Charge || ((m.maxHp - m.Hp) >= 4))
+                {
+                    pen = 0;
+                }
                 if (m.handcard.card.deathrattle || m.handcard.card.battlecry || m.handcard.card.Charge || ((m.maxHp - m.Hp )>=4))
                 {
                     pen = 0;
                 }
                 if (m.shadowmadnessed)
                 {
-                    pen = -2;
+                    pen = -20;
                 }
+
+                if (m.Ready) pen += 10;
             }
             if (!target.own && !target.isHero)
             {
@@ -1778,32 +1796,7 @@
 
             if (p.turnCounter >= 1 && name == CardDB.cardName.reversingswitch && target.Angr == target.Hp) return 500;
 
-            if (returnHandDatabase.ContainsKey(name))
-            {
-
-                
-                if (name == CardDB.cardName.vanish)
-                {
-                    //dont vanish if we have minons on board wich are ready
-                    bool haveready = false;
-                    foreach (Minion mins in p.ownMinions)
-                    {
-                        if (mins.Ready) haveready = true;
-                    }
-                    if (haveready) pen += 10;
-                }
-
-                if (target.own && !target.isHero)
-                {
-                    if (p.turnCounter >= 1 && !target.handcard.card.Charge) return 500;
-                    Minion mnn = target;
-                    if (mnn.Ready) pen += 10;
-                    if (!mnn.handcard.card.battlecry && mnn.Hp == mnn.maxHp && mnn.Angr >= mnn.handcard.card.Attack)
-                    {
-                        pen += 20;
-                    }
-                }
-            }
+            
 
             return pen;
         }
@@ -2467,20 +2460,11 @@
             this.backToHandDatabase.Add(CardDB.cardName.shadowstep, 0);
             this.backToHandDatabase.Add(CardDB.cardName.youthfulbrewmaster, 0);
             this.backToHandDatabase.Add(CardDB.cardName.kidnapper, 0);
+            this.backToHandDatabase.Add(CardDB.cardName.recycle, 0);
+            this.backToHandDatabase.Add(CardDB.cardName.vanish, 0);
 
         }
 
-        private void setupReturnBackToHandCards()
-        {
-            returnHandDatabase.Add(CardDB.cardName.ancientbrewmaster, 0);
-            returnHandDatabase.Add(CardDB.cardName.dream, 0);
-            returnHandDatabase.Add(CardDB.cardName.kidnapper, 0);//if combo
-            returnHandDatabase.Add(CardDB.cardName.shadowstep, 0);
-            returnHandDatabase.Add(CardDB.cardName.vanish, 0);
-            returnHandDatabase.Add(CardDB.cardName.youthfulbrewmaster, 0);
-            returnHandDatabase.Add(CardDB.cardName.timerewinder, 0);
-            returnHandDatabase.Add(CardDB.cardName.recycle, 0);
-        }
 
         private void setupHeroDamagingAOE()
         {

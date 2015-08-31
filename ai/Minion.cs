@@ -740,6 +740,11 @@
                     this.charge++;
                 }
 
+                if (me.CARDID == CardDB.cardIDEnum.AT_071e)// sturmangriff    +1 angriff und ansturm/.
+                {
+                    this.charge++;
+                }
+
                 //ancientbuffs-------------------------------------------------
                 if (me.CARDID == CardDB.cardIDEnum.EX1_565o) //flametongue
                 {
