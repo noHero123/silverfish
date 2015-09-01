@@ -228,7 +228,7 @@
 
                         if (usePenalityManager)
                         {
-                            cardplayPenality = pen.getPlayCardPenality(hc.card, null, p, i, lethalcheck);
+                            cardplayPenality = pen.getPlayCardPenality(hc, null, p, i, lethalcheck);
                             if (cardplayPenality <= 499)
                             {
                                 //help.logg(hc.card.name + " is played");
@@ -255,7 +255,7 @@
 
                             if (usePenalityManager)
                             {
-                                cardplayPenality = pen.getPlayCardPenality(hc.card, trgt, p, i, lethalcheck);
+                                cardplayPenality = pen.getPlayCardPenality(hc, trgt, p, i, lethalcheck);
 
                                 if (cardplayPenality <= 499)
                                 {
@@ -358,7 +358,7 @@
 
                             if (usePenalityManager)
                             {
-                                cardplayPenality = pen.getPlayCardPenality(c, null, p, 0, isLethalCheck);
+                                cardplayPenality = pen.getPlayCardPenality(hc, null, p, 0, isLethalCheck);
                                 if (cardplayPenality <= 499)
                                 {
 
@@ -369,8 +369,9 @@
                                         if (hc.card.name == CardDB.cardName.direwolfalpha || hc.card.name == CardDB.cardName.flametonguetotem)//|| hc.card.name == CardDB.cardName.defenderofargus)
                                         {
                                             adding = 2;
-                                            subbing = 2;
+                                            subbing = 1;
                                         }
+                                        //Helpfunctions.Instance.ErrorLog(adding + " " + subbing + " " + p.ownMinions.Count);
                                         for (int placer = 0; placer < p.ownMinions.Count - subbing; placer++)
                                         {
                                             Action a = new Action(actionEnum.playcard, hc, null, placer + adding, null, cardplayPenality, 0);
@@ -405,7 +406,7 @@
 
                                 if (usePenalityManager)
                                 {
-                                    cardplayPenality = pen.getPlayCardPenality(c, trgt, p, 0, isLethalCheck);
+                                    cardplayPenality = pen.getPlayCardPenality(hc, trgt, p, 0, isLethalCheck);
                                     if (cardplayPenality <= 499)
                                     {
                                         //pf.playCard(hc, hc.position - 1, hc.entity, trgt.target, trgt.targetEntity, 0, bestplace, cardplayPenality);
@@ -632,7 +633,7 @@
 
                         if (usePenalityManager)
                         {
-                            abilityPenality = pen.getPlayCardPenality(p.ownHeroAblility.card, trgt, p, 0, isLethalCheck);
+                            abilityPenality = pen.getPlayCardPenality(p.ownHeroAblility, trgt, p, 0, isLethalCheck);
                             if (abilityPenality <= 499)
                             {
                                 //pf.activateAbility(p.ownHeroAblility, trgt.target, trgt.targetEntity, abilityPenality);
@@ -656,7 +657,7 @@
 
                     if (usePenalityManager)
                     {
-                        abilityPenality = pen.getPlayCardPenality(p.ownHeroAblility.card, null, p, 0, isLethalCheck);
+                        abilityPenality = pen.getPlayCardPenality(p.ownHeroAblility, null, p, 0, isLethalCheck);
                         if (abilityPenality <= 499)
                         {
                             //havedonesomething = true;

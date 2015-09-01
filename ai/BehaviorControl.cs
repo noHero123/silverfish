@@ -213,6 +213,7 @@
                 if (p.turnCounter < 2) retval += p.owncarddraw * 100;
                 retval -= 1000;
             }
+            
             if (p.ownHero.Hp <= 0) retval = -10000;
 
             p.value = retval;

@@ -148,9 +148,10 @@
             return retval;
         }
 
-        public int getPlayCardPenality(CardDB.Card card, Minion target, Playfield p, int choice, bool lethal)
+        public int getPlayCardPenality(Handmanager.Handcard hcard, Minion target, Playfield p, int choice, bool lethal)
         {
             int retval = 0;
+            CardDB.Card card = hcard.card;
             CardDB.cardName name = card.name;
             //there is no reason to buff HP of minon (because it is not healed)
 
@@ -176,7 +177,8 @@
 
             retval += getDestroyPenality(name, target, p, lethal);
             retval += getbackToHandPenality(name, target, p, lethal);
-            retval += getSpecialCardComboPenalitys(card, target, p, lethal, choice);
+            retval += getSpecialCardComboPenalitys(card, target, p, lethal, choice, hcard.manacost);
+            //if (lethal) Console.WriteLine(retval+ " " + name);
             retval += getRandomPenaltiy(card, p, target);
             if (!lethal)
             {
@@ -1183,7 +1185,7 @@
         }
 
 
-        private int getSpecialCardComboPenalitys(CardDB.Card card, Minion target, Playfield p, bool lethal, int choice)
+        private int getSpecialCardComboPenalitys(CardDB.Card card, Minion target, Playfield p, bool lethal, int choice, int manaCostCard)
         {
             CardDB.cardName name = card.name;
 
@@ -1206,7 +1208,7 @@
                         int beasts = 0;
                         foreach (Minion mm in p.ownMinions)
                         {
-                            if ((TAG_RACE)mm.handcard.card.race == TAG_RACE.PET) beasts++;
+                            if (mm.Ready && (TAG_RACE)mm.handcard.card.race == TAG_RACE.PET) beasts++;
                         }
                         if (beasts == 0) return 500;
                     }
@@ -1215,7 +1217,7 @@
                         int beasts = 0;
                         foreach (Minion mm in p.ownMinions)
                         {
-                            if ((TAG_RACE)mm.handcard.card.race == TAG_RACE.PIRATE) beasts++;
+                            if (mm.Ready && (TAG_RACE)mm.handcard.card.race == TAG_RACE.PIRATE) beasts++;
                         }
                         if (beasts == 0) return 500;
                     }
@@ -1224,7 +1226,7 @@
                         int beasts = 0;
                         foreach (Minion mm in p.ownMinions)
                         {
-                            if ((TAG_RACE)mm.handcard.card.race == TAG_RACE.MURLOC) beasts++;
+                            if (mm.Ready && (TAG_RACE)mm.handcard.card.race == TAG_RACE.MURLOC) beasts++;
                         }
                         if (beasts == 0) return 500;
                     }
@@ -1234,7 +1236,7 @@
                         int beasts = 0;
                         foreach (Minion mm in p.ownMinions)
                         {
-                            if (mm.name == CardDB.cardName.silverhandrecruit) beasts++;
+                            if (mm.Ready &&  mm.name == CardDB.cardName.silverhandrecruit) beasts++;
                         }
                         if (beasts == 0) return 500;
                     }
@@ -1443,17 +1445,58 @@
             {
                 //penalize for any own minions with health equal to potential attack amount
                 //to lessen risk of losing your own minion
-                bool haveready;
                 int maxAtk = 3;
-                if (name == CardDB.cardName.madderbomber) maxAtk = 5;
-                foreach (Minion mins in p.ownMinions)
+                if (name == CardDB.cardName.madderbomber) maxAtk = 6;
+                if (maxAtk >= p.ownHero.Hp && maxAtk < p.enemyHero.Hp) return 500;//we could be killed, but not enemy >_< .. otherwise YOLO
+                foreach (Minion mnn in p.ownMinions)
                 {
-                    if (mins.Hp <= maxAtk)
+                    if (mnn.Hp <= maxAtk)
                     {
-                        haveready = false;
-                        if (mins.Ready) haveready = true;
-                        if (haveready) pen += 20;
+                        if (mnn.Ready) pen += 20; 
                     }
+                }
+
+                /*
+                int numTargets = 2 + p.ownMinions.Count + p.enemyMinions.Count;
+                int numOwnTargets = 1 + p.ownMinions.Count;
+                int numEnemyTargets = numTargets-numOwnTargets;
+                double dmgpertarget = ((double)maxAtk)/((double)numTargets);
+                foreach (Minion mnn in p.ownMinions)
+                {
+                    if (mnn.Hp <= dmgpertarget)
+                    {
+                        pen += 10;
+                    }
+                }
+                */
+            }
+
+            if (name == CardDB.cardName.goblinblastmage)
+            {
+                bool mechOnField = false;
+
+                foreach (Minion mnn in p.ownMinions)
+                {
+                    if (mnn.handcard.card.race == TAG_RACE.MECHANICAL)
+                    {
+                        mechOnField = true;
+                        break;
+                    }
+                }
+
+                if (! mechOnField)
+                {
+                    int manacost = card.getManaCost(p, manaCostCard);
+                    foreach (Handmanager.Handcard hc in p.owncards)
+                    {
+                        if (hc.card.race == TAG_RACE.MECHANICAL && p.mana >= (hc.getManaCost(p) + manacost)) return 500;//hc.card.race Should work? Nohero please confirm!
+                        if (hc.card.race == TAG_RACE.MECHANICAL && p.mana >= hc.getManaCost(p)) return 50;
+
+                    }
+                }
+                else
+                {
+                    return 20;
                 }
             }
 
@@ -2994,7 +3037,7 @@
             this.randomEffects.Add(CardDB.cardName.crackle, 1);
             this.randomEffects.Add(CardDB.cardName.bouncingblade, 3);
             this.randomEffects.Add(CardDB.cardName.coghammer, 1);
-            this.randomEffects.Add(CardDB.cardName.madderbomber, 1);
+            this.randomEffects.Add(CardDB.cardName.madderbomber, 6);
             this.randomEffects.Add(CardDB.cardName.bomblobber, 1);
             this.randomEffects.Add(CardDB.cardName.enhanceomechano, 1);
 

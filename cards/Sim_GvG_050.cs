@@ -42,16 +42,22 @@ namespace HREngine.Bots
             int minHp = 100000;
             foreach (Minion m in p.ownMinions)
             {
-                if (m.Hp < minHp) minHp = m.Hp;
+                int div = 0;
+                if (m.divineshild) div = 1;
+                if (m.Hp + div < minHp) minHp = m.Hp;
             }
             foreach (Minion m in p.enemyMinions)
             {
-                if (m.Hp < minHp) minHp = m.Hp;
+                int div = 0;
+                if (m.divineshild) div = 1;
+                if (m.Hp + div < minHp) minHp = m.Hp;
             }
 
             int dmgdone = (int)Math.Ceiling((double)minHp / (double)dmg) * dmg;
-
-            p.allMinionsGetDamage(dmgdone);
+            for (int i = 0; i < dmgdone; i++)
+            {
+                p.allMinionsGetDamage(1);
+            }
         }
 
 

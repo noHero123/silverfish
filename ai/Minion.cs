@@ -242,7 +242,7 @@
                     bool BolfRamshield = false;
                     if (dmg > 0)
                     {
-                        
+
                         foreach (Minion m in (this.own) ? p.ownMinions : p.enemyMinions)
                         {
                             if (m.name == CardDB.cardName.bolframshield)
@@ -435,7 +435,7 @@
                 if (this.name == CardDB.cardName.feugen) p.feugenDead = true;
             }
 
-            
+
 
             if (own)
             {
@@ -489,9 +489,9 @@
                 return;
             }
 
-            if (!silenced && (name == CardDB.cardName.ragnarosthefirelord || name == CardDB.cardName.ancientwatcher || (name== CardDB.cardName.argentwatchman && !this.canAttackNormal))) return;
+            if (!silenced && (name == CardDB.cardName.ragnarosthefirelord || name == CardDB.cardName.ancientwatcher || (name == CardDB.cardName.argentwatchman && !this.canAttackNormal))) return;
 
-            if (!frozen && ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury) || ( !silenced && this.name == CardDB.cardName.v07tr0n && numAttacksThisTurn <=3 )) ) Ready = true;
+            if (!frozen && ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury) || (!silenced && this.name == CardDB.cardName.v07tr0n && numAttacksThisTurn <= 3))) Ready = true;
 
         }
 
@@ -588,6 +588,8 @@
 
         public void loadEnchantments(List<miniEnch> enchants, int ownPlayerControler)
         {
+            bool correctSpellPower = false;
+            int spellpowerbuffs = 0;
             foreach (miniEnch me in enchants)
             {
 
@@ -618,7 +620,7 @@
                     this.tempAttack += 2;
                 }
                 // deathrattles reborns and destoyings----------------------------------------------
-               
+
 
                 if (me.CARDID == CardDB.cardIDEnum.CS2_038e) //ancestral spirit
                 {
@@ -629,10 +631,14 @@
                 if (me.CARDID == CardDB.cardIDEnum.EX1_584e) //ancient mage
                 {
                     //this.spellpower++;
+                    correctSpellPower = true;
+                    spellpowerbuffs++;
                 }
                 if (me.CARDID == CardDB.cardIDEnum.GVG_010b) //Velen's Chosen (+2+4, +spellpower)
                 {
                     //this.spellpower++;
+                    correctSpellPower = true;
+                    spellpowerbuffs++;
                 }
 
                 if (me.CARDID == CardDB.cardIDEnum.EX1_158e) //soul of the forest
@@ -673,7 +679,7 @@
                     }
                 }
 
-                
+
 
                 if (me.CARDID == CardDB.cardIDEnum.DREAM_05e) //nightmare
                 {
@@ -793,7 +799,7 @@
                 {
                     this.tempAttack += 1;
                 }
-                
+
                 if (me.CARDID == CardDB.cardIDEnum.EX1_549o) //bestial wrath
                 {
                     this.tempAttack += 2;
@@ -803,9 +809,9 @@
                 {
                     this.tempAttack += 2;
                 }
-                
 
-                
+
+
                 if (me.CARDID == CardDB.cardIDEnum.GVG_011a) //Shrink Ray
                 {
                     this.tempAttack -= 2; //todo might not be correct
@@ -815,6 +821,20 @@
                     this.tempAttack += 2;
                 }
             }
+
+            if (correctSpellPower)
+            {
+                //TODO add the mission spellpower of that new insprire minion, but we need the (correct)spellpower of the player for that
+                if (spellpowerbuffs >= 1)
+                {
+                    this.spellpower += spellpowerbuffs - 1; //one is counted!
+                }
+                if (!this.silenced)
+                {
+                    this.spellpower += this.handcard.card.spellpowervalue;
+                }
+            }
+
         }
 
     }

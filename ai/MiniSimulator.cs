@@ -147,6 +147,7 @@
                         /*if (deep == 0)
                         {
                             Helpfunctions.Instance.ErrorLog("do action...");
+                            a.print(false);
                             pf.printBoard();
                         }*/
                         addToPosmoves(pf);

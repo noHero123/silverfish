@@ -25,13 +25,33 @@ namespace HREngine.Bots
                     bool found = false;
 
                     //search smallest minion:
-                    foreach (Minion mnn in tmp)
+                    if (m.own)
                     {
-                        if (mnn.Hp < value && mnn.Hp >= 1)
+                        foreach (Minion mnn in tmp)
                         {
-                            target = mnn;
-                            value = target.Hp;
-                            found = true;
+                            if (mnn.Hp < value && mnn.Hp >= 1)
+                            {
+                                target = mnn;
+                                value = target.Hp;
+                                found = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //steal a minion with has not attacked or has taunt
+                        foreach (Minion mnn in tmp)
+                        {
+                            int special = (m.Ready) ? 10 : 0;
+                            special += (m.taunt) ? 5 : 0;
+                            special += mnn.Hp;
+                            if (special > value)
+                            {
+                                
+                                target = mnn;
+                                value = special;
+                                found = true;
+                            }
                         }
                     }
                     if (found) p.minionGetControlled(target, m.own, false);
