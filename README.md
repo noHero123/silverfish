@@ -15,3 +15,38 @@ if your are using HR:
 Hrtbuddy:
 - same like HR, only take the silverfish_HB.cs instead of Programm.cs
 - there might be some builderrors i cant fix (dont own HB) if you know how to fix, let me know
+
+### Custom Mulligan
+If you want you can configure custom Mulligan Rules. Create an empty _mulligan.txt file in the same folder as your silverfish.dll to get started.
+
+Here an example to discard specific cards all the time:
+discard;all;all;EX1_287,EX1_295,EX1_294,EX1_612,CS2_029,GVG_074,GVG_096,CS1_069,EX1_274,EX1_284,EX1_289,GVG_069,BRM_019,CS2_032
+
+Each line of your _mulligan.txt file is a custom Mulligan rule. Each Value is separated by a semicolon. 
+
+```bash
+SYNTAX:
+ACTION;YOUR_CLASS;ENEMY_CLASS;MULIGAN_COMMAND
+```
+
+Name  | Possible Values | Notes
+------------- | -------------
+ACTION  | discard or hold | This Value defines what to do with the cards matching the Mulligan rule
+YOUR_CLASS  | hunter, mage, pala, rouge, druid, warlock, warrior, priest | Only use the Mulligan rule when you play this character
+ENEMY_CLASS | hunter, mage, pala, rouge, druid, warlock, warrior, priest | Only use the Mulligan rule when you play against this character
+MULIGAN_COMMAND | cards name (look _carddb.txt in silverfish folder) | The Syntax of the Mulligan rule is CARDNAME:CARD_COUNT - multiple cards are separated with Colons eg CARD1_ID:CARD1_COUNT1:CARD2_ID:CARD2_COUNT
+
+Here an example for a Hunter Mulligan:
+
+```bash
+hold;hunter;all;FP1_004
+hold;hunter;all;FP1_011
+hold;hunter;all;FP1_002
+hold;hunter;all;NEW1_019
+hold;hunter;hunter;EX1_538
+hold;hunter;all;GAME_005:1:NEW1_031
+hold;hunter;druid;GAME_005:1:CS2_084:1:CS2_203
+```
+
+
+
