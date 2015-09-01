@@ -8,18 +8,20 @@ Official Threads:
 
 build instructions:
 if your are using HR:
-- copy the Programm.cs and the ai + cards folder in one folder, create a project out of it
+- copy the Programm.cs and the AI + cards folder in one folder, create a project out of it
 - include HSRangerLib.dll from HR
 - build it, and copy in the bin\Debug or Release-folder the _cardDB.txt file
 
 Hrtbuddy:
 - same like HR, only take the silverfish_HB.cs instead of Programm.cs
-- there might be some builderrors i cant fix (dont own HB) if you know how to fix, let me know
+- there might be some builderrors I cant fix (don't own HB) if you know how to fix, let me know
 
 ### Custom Mulligan
 If you want you can configure custom Mulligan Rules. Create an empty _mulligan.txt file in the same folder as your silverfish.dll to get started.
 
 Each line of your _mulligan.txt file is a custom Mulligan rule. Each Value is separated by a semicolon. 
+
+Since this File works with CARD_ID it is very helpful to check out the included _carddb.txt file to find the ID of specific cards.
 
 The Syntax for this file works like this:
 ```bash
