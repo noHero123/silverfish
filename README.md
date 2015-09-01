@@ -27,7 +27,7 @@ ACTION;YOUR_CLASS;ENEMY_CLASS;MULIGAN_COMMAND
 ```
 
 Name  | Possible Values | Notes
-------------- | -------------
+------------- | ------------- | -------------
 ACTION  | discard or hold | This Value defines what to do with the cards matching the Mulligan rule
 YOUR_CLASS  | hunter, mage, pala, rouge, druid, warlock, warrior, priest | Only use the Mulligan rule when you play this character
 ENEMY_CLASS | hunter, mage, pala, rouge, druid, warlock, warrior, priest | Only use the Mulligan rule when you play against this character
