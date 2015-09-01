@@ -21,7 +21,7 @@ If you want you can configure custom Mulligan Rules. Create an empty _mulligan.t
 
 Each line of your _mulligan.txt file is a custom Mulligan rule. Each Value is separated by a semicolon. 
 
-Since this File works with CARD_ID it is very helpful to check out the included _carddb.txt file to find the ID of specific cards.
+Since this file works with CARD_ID it is very helpful to check out the included _carddb.txt file to find the ID of specific cards.
 
 The Syntax for this file works like this:
 ```bash
