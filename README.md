@@ -19,13 +19,10 @@ Hrtbuddy:
 ### Custom Mulligan
 If you want you can configure custom Mulligan Rules. Create an empty _mulligan.txt file in the same folder as your silverfish.dll to get started.
 
-Here an example to discard specific cards all the time:
-discard;all;all;EX1_287,EX1_295,EX1_294,EX1_612,CS2_029,GVG_074,GVG_096,CS1_069,EX1_274,EX1_284,EX1_289,GVG_069,BRM_019,CS2_032
-
 Each line of your _mulligan.txt file is a custom Mulligan rule. Each Value is separated by a semicolon. 
 
+####SYNTAX:
 ```bash
-SYNTAX:
 ACTION;YOUR_CLASS;ENEMY_CLASS;MULIGAN_COMMAND
 ```
 
