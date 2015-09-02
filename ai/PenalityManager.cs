@@ -559,6 +559,7 @@
                     int dmg = this.DamageTargetDatabase.ContainsKey(name) ? this.DamageTargetDatabase[name] : this.HealTargetDatabase[name];
 
                     if (m.name == CardDB.cardName.madscientist && p.ownHeroName == HeroEnum.hunter) return 500;
+                    if (m.name == CardDB.cardName.sylvanaswindrunner) return 0;
                     if (m.handcard.card.deathrattle) return 60;
                     if (m.Hp > dmg)
                     {

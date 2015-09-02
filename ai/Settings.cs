@@ -448,6 +448,21 @@ namespace HREngine.Bots
                     if (a.StartsWith("face")) returnbehav = new BehaviorFace();
                 }
 
+                searchword = "concedeonbadboard=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.enemyConcede = Convert.ToBoolean(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+                
+
             }
             //foreach ended----------
 

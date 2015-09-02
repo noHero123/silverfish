@@ -98,6 +98,7 @@
                 {
                     if (m.Angr <= 2 && m.Hp <= 2 && !m.divineshild) retval -= 5;
                 }
+                //if (m.Angr <= m.Hp + 1) retval += m.Angr;
                 //if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
                 //if (m.poisonous) retval += 1;
                 if (m.divineshild && m.taunt) retval += 4;

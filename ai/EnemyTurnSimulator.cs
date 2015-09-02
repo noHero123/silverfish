@@ -106,6 +106,32 @@
 
             }
 
+            //kill to strong minions with low hp
+
+            /*if (enemMana >= 4)
+            {
+                foreach (Playfield pf in posmoves)
+                {
+                    Minion lowest = null;
+                    foreach (Minion m in pf.ownMinions)
+                    {
+                        if (m.Angr >= 4 && m.Hp <= 2 && m.Hp>=1)
+                        {
+                            pf.minionGetDamageOrHeal(m, 100);
+                            if (lowest == null || lowest.Angr <= m.Angr)
+                            {
+                            //    lowest = m;
+                            }
+                        }
+                    }
+                    pf.doDmgTriggers();
+                    if (lowest != null)
+                    {
+                        pf.minionGetDamageOrHeal(lowest, lowest.Hp);
+                        pf.doDmgTriggers();
+                    }
+                }
+            }*/
 
             foreach (Minion m in posmoves[0].enemyMinions)
             {
@@ -188,7 +214,7 @@
             }
 
             float bestval = int.MaxValue;
-            Playfield bestplay = posmoves[0];
+            Playfield bestplay = rootfield;// posmoves[0];
 
             //foreach (Playfield p in posmoves)
             count = posmoves.Count;

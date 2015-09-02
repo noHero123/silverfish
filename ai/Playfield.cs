@@ -6,8 +6,10 @@
     public struct triggerCounter
     {
         public int minionsGotHealed;
+        public int ownMinionsGotHealed;
 
         public int charsGotHealed;
+        public int owncharsGotHealed;
 
         public int ownMinionsGotDmg;
         public int enemyMinionsGotDmg;
@@ -2200,9 +2202,8 @@
                         {
                             this.evaluatePenality += 2 * hasReady;
                         }
-                        
 
-                        this.evaluatePenality += 10 * hasReady;
+                        this.evaluatePenality += 40 * hasReady;
                     }
 
                 }
@@ -3255,12 +3256,14 @@
             {
                 triggerACharGotHealed();//possible effects: gain attack
                 this.tempTrigger.charsGotHealed = 0;
+                this.tempTrigger.owncharsGotHealed = 0;
             }
 
             if (this.tempTrigger.minionsGotHealed >= 1)
             {
                 triggerAMinionGotHealed();//possible effects: draw card
                 this.tempTrigger.minionsGotHealed = 0;
+                this.tempTrigger.ownMinionsGotHealed = 0;
             }
 
 
@@ -3302,9 +3305,20 @@
                 if (mnn.silenced) continue;
                 if (mnn.handcard.card.name == CardDB.cardName.lightwarden)
                 {
-                    for (int i = 0; i < this.tempTrigger.charsGotHealed; i++)
+                    if (turnCounter == 0)
                     {
-                        mnn.handcard.card.sim_card.onAHeroGotHealedTrigger(this, mnn, true);
+                        for (int i = 0; i < this.tempTrigger.charsGotHealed; i++)
+                        {
+                            mnn.handcard.card.sim_card.onAHeroGotHealedTrigger(this, mnn, true);
+                        }
+                    }
+                    else
+                    {
+                        //we are doing this, because we dont do a "real" search on enemys turn
+                        for (int i = 0; i < this.tempTrigger.owncharsGotHealed; i++)
+                        {
+                            mnn.handcard.card.sim_card.onAHeroGotHealedTrigger(this, mnn, true);
+                        }
                     }
                     
                 }
@@ -3319,9 +3333,20 @@
 
                 if (mnn.handcard.card.name == CardDB.cardName.holychampion)
                 {
-                    for (int i = 0; i < this.tempTrigger.charsGotHealed; i++)
+                    if (turnCounter == 0)
                     {
-                        mnn.handcard.card.sim_card.onAHeroGotHealedTrigger(this, mnn, true);
+                        for (int i = 0; i < this.tempTrigger.charsGotHealed; i++)
+                        {
+                            mnn.handcard.card.sim_card.onAHeroGotHealedTrigger(this, mnn, true);
+                        }
+                    }
+                    else 
+                    {
+                        //we are doing this, because we dont do a "real" search on enemys turn
+                        for (int i = 0; i < this.tempTrigger.owncharsGotHealed; i++)
+                        {
+                            mnn.handcard.card.sim_card.onAHeroGotHealedTrigger(this, mnn, true);
+                        }
                     }
                 }
             }

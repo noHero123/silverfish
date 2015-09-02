@@ -260,6 +260,10 @@
                     if (copy < this.Hp)
                     {
                         p.tempTrigger.charsGotHealed++;
+                        if (this.own)
+                        {
+                            p.tempTrigger.owncharsGotHealed++;
+                        }
                     }
                     if (copy - this.Hp >= 1)
                     {
@@ -372,6 +376,11 @@
                 //minionWasHealed
                 p.tempTrigger.minionsGotHealed++;
                 p.tempTrigger.charsGotHealed++;
+                if (this.own)
+                {
+                    p.tempTrigger.ownMinionsGotHealed++;
+                    p.tempTrigger.owncharsGotHealed++;
+                }
             }
 
             if (this.Hp < hpcopy)
