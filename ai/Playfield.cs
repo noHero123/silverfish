@@ -3267,7 +3267,7 @@
             }
 
 
-            if (this.tempTrigger.ownMinionsGotDmg + this.tempTrigger.enemyMinionsGotDmg >= 1)
+            if (this.tempTrigger.ownMinionsGotDmg + this.tempTrigger.enemyMinionsGotDmg + this.tempTrigger.ownHeroGotDmg + this.tempTrigger.enemyHeroGotDmg>= 1)
             {
                 triggerAMinionGotDmg(); //possible effects: draw card, gain armor, gain attack
                 this.tempTrigger.ownMinionsGotDmg = 0;
@@ -6335,7 +6335,7 @@
             data +="Own Handcards: "+ "\r\n";
             foreach (Handmanager.Handcard c in this.owncards)
             {
-                data +="pos " + c.position + " " + c.card.name + " " + c.manacost + " entity " + c.entity + " " + c.card.cardIDenum + " " + c.addattack+ " " + c.addHp + "\r\n";
+                data +="pos " + c.position + " " + c.card.name + " " + c.getManaCost(this) + " entity " + c.entity + " " + c.card.cardIDenum + " " + c.addattack+ " " + c.addHp + "\r\n";
             }
             data += "Enemy cards: " + this.enemyAnzCards + "\r\n";
 

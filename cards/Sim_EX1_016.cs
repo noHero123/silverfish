@@ -40,6 +40,7 @@ namespace HREngine.Bots
                     else
                     {
                         //steal a minion with has not attacked or has taunt
+                        value = -1000;
                         foreach (Minion mnn in tmp)
                         {
                             int special = (m.Ready) ? 10 : 0;

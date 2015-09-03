@@ -200,7 +200,18 @@
 
             //if (p.ownMinions.Count == 0) retval -= 20;
             //if (p.enemyMinions.Count == 0) retval += 20;
-            if (p.enemyHero.Hp <= 0) retval = 10000;
+            
+            if (p.enemyHero.Hp <= 0)
+            {
+                if (p.turnCounter <= 1)
+                {
+                    retval = 10000;
+                }
+                else
+                {
+                    retval += 10000;
+                }
+            }
             //soulfire etc
             int deletecardsAtLast = 0;
             foreach (Action a in p.playactions)

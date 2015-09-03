@@ -144,7 +144,7 @@
                         havedonesomething = true;
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
-                        /*if (deep == 0)
+                        /*if (deep == 1)
                         {
                             Helpfunctions.Instance.ErrorLog("do action...");
                             a.print(false);
@@ -254,7 +254,6 @@
                     }
 
                 }
-
                 this.bestmove = bestplay.getNextAction();
                 this.bestmoveValue = bestval;
                 this.bestboard = new Playfield(bestplay);

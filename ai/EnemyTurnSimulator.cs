@@ -275,14 +275,17 @@
             if (p.enemyHeroName == HeroEnum.warrior && p.enemyWeaponDurability == 0 && p.enemyMaxMana >= 4)
             {
                 p.equipWeapon(this.warriorweapon, false);
+                if (p.ownHero.Hp>=1 && p.ownHero.Hp <= p.ownHero.maxHp - 3)  p.ownHero.Hp += 3; //to not change lethal
             }
             if (p.enemyHeroName == HeroEnum.thief && p.enemyWeaponDurability != 0 && p.enemyMaxMana >= 4)
             {
                 p.enemyWeaponAttack++;
+                if (p.ownHero.Hp >= 1 && p.ownHero.Hp <= p.ownHero.maxHp - 1) p.ownHero.Hp += 1;//to not change lethal
             }
             if (p.enemyHeroName == HeroEnum.pala && p.enemyWeaponDurability == 0 && p.enemyMaxMana >= 4)
             {
-                p.equipWeapon(this.warriorweapon, false);//warrion weapon is ok for pala
+                p.equipWeapon(this.warriorweapon, false);//warrion weapon is ok for pala 
+                if (p.ownHero.Hp >= 1 && p.ownHero.Hp <= p.ownHero.maxHp - 3) p.ownHero.Hp += 3;//to not change lethal
             }
 
             //int i = 0;

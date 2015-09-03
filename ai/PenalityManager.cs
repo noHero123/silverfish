@@ -954,6 +954,11 @@
                         continue;
                     }
 
+                    if (this.randomEffects.ContainsKey(a.card.card.name))
+                    {
+                        continue;
+                    }
+
                     if (hasgadget && card.type == CardDB.cardtype.SPELL)
                     {
                         continue;
@@ -1284,6 +1289,18 @@
                 if (card.Attack >= 3 && card.Health >= 2) return -20;
                 
             }
+
+            /*if (card.name == CardDB.cardName.flamewaker && p.turnCounter == 0)
+            {
+                int number =0;
+                foreach (Action a in p.playactions)
+                {
+                    if (a.card!=null && a.card.card.type == CardDB.cardtype.SPELL) number++;
+                }
+                return number * 10;
+            }*/
+
+
 
             if (card.name == CardDB.cardName.unstableportal && p.owncards.Count <= 9) return -15;
 
@@ -3065,6 +3082,8 @@
             this.randomEffects.Add(CardDB.cardName.flamejuggler, 1);
             this.randomEffects.Add(CardDB.cardName.grandcrusader, 1);
             this.randomEffects.Add(CardDB.cardName.spellslinger, 1);
+
+            this.randomEffects.Add(CardDB.cardName.flamewaker, 10); //its not random, but we do it :D, for randomspells
         }
 
         private void setupTargetAbilitys()

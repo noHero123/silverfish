@@ -302,6 +302,14 @@
 
                 if (this.Hp < copy)
                 {
+                    if (this.own)
+                    {
+                        p.tempTrigger.ownHeroGotDmg++;
+                    }
+                    else
+                    {
+                        p.tempTrigger.enemyHeroGotDmg++;
+                    }
                     this.anzGotDmg++;
                     this.gotDmgRaw += dmg;
                 }

@@ -56,6 +56,7 @@ namespace HREngine.Bots
         {
             get
             {
+                
                 return "Author of HR-Silver-translator: Rush4xDev "+"\r\n" +
                        "This is silver fish A.I. module.\r\nyou are running version V" + Silverfish.Instance.versionnumber +")\r\n" +
                        "\r\n\r\n\r\n\r\n\r\ni hope you dont see the following version number :P"
@@ -386,6 +387,10 @@ namespace HREngine.Bots
              }
 
 
+             //string path = SiverFishBotPath.AssemblyDirectory + System.IO.Path.DirectorySeparatorChar + "HRERRORLogs" + System.IO.Path.DirectorySeparatorChar;
+             //System.IO.Directory.CreateDirectory(path);
+             //this.gameState.SaveToXMLFile(path + "HRErrorLog" + DateTime.Now.ToString("_yyyy-MM-dd_HH-mm-ss") + ".xml");
+
              return ranger_action;
         }
 
@@ -441,10 +446,10 @@ namespace HREngine.Bots
                     return;
                 }
 
-
-
+                if (Settings.Instance.enemyConcede) Helpfunctions.Instance.ErrorLog("bestmoveVal:" + Ai.Instance.bestmoveValue);
+                
                 if (Ai.Instance.bestmoveValue <= -900 && Settings.Instance.enemyConcede) 
-                { 
+                {
                     e.action_list.Add(CreateRangerConcedeAction());
                     return;
                 }
@@ -903,7 +908,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.03";
+        public string versionnumber = "116.07";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1164,7 +1169,6 @@ namespace HREngine.Bots
             Entity enemyhero = rangerbot.EnemyHero;
             Entity ownHeroAbility = rangerbot.FriendHeroPower;
 
-            
 
             //TEST
             List<Entity> heroplayers = new List<Entity>();
@@ -1507,7 +1511,7 @@ namespace HREngine.Bots
 
                     if (!m.silenced && m.name == CardDB.cardName.southseadeckhand && entitiy.HasCharge) m.charge = 1;
                     if (!m.silenced && m.handcard.card.Charge) m.charge = 1;
-
+                    if (m.charge == 0 && entitiy.HasCharge) m.charge = 1;
                     m.zonepos = zp;
 
                     m.entitiyID = entitiy.EntityId;

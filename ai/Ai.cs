@@ -368,9 +368,49 @@
             if (printstuff)
             {
                 this.mainTurnSimulator.printPosmoves();
-                simmulateWholeTurn();
+                simmulateWholeTurn(this.mainTurnSimulator.bestboard);
                 help.logg("calculated " + timeneeded);
             }
+        }
+
+        public void simmulateWholeTurn(Playfield board)
+        {
+            help.ErrorLog("########################################################################################################");
+            help.ErrorLog("simulate best board");
+            help.ErrorLog("########################################################################################################");
+            //this.bestboard.printActions();
+
+            Playfield tempbestboard = new Playfield();
+            tempbestboard.printBoard();
+
+            foreach (Action bestmovee in board.playactions)
+            {
+
+                help.logg("stepp");
+
+
+                if (bestmovee != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
+                {
+                    bestmovee.print();
+
+                    tempbestboard.doAction(bestmovee);
+
+                }
+                else
+                {
+                    tempbestboard.mana = -100;
+                }
+                help.logg("-------------");
+                tempbestboard.printBoard();
+            }
+
+            //help.logg("AFTER ENEMY TURN:" );
+            tempbestboard.sEnemTurn = true;
+            tempbestboard.endTurn(false, this.playaround, false, Settings.Instance.playaroundprob, Settings.Instance.playaroundprob2);
+            help.logg("ENEMY TURN:-----------------------------");
+            tempbestboard.value = int.MinValue;
+            tempbestboard.prepareNextTurn(tempbestboard.isOwnTurn);
+            Ai.Instance.enemyTurnSim[0].simulateEnemysTurn(tempbestboard, true, playaround, true, Settings.Instance.playaroundprob, Settings.Instance.playaroundprob2);
         }
 
         public void simmulateWholeTurn()
