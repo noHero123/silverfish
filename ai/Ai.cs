@@ -173,7 +173,7 @@
             help.logg("set best action-----------------------------------");
             this.bestActions.Clear();
             this.bestmove = null;
-
+            this.bestmoveValue = value;
             foreach (Action a in alist)
             {
                 help.logg("-a-");
