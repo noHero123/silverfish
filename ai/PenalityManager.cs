@@ -1595,7 +1595,23 @@
 
             if (name == CardDB.cardName.deadlypoison)
             {
-                return p.ownWeaponDurability * 2;
+                return -p.ownWeaponDurability * 2;
+            }
+
+            if (name == CardDB.cardName.shadydealer)
+            {
+                bool haspirate = false;
+                foreach (Minion mnn in p.ownMinions)
+                {
+                    if (mnn.handcard.card.race == TAG_RACE.PIRATE)
+                    {
+                        haspirate = true;
+                        break;
+                    }
+                }
+                if (haspirate) return 0;
+                else return 10;
+
             }
 
             if (name == CardDB.cardName.coldblood)
