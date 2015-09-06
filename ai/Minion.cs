@@ -514,7 +514,7 @@
 
         public void endAura(Playfield p)
         {
-            this.handcard.card.sim_card.onAuraEnds(p, this);
+            if(!this.silenced) this.handcard.card.sim_card.onAuraEnds(p, this);
 
             if (this.own)
             {

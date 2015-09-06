@@ -908,7 +908,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.07";
+        public string versionnumber = "116.09";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1283,7 +1283,7 @@ namespace HREngine.Bots
                 Entity weapon = rangerbot.EnemyWeapon;
                 this.enemyHeroWeapon = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(weapon.CardId)).name.ToString();
                 this.enemyWeaponAttack = weapon.ATK;
-                this.enemyWeaponDurability = weapon.Durability;
+                this.enemyWeaponDurability = weapon.Durability - weapon.Damage;
             }
 
 
