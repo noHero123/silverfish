@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_EX1_091 : PenTemplate //cabalshadowpriest
 	{
-
-//    kampfschrei:/ übernehmt die kontrolle über einen feindlichen diener mit max. 2 angriff.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

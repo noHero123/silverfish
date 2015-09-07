@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_EX1_100 : PenTemplate //lorewalkercho
 	{
-
-//    wenn ein spieler einen zauber wirkt, erhält der andere spieler eine kopie desselben auf seine hand.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

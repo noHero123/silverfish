@@ -4910,6 +4910,7 @@
             public List<ErrorType2> playrequires;
 
             public SimTemplate sim_card;
+            public PenTemplate pen_card;
 
             public Card()
             {
@@ -5983,6 +5984,7 @@
                     foreach (Card c in instance.cardlist)
                     {
                         c.sim_card = instance.getSimCard(c.cardIDenum);
+                        c.pen_card = instance.getPenCard(c.cardIDenum);
                     }
                     instance.setAdditionalData();
                 }
@@ -8365,6 +8367,1677 @@
             return new SimTemplate();
         }
 
+        public PenTemplate getPenCard(cardIDEnum id)
+        {
+            switch (id)
+            {
+                case cardIDEnum.CS1h_001:
+                    return new Pen_CS1h_001();
+                case cardIDEnum.CS1_042:
+                    return new Pen_CS1_042();
+                case cardIDEnum.CS1_112:
+                    return new Pen_CS1_112();
+                case cardIDEnum.CS1_113:
+                    return new Pen_CS1_113();
+                case cardIDEnum.CS1_130:
+                    return new Pen_CS1_130();
+                case cardIDEnum.CS2_003:
+                    return new Pen_CS2_003();
+                case cardIDEnum.CS2_004:
+                    return new Pen_CS2_004();
+                case cardIDEnum.CS2_005:
+                    return new Pen_CS2_005();
+                case cardIDEnum.CS2_007:
+                    return new Pen_CS2_007();
+                case cardIDEnum.CS2_008:
+                    return new Pen_CS2_008();
+                case cardIDEnum.CS2_009:
+                    return new Pen_CS2_009();
+                case cardIDEnum.CS2_011:
+                    return new Pen_CS2_011();
+                case cardIDEnum.CS2_012:
+                    return new Pen_CS2_012();
+                case cardIDEnum.CS2_013:
+                    return new Pen_CS2_013();
+                case cardIDEnum.CS2_013t:
+                    return new Pen_CS2_013t();
+                case cardIDEnum.CS2_017:
+                    return new Pen_CS2_017();
+                case cardIDEnum.CS2_022:
+                    return new Pen_CS2_022();
+                case cardIDEnum.CS2_023:
+                    return new Pen_CS2_023();
+                case cardIDEnum.CS2_024:
+                    return new Pen_CS2_024();
+                case cardIDEnum.CS2_025:
+                    return new Pen_CS2_025();
+                case cardIDEnum.CS2_026:
+                    return new Pen_CS2_026();
+                case cardIDEnum.CS2_027:
+                    return new Pen_CS2_027();
+                case cardIDEnum.CS2_029:
+                    return new Pen_CS2_029();
+                case cardIDEnum.CS2_032:
+                    return new Pen_CS2_032();
+                case cardIDEnum.CS2_033:
+                    return new Pen_CS2_033();
+                case cardIDEnum.CS2_034:
+                    return new Pen_CS2_034();
+                case cardIDEnum.CS2_037:
+                    return new Pen_CS2_037();
+                case cardIDEnum.CS2_039:
+                    return new Pen_CS2_039();
+                case cardIDEnum.CS2_041:
+                    return new Pen_CS2_041();
+                case cardIDEnum.CS2_042:
+                    return new Pen_CS2_042();
+                case cardIDEnum.CS2_045:
+                    return new Pen_CS2_045();
+                case cardIDEnum.CS2_046:
+                    return new Pen_CS2_046();
+                case cardIDEnum.CS2_049:
+                    return new Pen_CS2_049();
+                case cardIDEnum.CS2_050:
+                    return new Pen_CS2_050();
+                case cardIDEnum.CS2_051:
+                    return new Pen_CS2_051();
+                case cardIDEnum.CS2_052:
+                    return new Pen_CS2_052();
+                case cardIDEnum.CS2_056:
+                    return new Pen_CS2_056();
+                case cardIDEnum.CS2_057:
+                    return new Pen_CS2_057();
+                case cardIDEnum.CS2_061:
+                    return new Pen_CS2_061();
+                case cardIDEnum.CS2_062:
+                    return new Pen_CS2_062();
+                case cardIDEnum.CS2_063:
+                    return new Pen_CS2_063();
+                case cardIDEnum.CS2_064:
+                    return new Pen_CS2_064();
+                case cardIDEnum.CS2_065:
+                    return new Pen_CS2_065();
+                case cardIDEnum.CS2_072:
+                    return new Pen_CS2_072();
+                case cardIDEnum.CS2_074:
+                    return new Pen_CS2_074();
+                case cardIDEnum.CS2_075:
+                    return new Pen_CS2_075();
+                case cardIDEnum.CS2_076:
+                    return new Pen_CS2_076();
+                case cardIDEnum.CS2_077:
+                    return new Pen_CS2_077();
+                case cardIDEnum.CS2_080:
+                    return new Pen_CS2_080();
+                case cardIDEnum.CS2_082:
+                    return new Pen_CS2_082();
+                case cardIDEnum.CS2_083b:
+                    return new Pen_CS2_083b();
+                case cardIDEnum.CS2_084:
+                    return new Pen_CS2_084();
+                case cardIDEnum.CS2_087:
+                    return new Pen_CS2_087();
+                case cardIDEnum.CS2_088:
+                    return new Pen_CS2_088();
+                case cardIDEnum.CS2_089:
+                    return new Pen_CS2_089();
+                case cardIDEnum.CS2_091:
+                    return new Pen_CS2_091();
+                case cardIDEnum.CS2_092:
+                    return new Pen_CS2_092();
+                case cardIDEnum.CS2_093:
+                    return new Pen_CS2_093();
+                case cardIDEnum.CS2_094:
+                    return new Pen_CS2_094();
+                case cardIDEnum.CS2_097:
+                    return new Pen_CS2_097();
+                case cardIDEnum.CS2_101:
+                    return new Pen_CS2_101();
+                case cardIDEnum.CS2_101t:
+                    return new Pen_CS2_101t();
+                case cardIDEnum.CS2_102:
+                    return new Pen_CS2_102();
+                case cardIDEnum.CS2_103:
+                    return new Pen_CS2_103();
+                case cardIDEnum.CS2_105:
+                    return new Pen_CS2_105();
+                case cardIDEnum.CS2_106:
+                    return new Pen_CS2_106();
+                case cardIDEnum.CS2_108:
+                    return new Pen_CS2_108();
+                case cardIDEnum.CS2_112:
+                    return new Pen_CS2_112();
+                case cardIDEnum.CS2_114:
+                    return new Pen_CS2_114();
+                case cardIDEnum.CS2_118:
+                    return new Pen_CS2_118();
+                case cardIDEnum.CS2_119:
+                    return new Pen_CS2_119();
+                case cardIDEnum.CS2_120:
+                    return new Pen_CS2_120();
+                case cardIDEnum.CS2_121:
+                    return new Pen_CS2_121();
+                case cardIDEnum.CS2_122:
+                    return new Pen_CS2_122();
+                case cardIDEnum.CS2_124:
+                    return new Pen_CS2_124();
+                case cardIDEnum.CS2_125:
+                    return new Pen_CS2_125();
+                case cardIDEnum.CS2_127:
+                    return new Pen_CS2_127();
+                case cardIDEnum.CS2_131:
+                    return new Pen_CS2_131();
+                case cardIDEnum.CS2_141:
+                    return new Pen_CS2_141();
+                case cardIDEnum.CS2_142:
+                    return new Pen_CS2_142();
+                case cardIDEnum.CS2_147:
+                    return new Pen_CS2_147();
+                case cardIDEnum.CS2_150:
+                    return new Pen_CS2_150();
+                case cardIDEnum.CS2_155:
+                    return new Pen_CS2_155();
+                case cardIDEnum.CS2_162:
+                    return new Pen_CS2_162();
+                case cardIDEnum.CS2_168:
+                    return new Pen_CS2_168();
+                case cardIDEnum.CS2_171:
+                    return new Pen_CS2_171();
+                case cardIDEnum.CS2_172:
+                    return new Pen_CS2_172();
+                case cardIDEnum.CS2_173:
+                    return new Pen_CS2_173();
+                case cardIDEnum.CS2_179:
+                    return new Pen_CS2_179();
+                case cardIDEnum.CS2_182:
+                    return new Pen_CS2_182();
+                case cardIDEnum.CS2_186:
+                    return new Pen_CS2_186();
+                case cardIDEnum.CS2_187:
+                    return new Pen_CS2_187();
+                case cardIDEnum.CS2_189:
+                    return new Pen_CS2_189();
+                case cardIDEnum.CS2_196:
+                    return new Pen_CS2_196();
+                case cardIDEnum.CS2_197:
+                    return new Pen_CS2_197();
+                case cardIDEnum.CS2_200:
+                    return new Pen_CS2_200();
+                case cardIDEnum.CS2_201:
+                    return new Pen_CS2_201();
+                case cardIDEnum.CS2_213:
+                    return new Pen_CS2_213();
+                case cardIDEnum.CS2_222:
+                    return new Pen_CS2_222();
+                case cardIDEnum.CS2_226:
+                    return new Pen_CS2_226();
+                case cardIDEnum.CS2_232:
+                    return new Pen_CS2_232();
+                case cardIDEnum.CS2_234:
+                    return new Pen_CS2_234();
+                case cardIDEnum.CS2_235:
+                    return new Pen_CS2_235();
+                case cardIDEnum.CS2_236:
+                    return new Pen_CS2_236();
+                case cardIDEnum.CS2_237:
+                    return new Pen_CS2_237();
+                case cardIDEnum.CS2_boar:
+                    return new Pen_CS2_boar();
+                case cardIDEnum.CS2_mirror:
+                    return new Pen_CS2_mirror();
+                case cardIDEnum.CS2_tk1:
+                    return new Pen_CS2_tk1();
+                case cardIDEnum.DS1h_292:
+                    return new Pen_DS1h_292();
+                case cardIDEnum.DS1_055:
+                    return new Pen_DS1_055();
+                case cardIDEnum.DS1_070:
+                    return new Pen_DS1_070();
+                case cardIDEnum.DS1_175:
+                    return new Pen_DS1_175();
+                case cardIDEnum.DS1_178:
+                    return new Pen_DS1_178();
+                case cardIDEnum.DS1_183:
+                    return new Pen_DS1_183();
+                case cardIDEnum.DS1_184:
+                    return new Pen_DS1_184();
+                case cardIDEnum.DS1_185:
+                    return new Pen_DS1_185();
+                case cardIDEnum.DS1_233:
+                    return new Pen_DS1_233();
+                case cardIDEnum.EX1_011:
+                    return new Pen_EX1_011();
+                case cardIDEnum.EX1_015:
+                    return new Pen_EX1_015();
+                case cardIDEnum.EX1_019:
+                    return new Pen_EX1_019();
+                case cardIDEnum.EX1_025:
+                    return new Pen_EX1_025();
+                case cardIDEnum.EX1_025t:
+                    return new Pen_EX1_025t();
+                case cardIDEnum.EX1_066:
+                    return new Pen_EX1_066();
+                case cardIDEnum.EX1_084:
+                    return new Pen_EX1_084();
+                case cardIDEnum.EX1_129:
+                    return new Pen_EX1_129();
+                case cardIDEnum.EX1_169:
+                    return new Pen_EX1_169();
+                case cardIDEnum.EX1_173:
+                    return new Pen_EX1_173();
+                case cardIDEnum.EX1_244:
+                    return new Pen_EX1_244();
+                case cardIDEnum.EX1_246:
+                    return new Pen_EX1_246();
+                case cardIDEnum.EX1_277:
+                    return new Pen_EX1_277();
+                case cardIDEnum.EX1_278:
+                    return new Pen_EX1_278();
+                case cardIDEnum.EX1_302:
+                    return new Pen_EX1_302();
+                case cardIDEnum.EX1_306:
+                    return new Pen_EX1_306();
+                case cardIDEnum.EX1_308:
+                    return new Pen_EX1_308();
+                case cardIDEnum.EX1_360:
+                    return new Pen_EX1_360();
+                case cardIDEnum.EX1_371:
+                    return new Pen_EX1_371();
+                case cardIDEnum.EX1_399:
+                    return new Pen_EX1_399();
+                case cardIDEnum.EX1_400:
+                    return new Pen_EX1_400();
+                case cardIDEnum.EX1_506:
+                    return new Pen_EX1_506();
+                case cardIDEnum.EX1_506a:
+                    return new Pen_EX1_506a();
+                case cardIDEnum.EX1_508:
+                    return new Pen_EX1_508();
+                case cardIDEnum.EX1_539:
+                    return new Pen_EX1_539();
+                case cardIDEnum.EX1_565:
+                    return new Pen_EX1_565();
+                case cardIDEnum.EX1_581:
+                    return new Pen_EX1_581();
+                case cardIDEnum.EX1_582:
+                    return new Pen_EX1_582();
+                case cardIDEnum.EX1_587:
+                    return new Pen_EX1_587();
+                case cardIDEnum.EX1_593:
+                    return new Pen_EX1_593();
+                case cardIDEnum.EX1_606:
+                    return new Pen_EX1_606();
+                case cardIDEnum.EX1_622:
+                    return new Pen_EX1_622();
+                case cardIDEnum.GAME_002:
+                    return new Pen_GAME_002();
+                case cardIDEnum.GAME_005:
+                    return new Pen_GAME_005();
+                case cardIDEnum.GAME_006:
+                    return new Pen_GAME_006();
+                case cardIDEnum.HERO_01:
+                    return new Pen_HERO_01();
+                case cardIDEnum.HERO_02:
+                    return new Pen_HERO_02();
+                case cardIDEnum.HERO_03:
+                    return new Pen_HERO_03();
+                case cardIDEnum.HERO_04:
+                    return new Pen_HERO_04();
+                case cardIDEnum.HERO_05:
+                    return new Pen_HERO_05();
+                case cardIDEnum.HERO_06:
+                    return new Pen_HERO_06();
+                case cardIDEnum.HERO_07:
+                    return new Pen_HERO_07();
+                case cardIDEnum.HERO_08:
+                    return new Pen_HERO_08();
+                case cardIDEnum.HERO_09:
+                    return new Pen_HERO_09();
+                case cardIDEnum.hexfrog:
+                    return new Pen_hexfrog();
+                case cardIDEnum.NEW1_003:
+                    return new Pen_NEW1_003();
+                case cardIDEnum.NEW1_004:
+                    return new Pen_NEW1_004();
+                case cardIDEnum.NEW1_009:
+                    return new Pen_NEW1_009();
+                case cardIDEnum.NEW1_011:
+                    return new Pen_NEW1_011();
+                case cardIDEnum.NEW1_031:
+                    return new Pen_NEW1_031();
+                case cardIDEnum.NEW1_032:
+                    return new Pen_NEW1_032();
+                case cardIDEnum.NEW1_033:
+                    return new Pen_NEW1_033();
+                case cardIDEnum.NEW1_034:
+                    return new Pen_NEW1_034();
+                case cardIDEnum.skele11:
+                    return new Pen_skele11();
+                case cardIDEnum.CS1_069:
+                    return new Pen_CS1_069();
+                case cardIDEnum.CS1_129:
+                    return new Pen_CS1_129();
+                case cardIDEnum.CS2_028:
+                    return new Pen_CS2_028();
+                case cardIDEnum.CS2_031:
+                    return new Pen_CS2_031();
+                case cardIDEnum.CS2_038:
+                    return new Pen_CS2_038();
+                case cardIDEnum.CS2_053:
+                    return new Pen_CS2_053();
+                case cardIDEnum.CS2_059:
+                    return new Pen_CS2_059();
+                case cardIDEnum.CS2_073:
+                    return new Pen_CS2_073();
+                case cardIDEnum.CS2_104:
+                    return new Pen_CS2_104();
+                case cardIDEnum.CS2_117:
+                    return new Pen_CS2_117();
+                case cardIDEnum.CS2_146:
+                    return new Pen_CS2_146();
+                case cardIDEnum.CS2_151:
+                    return new Pen_CS2_151();
+                case cardIDEnum.CS2_152:
+                    return new Pen_CS2_152();
+                case cardIDEnum.CS2_161:
+                    return new Pen_CS2_161();
+                case cardIDEnum.CS2_169:
+                    return new Pen_CS2_169();
+                case cardIDEnum.CS2_181:
+                    return new Pen_CS2_181();
+                case cardIDEnum.CS2_188:
+                    return new Pen_CS2_188();
+                case cardIDEnum.CS2_203:
+                    return new Pen_CS2_203();
+                case cardIDEnum.CS2_221:
+                    return new Pen_CS2_221();
+                case cardIDEnum.CS2_227:
+                    return new Pen_CS2_227();
+                case cardIDEnum.CS2_231:
+                    return new Pen_CS2_231();
+                case cardIDEnum.CS2_233:
+                    return new Pen_CS2_233();
+                case cardIDEnum.DREAM_01:
+                    return new Pen_DREAM_01();
+                case cardIDEnum.DREAM_02:
+                    return new Pen_DREAM_02();
+                case cardIDEnum.DREAM_03:
+                    return new Pen_DREAM_03();
+                case cardIDEnum.DREAM_04:
+                    return new Pen_DREAM_04();
+                case cardIDEnum.DREAM_05:
+                    return new Pen_DREAM_05();
+                case cardIDEnum.DS1_188:
+                    return new Pen_DS1_188();
+                case cardIDEnum.ds1_whelptoken:
+                    return new Pen_ds1_whelptoken();
+                case cardIDEnum.EX1_001:
+                    return new Pen_EX1_001();
+                case cardIDEnum.EX1_002:
+                    return new Pen_EX1_002();
+                case cardIDEnum.EX1_004:
+                    return new Pen_EX1_004();
+                case cardIDEnum.EX1_005:
+                    return new Pen_EX1_005();
+                case cardIDEnum.EX1_006:
+                    return new Pen_EX1_006();
+                case cardIDEnum.EX1_007:
+                    return new Pen_EX1_007();
+                case cardIDEnum.EX1_008:
+                    return new Pen_EX1_008();
+                case cardIDEnum.EX1_009:
+                    return new Pen_EX1_009();
+                case cardIDEnum.EX1_010:
+                    return new Pen_EX1_010();
+                case cardIDEnum.EX1_012:
+                    return new Pen_EX1_012();
+                case cardIDEnum.EX1_014:
+                    return new Pen_EX1_014();
+                case cardIDEnum.EX1_014t:
+                    return new Pen_EX1_014t();
+                case cardIDEnum.EX1_016:
+                    return new Pen_EX1_016();
+                case cardIDEnum.EX1_017:
+                    return new Pen_EX1_017();
+                case cardIDEnum.EX1_020:
+                    return new Pen_EX1_020();
+                case cardIDEnum.EX1_021:
+                    return new Pen_EX1_021();
+                case cardIDEnum.EX1_023:
+                    return new Pen_EX1_023();
+                case cardIDEnum.EX1_028:
+                    return new Pen_EX1_028();
+                case cardIDEnum.EX1_029:
+                    return new Pen_EX1_029();
+                case cardIDEnum.EX1_032:
+                    return new Pen_EX1_032();
+                case cardIDEnum.EX1_033:
+                    return new Pen_EX1_033();
+                case cardIDEnum.EX1_043:
+                    return new Pen_EX1_043();
+                case cardIDEnum.EX1_044:
+                    return new Pen_EX1_044();
+                case cardIDEnum.EX1_045:
+                    return new Pen_EX1_045();
+                case cardIDEnum.EX1_046:
+                    return new Pen_EX1_046();
+                case cardIDEnum.EX1_048:
+                    return new Pen_EX1_048();
+                case cardIDEnum.EX1_049:
+                    return new Pen_EX1_049();
+                case cardIDEnum.EX1_050:
+                    return new Pen_EX1_050();
+                case cardIDEnum.EX1_055:
+                    return new Pen_EX1_055();
+                case cardIDEnum.EX1_057:
+                    return new Pen_EX1_057();
+                case cardIDEnum.EX1_058:
+                    return new Pen_EX1_058();
+                case cardIDEnum.EX1_059:
+                    return new Pen_EX1_059();
+                case cardIDEnum.EX1_067:
+                    return new Pen_EX1_067();
+                case cardIDEnum.EX1_076:
+                    return new Pen_EX1_076();
+                case cardIDEnum.EX1_080:
+                    return new Pen_EX1_080();
+                case cardIDEnum.EX1_082:
+                    return new Pen_EX1_082();
+                case cardIDEnum.EX1_083:
+                    return new Pen_EX1_083();
+                case cardIDEnum.EX1_085:
+                    return new Pen_EX1_085();
+                case cardIDEnum.EX1_089:
+                    return new Pen_EX1_089();
+                case cardIDEnum.EX1_091:
+                    return new Pen_EX1_091();
+                case cardIDEnum.EX1_093:
+                    return new Pen_EX1_093();
+                case cardIDEnum.EX1_095:
+                    return new Pen_EX1_095();
+                case cardIDEnum.EX1_096:
+                    return new Pen_EX1_096();
+                case cardIDEnum.EX1_097:
+                    return new Pen_EX1_097();
+                case cardIDEnum.EX1_100:
+                    return new Pen_EX1_100();
+                case cardIDEnum.EX1_102:
+                    return new Pen_EX1_102();
+                case cardIDEnum.EX1_103:
+                    return new Pen_EX1_103();
+                case cardIDEnum.EX1_105:
+                    return new Pen_EX1_105();
+                case cardIDEnum.EX1_110:
+                    return new Pen_EX1_110();
+                case cardIDEnum.EX1_110t:
+                    return new Pen_EX1_110t();
+                case cardIDEnum.EX1_116:
+                    return new Pen_EX1_116();
+                case cardIDEnum.EX1_116t:
+                    return new Pen_EX1_116t();
+                case cardIDEnum.EX1_124:
+                    return new Pen_EX1_124();
+                case cardIDEnum.EX1_126:
+                    return new Pen_EX1_126();
+                case cardIDEnum.EX1_128:
+                    return new Pen_EX1_128();
+                case cardIDEnum.EX1_130:
+                    return new Pen_EX1_130();
+                case cardIDEnum.EX1_130a:
+                    return new Pen_EX1_130a();
+                case cardIDEnum.EX1_131:
+                    return new Pen_EX1_131();
+                case cardIDEnum.EX1_131t:
+                    return new Pen_EX1_131t();
+                case cardIDEnum.EX1_132:
+                    return new Pen_EX1_132();
+                case cardIDEnum.EX1_133:
+                    return new Pen_EX1_133();
+                case cardIDEnum.EX1_134:
+                    return new Pen_EX1_134();
+                case cardIDEnum.EX1_136:
+                    return new Pen_EX1_136();
+                case cardIDEnum.EX1_137:
+                    return new Pen_EX1_137();
+                case cardIDEnum.EX1_144:
+                    return new Pen_EX1_144();
+                case cardIDEnum.EX1_145:
+                    return new Pen_EX1_145();
+                case cardIDEnum.EX1_154:
+                    return new Pen_EX1_154();
+                case cardIDEnum.EX1_154a:
+                    return new Pen_EX1_154a();
+                case cardIDEnum.EX1_154b:
+                    return new Pen_EX1_154b();
+                case cardIDEnum.EX1_155:
+                    return new Pen_EX1_155();
+                case cardIDEnum.EX1_155a:
+                    return new Pen_EX1_155a();
+                case cardIDEnum.EX1_155b:
+                    return new Pen_EX1_155b();
+                case cardIDEnum.EX1_158:
+                    return new Pen_EX1_158();
+                case cardIDEnum.EX1_158t:
+                    return new Pen_EX1_158t();
+                case cardIDEnum.EX1_160:
+                    return new Pen_EX1_160();
+                case cardIDEnum.EX1_160a:
+                    return new Pen_EX1_160a();
+                case cardIDEnum.EX1_160b:
+                    return new Pen_EX1_160b();
+                case cardIDEnum.EX1_160t:
+                    return new Pen_EX1_160t();
+                case cardIDEnum.EX1_161:
+                    return new Pen_EX1_161();
+                case cardIDEnum.EX1_162:
+                    return new Pen_EX1_162();
+                case cardIDEnum.EX1_164:
+                    return new Pen_EX1_164();
+                case cardIDEnum.EX1_164a:
+                    return new Pen_EX1_164a();
+                case cardIDEnum.EX1_164b:
+                    return new Pen_EX1_164b();
+                case cardIDEnum.EX1_165:
+                    return new Pen_EX1_165();
+                case cardIDEnum.EX1_165a:
+                    return new Pen_EX1_165a();
+                case cardIDEnum.EX1_165b:
+                    return new Pen_EX1_165b();
+                case cardIDEnum.EX1_165t1:
+                    return new Pen_EX1_165t1();
+                case cardIDEnum.EX1_165t2:
+                    return new Pen_EX1_165t2();
+                case cardIDEnum.EX1_166:
+                    return new Pen_EX1_166();
+                case cardIDEnum.EX1_166a:
+                    return new Pen_EX1_166a();
+                case cardIDEnum.EX1_166b:
+                    return new Pen_EX1_166b();
+                case cardIDEnum.EX1_170:
+                    return new Pen_EX1_170();
+                case cardIDEnum.EX1_178:
+                    return new Pen_EX1_178();
+                case cardIDEnum.EX1_178a:
+                    return new Pen_EX1_178a();
+                case cardIDEnum.EX1_178b:
+                    return new Pen_EX1_178b();
+                case cardIDEnum.EX1_238:
+                    return new Pen_EX1_238();
+                case cardIDEnum.EX1_241:
+                    return new Pen_EX1_241();
+                case cardIDEnum.EX1_243:
+                    return new Pen_EX1_243();
+                case cardIDEnum.EX1_245:
+                    return new Pen_EX1_245();
+                case cardIDEnum.EX1_247:
+                    return new Pen_EX1_247();
+                case cardIDEnum.EX1_248:
+                    return new Pen_EX1_248();
+                case cardIDEnum.EX1_249:
+                    return new Pen_EX1_249();
+                case cardIDEnum.EX1_250:
+                    return new Pen_EX1_250();
+                case cardIDEnum.EX1_251:
+                    return new Pen_EX1_251();
+                case cardIDEnum.EX1_258:
+                    return new Pen_EX1_258();
+                case cardIDEnum.EX1_259:
+                    return new Pen_EX1_259();
+                case cardIDEnum.EX1_274:
+                    return new Pen_EX1_274();
+                case cardIDEnum.EX1_275:
+                    return new Pen_EX1_275();
+                case cardIDEnum.EX1_279:
+                    return new Pen_EX1_279();
+                case cardIDEnum.EX1_283:
+                    return new Pen_EX1_283();
+                case cardIDEnum.EX1_284:
+                    return new Pen_EX1_284();
+                case cardIDEnum.EX1_287:
+                    return new Pen_EX1_287();
+                case cardIDEnum.EX1_289:
+                    return new Pen_EX1_289();
+                case cardIDEnum.EX1_294:
+                    return new Pen_EX1_294();
+                case cardIDEnum.EX1_295:
+                    return new Pen_EX1_295();
+                case cardIDEnum.EX1_298:
+                    return new Pen_EX1_298();
+                case cardIDEnum.EX1_301:
+                    return new Pen_EX1_301();
+                case cardIDEnum.EX1_303:
+                    return new Pen_EX1_303();
+                case cardIDEnum.EX1_304:
+                    return new Pen_EX1_304();
+                case cardIDEnum.EX1_309:
+                    return new Pen_EX1_309();
+                case cardIDEnum.EX1_310:
+                    return new Pen_EX1_310();
+                case cardIDEnum.EX1_312:
+                    return new Pen_EX1_312();
+                case cardIDEnum.EX1_313:
+                    return new Pen_EX1_313();
+                case cardIDEnum.EX1_315:
+                    return new Pen_EX1_315();
+                case cardIDEnum.EX1_316:
+                    return new Pen_EX1_316();
+                case cardIDEnum.EX1_317:
+                    return new Pen_EX1_317();
+                case cardIDEnum.EX1_317t:
+                    return new Pen_EX1_317t();
+                case cardIDEnum.EX1_319:
+                    return new Pen_EX1_319();
+                case cardIDEnum.EX1_320:
+                    return new Pen_EX1_320();
+                case cardIDEnum.EX1_323:
+                    return new Pen_EX1_323();
+                case cardIDEnum.EX1_323h:
+                    return new Pen_EX1_323h();
+                case cardIDEnum.EX1_323w:
+                    return new Pen_EX1_323w();
+                case cardIDEnum.EX1_332:
+                    return new Pen_EX1_332();
+                case cardIDEnum.EX1_334:
+                    return new Pen_EX1_334();
+                case cardIDEnum.EX1_335:
+                    return new Pen_EX1_335();
+                case cardIDEnum.EX1_339:
+                    return new Pen_EX1_339();
+                case cardIDEnum.EX1_341:
+                    return new Pen_EX1_341();
+                case cardIDEnum.EX1_345:
+                    return new Pen_EX1_345();
+                case cardIDEnum.EX1_345t:
+                    return new Pen_EX1_345t();
+                case cardIDEnum.EX1_349:
+                    return new Pen_EX1_349();
+                case cardIDEnum.EX1_350:
+                    return new Pen_EX1_350();
+                case cardIDEnum.EX1_354:
+                    return new Pen_EX1_354();
+                case cardIDEnum.EX1_355:
+                    return new Pen_EX1_355();
+                case cardIDEnum.EX1_362:
+                    return new Pen_EX1_362();
+                case cardIDEnum.EX1_363:
+                    return new Pen_EX1_363();
+                case cardIDEnum.EX1_365:
+                    return new Pen_EX1_365();
+                case cardIDEnum.EX1_366:
+                    return new Pen_EX1_366();
+                case cardIDEnum.EX1_379:
+                    return new Pen_EX1_379();
+                case cardIDEnum.EX1_382:
+                    return new Pen_EX1_382();
+                case cardIDEnum.EX1_383:
+                    return new Pen_EX1_383();
+                case cardIDEnum.EX1_383t:
+                    return new Pen_EX1_383t();
+                case cardIDEnum.EX1_384:
+                    return new Pen_EX1_384();
+                case cardIDEnum.EX1_390:
+                    return new Pen_EX1_390();
+                case cardIDEnum.EX1_391:
+                    return new Pen_EX1_391();
+                case cardIDEnum.EX1_392:
+                    return new Pen_EX1_392();
+                case cardIDEnum.EX1_393:
+                    return new Pen_EX1_393();
+                case cardIDEnum.EX1_396:
+                    return new Pen_EX1_396();
+                case cardIDEnum.EX1_398:
+                    return new Pen_EX1_398();
+                case cardIDEnum.EX1_398t:
+                    return new Pen_EX1_398t();
+                case cardIDEnum.EX1_402:
+                    return new Pen_EX1_402();
+                case cardIDEnum.EX1_405:
+                    return new Pen_EX1_405();
+                case cardIDEnum.EX1_407:
+                    return new Pen_EX1_407();
+                case cardIDEnum.EX1_408:
+                    return new Pen_EX1_408();
+                case cardIDEnum.EX1_409:
+                    return new Pen_EX1_409();
+                case cardIDEnum.EX1_409t:
+                    return new Pen_EX1_409t();
+                case cardIDEnum.EX1_410:
+                    return new Pen_EX1_410();
+                case cardIDEnum.EX1_411:
+                    return new Pen_EX1_411();
+                case cardIDEnum.EX1_412:
+                    return new Pen_EX1_412();
+                case cardIDEnum.EX1_414:
+                    return new Pen_EX1_414();
+                case cardIDEnum.EX1_507:
+                    return new Pen_EX1_507();
+                case cardIDEnum.EX1_509:
+                    return new Pen_EX1_509();
+                case cardIDEnum.EX1_522:
+                    return new Pen_EX1_522();
+                case cardIDEnum.EX1_531:
+                    return new Pen_EX1_531();
+                case cardIDEnum.EX1_533:
+                    return new Pen_EX1_533();
+                case cardIDEnum.EX1_534:
+                    return new Pen_EX1_534();
+                case cardIDEnum.EX1_534t:
+                    return new Pen_EX1_534t();
+                case cardIDEnum.EX1_536:
+                    return new Pen_EX1_536();
+                case cardIDEnum.EX1_537:
+                    return new Pen_EX1_537();
+                case cardIDEnum.EX1_538:
+                    return new Pen_EX1_538();
+                case cardIDEnum.EX1_538t:
+                    return new Pen_EX1_538t();
+                case cardIDEnum.EX1_543:
+                    return new Pen_EX1_543();
+                case cardIDEnum.EX1_544:
+                    return new Pen_EX1_544();
+                case cardIDEnum.EX1_549:
+                    return new Pen_EX1_549();
+                case cardIDEnum.EX1_554:
+                    return new Pen_EX1_554();
+                case cardIDEnum.EX1_554t:
+                    return new Pen_EX1_554t();
+                case cardIDEnum.EX1_556:
+                    return new Pen_EX1_556();
+                case cardIDEnum.EX1_557:
+                    return new Pen_EX1_557();
+                case cardIDEnum.EX1_558:
+                    return new Pen_EX1_558();
+                case cardIDEnum.EX1_559:
+                    return new Pen_EX1_559();
+                case cardIDEnum.EX1_560:
+                    return new Pen_EX1_560();
+                case cardIDEnum.EX1_561:
+                    return new Pen_EX1_561();
+                case cardIDEnum.EX1_562:
+                    return new Pen_EX1_562();
+                case cardIDEnum.EX1_563:
+                    return new Pen_EX1_563();
+                case cardIDEnum.EX1_564:
+                    return new Pen_EX1_564();
+                case cardIDEnum.EX1_567:
+                    return new Pen_EX1_567();
+                case cardIDEnum.EX1_570:
+                    return new Pen_EX1_570();
+                case cardIDEnum.EX1_571:
+                    return new Pen_EX1_571();
+                case cardIDEnum.EX1_572:
+                    return new Pen_EX1_572();
+                case cardIDEnum.EX1_573:
+                    return new Pen_EX1_573();
+                case cardIDEnum.EX1_573a:
+                    return new Pen_EX1_573a();
+                case cardIDEnum.EX1_573b:
+                    return new Pen_EX1_573b();
+                case cardIDEnum.EX1_573t:
+                    return new Pen_EX1_573t();
+                case cardIDEnum.EX1_575:
+                    return new Pen_EX1_575();
+                case cardIDEnum.EX1_577:
+                    return new Pen_EX1_577();
+                case cardIDEnum.EX1_578:
+                    return new Pen_EX1_578();
+                case cardIDEnum.EX1_583:
+                    return new Pen_EX1_583();
+                case cardIDEnum.EX1_584:
+                    return new Pen_EX1_584();
+                case cardIDEnum.EX1_586:
+                    return new Pen_EX1_586();
+                case cardIDEnum.EX1_590:
+                    return new Pen_EX1_590();
+                case cardIDEnum.EX1_591:
+                    return new Pen_EX1_591();
+                case cardIDEnum.EX1_594:
+                    return new Pen_EX1_594();
+                case cardIDEnum.EX1_595:
+                    return new Pen_EX1_595();
+                case cardIDEnum.EX1_596:
+                    return new Pen_EX1_596();
+                case cardIDEnum.EX1_597:
+                    return new Pen_EX1_597();
+                case cardIDEnum.EX1_598:
+                    return new Pen_EX1_598();
+                case cardIDEnum.EX1_603:
+                    return new Pen_EX1_603();
+                case cardIDEnum.EX1_604:
+                    return new Pen_EX1_604();
+                case cardIDEnum.EX1_607:
+                    return new Pen_EX1_607();
+                case cardIDEnum.EX1_608:
+                    return new Pen_EX1_608();
+                case cardIDEnum.EX1_609:
+                    return new Pen_EX1_609();
+                case cardIDEnum.EX1_610:
+                    return new Pen_EX1_610();
+                case cardIDEnum.EX1_611:
+                    return new Pen_EX1_611();
+                case cardIDEnum.EX1_612:
+                    return new Pen_EX1_612();
+                case cardIDEnum.EX1_613:
+                    return new Pen_EX1_613();
+                case cardIDEnum.EX1_614:
+                    return new Pen_EX1_614();
+                case cardIDEnum.EX1_614t:
+                    return new Pen_EX1_614t();
+                case cardIDEnum.EX1_616:
+                    return new Pen_EX1_616();
+                case cardIDEnum.EX1_617:
+                    return new Pen_EX1_617();
+                case cardIDEnum.EX1_619:
+                    return new Pen_EX1_619();
+                case cardIDEnum.EX1_620:
+                    return new Pen_EX1_620();
+                case cardIDEnum.EX1_621:
+                    return new Pen_EX1_621();
+                case cardIDEnum.EX1_623:
+                    return new Pen_EX1_623();
+                case cardIDEnum.EX1_624:
+                    return new Pen_EX1_624();
+                case cardIDEnum.EX1_625:
+                    return new Pen_EX1_625();
+                case cardIDEnum.EX1_625t:
+                    return new Pen_EX1_625t();
+                case cardIDEnum.EX1_625t2:
+                    return new Pen_EX1_625t2();
+                case cardIDEnum.EX1_626:
+                    return new Pen_EX1_626();
+                case cardIDEnum.EX1_finkle:
+                    return new Pen_EX1_finkle();
+                case cardIDEnum.EX1_tk11:
+                    return new Pen_EX1_tk11();
+                case cardIDEnum.EX1_tk28:
+                    return new Pen_EX1_tk28();
+                case cardIDEnum.EX1_tk29:
+                    return new Pen_EX1_tk29();
+                case cardIDEnum.EX1_tk33:
+                    return new Pen_EX1_tk33();
+                case cardIDEnum.EX1_tk34:
+                    return new Pen_EX1_tk34();
+                case cardIDEnum.EX1_tk9:
+                    return new Pen_EX1_tk9();
+                case cardIDEnum.NEW1_005:
+                    return new Pen_NEW1_005();
+                case cardIDEnum.NEW1_007:
+                    return new Pen_NEW1_007();
+                case cardIDEnum.NEW1_007a:
+                    return new Pen_NEW1_007a();
+                case cardIDEnum.NEW1_007b:
+                    return new Pen_NEW1_007b();
+                case cardIDEnum.NEW1_008:
+                    return new Pen_NEW1_008();
+                case cardIDEnum.NEW1_008a:
+                    return new Pen_NEW1_008a();
+                case cardIDEnum.NEW1_008b:
+                    return new Pen_NEW1_008b();
+                case cardIDEnum.NEW1_010:
+                    return new Pen_NEW1_010();
+                case cardIDEnum.NEW1_012:
+                    return new Pen_NEW1_012();
+                case cardIDEnum.NEW1_014:
+                    return new Pen_NEW1_014();
+                case cardIDEnum.NEW1_017:
+                    return new Pen_NEW1_017();
+                case cardIDEnum.NEW1_018:
+                    return new Pen_NEW1_018();
+                case cardIDEnum.NEW1_019:
+                    return new Pen_NEW1_019();
+                case cardIDEnum.NEW1_020:
+                    return new Pen_NEW1_020();
+                case cardIDEnum.NEW1_021:
+                    return new Pen_NEW1_021();
+                case cardIDEnum.NEW1_022:
+                    return new Pen_NEW1_022();
+                case cardIDEnum.NEW1_023:
+                    return new Pen_NEW1_023();
+                case cardIDEnum.NEW1_024:
+                    return new Pen_NEW1_024();
+                case cardIDEnum.NEW1_025:
+                    return new Pen_NEW1_025();
+                case cardIDEnum.NEW1_026:
+                    return new Pen_NEW1_026();
+                case cardIDEnum.NEW1_026t:
+                    return new Pen_NEW1_026t();
+                case cardIDEnum.NEW1_027:
+                    return new Pen_NEW1_027();
+                case cardIDEnum.NEW1_029:
+                    return new Pen_NEW1_029();
+                case cardIDEnum.NEW1_030:
+                    return new Pen_NEW1_030();
+                case cardIDEnum.NEW1_036:
+                    return new Pen_NEW1_036();
+                case cardIDEnum.NEW1_037:
+                    return new Pen_NEW1_037();
+                case cardIDEnum.NEW1_038:
+                    return new Pen_NEW1_038();
+                case cardIDEnum.NEW1_040:
+                    return new Pen_NEW1_040();
+                case cardIDEnum.NEW1_040t:
+                    return new Pen_NEW1_040t();
+                case cardIDEnum.NEW1_041:
+                    return new Pen_NEW1_041();
+                case cardIDEnum.skele21:
+                    return new Pen_skele21();
+                case cardIDEnum.tt_004:
+                    return new Pen_tt_004();
+                case cardIDEnum.tt_010:
+                    return new Pen_tt_010();
+                case cardIDEnum.tt_010a:
+                    return new Pen_tt_010a();
+                case cardIDEnum.HERO_01a:
+                    return new Pen_HERO_01a();
+                case cardIDEnum.HERO_05a:
+                    return new Pen_HERO_05a();
+                case cardIDEnum.HERO_08a:
+                    return new Pen_HERO_08a();
+                case cardIDEnum.EX1_062:
+                    return new Pen_EX1_062();
+                case cardIDEnum.NEW1_016:
+                    return new Pen_NEW1_016();
+                case cardIDEnum.EX1_112:
+                    return new Pen_EX1_112();
+                case cardIDEnum.Mekka1:
+                    return new Pen_Mekka1();
+                case cardIDEnum.Mekka2:
+                    return new Pen_Mekka2();
+                case cardIDEnum.Mekka3:
+                    return new Pen_Mekka3();
+                case cardIDEnum.Mekka4:
+                    return new Pen_Mekka4();
+                case cardIDEnum.Mekka4t:
+                    return new Pen_Mekka4t();
+                case cardIDEnum.PRO_001:
+                    return new Pen_PRO_001();
+                case cardIDEnum.PRO_001a:
+                    return new Pen_PRO_001a();
+                case cardIDEnum.PRO_001at:
+                    return new Pen_PRO_001at();
+                case cardIDEnum.PRO_001b:
+                    return new Pen_PRO_001b();
+                case cardIDEnum.PRO_001c:
+                    return new Pen_PRO_001c();
+                case cardIDEnum.FP1_001:
+                    return new Pen_FP1_001();
+                case cardIDEnum.FP1_002:
+                    return new Pen_FP1_002();
+                case cardIDEnum.FP1_002t:
+                    return new Pen_FP1_002t();
+                case cardIDEnum.FP1_003:
+                    return new Pen_FP1_003();
+                case cardIDEnum.FP1_004:
+                    return new Pen_FP1_004();
+                case cardIDEnum.FP1_005:
+                    return new Pen_FP1_005();
+                case cardIDEnum.FP1_006:
+                    return new Pen_FP1_006();
+                case cardIDEnum.FP1_007:
+                    return new Pen_FP1_007();
+                case cardIDEnum.FP1_007t:
+                    return new Pen_FP1_007t();
+                case cardIDEnum.FP1_008:
+                    return new Pen_FP1_008();
+                case cardIDEnum.FP1_009:
+                    return new Pen_FP1_009();
+                case cardIDEnum.FP1_010:
+                    return new Pen_FP1_010();
+                case cardIDEnum.FP1_011:
+                    return new Pen_FP1_011();
+                case cardIDEnum.FP1_012:
+                    return new Pen_FP1_012();
+                case cardIDEnum.FP1_012t:
+                    return new Pen_FP1_012t();
+                case cardIDEnum.FP1_013:
+                    return new Pen_FP1_013();
+                case cardIDEnum.FP1_014:
+                    return new Pen_FP1_014();
+                case cardIDEnum.FP1_014t:
+                    return new Pen_FP1_014t();
+                case cardIDEnum.FP1_015:
+                    return new Pen_FP1_015();
+                case cardIDEnum.FP1_016:
+                    return new Pen_FP1_016();
+                case cardIDEnum.FP1_017:
+                    return new Pen_FP1_017();
+                case cardIDEnum.FP1_018:
+                    return new Pen_FP1_018();
+                case cardIDEnum.FP1_019:
+                    return new Pen_FP1_019();
+                case cardIDEnum.FP1_019t:
+                    return new Pen_FP1_019t();
+                case cardIDEnum.FP1_020:
+                    return new Pen_FP1_020();
+                case cardIDEnum.FP1_021:
+                    return new Pen_FP1_021();
+                case cardIDEnum.FP1_022:
+                    return new Pen_FP1_022();
+                case cardIDEnum.FP1_023:
+                    return new Pen_FP1_023();
+                case cardIDEnum.FP1_024:
+                    return new Pen_FP1_024();
+                case cardIDEnum.FP1_025:
+                    return new Pen_FP1_025();
+                case cardIDEnum.FP1_026:
+                    return new Pen_FP1_026();
+                case cardIDEnum.FP1_027:
+                    return new Pen_FP1_027();
+                case cardIDEnum.FP1_028:
+                    return new Pen_FP1_028();
+                case cardIDEnum.FP1_029:
+                    return new Pen_FP1_029();
+                case cardIDEnum.FP1_030:
+                    return new Pen_FP1_030();
+                case cardIDEnum.FP1_031:
+                    return new Pen_FP1_031();
+                case cardIDEnum.GVG_001:
+                    return new Pen_GVG_001();
+                case cardIDEnum.GVG_002:
+                    return new Pen_GVG_002();
+                case cardIDEnum.GVG_003:
+                    return new Pen_GVG_003();
+                case cardIDEnum.GVG_004:
+                    return new Pen_GVG_004();
+                case cardIDEnum.GVG_005:
+                    return new Pen_GVG_005();
+                case cardIDEnum.GVG_006:
+                    return new Pen_GVG_006();
+                case cardIDEnum.GVG_007:
+                    return new Pen_GVG_007();
+                case cardIDEnum.GVG_008:
+                    return new Pen_GVG_008();
+                case cardIDEnum.GVG_009:
+                    return new Pen_GVG_009();
+                case cardIDEnum.GVG_010:
+                    return new Pen_GVG_010();
+                case cardIDEnum.GVG_011:
+                    return new Pen_GVG_011();
+                case cardIDEnum.GVG_012:
+                    return new Pen_GVG_012();
+                case cardIDEnum.GVG_013:
+                    return new Pen_GVG_013();
+                case cardIDEnum.GVG_014:
+                    return new Pen_GVG_014();
+                case cardIDEnum.GVG_015:
+                    return new Pen_GVG_015();
+                case cardIDEnum.GVG_016:
+                    return new Pen_GVG_016();
+                case cardIDEnum.GVG_017:
+                    return new Pen_GVG_017();
+                case cardIDEnum.GVG_018:
+                    return new Pen_GVG_018();
+                case cardIDEnum.GVG_019:
+                    return new Pen_GVG_019();
+                case cardIDEnum.GVG_020:
+                    return new Pen_GVG_020();
+                case cardIDEnum.GVG_021:
+                    return new Pen_GVG_021();
+                case cardIDEnum.GVG_022:
+                    return new Pen_GVG_022();
+                case cardIDEnum.GVG_023:
+                    return new Pen_GVG_023();
+                case cardIDEnum.GVG_024:
+                    return new Pen_GVG_024();
+                case cardIDEnum.GVG_025:
+                    return new Pen_GVG_025();
+                case cardIDEnum.GVG_026:
+                    return new Pen_GVG_026();
+                case cardIDEnum.GVG_027:
+                    return new Pen_GVG_027();
+                case cardIDEnum.GVG_028:
+                    return new Pen_GVG_028();
+                case cardIDEnum.GVG_028t:
+                    return new Pen_GVG_028t();
+                case cardIDEnum.GVG_029:
+                    return new Pen_GVG_029();
+                case cardIDEnum.GVG_030:
+                    return new Pen_GVG_030();
+                case cardIDEnum.GVG_030a:
+                    return new Pen_GVG_030a();
+                case cardIDEnum.GVG_030b:
+                    return new Pen_GVG_030b();
+                case cardIDEnum.GVG_031:
+                    return new Pen_GVG_031();
+                case cardIDEnum.GVG_032:
+                    return new Pen_GVG_032();
+                case cardIDEnum.GVG_032a:
+                    return new Pen_GVG_032a();
+                case cardIDEnum.GVG_032b:
+                    return new Pen_GVG_032b();
+                case cardIDEnum.GVG_033:
+                    return new Pen_GVG_033();
+                case cardIDEnum.GVG_034:
+                    return new Pen_GVG_034();
+                case cardIDEnum.GVG_035:
+                    return new Pen_GVG_035();
+                case cardIDEnum.GVG_036:
+                    return new Pen_GVG_036();
+                case cardIDEnum.GVG_037:
+                    return new Pen_GVG_037();
+                case cardIDEnum.GVG_038:
+                    return new Pen_GVG_038();
+                case cardIDEnum.GVG_039:
+                    return new Pen_GVG_039();
+                case cardIDEnum.GVG_040:
+                    return new Pen_GVG_040();
+                case cardIDEnum.GVG_041:
+                    return new Pen_GVG_041();
+                case cardIDEnum.GVG_041a:
+                    return new Pen_GVG_041a();
+                case cardIDEnum.GVG_041b:
+                    return new Pen_GVG_041b();
+                case cardIDEnum.GVG_042:
+                    return new Pen_GVG_042();
+                case cardIDEnum.GVG_043:
+                    return new Pen_GVG_043();
+                case cardIDEnum.GVG_044:
+                    return new Pen_GVG_044();
+                case cardIDEnum.GVG_045:
+                    return new Pen_GVG_045();
+                case cardIDEnum.GVG_045t:
+                    return new Pen_GVG_045t();
+                case cardIDEnum.GVG_046:
+                    return new Pen_GVG_046();
+                case cardIDEnum.GVG_047:
+                    return new Pen_GVG_047();
+                case cardIDEnum.GVG_048:
+                    return new Pen_GVG_048();
+                case cardIDEnum.GVG_049:
+                    return new Pen_GVG_049();
+                case cardIDEnum.GVG_050:
+                    return new Pen_GVG_050();
+                case cardIDEnum.GVG_051:
+                    return new Pen_GVG_051();
+                case cardIDEnum.GVG_052:
+                    return new Pen_GVG_052();
+                case cardIDEnum.GVG_053:
+                    return new Pen_GVG_053();
+                case cardIDEnum.GVG_054:
+                    return new Pen_GVG_054();
+                case cardIDEnum.GVG_055:
+                    return new Pen_GVG_055();
+                case cardIDEnum.GVG_056:
+                    return new Pen_GVG_056();
+                case cardIDEnum.GVG_056t:
+                    return new Pen_GVG_056t();
+                case cardIDEnum.GVG_057:
+                    return new Pen_GVG_057();
+                case cardIDEnum.GVG_058:
+                    return new Pen_GVG_058();
+                case cardIDEnum.GVG_059:
+                    return new Pen_GVG_059();
+                case cardIDEnum.GVG_060:
+                    return new Pen_GVG_060();
+                case cardIDEnum.GVG_061:
+                    return new Pen_GVG_061();
+                case cardIDEnum.GVG_062:
+                    return new Pen_GVG_062();
+                case cardIDEnum.GVG_063:
+                    return new Pen_GVG_063();
+                case cardIDEnum.GVG_064:
+                    return new Pen_GVG_064();
+                case cardIDEnum.GVG_065:
+                    return new Pen_GVG_065();
+                case cardIDEnum.GVG_066:
+                    return new Pen_GVG_066();
+                case cardIDEnum.GVG_067:
+                    return new Pen_GVG_067();
+                case cardIDEnum.GVG_068:
+                    return new Pen_GVG_068();
+                case cardIDEnum.GVG_069:
+                    return new Pen_GVG_069();
+                case cardIDEnum.GVG_070:
+                    return new Pen_GVG_070();
+                case cardIDEnum.GVG_071:
+                    return new Pen_GVG_071();
+                case cardIDEnum.GVG_072:
+                    return new Pen_GVG_072();
+                case cardIDEnum.GVG_073:
+                    return new Pen_GVG_073();
+                case cardIDEnum.GVG_074:
+                    return new Pen_GVG_074();
+                case cardIDEnum.GVG_075:
+                    return new Pen_GVG_075();
+                case cardIDEnum.GVG_076:
+                    return new Pen_GVG_076();
+                case cardIDEnum.GVG_077:
+                    return new Pen_GVG_077();
+                case cardIDEnum.GVG_078:
+                    return new Pen_GVG_078();
+                case cardIDEnum.GVG_079:
+                    return new Pen_GVG_079();
+                case cardIDEnum.GVG_080:
+                    return new Pen_GVG_080();
+                case cardIDEnum.GVG_080t:
+                    return new Pen_GVG_080t();
+                case cardIDEnum.GVG_081:
+                    return new Pen_GVG_081();
+                case cardIDEnum.GVG_082:
+                    return new Pen_GVG_082();
+                case cardIDEnum.GVG_083:
+                    return new Pen_GVG_083();
+                case cardIDEnum.GVG_084:
+                    return new Pen_GVG_084();
+                case cardIDEnum.GVG_085:
+                    return new Pen_GVG_085();
+                case cardIDEnum.GVG_086:
+                    return new Pen_GVG_086();
+                case cardIDEnum.GVG_087:
+                    return new Pen_GVG_087();
+                case cardIDEnum.GVG_088:
+                    return new Pen_GVG_088();
+                case cardIDEnum.GVG_089:
+                    return new Pen_GVG_089();
+                case cardIDEnum.GVG_090:
+                    return new Pen_GVG_090();
+                case cardIDEnum.GVG_091:
+                    return new Pen_GVG_091();
+                case cardIDEnum.GVG_092:
+                    return new Pen_GVG_092();
+                case cardIDEnum.GVG_092t:
+                    return new Pen_GVG_092t();
+                case cardIDEnum.GVG_093:
+                    return new Pen_GVG_093();
+                case cardIDEnum.GVG_094:
+                    return new Pen_GVG_094();
+                case cardIDEnum.GVG_095:
+                    return new Pen_GVG_095();
+                case cardIDEnum.GVG_096:
+                    return new Pen_GVG_096();
+                case cardIDEnum.GVG_097:
+                    return new Pen_GVG_097();
+                case cardIDEnum.GVG_098:
+                    return new Pen_GVG_098();
+                case cardIDEnum.GVG_099:
+                    return new Pen_GVG_099();
+                case cardIDEnum.GVG_100:
+                    return new Pen_GVG_100();
+                case cardIDEnum.GVG_101:
+                    return new Pen_GVG_101();
+                case cardIDEnum.GVG_102:
+                    return new Pen_GVG_102();
+                case cardIDEnum.GVG_103:
+                    return new Pen_GVG_103();
+                case cardIDEnum.GVG_104:
+                    return new Pen_GVG_104();
+                case cardIDEnum.GVG_105:
+                    return new Pen_GVG_105();
+                case cardIDEnum.GVG_106:
+                    return new Pen_GVG_106();
+                case cardIDEnum.GVG_107:
+                    return new Pen_GVG_107();
+                case cardIDEnum.GVG_108:
+                    return new Pen_GVG_108();
+                case cardIDEnum.GVG_109:
+                    return new Pen_GVG_109();
+                case cardIDEnum.GVG_110:
+                    return new Pen_GVG_110();
+                case cardIDEnum.GVG_110t:
+                    return new Pen_GVG_110t();
+                case cardIDEnum.GVG_111:
+                    return new Pen_GVG_111();
+                case cardIDEnum.GVG_111t:
+                    return new Pen_GVG_111t();
+                case cardIDEnum.GVG_112:
+                    return new Pen_GVG_112();
+                case cardIDEnum.GVG_113:
+                    return new Pen_GVG_113();
+                case cardIDEnum.GVG_114:
+                    return new Pen_GVG_114();
+                case cardIDEnum.GVG_115:
+                    return new Pen_GVG_115();
+                case cardIDEnum.GVG_116:
+                    return new Pen_GVG_116();
+                case cardIDEnum.GVG_117:
+                    return new Pen_GVG_117();
+                case cardIDEnum.GVG_118:
+                    return new Pen_GVG_118();
+                case cardIDEnum.GVG_119:
+                    return new Pen_GVG_119();
+                case cardIDEnum.GVG_120:
+                    return new Pen_GVG_120();
+                case cardIDEnum.GVG_121:
+                    return new Pen_GVG_121();
+                case cardIDEnum.GVG_122:
+                    return new Pen_GVG_122();
+                case cardIDEnum.GVG_123:
+                    return new Pen_GVG_123();
+                case cardIDEnum.PART_001:
+                    return new Pen_PART_001();
+                case cardIDEnum.PART_002:
+                    return new Pen_PART_002();
+                case cardIDEnum.PART_003:
+                    return new Pen_PART_003();
+                case cardIDEnum.PART_004:
+                    return new Pen_PART_004();
+                case cardIDEnum.PART_005:
+                    return new Pen_PART_005();
+                case cardIDEnum.PART_006:
+                    return new Pen_PART_006();
+                case cardIDEnum.PART_007:
+                    return new Pen_PART_007();
+                case cardIDEnum.AT_001:
+                    return new Pen_AT_001();
+                case cardIDEnum.AT_002:
+                    return new Pen_AT_002();
+                case cardIDEnum.AT_003:
+                    return new Pen_AT_003();
+                case cardIDEnum.AT_004:
+                    return new Pen_AT_004();
+                case cardIDEnum.AT_005:
+                    return new Pen_AT_005();
+                case cardIDEnum.AT_005t:
+                    return new Pen_AT_005t();
+                case cardIDEnum.AT_006:
+                    return new Pen_AT_006();
+                case cardIDEnum.AT_007:
+                    return new Pen_AT_007();
+                case cardIDEnum.AT_008:
+                    return new Pen_AT_008();
+                case cardIDEnum.AT_009:
+                    return new Pen_AT_009();
+                case cardIDEnum.AT_010:
+                    return new Pen_AT_010();
+                case cardIDEnum.AT_011:
+                    return new Pen_AT_011();
+                case cardIDEnum.AT_012:
+                    return new Pen_AT_012();
+                case cardIDEnum.AT_013:
+                    return new Pen_AT_013();
+                case cardIDEnum.AT_014:
+                    return new Pen_AT_014();
+                case cardIDEnum.AT_015:
+                    return new Pen_AT_015();
+                case cardIDEnum.AT_016:
+                    return new Pen_AT_016();
+                case cardIDEnum.AT_017:
+                    return new Pen_AT_017();
+                case cardIDEnum.AT_018:
+                    return new Pen_AT_018();
+                case cardIDEnum.AT_019:
+                    return new Pen_AT_019();
+                case cardIDEnum.AT_020:
+                    return new Pen_AT_020();
+                case cardIDEnum.AT_021:
+                    return new Pen_AT_021();
+                case cardIDEnum.AT_022:
+                    return new Pen_AT_022();
+                case cardIDEnum.AT_023:
+                    return new Pen_AT_023();
+                case cardIDEnum.AT_024:
+                    return new Pen_AT_024();
+                case cardIDEnum.AT_025:
+                    return new Pen_AT_025();
+                case cardIDEnum.AT_026:
+                    return new Pen_AT_026();
+                case cardIDEnum.AT_027:
+                    return new Pen_AT_027();
+                case cardIDEnum.AT_028:
+                    return new Pen_AT_028();
+                case cardIDEnum.AT_029:
+                    return new Pen_AT_029();
+                case cardIDEnum.AT_030:
+                    return new Pen_AT_030();
+                case cardIDEnum.AT_031:
+                    return new Pen_AT_031();
+                case cardIDEnum.AT_032:
+                    return new Pen_AT_032();
+                case cardIDEnum.AT_033:
+                    return new Pen_AT_033();
+                case cardIDEnum.AT_034:
+                    return new Pen_AT_034();
+                case cardIDEnum.AT_035:
+                    return new Pen_AT_035();
+                case cardIDEnum.AT_035t:
+                    return new Pen_AT_035t();
+                case cardIDEnum.AT_036:
+                    return new Pen_AT_036();
+                case cardIDEnum.AT_036t:
+                    return new Pen_AT_036t();
+                case cardIDEnum.AT_037:
+                    return new Pen_AT_037();
+                case cardIDEnum.AT_037a:
+                    return new Pen_AT_037a();
+                case cardIDEnum.AT_037b:
+                    return new Pen_AT_037b();
+                case cardIDEnum.AT_037t:
+                    return new Pen_AT_037t();
+                case cardIDEnum.AT_038:
+                    return new Pen_AT_038();
+                case cardIDEnum.AT_039:
+                    return new Pen_AT_039();
+                case cardIDEnum.AT_040:
+                    return new Pen_AT_040();
+                case cardIDEnum.AT_041:
+                    return new Pen_AT_041();
+                case cardIDEnum.AT_042:
+                    return new Pen_AT_042();
+                case cardIDEnum.AT_042a:
+                    return new Pen_AT_042a();
+                case cardIDEnum.AT_042b:
+                    return new Pen_AT_042b();
+                case cardIDEnum.AT_042t:
+                    return new Pen_AT_042t();
+                case cardIDEnum.AT_042t2:
+                    return new Pen_AT_042t2();
+                case cardIDEnum.AT_043:
+                    return new Pen_AT_043();
+                case cardIDEnum.AT_044:
+                    return new Pen_AT_044();
+                case cardIDEnum.AT_045:
+                    return new Pen_AT_045();
+                case cardIDEnum.AT_046:
+                    return new Pen_AT_046();
+                case cardIDEnum.AT_047:
+                    return new Pen_AT_047();
+                case cardIDEnum.AT_048:
+                    return new Pen_AT_048();
+                case cardIDEnum.AT_049:
+                    return new Pen_AT_049();
+                case cardIDEnum.AT_050:
+                    return new Pen_AT_050();
+                case cardIDEnum.AT_050t:
+                    return new Pen_AT_050t();
+                case cardIDEnum.AT_051:
+                    return new Pen_AT_051();
+                case cardIDEnum.AT_052:
+                    return new Pen_AT_052();
+                case cardIDEnum.AT_053:
+                    return new Pen_AT_053();
+                case cardIDEnum.AT_054:
+                    return new Pen_AT_054();
+                case cardIDEnum.AT_055:
+                    return new Pen_AT_055();
+                case cardIDEnum.AT_056:
+                    return new Pen_AT_056();
+                case cardIDEnum.AT_057:
+                    return new Pen_AT_057();
+                case cardIDEnum.AT_058:
+                    return new Pen_AT_058();
+                case cardIDEnum.AT_059:
+                    return new Pen_AT_059();
+                case cardIDEnum.AT_060:
+                    return new Pen_AT_060();
+                case cardIDEnum.AT_061:
+                    return new Pen_AT_061();
+                case cardIDEnum.AT_062:
+                    return new Pen_AT_062();
+                case cardIDEnum.AT_063:
+                    return new Pen_AT_063();
+                case cardIDEnum.AT_064:
+                    return new Pen_AT_064();
+                case cardIDEnum.AT_065:
+                    return new Pen_AT_065();
+                case cardIDEnum.AT_066:
+                    return new Pen_AT_066();
+                case cardIDEnum.AT_067:
+                    return new Pen_AT_067();
+                case cardIDEnum.AT_068:
+                    return new Pen_AT_068();
+                case cardIDEnum.AT_069:
+                    return new Pen_AT_069();
+                case cardIDEnum.AT_070:
+                    return new Pen_AT_070();
+                case cardIDEnum.AT_071:
+                    return new Pen_AT_071();
+                case cardIDEnum.AT_072:
+                    return new Pen_AT_072();
+                case cardIDEnum.AT_073:
+                    return new Pen_AT_073();
+                case cardIDEnum.AT_074:
+                    return new Pen_AT_074();
+                case cardIDEnum.AT_075:
+                    return new Pen_AT_075();
+                case cardIDEnum.AT_076:
+                    return new Pen_AT_076();
+                case cardIDEnum.AT_077:
+                    return new Pen_AT_077();
+                case cardIDEnum.AT_078:
+                    return new Pen_AT_078();
+                case cardIDEnum.AT_079:
+                    return new Pen_AT_079();
+                case cardIDEnum.AT_080:
+                    return new Pen_AT_080();
+                case cardIDEnum.AT_081:
+                    return new Pen_AT_081();
+                case cardIDEnum.AT_082:
+                    return new Pen_AT_082();
+                case cardIDEnum.AT_083:
+                    return new Pen_AT_083();
+                case cardIDEnum.AT_084:
+                    return new Pen_AT_084();
+                case cardIDEnum.AT_085:
+                    return new Pen_AT_085();
+                case cardIDEnum.AT_086:
+                    return new Pen_AT_086();
+                case cardIDEnum.AT_087:
+                    return new Pen_AT_087();
+                case cardIDEnum.AT_088:
+                    return new Pen_AT_088();
+                case cardIDEnum.AT_089:
+                    return new Pen_AT_089();
+                case cardIDEnum.AT_090:
+                    return new Pen_AT_090();
+                case cardIDEnum.AT_091:
+                    return new Pen_AT_091();
+                case cardIDEnum.AT_092:
+                    return new Pen_AT_092();
+                case cardIDEnum.AT_093:
+                    return new Pen_AT_093();
+                case cardIDEnum.AT_094:
+                    return new Pen_AT_094();
+                case cardIDEnum.AT_095:
+                    return new Pen_AT_095();
+                case cardIDEnum.AT_096:
+                    return new Pen_AT_096();
+                case cardIDEnum.AT_097:
+                    return new Pen_AT_097();
+                case cardIDEnum.AT_098:
+                    return new Pen_AT_098();
+                case cardIDEnum.AT_099:
+                    return new Pen_AT_099();
+                case cardIDEnum.AT_099t:
+                    return new Pen_AT_099t();
+                case cardIDEnum.AT_100:
+                    return new Pen_AT_100();
+                case cardIDEnum.AT_101:
+                    return new Pen_AT_101();
+                case cardIDEnum.AT_102:
+                    return new Pen_AT_102();
+                case cardIDEnum.AT_103:
+                    return new Pen_AT_103();
+                case cardIDEnum.AT_104:
+                    return new Pen_AT_104();
+                case cardIDEnum.AT_105:
+                    return new Pen_AT_105();
+                case cardIDEnum.AT_106:
+                    return new Pen_AT_106();
+                case cardIDEnum.AT_108:
+                    return new Pen_AT_108();
+                case cardIDEnum.AT_109:
+                    return new Pen_AT_109();
+                case cardIDEnum.AT_110:
+                    return new Pen_AT_110();
+                case cardIDEnum.AT_111:
+                    return new Pen_AT_111();
+                case cardIDEnum.AT_112:
+                    return new Pen_AT_112();
+                case cardIDEnum.AT_113:
+                    return new Pen_AT_113();
+                case cardIDEnum.AT_114:
+                    return new Pen_AT_114();
+                case cardIDEnum.AT_115:
+                    return new Pen_AT_115();
+                case cardIDEnum.AT_116:
+                    return new Pen_AT_116();
+                case cardIDEnum.AT_117:
+                    return new Pen_AT_117();
+                case cardIDEnum.AT_118:
+                    return new Pen_AT_118();
+                case cardIDEnum.AT_119:
+                    return new Pen_AT_119();
+                case cardIDEnum.AT_120:
+                    return new Pen_AT_120();
+                case cardIDEnum.AT_121:
+                    return new Pen_AT_121();
+                case cardIDEnum.AT_122:
+                    return new Pen_AT_122();
+                case cardIDEnum.AT_123:
+                    return new Pen_AT_123();
+                case cardIDEnum.AT_124:
+                    return new Pen_AT_124();
+                case cardIDEnum.AT_125:
+                    return new Pen_AT_125();
+                case cardIDEnum.AT_127:
+                    return new Pen_AT_127();
+                case cardIDEnum.AT_128:
+                    return new Pen_AT_128();
+                case cardIDEnum.AT_129:
+                    return new Pen_AT_129();
+                case cardIDEnum.AT_130:
+                    return new Pen_AT_130();
+                case cardIDEnum.AT_131:
+                    return new Pen_AT_131();
+                case cardIDEnum.AT_132:
+                    return new Pen_AT_132();
+                case cardIDEnum.AT_132_DRUID:
+                    return new Pen_AT_132_DRUID();
+                case cardIDEnum.AT_132_HUNTER:
+                    return new Pen_AT_132_HUNTER();
+                case cardIDEnum.AT_132_MAGE:
+                    return new Pen_AT_132_MAGE();
+                case cardIDEnum.AT_132_PALADIN:
+                    return new Pen_AT_132_PALADIN();
+                case cardIDEnum.AT_132_PRIEST:
+                    return new Pen_AT_132_PRIEST();
+                case cardIDEnum.AT_132_ROGUE:
+                    return new Pen_AT_132_ROGUE();
+                case cardIDEnum.AT_132_ROGUEt:
+                    return new Pen_AT_132_ROGUEt();
+                case cardIDEnum.AT_132_SHAMAN:
+                    return new Pen_AT_132_SHAMAN();
+                case cardIDEnum.AT_132_SHAMANa:
+                    return new Pen_AT_132_SHAMANa();
+                case cardIDEnum.AT_132_SHAMANb:
+                    return new Pen_AT_132_SHAMANb();
+                case cardIDEnum.AT_132_SHAMANc:
+                    return new Pen_AT_132_SHAMANc();
+                case cardIDEnum.AT_132_SHAMANd:
+                    return new Pen_AT_132_SHAMANd();
+                case cardIDEnum.AT_132_WARLOCK:
+                    return new Pen_AT_132_WARLOCK();
+                case cardIDEnum.AT_132_WARRIOR:
+                    return new Pen_AT_132_WARRIOR();
+                case cardIDEnum.AT_133:
+                    return new Pen_AT_133();
+                case cardIDEnum.PlaceholderCard:
+                    return new Pen_PlaceholderCard();
+            }
+
+            return new PenTemplate();
+        }
+       
         private void enumCreator()
         {
             //call this, if carddb.txt was changed, to get latest public enum cardIDEnum

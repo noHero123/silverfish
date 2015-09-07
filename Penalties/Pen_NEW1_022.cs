@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_NEW1_022 : PenTemplate //dreadcorsair
 	{
-
-//    spott./ kostet (1) weniger für jeden angriffspunkt eurer waffe.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

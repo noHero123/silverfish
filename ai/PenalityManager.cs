@@ -189,6 +189,7 @@
             retval += playSecretPenality(card, p);
             retval += getPlayCardSecretPenality(card, p);
 
+            retval += (int)card.pen_card.getPlayPenalty(p, hcard, target, choice, lethal);
             //Helpfunctions.Instance.ErrorLog("retval " + retval);
             return retval;
         }

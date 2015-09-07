@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_EX1_298 : PenTemplate //ragnarosthefirelord
 	{
-
-//    kann nicht angreifen. fügt am ende eures zuges einem zufälligen feind 8 schaden zu.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

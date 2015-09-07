@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_EX1_398 : PenTemplate //arathiweaponsmith
 	{
-
-//    kampfschrei:/ legt eine waffe (2/2) an.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

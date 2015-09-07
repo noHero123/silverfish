@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_EX1_144 : PenTemplate //shadowstep
 	{
-
-//    lasst einen befreundeten diener auf eure hand zurückkehren. der diener kostet (2) weniger.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

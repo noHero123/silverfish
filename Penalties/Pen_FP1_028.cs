@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_FP1_028 : PenTemplate //undertaker
 	{
-
-//    erhält jedes mal +1/+1, wenn ihr einen diener mit todesröcheln/ herbeiruft.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_EX1_062 : PenTemplate //oldmurkeye
 	{
-
-//    ansturm/. hat +1 angriff für jeden anderen murloc auf dem schlachtfeld.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

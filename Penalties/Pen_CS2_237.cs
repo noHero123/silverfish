@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_CS2_237 : PenTemplate //starvingbuzzard
 	{
-
-//    zieht jedes mal eine karte, wenn ihr ein wildtier herbeiruft.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

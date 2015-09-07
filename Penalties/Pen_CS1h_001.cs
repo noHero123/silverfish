@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_CS1h_001 : PenTemplate //lesserheal
 	{
-
-//    heldenfähigkeit/\nstellt 2 leben wieder her.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

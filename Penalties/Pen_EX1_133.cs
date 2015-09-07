@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_EX1_133 : PenTemplate //perditionsblade
 	{
-
-//    kampfschrei:/ verursacht 1 schaden. combo:/ verursacht stattdessen 2 schaden.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

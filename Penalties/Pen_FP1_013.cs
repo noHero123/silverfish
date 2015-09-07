@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_FP1_013 : PenTemplate //kelthuzad
 	{
-
-//    ruft am ende jedes zuges alle befreundeten diener herbei, die in diesem zug gestorben sind.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }

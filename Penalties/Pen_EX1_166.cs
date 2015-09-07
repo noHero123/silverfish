@@ -6,12 +6,9 @@ namespace HREngine.Bots
 {
 	class Pen_EX1_166 : PenTemplate //keeperofthegrove
 	{
-
-//    wählt aus:/ verursacht 2 schaden; oder bringt einen diener zum schweigen/.
-		public override int getPlayPenalty(Playfield p, Minion m, Minion target, int choice, bool isLethal)
+		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-		return 0;
+			return 0;
 		}
-
 	}
 }
