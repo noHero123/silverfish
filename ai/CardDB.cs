@@ -5712,14 +5712,15 @@
                     retval = 0;
                 }
 
+
+                if (this.type == cardtype.HEROPWR && p.anzOwnMaidenOfTheLake >= 1)
+                {
+                    retval = 1;
+                }
+
                 if (this.type == cardtype.HEROPWR )
                 {
                     retval += (p.isOwnTurn) ? p.enemySaboteur * 5 : p.ownSaboteur * 5; ;
-                }
-
-                if (this.type == cardtype.HEROPWR && p.anzOwnMaidenOfTheLake >=1)
-                {
-                    retval = 1;
                 }
 
                 if (this.type == cardtype.HEROPWR && p.anzOwnFencingCoach >= 1)

@@ -908,7 +908,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.09";
+        public string versionnumber = "116.11";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1061,7 +1061,7 @@ namespace HREngine.Bots
             getMinions(rangerbot);
             getHandcards(rangerbot);
             getDecks(rangerbot);
-
+            correctSpellpower(rangerbot);
             // send ai the data:
             Hrtprozis.Instance.clearAll();
             Handmanager.Instance.clearAll();
@@ -1417,6 +1417,10 @@ namespace HREngine.Bots
             }
             this.lockandload = (rangerbot.gameState.LocalPlayerLockAndLoad)? 1 : 0;
 
+            //saboteur test:
+            if (this.enemysabo == 0 && ownHeroAbility.Cost >= 3) this.enemysabo++;
+            if (this.enemysabo == 1 && ownHeroAbility.Cost >= 8) this.enemysabo++;
+
             //TODO test Bolvar Fordragon but it will be on his card :D
             //Reading new values end################################
 
@@ -1610,6 +1614,46 @@ namespace HREngine.Bots
 
             // add enchantments to minions
             setEnchantments(enchantments);*/
+        }
+
+        private void correctSpellpower(HSRangerLib.BotBase rangerbot)
+        {
+            int ownspellpower = rangerbot.gameState.LocalPlayerSpellPower;
+            int spellpowerfield = 0;
+            int numberDalaranAspirant=0;
+            foreach (Minion mnn in this.ownMinions)
+            {
+                if(mnn.name == CardDB.cardName.dalaranaspirant) numberDalaranAspirant++;
+                spellpowerfield += mnn.spellpower;
+            }
+            int missingSpellpower = ownspellpower - spellpowerfield;
+            if (missingSpellpower != 0 )
+            {
+                Helpfunctions.Instance.ErrorLog("spellpower correction: " + ownspellpower + " " + spellpowerfield + " " + numberDalaranAspirant);
+            }
+            if (missingSpellpower >= 1 && numberDalaranAspirant >= 1)
+            {
+                //give all dalaran aspirants the "same amount" of spellpower
+                for (int i = 0; i < missingSpellpower; i++)
+                {
+                    Minion dalaranAspriant = null;
+                    int spellpower = ownspellpower;
+
+                    foreach (Minion mnn in this.ownMinions)
+                    {
+                        if (mnn.name == CardDB.cardName.dalaranaspirant)
+                        {
+                            if (spellpower >= mnn.spellpower)
+                            {
+                                spellpower = mnn.spellpower;
+                                dalaranAspriant = mnn;
+                            }
+                        }
+                    }
+                    dalaranAspriant.spellpower++;
+                }
+
+            }
         }
 
         private void setEnchantments(List<Entity> enchantments)

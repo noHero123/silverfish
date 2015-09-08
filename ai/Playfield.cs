@@ -3038,20 +3038,9 @@
                 }
                 
             }
-            int cost = 2;
+            int cost = c.getManaCost(this,2);
 
-            if (ownturn)
-            {
-                if (this.anzOwnMaidenOfTheLake >= 1) cost = 1;
-                cost += 5 * this.enemySaboteur - 2 * this.anzOwnFencingCoach;
-                if (cost < 0) cost = 0;
-            }
-            else
-            {
-                if (this.anzEnemyMaidenOfTheLake >= 1) cost = 1;
-                cost += 5 * this.ownSaboteur - 2 * this.anzEnemyFencingCoach;
-                if (cost < 0) cost = 0;
-            }
+            
             this.evaluatePenality += penality;
             this.mana = this.mana - cost;
 
@@ -6372,7 +6361,7 @@
 
             if (m.charge >= 1) mini += " chrg(" + m.charge + ")";
             if (m.AdjacentAngr >= 1) mini += " adjaattk(" + m.AdjacentAngr + ")";
-            if (m.tempAttack >= 1) mini += " tmpattck(" + m.tempAttack + ")";
+            if (m.tempAttack != 0) mini += " tmpattck(" + m.tempAttack + ")";
             if (m.spellpower >= 1) mini += " spllpwr(" + m.spellpower + ")";
 
             if (m.ancestralspirit >= 1) mini += " ancstrl(" + m.ancestralspirit + ")";

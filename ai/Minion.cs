@@ -842,9 +842,10 @@
             if (correctSpellPower)
             {
                 //TODO add the mission spellpower of that new insprire minion, but we need the (correct)spellpower of the player for that
+                this.spellpower = 0;
                 if (spellpowerbuffs >= 1)
                 {
-                    this.spellpower += spellpowerbuffs - 1; //one is counted!
+                    this.spellpower += spellpowerbuffs; //one is counted!
                 }
                 if (!this.silenced)
                 {
