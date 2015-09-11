@@ -163,6 +163,7 @@
             AT_061e,
             AT_062,
             AT_063,
+            AT_063t,
             AT_064,
             AT_065,
             AT_065e,
@@ -1489,6 +1490,7 @@
             if (s == "AT_061e") return CardDB.cardIDEnum.AT_061e;
             if (s == "AT_062") return CardDB.cardIDEnum.AT_062;
             if (s == "AT_063") return CardDB.cardIDEnum.AT_063;
+            if (s == "AT_063t") return CardDB.cardIDEnum.AT_063t;
             if (s == "AT_064") return CardDB.cardIDEnum.AT_064;
             if (s == "AT_065") return CardDB.cardIDEnum.AT_065;
             if (s == "AT_065e") return CardDB.cardIDEnum.AT_065e;
@@ -6753,6 +6755,8 @@
                     return new Sim_AT_062();
                 case cardIDEnum.AT_063:
                     return new Sim_AT_063();
+                case cardIDEnum.AT_063t:
+                    return new Sim_AT_063t();
                 case cardIDEnum.AT_064:
                     return new Sim_AT_064();
                 case cardIDEnum.AT_065:
@@ -9866,6 +9870,8 @@
                     return new Pen_AT_062();
                 case cardIDEnum.AT_063:
                     return new Pen_AT_063();
+                case cardIDEnum.AT_063t:
+                    return new Pen_AT_063t();
                 case cardIDEnum.AT_064:
                     return new Pen_AT_064();
                 case cardIDEnum.AT_065:
