@@ -3480,7 +3480,8 @@
 
                 if (m.name == CardDB.cardName.gahzrilla && m.anzGotDmg >= 1)
                 {
-                    this.minionGetBuffed(m, m.Angr * (2^m.anzGotDmg) - m.Angr, 0);
+                    int attackbuff = m.Angr * (int)Math.Pow(2, m.anzGotDmg) - m.Angr;
+                    this.minionGetBuffed(m, attackbuff, 0);
                 }
 
                 if (this.isOwnTurn && m.name == CardDB.cardName.floatingwatcher && this.ownHero.anzGotDmg>=1)
@@ -3585,7 +3586,9 @@
 
                 if (m.name == CardDB.cardName.gahzrilla && m.anzGotDmg >= 1)
                 {
-                    this.minionGetBuffed(m, m.Angr * (2 ^ m.anzGotDmg) - m.Angr, 0);
+
+                    int attackbuff = m.Angr * (int)Math.Pow(2, m.anzGotDmg) - m.Angr;
+                    this.minionGetBuffed(m, attackbuff, 0);
                 }
 
                 if (!this.isOwnTurn && m.name == CardDB.cardName.floatingwatcher && this.enemyHero.anzGotDmg >= 1)
