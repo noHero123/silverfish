@@ -148,7 +148,8 @@
             //dont waste mana!!
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (usecoin && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 100 * p.manaTurnEnd;
-            if (p.manaTurnEnd >= 2 && !useAbili && p.ownAbilityReady)
+            int heropowermana = p.ownHeroAblility.getManaCost(p);
+            if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)
             {
                 if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 20;
             }
@@ -209,7 +210,7 @@
                 }
                 else
                 {
-                    retval += 10000;
+                    retval += 50;//10000
                 }
             }
             //soulfire etc

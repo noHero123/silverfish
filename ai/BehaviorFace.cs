@@ -12,7 +12,7 @@
             retval += p.owncards.Count * 3;
 
             retval += p.ownHero.Hp + p.ownHero.armor;
-            retval += -2*(p.enemyHero.Hp + p.enemyHero.armor);
+            retval += -10*(p.enemyHero.Hp + p.enemyHero.armor);
 
             retval += p.ownMaxMana * 15 - p.enemyMaxMana * 15;
 
@@ -65,10 +65,10 @@
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (usecoin) retval -= 5 * p.manaTurnEnd;
-            if (p.manaTurnEnd >= 2 && !useAbili && p.ownAbilityReady)
+            int heropowermana = p.ownHeroAblility.getManaCost(p);
+            if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)
             {
-                retval -= 10;
-                if (p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2)) retval += 10;
+                if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 20;
             }
             //if (usecoin && p.mana >= 1) retval -= 20;
 
@@ -99,7 +99,17 @@
             retval -= p.lostWeaponDamage;
             if (p.ownMinions.Count == 0) retval -= 20;
             if (p.enemyMinions.Count >= 4) retval -= 20;
-            if (p.enemyHero.Hp <= 0) retval = 10000;
+            if (p.enemyHero.Hp <= 0)
+            {
+                if (p.turnCounter <= 1)
+                {
+                    retval = 10000;
+                }
+                else
+                {
+                    retval += 50;//10000
+                }
+            }
             //soulfire etc
             int deletecardsAtLast = 0;
             foreach (Action a in p.playactions)
@@ -136,13 +146,16 @@
                 if (m.frozen) retval -= 1; // because its bad for enemy :D
                 if (m.poisonous) retval += 4;
                 retval += m.handcard.card.rarity;
+
+                
+                if (m.Angr >= 4) retval += 20;
+                if (m.Angr >= 7) retval += 50;
+                if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 3 && !m.taunt) retval = 0;
             }
 
-
             if (m.handcard.card.targetPriority >= 1 && !m.silenced) retval += m.handcard.card.targetPriority;
-            if (m.Angr >= 4) retval += 20;
-            if (m.Angr >= 7) retval += 50;
-            if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 3 && !m.taunt) retval = 0;
+
+            
             return retval;
         }
 

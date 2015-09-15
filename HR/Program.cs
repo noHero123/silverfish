@@ -908,7 +908,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.11";
+        public string versionnumber = "116.15";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1418,6 +1418,7 @@ namespace HREngine.Bots
             this.lockandload = (rangerbot.gameState.LocalPlayerLockAndLoad)? 1 : 0;
 
             //saboteur test:
+            if (ownHeroAbility.Cost >= 3) Helpfunctions.Instance.ErrorLog("heroabilitymana " + ownHeroAbility.Cost);
             if (this.enemysabo == 0 && ownHeroAbility.Cost >= 3) this.enemysabo++;
             if (this.enemysabo == 1 && ownHeroAbility.Cost >= 8) this.enemysabo++;
 

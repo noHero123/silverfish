@@ -224,8 +224,8 @@
                 //allow it if you have biggamehunter
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.name == CardDB.cardName.biggamehunter) return 5;
-                    if (hc.card.name == CardDB.cardName.shadowworddeath) return 5;
+                    if (hc.card.name == CardDB.cardName.biggamehunter && target.Angr <= 6) return 5;
+                    if (hc.card.name == CardDB.cardName.shadowworddeath && target.Angr <= 4) return 5;
                 }
                 if (card.name == CardDB.cardName.crueltaskmaster || card.name == CardDB.cardName.innerrage)
                 {
