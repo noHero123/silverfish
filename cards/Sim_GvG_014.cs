@@ -14,7 +14,7 @@ namespace HREngine.Bots
             if (target == null) return;
 
             int volMHp = own.maxHp;
-            int tarMHp = target.maxHp;
+            int tarMHp = target.Hp;
 
 
             target.maxHp = volMHp;
@@ -28,16 +28,7 @@ namespace HREngine.Bots
             }
 
             own.maxHp = tarMHp;
-            if (volMHp < tarMHp)//minion has lower maxHp as his card -> heal his hp
-            {
-                own.Hp += tarMHp - volMHp; //heal minion
-            }
-            if (own.Hp > own.maxHp)
-            {
-                own.Hp = own.maxHp;
-            }
-
-
+            own.Hp = tarMHp;
 
         }
 

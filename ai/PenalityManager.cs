@@ -373,6 +373,11 @@
                         return 500;
                     }
 
+                    if ((!target.silenced && (target.name == CardDB.cardName.wrathguard || target.name == CardDB.cardName.darnassusaspirant || target.name == CardDB.cardName.icehowl)))
+                    {
+                        return 100;
+                    }
+
                     if (lethal)
                     {
                         //during lethal we only silence taunt, or if its a mob (owl/spellbreaker) + we can give him charge
