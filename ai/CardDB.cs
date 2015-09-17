@@ -1389,7 +1389,7 @@
             PART_007,
             PART_007e,
             PlaceholderCard
-            
+
         }
 
         public cardIDEnum cardIdstringToEnum(string s)
@@ -1643,7 +1643,7 @@
             if (s == "BRM_031") return CardDB.cardIDEnum.BRM_031;
             if (s == "BRM_033") return CardDB.cardIDEnum.BRM_033;
             if (s == "BRM_034") return CardDB.cardIDEnum.BRM_034;
-            
+
             if (s == "CS1h_001") return CardDB.cardIDEnum.CS1h_001;
             if (s == "CS1_042") return CardDB.cardIDEnum.CS1_042;
             if (s == "CS1_112") return CardDB.cardIDEnum.CS1_112;
@@ -1677,7 +1677,7 @@
             if (s == "CS2_032") return CardDB.cardIDEnum.CS2_032;
             if (s == "CS2_033") return CardDB.cardIDEnum.CS2_033;
             if (s == "CS2_034") return CardDB.cardIDEnum.CS2_034;
-            
+
             if (s == "CS2_037") return CardDB.cardIDEnum.CS2_037;
             if (s == "CS2_039") return CardDB.cardIDEnum.CS2_039;
             if (s == "CS2_041") return CardDB.cardIDEnum.CS2_041;
@@ -1688,12 +1688,12 @@
             if (s == "CS2_046") return CardDB.cardIDEnum.CS2_046;
             if (s == "CS2_046e") return CardDB.cardIDEnum.CS2_046e;
             if (s == "CS2_049") return CardDB.cardIDEnum.CS2_049;
-            
+
             if (s == "CS2_050") return CardDB.cardIDEnum.CS2_050;
             if (s == "CS2_051") return CardDB.cardIDEnum.CS2_051;
             if (s == "CS2_052") return CardDB.cardIDEnum.CS2_052;
             if (s == "CS2_056") return CardDB.cardIDEnum.CS2_056;
-            
+
             if (s == "CS2_057") return CardDB.cardIDEnum.CS2_057;
             if (s == "CS2_061") return CardDB.cardIDEnum.CS2_061;
             if (s == "CS2_062") return CardDB.cardIDEnum.CS2_062;
@@ -1726,7 +1726,7 @@
             if (s == "CS2_101") return CardDB.cardIDEnum.CS2_101;
             if (s == "CS2_101t") return CardDB.cardIDEnum.CS2_101t;
             if (s == "CS2_102") return CardDB.cardIDEnum.CS2_102;
-            
+
             if (s == "CS2_103") return CardDB.cardIDEnum.CS2_103;
             if (s == "CS2_103e2") return CardDB.cardIDEnum.CS2_103e2;
             if (s == "CS2_105") return CardDB.cardIDEnum.CS2_105;
@@ -1779,7 +1779,7 @@
             if (s == "CS2_mirror") return CardDB.cardIDEnum.CS2_mirror;
             if (s == "CS2_tk1") return CardDB.cardIDEnum.CS2_tk1;
             if (s == "DS1h_292") return CardDB.cardIDEnum.DS1h_292;
-            
+
             if (s == "DS1_055") return CardDB.cardIDEnum.DS1_055;
             if (s == "DS1_070") return CardDB.cardIDEnum.DS1_070;
             if (s == "DS1_070o") return CardDB.cardIDEnum.DS1_070o;
@@ -2752,17 +2752,17 @@
             if (s == "CS2_034_H1_AT_132") return CardDB.cardIDEnum.AT_132_MAGE;
             if (s == "CS2_102_H1_AT_132") return CardDB.cardIDEnum.AT_132_WARRIOR;
             if (s == "DS1h_292_H1_AT_132") return CardDB.cardIDEnum.AT_132_HUNTER;
-            
-                
-                
-                    
-                    
-                       
-                                   
-                                       
+
+
+
+
+
+
+
+
 
             if (s == "PlaceholderCard") return CardDB.cardIDEnum.PlaceholderCard;
-            
+
             return CardDB.cardIDEnum.None;
         }
 
@@ -3975,7 +3975,7 @@
             if (s == "chromaggus") return CardDB.cardName.chromaggus;
             if (s == "blackwingtechnician") return CardDB.cardName.blackwingtechnician;
             if (s == "blackwingcorruptor") return CardDB.cardName.blackwingcorruptor;
-         
+
             if (s == "unknown") return CardDB.cardName.unknown;
             if (s == "lesserheal") return CardDB.cardName.lesserheal;
             if (s == "goldshirefootman") return CardDB.cardName.goldshirefootman;
@@ -4777,7 +4777,7 @@
             if (s == "reversingswitch") return CardDB.cardName.reversingswitch;
             if (s == "whirlingblades") return CardDB.cardName.whirlingblades;
             if (s == "placeholdercard") return CardDB.cardName.placeholdercard;
-            
+
             return CardDB.cardName.unknown;
         }
 
@@ -4838,11 +4838,11 @@
             REQ_LEGENDARY_TARGET,//52
             REQ_FRIENDLY_MINION_DIED_THIS_TURN,//53
             REQ_FRIENDLY_MINION_DIED_THIS_GAME,//54
-		    REQ_ENEMY_WEAPON_EQUIPPED,//55
-		    REQ_TARGET_IF_AVAILABLE_AND_MINIMUM_FRIENDLY_MINIONS,//56
-		    REQ_TARGET_WITH_BATTLECRY,//57
-		    REQ_TARGET_WITH_DEATHRATTLE,//58
-		    REQ_DRAG_TO_PLAY
+            REQ_ENEMY_WEAPON_EQUIPPED,//55
+            REQ_TARGET_IF_AVAILABLE_AND_MINIMUM_FRIENDLY_MINIONS,//56
+            REQ_TARGET_WITH_BATTLECRY,//57
+            REQ_TARGET_WITH_DEATHRATTLE,//58
+            REQ_DRAG_TO_PLAY
         }
 
         public class Card
@@ -5102,7 +5102,7 @@
                     for (int i = 0; i < ownMins.Length; i++) ownMins[i] = false;
                 }
 
-                
+
                 if (isRequirementInList(CardDB.ErrorType2.REQ_LEGENDARY_TARGET))
                 {
                     addOwnHero = false;
@@ -5377,7 +5377,7 @@
                     for (int i = 0; i < enemyMins.Length; i++) enemyMins[i] = false;
                 }
 
-                
+
                 if (isRequirementInList(CardDB.ErrorType2.REQ_LEGENDARY_TARGET))
                 {
                     addOwnHero = false;
@@ -5578,7 +5578,7 @@
                 int offset = 0; // if offset < 0 costs become lower, if >0 costs are higher at the end
 
                 // CARDS that increase the manacosts of others ##############################
-                
+
                 if (this.type == cardtype.MOB)
                 {
                     //Manacosts changes with soeldner der venture co.
@@ -5591,7 +5591,7 @@
                         offset += p.nerubarweblord * 2;
                     }
 
-                    
+
                 }
 
                 // CARDS that decrease the manacosts of others ##############################
@@ -5599,13 +5599,17 @@
                 if (this.type == cardtype.MOB)
                 {
                     //Manacosts changes with the summoning-portal >_>
-                    int temp = - p.beschwoerungsportal * 2;
-                    if (retval + temp <= 0) temp = -retval + 1;
-                    offset = offset + temp;
+                    if (p.beschwoerungsportal >= 1)
+                    {
+                        int temp = -p.beschwoerungsportal * 2;
+                        if (retval >= 1 && retval + temp <= 0) temp = -retval + 1;
+                        offset = offset + temp;
+                    }
+
 
                     //Manacosts changes with the pint-sized summoner
                     if (p.mobsplayedThisTurn == 0)
-                    { 
+                    {
                         offset -= p.pintsizedsummoner;
                     }
 
@@ -5618,15 +5622,15 @@
                 }
 
 
-                
+
                 if (this.type == cardtype.SPELL)
-                { 
+                {
                     //Manacosts changes with the zauberlehrling summoner
                     offset -= p.anzOwnsorcerersapprentice;
 
                     //manacosts are lowered, after we played preparation
                     if (p.playedPreparation)
-                    { 
+                    {
                         offset -= 3;
                     }
                 }
@@ -5676,7 +5680,7 @@
                         }
                         if (dmgedminions)
                         {
-                            retval  -= 4;
+                            retval -= 4;
                         }
                         break;
 
@@ -5703,11 +5707,11 @@
                     retval -= (p.isOwnTurn) ? p.ownDragonConsort * 2 : p.enemyDragonConsort * 2;
                 }
 
-                if (this.type == cardtype.SPELL )
+                if (this.type == cardtype.SPELL)
                 {
-                    retval += (p.isOwnTurn) ? p.enemyloatheb*5 : p.ownloatheb * 5;
+                    retval += (p.isOwnTurn) ? p.enemyloatheb * 5 : p.ownloatheb * 5;
                 }
-                
+
 
                 if (this.type == cardtype.SPELL && ((p.isOwnTurn && p.enemyHavePlayedMillhouseManastorm) || (!p.isOwnTurn && p.weHavePlayedMillhouseManastorm)))
                 {
@@ -5720,14 +5724,14 @@
                     retval = 1;
                 }
 
-                if (this.type == cardtype.HEROPWR )
+                if (this.type == cardtype.HEROPWR)
                 {
                     retval += (p.isOwnTurn) ? p.enemySaboteur * 5 : p.ownSaboteur * 5; ;
                 }
 
                 if (this.type == cardtype.HEROPWR && p.anzOwnFencingCoach >= 1)
                 {
-                    retval -= 2* p.anzOwnFencingCoach;
+                    retval -= 2 * p.anzOwnFencingCoach;
                 }
 
                 retval = Math.Max(0, retval);
@@ -5744,14 +5748,14 @@
                 int offset = 0; // if offset < 0 costs become lower, if >0 costs are higher at the end
 
                 // CARDS that increase the manacosts of others ##############################
-                
+
                 if (this.type == cardtype.MOB)
                 {
 
                     //Manacosts changes with soeldner der venture co.
-                    offset +=  - p.soeldnerDerVenture * 3;
+                    offset += -p.soeldnerDerVenture * 3;
                     //Manacosts changes with mana-ghost
-                    offset += - p.managespenst;
+                    offset += -p.managespenst;
                     //weblord
                     if (this.battlecry)
                     {
@@ -5764,7 +5768,7 @@
                 // CARDS that decrease the manacosts of others ##############################
 
                 if (this.type == cardtype.MOB)
-                { 
+                {
 
                     //Manacosts changes with the summoning-portal >_>
                     //cant lower the mana to 0
@@ -5779,7 +5783,7 @@
                     //manacosts changes with Mechwarper
                     if ((TAG_RACE)this.race == TAG_RACE.MECHANICAL)
                     {
-                        offset +=  p.anzOwnMechwarper;
+                        offset += p.anzOwnMechwarper;
                     }
                 }
 
@@ -5788,8 +5792,8 @@
                 {
 
                     //manacosts are lowered, after we played preparation
-                    if (p.playedPreparation )
-                    { 
+                    if (p.playedPreparation)
+                    {
                         offset += 3;
                     }
 
@@ -5798,7 +5802,7 @@
 
                 }
 
-                
+
                 switch (this.name)
                 {
 
@@ -5808,7 +5812,7 @@
 
                     case CardDB.cardName.skycapnkragg:
                         int pirates = 0;
-                        foreach(Minion m in p.ownMinions)
+                        foreach (Minion m in p.ownMinions)
                         {
                             if (m.handcard.card.race == TAG_RACE.PIRATE) pirates++;
                         }
@@ -5836,7 +5840,7 @@
                         {
                             if (m.wounded) dmgedminions = true;
                         }
-                        if(dmgedminions) retval = retval + offset + 4;
+                        if (dmgedminions) retval = retval + offset + 4;
                         break;
 
                     //Cards with effect: Costs (1) less for each minion that died this turn.
@@ -5913,7 +5917,7 @@
                     if (this.needMinTotalMinions > p.ownMinions.Count + p.enemyMinions.Count) return false;
                 }
 
-                
+
 
                 if (haveToDoRequires)
                 {
@@ -5944,7 +5948,7 @@
                     if (p.ownSecretsIDList.Count >= 5) return false;
                 }
 
-                
+
 
                 return true;
             }
@@ -6236,7 +6240,7 @@
                         c.choice = true;
                         //Helpfunctions.Instance.logg(c.name + " is choice");
                     }
-                   
+
                     continue;
                 }
                 //targetingarrowtext
@@ -10044,7 +10048,7 @@
 
             return new PenTemplate();
         }
-       
+
         private void enumCreator()
         {
             //call this, if carddb.txt was changed, to get latest public enum cardIDEnum

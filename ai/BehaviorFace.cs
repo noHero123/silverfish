@@ -12,7 +12,7 @@
             retval += p.owncards.Count * 3;
 
             retval += p.ownHero.Hp + p.ownHero.armor;
-            retval += -10*(p.enemyHero.Hp + p.enemyHero.armor);
+            retval += -3*(p.enemyHero.Hp + p.enemyHero.armor);
 
             retval += p.ownMaxMana * 15 - p.enemyMaxMana * 15;
 
