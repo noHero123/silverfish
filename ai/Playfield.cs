@@ -2026,7 +2026,7 @@
                     List<Minion> temp = this.enemyMinions;
                     foreach (Minion m in temp)
                     {
-                        if(m.Hp>=3) minionGetDamageOrHeal(m, 2);
+                        minionGetDamageOrHeal(m, 2);
                     }
                     attackEnemyHeroWithoutKill(2);
                 }
