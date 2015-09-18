@@ -106,13 +106,22 @@
             return pen;
         }
 
+
+        int enfacehp = -142;
+        
         public int getAttackWithHeroPenality(Minion target, Playfield p, bool leathal)
         {
+            if (enfacehp == -142) enfacehp = Settings.Instance.enfacehp;
             int retval = 0;
 
             if (!leathal && p.ownWeaponName == CardDB.cardName.swordofjustice)
             {
                 return 28;
+            }
+
+            if (!leathal && p.enemyHero.Hp >= enfacehp)
+            {
+                return 50+p.ownWeaponAttack;
             }
 
             if (p.ownWeaponDurability == 1 && p.ownWeaponName == CardDB.cardName.eaglehornbow)
@@ -392,6 +401,11 @@
                     }
 
                     if (m.handcard.card.name == CardDB.cardName.venturecomercenary && !m.silenced && (m.Angr <= m.handcard.card.Attack && m.maxHp <= m.handcard.card.Health))
+                    {
+                        return 30;
+                    }
+
+                    if (m.handcard.card.name == CardDB.cardName.quartermaster && (p.enemyHeroAblility.card.cardIDenum != CardDB.cardIDEnum.AT_132_PALADIN && p.enemyHeroAblility.card.cardIDenum != CardDB.cardIDEnum.CS2_101))
                     {
                         return 30;
                     }
@@ -1465,6 +1479,7 @@
 
             }
 
+
             if (name == CardDB.cardName.madbomber || name == CardDB.cardName.madderbomber)
             {
                 //penalize for any own minions with health equal to potential attack amount
@@ -1927,9 +1942,19 @@
                 return 0;
             }
 
+            
+
             if (c.name == CardDB.cardName.flare)
             {
+                if (p.playactions.Count >= 1) return 100;
                 return 0;
+            }
+            else
+            {
+                foreach (Handmanager.Handcard hc in p.owncards)
+                {
+                    if (hc.card.name == CardDB.cardName.flare) return 100 * p.enemySecretCount;
+                }
             }
 
             int attackedbefore = 0;
@@ -2021,6 +2046,11 @@
             if (p.enemySecretCount == 0)
             {
                 return 0;
+            }
+
+            foreach (Handmanager.Handcard hc in p.owncards)
+            {
+                if (hc.card.name == CardDB.cardName.flare) return 100 * p.enemySecretCount;
             }
 
             int pen = 0;

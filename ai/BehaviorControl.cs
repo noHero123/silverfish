@@ -5,8 +5,10 @@
     {
         PenalityManager penman = PenalityManager.Instance;
 
+        
         public override float getPlayfieldValue(Playfield p)
         {
+            
             if (p.value >= -2000000) return p.value;
             int retval = 0;
             int hpboarder = 10;
@@ -21,6 +23,7 @@
             
             retval += p.ownMaxMana * 20 - p.enemyMaxMana * 20;
 
+            
             if (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.druid) retval -= 2 * p.enemyspellpower;
 
             if (p.ownHero.Hp + p.ownHero.armor > hpboarder)
@@ -31,7 +34,6 @@
             {
                 retval -= 2 * (hpboarder + 1 - p.ownHero.Hp - p.ownHero.armor) * (hpboarder + 1 - p.ownHero.Hp - p.ownHero.armor);
             }
-
 
             if (p.enemyHero.Hp + p.enemyHero.armor > aggroboarder)
             {
@@ -262,6 +264,9 @@
                 retval += m.handcard.card.targetPriority;
             }
             if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 3 && !m.taunt) retval = 0;
+
+            
+
             return retval;
         }
 
