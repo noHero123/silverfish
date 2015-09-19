@@ -6033,6 +6033,8 @@
             int de = 0;
             //placeholdercard
             Card plchldr = new Card { name = cardName.unknown, cost = 1000 };
+            plchldr.sim_card = new SimTemplate();
+            plchldr.pen_card = new PenTemplate();
             this.namelist.Add("unknown");
             this.cardlist.Add(plchldr);
             this.unknownCard = cardlist[0];

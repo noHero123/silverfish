@@ -525,9 +525,10 @@
             int temptaunt = 0;
             foreach (string s in temp.Split(';'))
             {
-                if (s == "" || s == " ") continue;
-                string id = s.Split(',')[0];
-                int anz = Convert.ToInt32(s.Split(',')[1]);
+                string ss = s.Replace(" ", "");
+                if (ss == "" || ss == " ") continue;
+                string id = ss.Split(',')[0];
+                int anz = Convert.ToInt32(ss.Split(',')[1]);
                 CardDB.cardIDEnum cdbe = CardDB.cardIDEnum.None;
                 try
                 {
@@ -583,9 +584,10 @@
             temp = enemygrave.Replace("eg: ", "");
             foreach (string s in temp.Split(';'))
             {
-                if (s == "" || s == " ") continue;
-                string id = s.Split(',')[0];
-                int anz = Convert.ToInt32(s.Split(',')[1]);
+                string ss = s.Replace(" ", "");
+                if (ss == "" || ss == " ") continue;
+                string id = ss.Split(',')[0];
+                int anz = Convert.ToInt32(ss.Split(',')[1]);
                 CardDB.cardIDEnum cdbe = CardDB.cardIDEnum.None;
                 try
                 {

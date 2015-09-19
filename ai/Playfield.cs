@@ -4812,8 +4812,8 @@
 
             if (this.isOwnTurn && !own && this.enemySecretCount >= 1)
             {
-
-                foreach (SecretItem si in this.enemySecretList)
+                List<SecretItem> templist = new List<SecretItem>(this.enemySecretList);
+                foreach (SecretItem si in templist)
                 {
                     if (si.canBe_duplicate)
                     {
@@ -5561,9 +5561,8 @@
                 {
                     if (s == CardDB.cardIDEnum.None)
                     {
-                        CardDB.Card plchldr = new CardDB.Card { name = CardDB.cardName.unknown };
+                        CardDB.Card plchldr =  CardDB.Instance.unknownCard;
                        
-                        
                         for (int i = 0; i < draw; i++)
                         {
                             Handmanager.Handcard hc = new Handmanager.Handcard { card = plchldr, position = this.owncards.Count + 1, manacost = 1000, entity = this.getNextEntity() };
