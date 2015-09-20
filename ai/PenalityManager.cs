@@ -119,9 +119,9 @@
                 return 28;
             }
 
-            if (!leathal && p.enemyHero.Hp >= enfacehp)
+            if (!leathal && target.entitiyID == p.enemyHero.entitiyID && p.ownWeaponAttack>=1 && p.enemyHero.Hp >= enfacehp)
             {
-                return 50+p.ownWeaponAttack;
+                if (!(p.ownHeroName == HeroEnum.thief && p.ownWeaponAttack == 1)) return 50+p.ownWeaponAttack;
             }
 
             if (p.ownWeaponDurability == 1 && p.ownWeaponName == CardDB.cardName.eaglehornbow)
