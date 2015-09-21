@@ -53,7 +53,7 @@
             retval -= p.enemycarddraw * 15;
 
             bool useAbili = false;
-            bool usecoin = false;
+            int usecoin = 0;
             foreach (Action a in p.playactions)
             {
                 if (a.actionType == actionEnum.attackWithHero && p.enemyHero.Hp <= p.attackFaceHP) retval++;
@@ -61,10 +61,17 @@
                 if (p.ownHeroName == HeroEnum.warrior && a.actionType == actionEnum.attackWithHero && useAbili) retval -= 1;
                 //if (a.actionType == actionEnum.useHeroPower && a.card.card.name == CardDB.cardName.lesserheal && (!a.target.own)) retval -= 5;
                 if (a.actionType != actionEnum.playcard) continue;
-                if ((a.card.card.name == CardDB.cardName.thecoin || a.card.card.name == CardDB.cardName.innervate)) usecoin = true;
+                if (a.card.card.name == CardDB.cardName.thecoin)
+                {
+                    usecoin = 1;
+                }
+                if (a.card.card.name == CardDB.cardName.innervate)
+                {
+                    usecoin = 2;
+                }
             }
-            if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
-            if (usecoin) retval -= 5 * p.manaTurnEnd;
+            if (usecoin >= 1 && useAbili && p.ownMaxMana <= 2) retval -= 40;
+            if (usecoin >= 1 && p.manaTurnEnd >= usecoin && p.owncards.Count <= 8) retval -= 100 * p.manaTurnEnd;
             int heropowermana = p.ownHeroAblility.card.getManaCost(p, 2);
             if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)
             {

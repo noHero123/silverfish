@@ -126,7 +126,7 @@
             }*/
 
             bool useAbili = false;
-            bool usecoin = false;
+            int usecoin = 0;
             //bool lastCoin = false;
             foreach (Action a in p.playactions)
             {
@@ -136,11 +136,13 @@
                 if (p.ownHeroName == HeroEnum.warrior && a.actionType == actionEnum.attackWithHero && useAbili) retval -= 1;
                 //if (a.actionType == actionEnum.useHeroPower && a.card.card.name == CardDB.cardName.lesserheal && (!a.target.own)) retval -= 5;
                 if (a.actionType != actionEnum.playcard) continue;
-                if ((a.card.card.name == CardDB.cardName.thecoin || a.card.card.name == CardDB.cardName.innervate))
+                if (a.card.card.name == CardDB.cardName.thecoin)
                 {
-                    usecoin = true;
-                    //lastCoin = true;
-
+                    usecoin = 1;
+                }
+                if (a.card.card.name == CardDB.cardName.innervate)
+                {
+                    usecoin = 2;
                 }
                 //save spell for all classes: (except for rouge if he has no combo)
                 if (a.target == null) continue;
@@ -148,8 +150,8 @@
                 if (p.ownHeroName == HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (a.target.isHero && !a.target.own)) retval -= 11;
             }
             //dont waste mana!!
-            if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
-            if (usecoin && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 100 * p.manaTurnEnd;
+            if (usecoin>=1 && useAbili && p.ownMaxMana <= 2) retval -= 40;
+            if (usecoin >= 1 && p.manaTurnEnd >= usecoin && p.owncards.Count <= 8) retval -= 100 * p.manaTurnEnd;
             int heropowermana = p.ownHeroAblility.card.getManaCost(p, 2);
             if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)
             {
