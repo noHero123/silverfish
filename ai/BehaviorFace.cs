@@ -145,6 +145,7 @@
 
         public override int getEnemyMinionValue(Minion m, Playfield p)
         {
+
             int retval = 0;
             if (m.name == CardDB.cardName.cutpurse) retval += 40;
             if (m.taunt || (m.handcard.card.targetPriority >= 1 && !m.silenced))
