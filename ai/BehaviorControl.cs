@@ -314,7 +314,7 @@
                 }
                 else
                 {
-                    retval += 200;
+                    retval += 50;
                 }
             }
             //soulfire etc

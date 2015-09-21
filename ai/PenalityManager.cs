@@ -533,7 +533,7 @@
                     }
                     if (targets <= 2)
                     {
-                        return 70;
+                        return 20;
                     }
 
                 }
@@ -2457,6 +2457,7 @@
                 if (p.enemyMinions.Count == 0) return 25;
                 foreach(Minion mnn in p.ownMinions)
                 {
+                    if (target.own) return 100;
                     if (!mnn.Ready) return 25;
                 }
                 
@@ -2836,9 +2837,8 @@
                 }
             }
 
-            if (p.enemyHeroName == HeroEnum.pala)//
+            if (p.enemyHeroName == HeroEnum.pala)
             {
-
                 if (c.type == CardDB.cardtype.MOB)
                 {
                     Minion m = new Minion
@@ -2849,10 +2849,9 @@
                         taunt = c.tank,
                         name = c.name
                     };
-                    //weakness first
                     if ((!this.isOwnLowestInHand(m, p) && p.mobsplayedThisTurn == 0) || attackedbefore == 0)
                     {
-                        pen += 5;
+                        pen += 10;
                     }
                 }
             }
@@ -2922,22 +2921,21 @@
             {
 
                 bool islow = isOwnLowest(m, p);
+                bool islowestattack = isownlowestattack(m, p);
 
-                if (!target.own && !target.isHero && attackedbefore == 0) // 
+                if (!target.own && !target.isHero && attackedbefore == 0) 
                 {
-                    if (!isEnemyLowest(target, p) || m.Hp <= 2) pen += 10;  // aviod sacrifice
+                    if (!isEnemyLowest(target, p) || m.Hp <= 2) pen += 5; 
                 }
 
-                //attack face weakness first
-                if (target.isHero && !target.own && !islow)
+                if (target.isHero && !target.own && (!islow || !islowestattack))
                 {
-                    pen += 5;
+                    pen += 15;
                 }
 
-                //attack minion first
                 if (target.isHero && !target.own && p.enemyMinions.Count >= 1 && attackedbefore == 0)
                 {
-                    pen += 10;
+                    pen += 5;
                 }
 
             }
