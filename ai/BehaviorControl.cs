@@ -1,29 +1,72 @@
 ﻿namespace HREngine.Bots
 {
-
+    using System;
+    using System.Collections.Generic;
     public class BehaviorControl : Behavior
     {
         PenalityManager penman = PenalityManager.Instance;
 
-        
         public override float getPlayfieldValue(Playfield p)
         {
-            
             if (p.value >= -2000000) return p.value;
             int retval = 0;
             int hpboarder = 10;
             if (p.ownHeroName == HeroEnum.warlock && p.enemyHeroName != HeroEnum.mage) hpboarder = 6;
-            int aggroboarder = 11;
+            int aggroboarder = 8;
+
+            /////////////////////////// 킬각
+            if (p.ownHeroName == HeroEnum.druid)
+            {
+                bool FON = false;
+                int FONMC = 0;
+                bool SR = false;
+                int SRMC = 0;
+                foreach (Handmanager.Handcard hcc in p.owncards)
+                {
+                    if (hcc.card.name == CardDB.cardName.forceofnature)
+                    {
+                        FON = true;
+                        FONMC = hcc.getManaCost(p);
+                    }
+                    if (hcc.card.name == CardDB.cardName.savageroar) 
+                    {
+                        SR = true;
+                        SRMC = hcc.getManaCost(p);
+                    }
+                }
+                bool TAUNT = false;
+                foreach (Minion mnn in p.enemyMinions)
+                {
+                    if (mnn.taunt) TAUNT = true;
+                }
+                bool HPCHECK = false;
+                //priest
+                if (p.enemyHero.Hp <= 10 && (p.enemyHeroName == HeroEnum.priest && p.enemyHeroAblility.card.name == CardDB.cardName.heal)) HPCHECK = true;
+                if (p.enemyHero.Hp <= 12 && (p.enemyHeroName == HeroEnum.priest && p.enemyHeroAblility.card.name == CardDB.cardName.lesserheal)) HPCHECK = true;
+                //warrior
+                if (p.enemyHero.Hp <= 10 && (p.enemyHeroName == HeroEnum.warrior && p.enemyHeroAblility.card.name == CardDB.cardName.tankup)) HPCHECK = true;
+                if (p.enemyHero.Hp <= 12 && (p.enemyHeroName == HeroEnum.warrior && p.enemyHeroAblility.card.name == CardDB.cardName.armorup)) HPCHECK = true;
+                //else
+                if (p.enemyHero.Hp <= 14 && (p.enemyHeroName != HeroEnum.priest || p.enemyHeroName != HeroEnum.warrior)) HPCHECK = true;
+                
+
+                if (FON && SR && !TAUNT && FONMC + SRMC <= p.ownMaxMana + 1 && !p.enemyHero.immune && p.enemySecretCount == 0 && HPCHECK) retval += 100;
+                if (FON && SR && !TAUNT && FONMC + SRMC <= p.ownMaxMana + 1 && !p.enemyHero.immune && p.enemySecretCount == 0 && HPCHECK) retval += 100;
+            }
+
+
+            ///////////////////////////
+
 
             retval -= p.evaluatePenality;
-            retval += p.owncards.Count * 5;
+            retval += p.owncards.Count * 3;
+
 
             retval += p.ownMaxMana;
             retval -= p.enemyMaxMana;
             
             retval += p.ownMaxMana * 20 - p.enemyMaxMana * 20;
 
-            
             if (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.druid) retval -= 2 * p.enemyspellpower;
 
             if (p.ownHero.Hp + p.ownHero.armor > hpboarder)
@@ -32,8 +75,11 @@
             }
             else
             {
+                retval += (p.ownHero.Hp + p.ownHero.armor);
                 retval -= 2 * (hpboarder + 1 - p.ownHero.Hp - p.ownHero.armor) * (hpboarder + 1 - p.ownHero.Hp - p.ownHero.armor);
             }
+
+            
 
             if (p.enemyHero.Hp + p.enemyHero.armor > aggroboarder)
             {
@@ -41,7 +87,7 @@
             }
             else
             {
-                retval += 3 * (aggroboarder + 1 - p.enemyHero.Hp - p.enemyHero.armor);
+                retval += 2 * (aggroboarder + 1 - p.enemyHero.Hp - p.enemyHero.armor);
             }
 
             if (p.ownWeaponAttack >= 1)
@@ -69,15 +115,17 @@
             }
             if (p.ownMaxMana < 4)
             {
-                retval += p.owncarddraw * 2;
+                retval += p.owncarddraw * 3;
             }
             else
             {
                 retval += p.owncarddraw * 5;
             }
 
+            if (p.ownHero.Hp >= 14 && p.ownMaxMana >= 7) retval += p.owncarddraw * 4;
+
             //retval += p.owncarddraw * 5;
-            retval -= p.enemycarddraw * 15;
+            retval -= p.enemycarddraw * 5;
 
             //int owntaunt = 0;
             int readycount = 0;
@@ -87,10 +135,25 @@
                 retval += 5;
                 retval += m.Hp * 2;
                 retval += m.Angr * 2;
+
+                if (p.enemyHeroName == HeroEnum.hunter && p.ownMaxMana <= 4) retval += m.Hp * 2;
+                if (p.enemyHeroName == HeroEnum.hunter && m.taunt) retval += m.Hp;
+
+
                 retval += m.handcard.card.rarity;
+                if (p.ownHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.PET) retval++;
+                if (p.ownHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval++;
+
+                if (m.name == CardDB.cardName.treant && !m.silenced) retval -= 2* (m.Hp + m.Angr) + 5 + 4;
+
+                if (m.handcard.card.deathrattle && !m.silenced) retval += Math.Max(m.handcard.card.cost - 2, 1); //죽메 있으면 가중치
+                if (m.divineshild) retval += m.Angr * 2 + m.handcard.card.cost; // 천보 걸린놈을 남김
+
+                
+
                 if (!m.playedThisTurn && m.windfury) retval += m.Angr;
-                if (m.divineshild) retval += 1;
-                if (m.stealth) retval += 1;
+
+                if (m.stealth) retval += m.Angr;
                 if (m.handcard.card.isSpecialMinion)
                 {
                     retval += 1;
@@ -107,8 +170,7 @@
                 //if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++;
                 //if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
-                if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
-                if (m.handcard.card.name == CardDB.cardName.bloodmagethalnos) retval += 10;
+                if (p.ownMinions.Count >= 2 && (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader)) retval += 5 * (p.ownMinions.Count);
                 if (m.handcard.card.name == CardDB.cardName.nerubianegg)
                 {
                     if (m.Angr >= 1) retval += 2;
@@ -128,10 +190,21 @@
             bool useAbili = false;
             bool usecoin = false;
             //bool lastCoin = false;
+
+            bool hasweapon = false;
+            foreach (Handmanager.Handcard hc in p.owncards)
+            {
+                if (hc.card.type == CardDB.cardtype.WEAPON) hasweapon = true;
+            }
+
             foreach (Action a in p.playactions)
             {
+                if (a.actionType == actionEnum.playcard && a.card.card.type == CardDB.cardtype.MOB && p.enemyHeroName == HeroEnum.hunter) retval += 15; 
+
+
+                if (p.ownHeroName != HeroEnum.thief && a.actionType == actionEnum.attackWithHero && p.ownWeaponAttack == 1) retval += 10;
                 //lastCoin = false;
-                if (a.actionType == actionEnum.attackWithHero && p.enemyHero.Hp <= p.attackFaceHP) retval++;
+                if (a.actionType == actionEnum.attackWithHero && p.enemyHero.Hp >= p.attackFaceHP && p.ownWeaponAttack >=2 && p.ownHero.Hp >=12 && !hasweapon) retval += -10;
                 if (a.actionType == actionEnum.useHeroPower) useAbili = true;
                 if (p.ownHeroName == HeroEnum.warrior && a.actionType == actionEnum.attackWithHero && useAbili) retval -= 1;
                 //if (a.actionType == actionEnum.useHeroPower && a.card.card.name == CardDB.cardName.lesserheal && (!a.target.own)) retval -= 5;
@@ -144,17 +217,47 @@
                 }
                 //save spell for all classes: (except for rouge if he has no combo)
                 if (a.target == null) continue;
-                if (p.ownHeroName != HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (!a.target.own && a.target.isHero) && a.card.card.name != CardDB.cardName.shieldblock) retval -= 11;
+                if (p.ownHeroName != HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (!a.target.own && a.target.isHero && a.target.Hp>=10) && a.card.card.name != CardDB.cardName.shieldblock ) retval -= 30;
                 if (p.ownHeroName == HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (a.target.isHero && !a.target.own)) retval -= 11;
             }
             //dont waste mana!!
-            if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
-            if (usecoin && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 100 * p.manaTurnEnd;
+            if (usecoin && useAbili && p.ownMaxMana <= 5) retval -= 10;
+            if (usecoin && p.manaTurnEnd >= 1) retval -= 20 * p.manaTurnEnd;
+
             int heropowermana = p.ownHeroAblility.getManaCost(p);
             if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)
             {
-                if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 20;
+                //공2이상돚거이 아니면 -20 (안쓰면 페널티)
+                if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 5;
+                                
             }
+
+
+            /*
+
+
+            //내 카드 코스트 코스트 맞게 일단 다 낸다//
+            int hasmob = 0;
+           
+            
+            foreach (Handmanager.Handcard hcc in p.owncards)
+            {
+
+                if (hcc.manacost <= p.mana && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion) && hcc.card.name != CardDB.cardName.ironbeakowl && hcc.card.name != CardDB.cardName.biggamehunter && hcc.card.name != CardDB.cardName.kezanmystic && hcc.card.name != CardDB.cardName.theblackknight && hcc.card.name != CardDB.cardName.rendblackhand) hasmob++; // 핸드 하수인체크
+            }
+             
+
+            if (hasmob >=1 && p.manaTurnEnd >= 1) retval -= 15 * p.manaTurnEnd;
+
+
+            */
+
+            
+
+
+
+
+
             //if (usecoin && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 100;
 
             int mobsInHand = 0;
@@ -197,13 +300,12 @@
                 }
             }*/
 
-            retval -= p.enemySecretCount;
-            retval -= p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
+            retval -= 3 * p.enemySecretCount;
+            retval -= 2 * p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
             retval -= p.lostWeaponDamage;
 
             //if (p.ownMinions.Count == 0) retval -= 20;
             //if (p.enemyMinions.Count == 0) retval += 20;
-            
             if (p.enemyHero.Hp <= 0)
             {
                 if (p.turnCounter <= 1)
@@ -212,7 +314,7 @@
                 }
                 else
                 {
-                    retval += 50;//10000
+                    retval += 200;
                 }
             }
             //soulfire etc
@@ -229,7 +331,20 @@
                 retval -= 1000;
             }
             
-            if (p.ownHero.Hp <= 0) retval = -10000;
+            if (p.ownHero.Hp <= 0) //retval = -10000;
+            {
+                if (p.turnCounter <= 1)
+                {
+                    retval += p.owncarddraw * 3000;
+                    retval -= 10000;
+                }
+                else
+                {
+                    retval -= 10000;
+                }
+
+                
+            }
 
             p.value = retval;
             return retval;
@@ -245,28 +360,60 @@
             {
                 retval += m.Angr * 2;
                 if (m.windfury) retval += m.Angr * 2;
-                if (m.Angr >= 4) retval += 10;
-                if (m.Angr >= 7) retval += 50;
+                if (m.Angr >= 5) retval += m.Angr-2;
+                if (m.Angr >= 7) retval += m.Angr-2;
             }
 
-            if (m.Angr == 0) retval -= 7;
+            //if (m.Angr == 0) retval -= 7;
 
             retval += m.handcard.card.rarity;
+
             if (m.taunt) retval += 5;
-            if (m.divineshild) retval += m.Angr;
+            
             if (m.divineshild && m.taunt) retval += 5;
             if (m.stealth) retval += 1;
 
             if (m.poisonous) retval += 4;
+
+            if (p.enemyHeroName == HeroEnum.hunter && p.ownHero.Hp<=12) retval += m.Angr;
+
+            if (p.enemyHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.PET) retval++;
+            if (p.enemyHeroName == HeroEnum.shaman && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval++;
+            if (p.enemyHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval++;
+            if (p.enemyHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval++;
+            if (p.enemyHeroName == HeroEnum.mage && m.name == CardDB.cardName.flamewaker) retval+=5;
+            if (m.handcard.card.deathrattle && !m.silenced) retval -= Math.Max(m.handcard.card.cost - 2, 1); //죽메 있으면 가중치
+
+
+            if (m.divineshild) retval += m.Angr + 1;
+            if (m.divineshild && m.name == CardDB.cardName.annoyotron && m.Angr == 1) retval += 3;
+            if (!m.silenced && (m.name == CardDB.cardName.wrathofairtotem || m.name == CardDB.cardName.flametonguetotem)) retval += 3;
+
+            int hasenemyattack = 0;
+            foreach (Minion mn in p.enemyMinions)
+            {
+                hasenemyattack += mn.Angr;
+                retval++;
+            }
+            hasenemyattack += p.enemyHero.Angr;
+            if (p.enemyHeroName == HeroEnum.hunter) hasenemyattack += 2;
+            if (p.enemyHeroName == HeroEnum.druid || p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.thief) hasenemyattack++;
+
+            if (m.divineshild && m.Angr == 1) retval += 5;
+
+            if (m.Angr == 0) retval += m.Hp + 3;
+            if (m.name == CardDB.cardName.wrathofairtotem && !m.silenced) retval += 4;
+
+            if ((p.ownHero.Hp + p.ownHero.armor) - hasenemyattack <= 10) retval += 4 * m.Angr;// 다음턴 예상피가 10보다 작으면 추가치부여
+
+
+            if (p.ownSecretsIDList.Contains(CardDB.cardIDEnum.EX1_611) && p.enemyMinions.Count == 1) retval -= m.Hp + m.Angr + m.handcard.card.cost; //빙덫있으면 쎈놈을 남긴다
 
             if (m.handcard.card.targetPriority >= 1 && !m.silenced)
             {
                 retval += m.handcard.card.targetPriority;
             }
             if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 3 && !m.taunt) retval = 0;
-
-            
-
             return retval;
         }
 
