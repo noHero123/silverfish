@@ -27,7 +27,7 @@
             }
             else
             {
-                if (p.enemyHeroName != HeroEnum.mage && p.enemyHeroName != HeroEnum.priest)
+                if (p.enemyHeroName != HeroEnum.mage && p.enemyHeroName != HeroEnum.priest && p.enemyHeroName != HeroEnum.warlock)
                 {
                     retval += 11;
                 }
@@ -49,7 +49,7 @@
             {
                 retval += p.owncarddraw * 5;
             }
-            retval += p.owncarddraw * 5;
+            //retval += p.owncarddraw * 5;
             retval -= p.enemycarddraw * 15;
 
             bool useAbili = false;
@@ -65,10 +65,12 @@
             }
             if (usecoin && useAbili && p.ownMaxMana <= 2) retval -= 40;
             if (usecoin) retval -= 5 * p.manaTurnEnd;
-            int heropowermana = p.ownHeroAblility.getManaCost(p);
+            int heropowermana = p.ownHeroAblility.card.getManaCost(p, 2);
+
             if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)
             {
-                if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 20;
+                if (p.ownHeroName == HeroEnum.pala) retval -= 3;
+                else if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 15;
             }
             //if (usecoin && p.mana >= 1) retval -= 20;
 
@@ -78,8 +80,14 @@
                 retval += m.Angr * 2;
                 retval += m.handcard.card.rarity;
                 if (m.windfury) retval += m.Angr;
+                if (m.divineshild) retval += ((m.Angr + 2) / 3) + ((m.Hp + 2) / 3);
+                if (m.stealth) retval += 1;
                 if (m.taunt) retval += 1;
-                if (!m.taunt && m.stealth && m.handcard.card.isSpecialMinion) retval += 20;
+                if (m.handcard.card.isSpecialMinion)
+                {
+                    retval += 1;
+                    if (!m.taunt && m.stealth) retval += (m.Angr < 4 ? 10 : 20);
+                }
                 if (m.handcard.card.name == CardDB.cardName.silverhandrecruit && m.Angr == 1 && m.Hp == 1) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
                 if (m.handcard.card.name == CardDB.cardName.nerubianegg)

@@ -94,7 +94,8 @@
         {
             int pen = 0;
             pen = getAttackSecretPenality(m, p, target);
-            if (!lethal && m.name == CardDB.cardName.bloodimp) pen = 50;
+            if (!lethal && target.entitiyID == p.enemyHero.entitiyID && m.destroyOnOwnTurnEnd) pen += 50;
+            if (!lethal && m.name == CardDB.cardName.bloodimp) pen += 50;
             if (m.name == CardDB.cardName.leeroyjenkins)
             {
                 if (!target.own)
@@ -217,12 +218,14 @@
                 {
                     if (m.Ready) targets++;
                 }
+                
                 if ((p.ownHero.Ready || p.ownHero.numAttacksThisTurn == 0) && card.name == CardDB.cardName.savageroar) targets++;
 
-                if (targets <= 2)
+                if (targets <= 3)
                 {
-                    return 20;
+                    pen += 20;
                 }
+                return pen + (5 - p.enemyMinions.Count) * 10;
             }
 
             if (!this.attackBuffDatabase.ContainsKey(name)) return 0;
@@ -893,8 +896,17 @@
             bool hasgadget = false;
             bool hasstarving = false;
             bool hasknife = false;
+            bool hasflamewaker = false;
+            bool hasmech = false;
+
             foreach (Minion mnn in p.ownMinions)
             {
+
+                if (mnn.handcard.card.race == TAG_RACE.MECHANICAL) hasmech = true;
+
+                if (mnn.silenced) continue;
+
+
                 if (mnn.name == CardDB.cardName.gadgetzanauctioneer)
                 {
                     hasgadget = true;
@@ -909,39 +921,64 @@
                 {
                     hasknife = true;
                 }
+
+                if (mnn.name == CardDB.cardName.flamewaker)
+                {
+                    hasflamewaker = true;
+                }
             }
 
-            if (!this.randomEffects.ContainsKey(card.name) && !this.cardDrawBattleCryDatabase.ContainsKey(card.name) && !(hasknife && card.type == CardDB.cardtype.MOB) && !(hasgadget && card.type == CardDB.cardtype.SPELL) && !(hasstarving && (TAG_RACE)card.race == TAG_RACE.PET))
-            {
-                return 0;
-            }
+            // Don't penalize for cases that don't actually have random outcomes
+            // TODO: Add Lightning Storm + Elemental Destruction if all enemies hp < the minimum damage?
 
+            if (!this.randomEffects.ContainsKey(card.name) 
+                && !this.cardDrawBattleCryDatabase.ContainsKey(card.name) 
+                && !(hasknife && card.type == CardDB.cardtype.MOB && p.enemyMinions.Count > 0) 
+                && !(hasgadget && card.type == CardDB.cardtype.SPELL)
+                && !(hasflamewaker && card.type == CardDB.cardtype.SPELL && p.enemyMinions.Count > 0)
+                && !(hasstarving && (TAG_RACE)card.race == TAG_RACE.PET))
+             {
+                 return 0;
+             }
+
+
+            //brawl should be used first
             if (card.name == CardDB.cardName.brawl)
             {
                 return 0;
             }
 
-            if ((card.name == CardDB.cardName.cleave || card.name == CardDB.cardName.multishot)
-                && p.enemyMinions.Count == 2)
-            {
-                return 0;
-            }
+            // Don't penalize for cases that don't actually have random outcomes
+            // TODO: Add Lightning Storm + Elemental Destruction if all enemies hp < the minimum damage?
 
-            if ((card.name == CardDB.cardName.deadlyshot) && p.enemyMinions.Count == 1)
-            {
-                return 0;
-            }
+            if (p.enemyMinions.Count == 2 && (card.name == CardDB.cardName.cleave
+                || card.name == CardDB.cardName.multishot
+                || card.name == CardDB.cardName.forkedlightning
+                || card.name == CardDB.cardName.darkbargain))
+             {
+                 return 0;
+             }
 
-            if ((card.name == CardDB.cardName.arcanemissiles || card.name == CardDB.cardName.avengingwrath)
-                && p.enemyMinions.Count == 0)
-            {
-                return 0;
-            }
+            if (p.enemyMinions.Count == 1 && (card.name == CardDB.cardName.deadlyshot
+                || card.name == CardDB.cardName.flamecannon
+                || card.name == CardDB.cardName.bomblobber))
+             {
+                 return 0;
+             }
+
+            if (p.enemyMinions.Count == 0 && (card.name == CardDB.cardName.arcanemissiles 
+                || card.name == CardDB.cardName.avengingwrath 
+                || card.name == CardDB.cardName.goblinblastmage
+                || card.name == CardDB.cardName.flamejuggler))
+             {
+                 return 0;
+             }
 
             int cards = 0;
             cards = this.randomEffects.ContainsKey(card.name) ? this.randomEffects[card.name] : (this.cardDrawBattleCryDatabase.ContainsKey(card.name) ? this.cardDrawBattleCryDatabase[card.name] : 0);
 
-            foreach (Action a in p.playactions)
+            int mobsafterKnife = 0;
+            foreach (Action a in p.playactions) // penalize for any non-random actions taken before playing this random one
             {
                 if (first == false) break;
                 if (a.actionType == actionEnum.attackWithHero)
@@ -964,10 +1001,7 @@
 
                 if (a.actionType == actionEnum.playcard)
                 {
-                    if (card.name == CardDB.cardName.knifejuggler && card.type == CardDB.cardtype.MOB)
-                    {
-                        continue;
-                    }
+
 
                     if (this.cardDrawBattleCryDatabase.ContainsKey(a.card.card.name))
                     {
@@ -979,20 +1013,34 @@
                         continue;
                     }
 
-                    if (hasgadget && card.type == CardDB.cardtype.SPELL)
+                    // no penalty for spells or other cards that obtain bonuses from playing spells
+                    if ((hasgadget || hasflamewaker) && (a.card.card.type == CardDB.cardtype.SPELL
+                        || a.card.card.name == CardDB.cardName.gadgetzanauctioneer || a.card.card.name == CardDB.cardName.flamewaker
+                        || a.card.card.name == CardDB.cardName.manawyrm || a.card.card.name == CardDB.cardName.manaaddict
+                        || a.card.card.name == CardDB.cardName.questingadventurer || a.card.card.name == CardDB.cardName.wildpyromancer
+                        || a.card.card.name == CardDB.cardName.violetteacher || a.card.card.name == CardDB.cardName.archmageantonidas))
+                     {
+                         continue;
+                     }
+
+                    if (hasstarving && a.card.card.race == TAG_RACE.PET)
                     {
                         continue;
                     }
 
-                    if (hasstarving && (TAG_RACE)card.race == TAG_RACE.PET)
-                    {
-                        continue;
-                    }
 
-                    if (hasknife && card.type == CardDB.cardtype.MOB)
-                    {
-                        continue;
-                    }
+                    if (hasknife && (a.card.card.type == CardDB.cardtype.MOB || a.card.card.name == CardDB.cardName.swordofjustice || a.card.card.name == CardDB.cardName.mirrorentity)) //and others
+                     {
+                        if (card.name == CardDB.cardName.knifejuggler && mobsafterKnife >= 1)
+                        {
+                            first = false;   // penalize playing 2nd knife juggler after other mobs
+                        }
+                        else
+                        {
+                            if (a.card.card.type == CardDB.cardtype.MOB && a.card.card.name != CardDB.cardName.knifejuggler) mobsafterKnife++;
+                            continue;
+                        }
+                     }
 
                     first = false;
                 }
@@ -1653,7 +1701,7 @@
                     if (m.handcard.card.cost <= 2)
                         return 15;
                 }
-                return 15;
+                return 8;
             }
 
             if (!lethal && choice == 1 && name == CardDB.cardName.druidoftheclaw)
@@ -2697,6 +2745,39 @@
             this.specialMinions.Add(CardDB.cardName.dragonkinsorcerer, 0);
             this.specialMinions.Add(CardDB.cardName.dragonegg, 0);
 
+            //GVG
+            this.specialMinions.Add(CardDB.cardName.snowchugger, 0);
+            this.specialMinions.Add(CardDB.cardName.mechwarper, 0);
+            this.specialMinions.Add(CardDB.cardName.cogmaster, 0);
+            this.specialMinions.Add(CardDB.cardName.mistressofpain, 0);
+            this.specialMinions.Add(CardDB.cardName.felcannon, 0);
+            this.specialMinions.Add(CardDB.cardName.malganis, 0);
+            this.specialMinions.Add(CardDB.cardName.ironsensei, 0);
+            this.specialMinions.Add(CardDB.cardName.tradeprincegallywix, 0);
+            this.specialMinions.Add(CardDB.cardName.mechbearcat, 0);
+            this.specialMinions.Add(CardDB.cardName.vitalitytotem, 0);
+            this.specialMinions.Add(CardDB.cardName.siltfinspiritwalker, 0);
+            this.specialMinions.Add(CardDB.cardName.gahzrilla, 0);
+            this.specialMinions.Add(CardDB.cardName.warbot, 0);
+            this.specialMinions.Add(CardDB.cardName.cobaltguardian, 0);
+            this.specialMinions.Add(CardDB.cardName.stonesplintertrogg, 0);
+            this.specialMinions.Add(CardDB.cardName.burlyrockjawtrogg, 0);
+            this.specialMinions.Add(CardDB.cardName.shadowboxer, 0);
+            this.specialMinions.Add(CardDB.cardName.shipscannon, 0);
+            this.specialMinions.Add(CardDB.cardName.steamwheedlesniper, 0);
+            this.specialMinions.Add(CardDB.cardName.jeeves, 0);
+            this.specialMinions.Add(CardDB.cardName.goblinsapper, 0);
+            this.specialMinions.Add(CardDB.cardName.floatingwatcher, 0);
+            this.specialMinions.Add(CardDB.cardName.micromachine, 0);
+            this.specialMinions.Add(CardDB.cardName.hobgoblin, 0);
+            this.specialMinions.Add(CardDB.cardName.junkbot, 0);
+            this.specialMinions.Add(CardDB.cardName.mimironshead, 0);
+            this.specialMinions.Add(CardDB.cardName.mogortheogre, 0);
+            this.specialMinions.Add(CardDB.cardName.foereaper4000, 0);
+            this.specialMinions.Add(CardDB.cardName.mekgineerthermaplugg, 0);
+            this.specialMinions.Add(CardDB.cardName.gazlowe, 0);
+            this.specialMinions.Add(CardDB.cardName.troggzortheearthinator, 0);
+
             //TGT
             this.specialMinions.Add(CardDB.cardName.lowlysquire, 0);
             this.specialMinions.Add(CardDB.cardName.boneguardlieutenant, 0);
@@ -3135,7 +3216,6 @@
             this.randomEffects.Add(CardDB.cardName.grandcrusader, 1);
             this.randomEffects.Add(CardDB.cardName.spellslinger, 1);
 
-            this.randomEffects.Add(CardDB.cardName.flamewaker, 10); //its not random, but we do it :D, for randomspells
         }
 
         private void setupTargetAbilitys()

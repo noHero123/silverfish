@@ -2068,13 +2068,20 @@
                     this.ownHero.immune = true;
                 }
 
-                if (secretID == CardDB.cardIDEnum.EX1_294) //mirror entity
-                {
-                    //summon snake ( a weak minion)
-                    int posi = this.ownMinions.Count;
-                    CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_554t);//snake
-                    callKid(kid, posi, true);
-                }
+                 if (secretID == CardDB.cardIDEnum.EX1_294) //mirror entity
+                 {
+                     // summon a weak minion (thx to xytrix)
+                     int posi = this.ownMinions.Count;
+                    CardDB.Card kid;
+                    switch ((this.ownMaxMana + 2) / 3)  // conservative, but scales a little as the game progresses
+                    {
+                        case 1: default:  kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_554t); break;  // 1/1 snake turns 1-3
+                        case 2: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_158t); break; // 2/2 treant turns 4-6
+                        case 3: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_172); break; // 3/2 bloodfen raptor turns 7-9
+                        case 4: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_036t); break; // 4/4 nerubian turn 10
+                    }
+                     callKid(kid, posi, true);
+                 }
                 if (secretID == CardDB.cardIDEnum.tt_010) //spellbender
                 {
                     //whut???
@@ -2150,7 +2157,7 @@
                     // we give our weakest minion +3/+2 :D
                     List<Minion> temp = new List<Minion>(this.ownMinions);
                     temp.Sort((a, b) => a.Hp.CompareTo(b.Hp));//take the weakest
-                    if (temp.Count == 0) continue;
+                    if (temp.Count < 2) continue;
                     foreach (Minion m in temp)
                     {
                         minionGetBuffed(m, 3, 2);
@@ -2322,6 +2329,7 @@
 
                 this.weHavePlayedMillhouseManastorm = false;
                 this.ownloatheb = 0;
+                this.ownSaboteur = 0;
                 
                 this.owncarddraw = 0;//todo: realy?
                 this.sEnemTurn = false;
@@ -2361,6 +2369,7 @@
 
                 this.enemyHavePlayedMillhouseManastorm = false;
                 this.enemyloatheb = 0;
+                this.enemySaboteur = 0;
                 
                 this.playedPreparation = false;
                 this.playedmagierinderkirintor = false;
@@ -3043,6 +3052,7 @@
             
             this.evaluatePenality += penality;
             this.mana = this.mana - cost;
+            this.anzOwnFencingCoach = 0;
 
             //Helpfunctions.Instance.logg("play crd " + c.name + " entitiy# " + cardEntity + " mana " + hc.getManaCost(this) + " trgt " + target);
             if (logging) Helpfunctions.Instance.logg("play crd " + c.name + " trgt " + target);
@@ -5301,7 +5311,7 @@
             {
                 if (this.ownWeaponDurability >= 1)
                 {
-                    this.lostWeaponDamage += this.ownWeaponDurability * this.ownWeaponAttack * this.ownWeaponAttack;
+                    this.lostWeaponDamage += this.ownWeaponDurability * this.ownWeaponAttack;
                     this.lowerWeaponDurability(1000, true);
                     hero.Angr -= this.ownWeaponAttack;
                 }

@@ -19,29 +19,61 @@ namespace HREngine.Bots
                 return;
             }
 
-            // optimistic
+            // conservative
 
             List<Minion> temp = (ownplay) ? p.enemyMinions : p.ownMinions;
             int times = (ownplay) ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);
 
             if (temp.Count >= 1)
             {
-                //search Minion with lowest hp
-                Minion enemy = temp[0];
-                int minhp = 10000;
-                foreach (Minion m in temp)
+                Minion chosen = temp[0];
+
+                if (ownplay)
                 {
-                    if (m.Hp >= times + 1 && minhp > m.Hp)
+                    bool hasDivineShield = false;
+                    foreach (Minion m in temp)
                     {
-                        enemy = m;
-                        minhp = m.Hp;
+                        if (m.divineshild)
+                        {
+                            chosen = m;
+                            hasDivineShield = true;
+                            break;
+                        }
+                    }
+
+                    if (!hasDivineShield)
+                    {
+                        temp.Sort((a, b) => a.Angr.CompareTo(b.Angr));  // sorted by lowest atk
+                        chosen = temp[0];
+                    }
+                }
+                else
+                {
+                    temp.Sort((a, b) => -a.Angr.CompareTo(b.Angr));  // sorted by highest atk
+
+                    // find strongest minion that can be killed, or pick minion with highest hp
+                    int maxhp = 0;
+                    foreach (Minion m in temp)
+                    {
+                        if (m.Hp <= times)
+                        {
+                            chosen = m;
+                            break;
+                        }
+
+                        if (maxhp < m.Hp)
+                        {
+                            chosen = m;
+                            maxhp = m.Hp;
+                        }
                     }
                 }
 
-                p.minionGetDamageOrHeal(enemy, times);
-
+                p.minionGetDamageOrHeal(chosen, times);
             }
         }
+
+
 
     }
 

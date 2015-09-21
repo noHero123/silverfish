@@ -908,7 +908,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.15";
+        public string versionnumber = "116.22";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1116,6 +1116,12 @@ namespace HREngine.Bots
 
             p = new Playfield();//secrets have updated :D
             // calculate stuff
+
+            /*foreach (Handmanager.Handcard hc in p.owncards)
+            {
+                Helpfunctions.Instance.ErrorLog("hc playfield" + hc.manacost + " " + hc.getManaCost(p));
+            }*/
+
             Helpfunctions.Instance.ErrorLog("calculating stuff... " + DateTime.Now.ToString("HH:mm:ss.ffff"));
             if (runExtern)
             {
@@ -1153,6 +1159,22 @@ namespace HREngine.Bots
             //heroPowerUsesThisTurn = 0;
             //ownHeroPowerUsesThisGame = 0;
             //enemyHeroPowerUsesThisGame = 0;
+
+            //reset playerbuffs (thx to xytri)
+            this.enemyMillhouse = 0;
+            this.enemyLoathebs = 0;
+            this.ownDragonConsort = 0;
+            this.ownKirintor = 0;
+            this.ownPrepa = 0;
+            this.lockandload = 0;
+            this.enemysabo = 0;
+            this.ownFenciCoaches = 0;
+            this.ownMillhouse = 0;
+            this.ownLoathebs = 0;
+            this.enemyDragonConsort = 0;
+            this.enemyKirintor = 0;
+            this.enemyPrepa = 0;
+            this.ownsabo = 0;
 
 
             Dictionary<int, Entity> allEntitys = new Dictionary<int, Entity>();
@@ -1717,7 +1739,7 @@ namespace HREngine.Bots
                     hc.entity = entitiy.EntityId;
                     hc.manacost = entitiy.Cost;
                     hc.addattack = 0;
-
+                    //Helpfunctions.Instance.ErrorLog("hc "+ entitiy.ZonePosition + " ." + entitiy.CardId + ". " + entitiy.Cost + "  " + c.name);
                     int attackchange = entitiy.ATK - c.Attack;
                     int hpchange = entitiy.Health - c.Health;
                     hc.addattack = attackchange;
