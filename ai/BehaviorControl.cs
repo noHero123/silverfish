@@ -14,7 +14,7 @@
             if (p.ownHeroName == HeroEnum.warlock && p.enemyHeroName != HeroEnum.mage) hpboarder = 6;
             int aggroboarder = 8;
 
-            /////////////////////////// 킬각
+            /////////////////////////// to find lethal
             if (p.ownHeroName == HeroEnum.druid)
             {
                 bool FON = false;
@@ -146,8 +146,8 @@
 
                 if (m.name == CardDB.cardName.treant && !m.silenced) retval -= 2* (m.Hp + m.Angr) + 5 + 4;
 
-                if (m.handcard.card.deathrattle && !m.silenced) retval += Math.Max(m.handcard.card.cost - 2, 1); //죽메 있으면 가중치
-                if (m.divineshild) retval += m.Angr * 2 + m.handcard.card.cost; // 천보 걸린놈을 남김
+                if (m.handcard.card.deathrattle && !m.silenced) retval += Math.Max(m.handcard.card.cost - 2, 1); //priority to deathrattal
+                if (m.divineshild) retval += m.Angr * 2 + m.handcard.card.cost; // to save divineshild
 
                 
 
@@ -227,7 +227,7 @@
             int heropowermana = p.ownHeroAblility.getManaCost(p);
             if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)
             {
-                //공2이상돚거이 아니면 -20 (안쓰면 페널티)
+                //penalty except thief
                 if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 5;
                                 
             }
@@ -236,7 +236,7 @@
             /*
 
 
-            //내 카드 코스트 코스트 맞게 일단 다 낸다//
+            //use all cards
             int hasmob = 0;
            
             
@@ -382,8 +382,7 @@
             if (p.enemyHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval++;
             if (p.enemyHeroName == HeroEnum.mage && (TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) retval++;
             if (p.enemyHeroName == HeroEnum.mage && m.name == CardDB.cardName.flamewaker) retval+=5;
-            if (m.handcard.card.deathrattle && !m.silenced) retval -= Math.Max(m.handcard.card.cost - 2, 1); //죽메 있으면 가중치
-
+            if (m.handcard.card.deathrattle && !m.silenced) retval -= Math.Max(m.handcard.card.cost - 2, 1); //not priority to deathrattle (bad for us)
 
             if (m.divineshild) retval += m.Angr + 1;
             if (m.divineshild && m.name == CardDB.cardName.annoyotron && m.Angr == 1) retval += 3;
@@ -404,10 +403,10 @@
             if (m.Angr == 0) retval += m.Hp + 3;
             if (m.name == CardDB.cardName.wrathofairtotem && !m.silenced) retval += 4;
 
-            if ((p.ownHero.Hp + p.ownHero.armor) - hasenemyattack <= 10) retval += 4 * m.Angr;// 다음턴 예상피가 10보다 작으면 추가치부여
+            if ((p.ownHero.Hp + p.ownHero.armor) - hasenemyattack <= 10) retval += 4 * m.Angr;// we can die next turn
 
 
-            if (p.ownSecretsIDList.Contains(CardDB.cardIDEnum.EX1_611) && p.enemyMinions.Count == 1) retval -= m.Hp + m.Angr + m.handcard.card.cost; //빙덫있으면 쎈놈을 남긴다
+            if (p.ownSecretsIDList.Contains(CardDB.cardIDEnum.EX1_611) && p.enemyMinions.Count == 1) retval -= m.Hp + m.Angr + m.handcard.card.cost; // if has freezingtrap, priority to kill weakness 
 
             if (m.handcard.card.targetPriority >= 1 && !m.silenced)
             {

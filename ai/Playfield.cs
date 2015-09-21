@@ -1871,7 +1871,7 @@
                     }
                     i++;
                 }
-                //추가
+                //added by anax
                 if (this.ownMinions.Count <= 1 && (this.ownHeroName == HeroEnum.pala || this.ownHeroName == HeroEnum.shaman)) bplace= bplace++;
                 return bplace;
 
@@ -1972,7 +1972,7 @@
             }
 
             return bestplace  ;
-            //수정전 return bestplace + 1;
+            //before modify return bestplace + 1;
         }
 
         public void guessHeroDamage()

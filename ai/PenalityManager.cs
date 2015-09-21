@@ -132,7 +132,7 @@
                     //
                     if (hc.card.name == CardDB.cardName.arcaneshot || hc.card.name == CardDB.cardName.killcommand) return -p.ownWeaponAttack - 1;
                 }
-                //내구1 비밀있으면 공격덜함
+                //to save eaglehornbow
                 if (p.ownSecretsIDList.Count >= 1) return 20;
 
                 bool hasweapon = false;
@@ -438,7 +438,7 @@
                         return 50;
                     }
 
-                    //추가 공3 방3이하에 스페셜미니언 아니면 안쓴다
+                    //to save silence
                     if (m.Hp <= 3 && m.Angr <= 3)
                     {
 
@@ -1418,7 +1418,7 @@
                     if (hcc.manacost == 1 && hcc.card.name != CardDB.cardName.abusivesergeant) has1manacard++;
                     if (hcc.manacost == 2 && hcc.card.name != CardDB.cardName.ironbeakowl) has2manacard++;
                     if (hcc.manacost == 3 && hcc.card.name != CardDB.cardName.biggamehunter) has3manacard++;
-                    //2마나 무기있고 적몹 확인
+                    //check 2 mana weapon situation
                     if (hcc.manacost == 2 && (hcc.card.type == CardDB.cardtype.WEAPON) && p.enemyMinions.Count >=1) hasweapon = true;
                 }
                 if (p.ownHeroName == HeroEnum.druid && WGON) return 0;
@@ -1577,7 +1577,7 @@
             if (name == CardDB.cardName.kezanmystic)
             {
                 if (p.enemySecretCount >= 1) return -80;
-                if (p.enemyHeroName == HeroEnum.hunter || p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.pala) //비밀클래스
+                if (p.enemyHeroName == HeroEnum.hunter || p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.pala) //enemy hero has secret?
                 {
                     return 55 - 2 * (p.ownMaxMana);
                 }
@@ -1602,18 +1602,18 @@
 
                 if (p.enemyMinions.Count <= 2 && p.enemyHero.Hp >= 4)
                 {
-                    PENALTY += 30 * (3 - p.enemyMinions.Count); // 90 60 30(2마리)
+                    PENALTY += 30 * (3 - p.enemyMinions.Count); //penalty low count
                 }
 
                 return PENALTY;
             }
 
-            if (name == CardDB.cardName.antiquehealbot) //힐봇
+            if (name == CardDB.cardName.antiquehealbot) 
             {
                 int PENALTY = 0;
-                foreach (Handmanager.Handcard hc in p.owncards)//핸드에 용거확인
+                foreach (Handmanager.Handcard hc in p.owncards)//check moltengiant
                 {
-                    if (name == CardDB.cardName.moltengiant)//용거코스트0이면 안내고, 그이상이면 코스트3배만큼 자제(1코=3 20코=60)
+                    if (name == CardDB.cardName.moltengiant)//use giant first
                     {
                         if (hc.card.getManaCost(p, hc.manacost) == 0)
                         {
@@ -1629,7 +1629,7 @@
 
                 if (p.ownHero.Hp >= 14)
                 {
-                    int ENEMYMINIONATTACK = 0; //적공격력 합이 8이상이면 낸다
+                    int ENEMYMINIONATTACK = 0; //if we candie, use heal
                     foreach (Minion mnn in p.enemyMinions)
                     {
                         ENEMYMINIONATTACK += mnn.Angr;
@@ -1723,7 +1723,7 @@
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
 
-                    if (name == CardDB.cardName.voidcaller)//공허소환사와 악마있으면 안낸다
+                    if (name == CardDB.cardName.voidcaller)//use voidcaller first (if we have another demon)
                     {
                         foreach (Handmanager.Handcard hcc in p.owncards)
                         {
@@ -1744,7 +1744,7 @@
 
                 }
                 if (DEMONCOUNT >= 2) return 40;
-                if (MOUNTAIN4COST) return 40; //4코이하 산거있으면 페널티
+                if (MOUNTAIN4COST) return 40; //mountaingiant first
             }
 
             if (name == CardDB.cardName.voidcaller && p.ownMaxMana == 4)
@@ -1814,7 +1814,7 @@
                         || (hcc.card.name == CardDB.cardName.snipe && !p.ownSecretsIDList.Contains(CardDB.cardIDEnum.EX1_609))
                         || (hcc.card.name == CardDB.cardName.misdirection && !p.ownSecretsIDList.Contains(CardDB.cardIDEnum.EX1_533))
                         || (hcc.card.name == CardDB.cardName.beartrap && !p.ownSecretsIDList.Contains(CardDB.cardIDEnum.AT_060))) hassecret = true;
-                    if (hcc.manacost <= p.mana && hcc.card.name != CardDB.cardName.ironbeakowl && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion)) puremob = true; // 핸드 하수인체크
+                    if (hcc.manacost <= p.mana && hcc.card.name != CardDB.cardName.ironbeakowl && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion)) puremob = true; // check available minion
                 }
                 if (p.manaTurnEnd >=2 && !hassecret) return 0;
                 if (puremob) return 10;
@@ -1827,7 +1827,7 @@
                 bool puremob = false;
                 foreach (Handmanager.Handcard hcc in p.owncards)
                 {
-                    if (hcc.manacost <= p.mana && !this.BadEarlyturnMinionsDatabase.ContainsKey(hcc.card.name) && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion)) puremob = true; // 핸드 하수인체크
+                    if (hcc.manacost <= p.mana && !this.BadEarlyturnMinionsDatabase.ContainsKey(hcc.card.name) && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion)) puremob = true;
                 }
                 bool haswounded = false;
                 foreach (Minion mnn in p.ownMinions)
@@ -1858,28 +1858,28 @@
                 {
                     if (hcc.card.name == CardDB.cardName.eaglehornbow) haseaglehorn = true;
                     if (hcc.card.name == CardDB.cardName.ironbeakowl) hasowl++;
-                    if (hcc.manacost <= p.ownMaxMana && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion)) hasmob++; // 핸드 하수인체크
+                    if (hcc.manacost <= p.ownMaxMana && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion)) hasmob++; // check minion
                 }
                 if ((hasowl == 1 && hasmob - hasowl >= 0) || (hasowl == 2 && hasmob - hasowl + 1 >= 0)) puremob = true;
 
                 bool enemyhasmob = false;
                 foreach (Minion mn in p.enemyMinions)
                 {
-                    if (mn.name == CardDB.cardName.antiquehealbot) return 150; //적 힐봇있으면 안씀
+                    if (mn.name == CardDB.cardName.antiquehealbot) return 150; //to avoid enemy use healot again
                     enemyhasmob = true;
                 }
 
-                //몹없고 적하수인없고 턴2에 이글혼 있으면 쓴다.
+                // if we have eaglehorn, can use this.
 
                 if (!puremob && !enemyhasmob && haseaglehorn) return 0;
 
-                //이글혼보우 장착시 or 내 피 10이하 or 적 하수인 한마리이고 5턴이상 or 핸드 하수인없고 3턴이상
+                //can use this secret
                 if ((p.ownWeaponDurability >= 1 && p.ownWeaponName == CardDB.cardName.eaglehornbow) || p.ownHero.Hp <= 10 || (p.enemyMinions.Count <= 1 && p.ownMaxMana >= 5) || (!puremob && p.ownMaxMana >= 3)) return 0;
 
                 return 15;
             }
 
-            if (name == CardDB.cardName.snaketrap) // 후턴1턴 동전 뱀덫 사용x
+            if (name == CardDB.cardName.snaketrap) // to avoid use this early turn
             {
                 if (p.ownMaxMana <= 2) return 50;
                 foreach (Minion mnn in p.ownMinions)
@@ -1889,19 +1889,19 @@
                 return 0;
             }
 
-            if (name == CardDB.cardName.beartrap) // 후턴1턴 동전 뱀덫 사용x
+            if (name == CardDB.cardName.beartrap) 
             {
                 //if (p.ownMaxMana <= 2) return 50;
                 int puremob = 0;
                 foreach (Handmanager.Handcard hcc in p.owncards)
                 {
-                    if (hcc.manacost <= p.ownMaxMana && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion) && hcc.card.name != CardDB.cardName.ironbeakowl) puremob++; // 핸드 하수인체크
+                    if (hcc.manacost <= p.ownMaxMana && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion) && hcc.card.name != CardDB.cardName.ironbeakowl) puremob++; //
                 }
                 if (puremob >= 1) return 10;
             }
 
 
-            if (name == CardDB.cardName.explosivetrap) // 후턴1턴 동전
+            if (name == CardDB.cardName.explosivetrap) // to avoid early turn
             {
 
                 int hasmob = 0;
@@ -1912,7 +1912,7 @@
                 {
                     if (hcc.card.name == CardDB.cardName.eaglehornbow) haseaglehorn = true;
                     if (hcc.card.name == CardDB.cardName.ironbeakowl) hasowl++;
-                    if (hcc.manacost <= p.ownMaxMana && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion)) hasmob++; // 핸드 하수인체크
+                    if (hcc.manacost <= p.ownMaxMana && (hcc.card.type == CardDB.cardtype.MOB || hcc.card.name == CardDB.cardName.animalcompanion)) hasmob++; 
                 }
                 if ((hasowl == 1 && hasmob - hasowl >= 0) || (hasowl == 2 && hasmob - hasowl + 1 >= 0)) puremob = true;
 
@@ -1923,8 +1923,8 @@
 
                 }
                 if ((p.ownWeaponDurability >= 1 && p.ownWeaponName == CardDB.cardName.eaglehornbow) || p.ownHero.Hp <= 10 || (!puremob && p.ownMaxMana >= 3)) return 0;
-                if (p.turnCounter <= 2) return 50; //2턴이하 안씀
-                if ((enemyhasmob <= 2 && p.enemyMinions.Count <= 2) || puremob || !haseaglehorn) return 10; // 2피이하몹이 2마리이하거나 순수몹이 있거나 이글혼보우 없으면 페널티
+                if (p.turnCounter <= 2) return 50; 
+                if ((enemyhasmob <= 2 && p.enemyMinions.Count <= 2) || puremob || !haseaglehorn) return 10; 
                 return 0;
             }
 
@@ -1960,7 +1960,7 @@
                 {
                     if (name == CardDB.cardName.silverhandrecruit) silver++;
                 }
-                //3턴이하에 신병소환 있거나 신병수 없으면 안낸다.
+                //no use if we have no silverhand
                 if (p.ownMaxMana <= 3 && (musteron || silver == 0)) return 5; 
             }
 
@@ -2188,7 +2188,7 @@
 
                 foreach(Minion mnn in p.ownMinions)
                 {
-                    //준비 되었고 탈진아니면
+                    //only ready
                     if (mnn.Ready && !mnn.exhausted) readycount++;
                 }
                 if (readycount == 0) return 15;
@@ -2397,7 +2397,7 @@
                 {
 
 
-                    if (hcc.manacost == 2 && (hcc.card.type == CardDB.cardtype.MOB && hcc.card.name != CardDB.cardName.ironbeakowl && hcc.card.name != CardDB.cardName.knifejuggler)) hasmob++; // 핸드 하수인체크
+                    if (hcc.manacost == 2 && (hcc.card.type == CardDB.cardtype.MOB && hcc.card.name != CardDB.cardName.ironbeakowl && hcc.card.name != CardDB.cardName.knifejuggler)) hasmob++;
                 }
 
                 if (p.ownMaxMana <= 3 && hasmob >= 1) return 100;
@@ -2448,7 +2448,7 @@
 
             if (name == CardDB.cardName.defenderofargus && p.ownMinions.Count <= 1)
             {
-                return (2 - p.ownMinions.Count) * 40; //0이며 80 1이면 40
+                return (2 - p.ownMinions.Count) * 40; 
             }
             //////////////
 
@@ -2505,10 +2505,10 @@
                 {
                     if ((TAG_RACE)mnn.handcard.card.race == TAG_RACE.PET) hasbeast = true;
                 }
-                if (hasbeast && p.enemyHero.Hp <= 12 && target.isHero) return 0;  //d야수있고 적피12이하면 명치에 갈긴다
+                if (hasbeast && p.enemyHero.Hp <= 12 && target.isHero) return 0;  //
                 if (hasbeast && target.Hp - p.spellpower == 5 && !target.isHero) return 0;
-                if (!hasbeast && (p.ownHero.Hp >= 10 || p.enemyHero.Hp + p.enemyHero.armor >= 13)) return 100; // 야수없을시, 피많거나(10이상) 적피 (13이상) 안쓴다
-                if (!target.isHero && target.Hp -p.spellpower >= 6) return 300; //타겟 6피이상이면 안씀
+                if (!hasbeast && (p.ownHero.Hp >= 10 || p.enemyHero.Hp + p.enemyHero.armor >= 13)) return 100; //
+                if (!target.isHero && target.Hp -p.spellpower >= 6) return 300; //
                 if (!target.isHero && target.Hp <= 2 && target.Angr <= 5) return 100;
                 
                 return 50;
@@ -2521,7 +2521,7 @@
                 if (m.Angr <= 3) PENALTY += 5;
                 if (m.Hp >= 4) PENALTY += 45;
                 if (!p.ownHero.allreadyAttacked && p.ownHero.Hp >= 10 && p.ownWeaponDurability >= 1) PENALTY += 20;
-                //if (!target.isHero) PENALTY += 3; //적히어로 공격아니면 페널
+                //if (!target.isHero) PENALTY += 3; 
                 if (target.isHero && p.enemyHero.Hp + p.enemyHero.armor <= 6) PENALTY = 0;
                 if (p.ownHero.Hp <= 10) PENALTY -= 20;
                 if (target.isHero && !target.own && target.Hp <= 8) PENALTY -= 45;
@@ -2784,15 +2784,15 @@
             }
             /////////////////////
             ////////
-            if (p.enemyHeroName == HeroEnum.hunter) //적냥?꾼
+            if (p.enemyHeroName == HeroEnum.hunter) //
             {
-                /*// 피4이하인거 안낸다
+                /*// 
                 if (hasMinionsWithLowHeal(p) && c.type == CardDB.cardtype.MOB && (attackedbefore == 0 || c.Health <= 4)) //|| (p.enemyHero.Hp >= p.enemyHeroHpStarted && attackedbefore >= 1)))
                 {
                     pen += 10;
                 }*/
 
-                //폭덫체크
+                //check explosive
                 if (c.type == CardDB.cardtype.MOB || c.name == CardDB.cardName.animalcompanion)
                 {
                     if (p.ownMinions.Count == 0) return 0;
@@ -2803,11 +2803,11 @@
                     }
                     if (cancastminion) pen += 15;
                 }
-                //빙덫체크
+                //check freezing
 
             }
 
-            if (p.enemyHeroName == HeroEnum.mage) //적법사
+            if (p.enemyHeroName == HeroEnum.mage) 
             {
                 if (c.type == CardDB.cardtype.MOB)
                 {
@@ -2821,7 +2821,7 @@
                     };
 
                     // play first the small minion:
-                    // 가장약한미니언 처음 아니거나 
+                    
                     if ((!this.isOwnLowestInHand(m, p) && p.mobsplayedThisTurn == 0)
                         || (p.mobsplayedThisTurn == 0 && attackedbefore >= 1))
                     {
@@ -2829,14 +2829,14 @@
                     }
                 }
 
-                //주문은 미니언 내고
+                //minion first
                 if (c.type == CardDB.cardtype.SPELL && p.cardsPlayedThisTurn == p.mobsplayedThisTurn)
                 {
                     pen += 10;
                 }
             }
 
-            if (p.enemyHeroName == HeroEnum.pala)//성기사
+            if (p.enemyHeroName == HeroEnum.pala)//
             {
 
                 if (c.type == CardDB.cardtype.MOB)
@@ -2849,7 +2849,7 @@
                         taunt = c.tank,
                         name = c.name
                     };
-                    //가장약한미니언 아니면 덜낸다.
+                    //weakness first
                     if ((!this.isOwnLowestInHand(m, p) && p.mobsplayedThisTurn == 0) || attackedbefore == 0)
                     {
                         pen += 5;
@@ -2880,15 +2880,15 @@
             {
                 bool islow = isOwnLowest(m, p);
                 bool islowestattack = isownlowestattack(m, p);
-                if (attackedbefore == 0 && islow) pen -= 10; //가장약한 미니언으로 공격 하라
-                if (attackedbefore == 0 && islowestattack) pen -= 5; //가장약한 미니언으로 공격 하라
-                if (attackedbefore == 0 && !islow) pen += 40; // 쎈넘이면 공격하지마라
-                if (attackedbefore == 0 && !islowestattack) pen += 20; // 쎈넘이면 공격하지마라
+                if (attackedbefore == 0 && islow) pen -= 10; //lowest hp attack first
+                if (attackedbefore == 0 && islowestattack) pen -= 5; //lowest angr attack first
+                if (attackedbefore == 0 && !islow) pen += 10; // don't attack 
+                if (attackedbefore == 0 && !islowestattack) pen += 10; // 
 
-                if (target.isHero && !target.own && p.enemyMinions.Count >= 1) // 타겟이 적히어로고 적미니언있으면
+                if (target.isHero && !target.own && p.enemyMinions.Count >= 1) // 
                 {
                     //penality if we doestn attacked before
-                    //낮은피 가진놈에 페널티 준다 ( 하수인 먼저떄릴것)
+                   
                     if (hasMinionsWithLowHeal(p)) pen += 10; //penality if we doestn attacked minions before
 
 
@@ -2903,15 +2903,15 @@
 
             if (p.enemyHeroName == HeroEnum.mage)
             {
-                if (p.mobsplayedThisTurn == 0) pen += 10; //몹안내면 페널티
+                if (p.mobsplayedThisTurn == 0) pen += 3; //
 
                 bool islow = isOwnLowest(m, p);
 
-                if (target.isHero && !target.own && !islow) //적히어로 가장약한거로 떄릴것
+                if (target.isHero && !target.own && !islow) //
                 {
                     pen += 10;
                 }
-                if (target.isHero && !target.own && islow && p.mobsplayedThisTurn >= 1) // 적히어로 쏀넘으로 안때릴것..
+                if (target.isHero && !target.own && islow && p.mobsplayedThisTurn >= 1) // 
                 {
                     pen -= 20;
                 }
@@ -2923,18 +2923,18 @@
 
                 bool islow = isOwnLowest(m, p);
 
-                if (!target.own && !target.isHero && attackedbefore == 0) // 적미니언 안때렷을때
+                if (!target.own && !target.isHero && attackedbefore == 0) // 
                 {
-                    if (!isEnemyLowest(target, p) || m.Hp <= 2) pen += 10;  // 가장낮은놈이나 피 2 이하인놈이면 안떄릴것 (엎드려)
+                    if (!isEnemyLowest(target, p) || m.Hp <= 2) pen += 10;  // aviod sacrifice
                 }
 
-                //타겟 히어로이고 쎈너밍면 페널티 (눈눈)
+                //attack face weakness first
                 if (target.isHero && !target.own && !islow)
                 {
                     pen += 5;
                 }
 
-                //적히어로고 적미니언숫자 한마리 이상이면 페널티( 미니언부터 팿것)
+                //attack minion first
                 if (target.isHero && !target.own && p.enemyMinions.Count >= 1 && attackedbefore == 0)
                 {
                     pen += 10;
