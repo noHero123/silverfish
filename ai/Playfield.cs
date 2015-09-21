@@ -1331,7 +1331,6 @@
             if (enemyHeroNamee == HeroEnum.priest)
             {
                 mana = EnemyPlaysACard(CardDB.cardName.holynova, mana, playAroundProb, pap2);
-  //              mana = EnemyPlaysACard(CardDB.cardName.lightbomb, mana, playAroundProb, pap2);
             }
 
             if (enemyHeroNamee == HeroEnum.shaman)
@@ -1448,36 +1447,6 @@
                 currmana -= 5;
                 return currmana;
             }
-
-  /*          ///////
-            if (cardname == CardDB.cardName.lightbomb && currmana >= 6)
-            {
-                bool dontkill = false;
-                int prob = Probabilitymaker.Instance.getProbOfEnemyHavingCardInHand(CardDB.cardIDEnum.GVG_008, this.enemyAnzCards, this.enemyDeckSize);
-                if (playAroundProb > prob) return currmana;
-                if (pap2 > prob) dontkill = true;
-
-                List<Minion> temp = this.enemyMinions;
-                int heal = getEnemySpellHeal(2);
-                int damage = getEnemySpellDamageDamage(2);
-                foreach (Minion enemy in temp)
-                {
-                    this.minionGetDamageOrHeal(enemy, -heal);
-                }
-                this.minionGetDamageOrHeal(this.enemyHero, -heal);
-                temp = this.ownMinions;
-                foreach (Minion enemy in temp)
-                {
-                    enemy.cantLowerHPbelowONE = dontkill;
-                    this.minionGetDamageOrHeal(enemy, damage);
-                    enemy.cantLowerHPbelowONE = false;
-                }
-                this.minionGetDamageOrHeal(this.ownHero, damage);
-                currmana -= 5;
-                return currmana;
-            }
-
-            /////// */
 
 
 
@@ -1705,7 +1674,7 @@
                     }
                     i++;
                 }
-                return bestpl;
+                return bestpl + 1;
             }
             if (card.name == CardDB.cardName.sunfuryprotector || card.name == CardDB.cardName.defenderofargus) // bestplace, if right and left minions have no taunt + lots of hp, dont make priority-minions to taunt
             {
@@ -1761,7 +1730,7 @@
                     }
                     i++;
                 }
-                return bestpl;
+                return bestpl + 1;
             }
 
             int cardIsBuffer = 0;
@@ -1871,9 +1840,7 @@
                     }
                     i++;
                 }
-                //추가
-                if (this.ownMinions.Count <= 1 && (this.ownHeroName == HeroEnum.pala || this.ownHeroName == HeroEnum.shaman)) bplace= bplace++;
-                return bplace;
+                return bplace + 1;
 
             }
 
@@ -1971,8 +1938,7 @@
                 i++;
             }
 
-            return bestplace  ;
-            //수정전 return bestplace + 1;
+            return bestplace + 1;
         }
 
         public void guessHeroDamage()
@@ -2060,7 +2026,7 @@
                     List<Minion> temp = this.enemyMinions;
                     foreach (Minion m in temp)
                     {
-                        if (m.Angr <= 4 && m.Hp <=2) minionGetDamageOrHeal(m, 2);
+                        minionGetDamageOrHeal(m, 2);
                     }
                     attackEnemyHeroWithoutKill(2);
                 }
@@ -3072,8 +3038,9 @@
                 }
                 
             }
-            int cost = c.getManaCost(this, 2);
+            int cost = c.getManaCost(this,2);
 
+            
             this.evaluatePenality += penality;
             this.mana = this.mana - cost;
 
@@ -3619,6 +3586,7 @@
 
                 if (m.name == CardDB.cardName.gahzrilla && m.anzGotDmg >= 1)
                 {
+
                     int attackbuff = m.Angr * (int)Math.Pow(2, m.anzGotDmg) - m.Angr;
                     this.minionGetBuffed(m, attackbuff, 0);
                 }
@@ -4844,7 +4812,6 @@
 
             if (this.isOwnTurn && !own && this.enemySecretCount >= 1)
             {
-
                 List<SecretItem> templist = new List<SecretItem>(this.enemySecretList);
                 foreach (SecretItem si in templist)
                 {
@@ -5594,8 +5561,8 @@
                 {
                     if (s == CardDB.cardIDEnum.None)
                     {
-                        CardDB.Card plchldr = CardDB.Instance.unknownCard;
-                                               
+                        CardDB.Card plchldr =  CardDB.Instance.unknownCard;
+                       
                         for (int i = 0; i < draw; i++)
                         {
                             Handmanager.Handcard hc = new Handmanager.Handcard { card = plchldr, position = this.owncards.Count + 1, manacost = 1000, entity = this.getNextEntity() };
