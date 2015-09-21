@@ -122,7 +122,7 @@
                 retval += p.owncarddraw * 5;
             }
 
-            if (p.ownHero.Hp >= 14 && p.ownMaxMana >= 7) retval += p.owncarddraw * 4;
+            if (p.ownHero.Hp >= 14 && p.ownMaxMana >= 7 && p.owncards.Count <=5) retval += p.owncarddraw * 4;
 
             //retval += p.owncarddraw * 5;
             retval -= p.enemycarddraw * 5;
@@ -141,6 +141,7 @@
 
 
                 retval += m.handcard.card.rarity;
+                if (p.ownHeroName == HeroEnum.warlock && (TAG_RACE)m.handcard.card.race == TAG_RACE.DEMON) retval++;
                 if (p.ownHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.PET) retval++;
                 if (p.ownHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval++;
 
@@ -376,7 +377,7 @@
             if (m.poisonous) retval += 4;
 
             if (p.enemyHeroName == HeroEnum.hunter && p.ownHero.Hp<=12) retval += m.Angr;
-
+            if (p.enemyHeroName == HeroEnum.warlock && (TAG_RACE)m.handcard.card.race == TAG_RACE.DEMON) retval++;
             if (p.enemyHeroName == HeroEnum.hunter && (TAG_RACE)m.handcard.card.race == TAG_RACE.PET) retval++;
             if (p.enemyHeroName == HeroEnum.shaman && (TAG_RACE)m.handcard.card.race == TAG_RACE.TOTEM) retval++;
             if (p.enemyHeroName == HeroEnum.pala && m.name == CardDB.cardName.silverhandrecruit) retval++;
