@@ -67,6 +67,8 @@
             
             retval += p.ownMaxMana * 20 - p.enemyMaxMana * 20;
 
+            if (p.ownMaxMana >= 7) retval -= p.ownMaxMana * 10; 
+
             if (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.druid) retval -= 2 * p.enemyspellpower;
 
             if (p.ownHero.Hp + p.ownHero.armor > hpboarder)
@@ -222,7 +224,7 @@
                 if (p.ownHeroName == HeroEnum.thief && a.card.card.type == CardDB.cardtype.SPELL && (a.target.isHero && !a.target.own)) retval -= 11;
             }
             //dont waste mana!!
-            if (usecoin && useAbili && p.ownMaxMana <= 5) retval -= 10;
+            if (usecoin && useAbili) retval -= 4;
             if (usecoin && p.manaTurnEnd >= 1) retval -= 20 * p.manaTurnEnd;
 
             int heropowermana = p.ownHeroAblility.getManaCost(p);
