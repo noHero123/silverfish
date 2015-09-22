@@ -245,6 +245,7 @@
         }
 
         CardDB.Card flame = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_614t);
+        CardDB.Card warsong = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_084);
         CardDB.Card warriorweapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_106);
 
         private void doSomeBasicEnemyAi(Playfield p)
@@ -304,6 +305,21 @@
 
                 switch (m.name)
                 {
+                    case CardDB.cardName.grimpatron:
+                        if(p.enemyMinions.Count<=6 && p.enemyHeroName == HeroEnum.warrior)
+                        {
+                            bool hascharger = false;
+                            foreach (Minion mini in p.enemyMinions)
+                            {
+                                if (!mini.silenced && mini.name == CardDB.cardName.warsongcommander) hascharger=true;
+                            }
+                            if (!hascharger)
+                            {
+                                p.callKid(warsong, p.enemyMinions.Count, false);
+                            }
+
+                        }
+                        break;
                     case CardDB.cardName.fjolalightbane:
                         if (p.enemyAnzCards >= 2)
                         {

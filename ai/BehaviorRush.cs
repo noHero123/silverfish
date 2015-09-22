@@ -101,6 +101,7 @@
                 {
                     if (m.Angr >= 1) retval += 2;
                     if ((!m.taunt && m.Angr == 0) && (m.divineshild || m.maxHp > 2)) retval -= 10;
+                    if (p.ownMinions.Count >= 3) retval += 15;
                 }
             }
 
@@ -110,6 +111,7 @@
             }
 
             retval -= p.enemySecretCount;
+            retval -= p.numEnemySecretsTurnEnd * 50;
             retval -= p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
             retval -= p.lostWeaponDamage;
             if (p.ownMinions.Count == 0) retval -= 20;

@@ -95,7 +95,7 @@
 
         private void startEnemyTurnSim(Playfield p, bool simulateTwoTurns, bool print)
         {
-            if (p.guessingHeroHP >= 1)
+            if (p.guessingHeroHP >= 1 && p.enemyHero.Hp >= 1)
             {
                 //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                 p.prepareNextTurn(p.isOwnTurn);
@@ -286,7 +286,7 @@
                 foreach (Playfield p in this.twoturnfields)
                 {
 
-                    if (p.guessingHeroHP >= 1)
+                    if (p.guessingHeroHP >= 1 && p.enemyHero.Hp >= 1)
                     {
                         p.value = int.MinValue;
                         //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
@@ -358,7 +358,7 @@
                 {
                     //if(threadnumber ==0)Helpfunctions.Instance.ErrorLog("no " + threadnumber + " calculates " + i);
                     Playfield p = this.twoturnfields[i];
-                    if (p.guessingHeroHP >= 1)
+                    if (p.guessingHeroHP >= 1 && p.enemyHero.Hp>=1)
                     {
                         p.value = int.MinValue;
                         //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
@@ -370,7 +370,7 @@
                         //p.value = -10000;
                     }
                     //Ai.Instance.enemyTurnSim.simulateEnemysTurn(p, true, this.playaround, false, this.playaroundprob, this.playaroundprob2);
-
+                    
 
                     this.threadresults[threadnumber].Add(p);
 

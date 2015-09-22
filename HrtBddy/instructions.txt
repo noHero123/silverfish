@@ -1,3 +1,5 @@
+an idea of how to import it to Hearthbuddy
+
 search for 
 //Reading new values:###########################
 

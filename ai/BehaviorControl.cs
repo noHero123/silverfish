@@ -113,6 +113,7 @@
                 {
                     if (m.Angr >= 1) retval += 2;
                     if ((!m.taunt && m.Angr == 0) && (m.divineshild || m.maxHp > 2)) retval -= 10;
+                    if (p.ownMinions.Count >= 3) retval += 15;
                 }
                 if (m.Ready) readycount++;
                 if (m.maxHp >= 4 && (m.Angr > 2 || m.Hp > 3)) ownMinionsCount++;
@@ -198,9 +199,9 @@
                     retval -= 25;
                 }
             }*/
-
             retval -= p.enemySecretCount;
-            //Helpfunctions.Instance.ErrorLog("sc:" + p.enemySecretCount);
+            retval -= p.numEnemySecretsTurnEnd*50;
+            //Helpfunctions.Instance.ErrorLog("sc:" + p.enemySecretCount+ " " + p.numEnemySecretsTurnEnd);
             retval -= p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
             retval -= p.lostWeaponDamage;
 
@@ -242,7 +243,7 @@
 
         public override int getEnemyMinionValue(Minion m, Playfield p)
         {
-            
+           
             int retval = 5;
             retval += m.Hp * 2;
             if (!m.frozen && !((m.name == CardDB.cardName.ancientwatcher || m.name == CardDB.cardName.ragnarosthefirelord) && !m.silenced))

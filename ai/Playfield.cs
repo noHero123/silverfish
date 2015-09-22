@@ -156,6 +156,7 @@
 
         public int mana = 0;
         public int manaTurnEnd = 0;
+        public int numEnemySecretsTurnEnd = 0;
 
 
 
@@ -276,6 +277,7 @@
 
             this.mana = Hrtprozis.Instance.currentMana;
             this.manaTurnEnd = this.mana;
+            this.numEnemySecretsTurnEnd = 0;
             this.ownMaxMana = Hrtprozis.Instance.ownMaxMana;
             this.enemyMaxMana = Hrtprozis.Instance.enemyMaxMana;
             this.evaluatePenality = 0;
@@ -650,6 +652,7 @@
 
             this.mana = p.mana;
             this.manaTurnEnd = p.manaTurnEnd;
+            this.numEnemySecretsTurnEnd = p.numEnemySecretsTurnEnd;
             this.ownMaxMana = p.ownMaxMana;
             this.enemyMaxMana = p.enemyMaxMana;
             addMinionsReal(p.ownMinions, ownMinions);
@@ -2182,6 +2185,7 @@
                 if (this.turnCounter == 0)
                 {
                     this.manaTurnEnd = this.mana;
+                    this.numEnemySecretsTurnEnd = this.enemySecretCount;
                     bool eHasTaunt = false;
                     
                     foreach (Minion m in this.enemyMinions)
@@ -2237,7 +2241,7 @@
                 }
 
             }
-            this.turnCounter++;
+            //this.turnCounter++;
             //penalty for destroying combo
 
             if (!doServerstuff)
@@ -2375,6 +2379,7 @@
                 this.playedmagierinderkirintor = false;
 
                 this.sEnemTurn = false;
+                this.turnCounter++;
             }
 
             this.attacked = false;
@@ -2396,7 +2401,7 @@
         public void endEnemyTurn() //
         {
             this.triggerEndTurn(false);
-            this.turnCounter++;
+            //this.turnCounter++;
             this.isOwnTurn = true;
             this.triggerStartTurn(true);
             this.complete = true;
@@ -6088,7 +6093,7 @@
             Helpfunctions.Instance.logg("ownherostatus: frozen" + this.ownHero.frozen + " ");
             Helpfunctions.Instance.logg("enemyherohp: " + this.enemyHero.Hp + " + " + this.enemyHero.armor + ((this.enemyHero.immune) ? " immune" : ""));
 
-            if (this.enemySecretCount >= 1) Helpfunctions.Instance.logg("enemySecrets: " + Probabilitymaker.Instance.getEnemySecretData(this.enemySecretList));
+            if (this.enemySecretCount >= 1) Helpfunctions.Instance.logg("enemySecrets: " + this.enemySecretCount + " " + Probabilitymaker.Instance.getEnemySecretData(this.enemySecretList));
             /*foreach (Action a in this.playactions)
             {
                 a.print();

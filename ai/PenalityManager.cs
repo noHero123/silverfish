@@ -1314,6 +1314,16 @@
                         }
                         if (beasts == 0) return 500;
                     }
+
+                    if (name == CardDB.cardName.malganis)
+                    {
+                        int beasts = 0;
+                        foreach (Minion mm in p.ownMinions)
+                        {
+                            if (mm.Ready && mm.handcard.card.race == TAG_RACE.DEMON) beasts++;
+                        }
+                        if (beasts == 0) return 500;
+                    }
                 }
                 else
                 {
@@ -1350,10 +1360,12 @@
 
             //lethal end########################################################
 
+            //bonus for early thread
             if (p.ownMaxMana == 1 )
             {
                 if (card.name == CardDB.cardName.lepergnome) return -10;
                 if (card.name == CardDB.cardName.faeriedragon) return -20;
+                if (card.name == CardDB.cardName.shrinkmeister) return 0;
                 if (card.Attack >= 3 && card.Health >= 2) return -20;
                 
             }
@@ -2846,6 +2858,7 @@
             buffingMinionsDatabase.Add(CardDB.cardName.stormwindchampion, 0);
             buffingMinionsDatabase.Add(CardDB.cardName.templeenforcer, 0);
             buffingMinionsDatabase.Add(CardDB.cardName.timberwolf, 0);
+            buffingMinionsDatabase.Add(CardDB.cardName.malganis, 0);
 
             buffing1TurnDatabase.Add(CardDB.cardName.abusivesergeant, 0);
             buffing1TurnDatabase.Add(CardDB.cardName.darkirondwarf, 0);

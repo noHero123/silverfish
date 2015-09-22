@@ -10,14 +10,17 @@ namespace HREngine.Bots
 //    wählt aus:/ verursacht 2 schaden; oder bringt einen diener zum schweigen/.
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            if (choice == 1)
+            if (target != null)
             {
-                p.minionGetDamageOrHeal(target, 2);
-            }
+                if (choice == 1)
+                {
+                    p.minionGetDamageOrHeal(target, 2);
+                }
 
-            if (choice == 2)
-            {
-                p.minionGetSilenced(target);
+                if (choice == 2)
+                {
+                    p.minionGetSilenced(target);
+                }
             }
 		}
 
