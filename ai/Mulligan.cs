@@ -26,7 +26,9 @@ namespace HREngine.Bots
             public string[] requiresCard = null;
             public int manarule = -1;
             public string rulestring = "";
-            public mulliitem(string id, string own, string enemy, int number, string[] req = null, int mrule = -1)
+            public int coinrule = 0; //0 = for both, 1 = if you are first, 2 if you are second
+
+            /*public mulliitem(string id, string own, string enemy, int number, string[] req = null, int coinr = 0, int mrule = -1)
             {
                 this.cardid = id;
                 this.ownclass = own;
@@ -34,9 +36,10 @@ namespace HREngine.Bots
                 this.howmuch = number;
                 this.requiresCard = req;
                 this.manarule = mrule;
-            }
+                this.coinrule = coinr;
+            }*/
 
-            public mulliitem(string all, string id, string own, string enemy, int number, string[] req = null, int mrule = -1)
+            public mulliitem(string all, string id, string own, string enemy, int number, string[] req = null, int coinr = 0, int mrule = -1)
             {
                 this.cardid = id;
                 this.ownclass = own;
@@ -45,6 +48,7 @@ namespace HREngine.Bots
                 this.requiresCard = req;
                 this.manarule = mrule;
                 this.rulestring = all;
+                this.coinrule = coinr;
             }
 
         }
@@ -134,30 +138,41 @@ namespace HREngine.Bots
                         string ownclass = line.Split(';')[1];
                         string enemyclass = line.Split(';')[2];
                         string cardlist = line.Split(';')[3];
+
+                        int coinrule = 0;
+                        if (line.Split(';').Length >= 5)
+                        {
+                            string coin = line.Split(';')[4];
+                            if (coin == "nocoin") coinrule = 1;
+                            if (coin == "coin") coinrule = 2;
+                        }
+
                         foreach (string crd in cardlist.Split(','))
                         {
                             if (crd.Contains(":"))
                             {
                                 if ((crd.Split(':')).Length == 3)
                                 {
-                                    this.holdlist.Add(new mulliitem(line, crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1]), crd.Split(':')[2].Split('/')));
+                                    this.holdlist.Add(new mulliitem(line, crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1]), crd.Split(':')[2].Split('/'),coinrule,-1));
                                 }
                                 else
                                 {
-                                    this.holdlist.Add(new mulliitem(line, crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1])));
+                                    this.holdlist.Add(new mulliitem(line, crd.Split(':')[0], ownclass, enemyclass, Convert.ToInt32(crd.Split(':')[1]),null, coinrule,-1));
                                 }
 
                             }
                             else
                             {
-                                this.holdlist.Add(new mulliitem(line, crd, ownclass, enemyclass, 2));
+                                this.holdlist.Add(new mulliitem(line, crd, ownclass, enemyclass, 2,null,coinrule,-1));
                             }
                         }
 
-                        if (line.Split(';').Length == 5)
+                        
+
+                        if (line.Split(';').Length >= 6)
                         {
-                            int manarule = Convert.ToInt32(line.Split(';')[4]);
-                            this.holdlist.Add(new mulliitem(line, "#MANARULE", ownclass, enemyclass, 2, null, manarule));
+                            int manarule = Convert.ToInt32(line.Split(';')[5]);
+                            this.holdlist.Add(new mulliitem(line, "#MANARULE", ownclass, enemyclass, 2, null, coinrule, manarule));
                         }
 
                     }
@@ -176,16 +191,23 @@ namespace HREngine.Bots
                             string ownclass = line.Split(';')[1];
                             string enemyclass = line.Split(';')[2];
                             string cardlist = line.Split(';')[3];
+                            int coinrule = 0;
+                            if (line.Split(';').Length >= 5)
+                            {
+                                string coin = line.Split(';')[4];
+                                if (coin == "nocoin") coinrule = 1;
+                                if (coin == "coin") coinrule = 2;
+                            }
                             foreach (string crd in cardlist.Split(','))
                             {
                                 if (crd == null || crd == "") continue;
-                                this.deletelist.Add(new mulliitem(line, crd, ownclass, enemyclass, 2));
+                                this.deletelist.Add(new mulliitem(line, crd, ownclass, enemyclass, 2,null, coinrule, -1));
                             }
 
                             if (line.Split(';').Length == 5)
                             {
                                 int manarule = Convert.ToInt32(line.Split(';')[4]);
-                                this.deletelist.Add(new mulliitem(line, "#MANARULE", ownclass, enemyclass, 2, null, manarule));
+                                this.deletelist.Add(new mulliitem(line, "#MANARULE", ownclass, enemyclass, 2, null, coinrule, manarule));
                             }
 
                         }
@@ -230,12 +252,15 @@ namespace HREngine.Bots
             return hasARule;
         }
 
-        public List<int> whatShouldIMulligan(List<CardIDEntity> cards, string ownclass, string enemclass)
+        public List<int> whatShouldIMulligan(List<CardIDEntity> cards, string ownclass, string enemclass, bool hascoin)
         {
             List<int> discarditems = new List<int>();
             bool usedManarule = false;
             foreach (mulliitem mi in this.deletelist)
             {
+                if (hascoin && mi.coinrule == 1) continue;
+                if (!hascoin && mi.coinrule == 2) continue;
+
                 foreach (CardIDEntity c in cards)
                 {
                     if (mi.cardid == "#MANARULE" && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
@@ -262,11 +287,15 @@ namespace HREngine.Bots
             if (holdlist.Count == 0 || !hasHoldListRule(ownclass, enemclass)) return discarditems;
 
             Dictionary<string, int> holddic = new Dictionary<string, int>();
+            List<string> combosToHold = new List<string>();
             foreach (CardIDEntity c in cards)
             {
                 bool delete = true;
                 foreach (mulliitem mi in this.holdlist)
                 {
+
+                    if (hascoin && mi.coinrule == 1) continue;
+                    if (!hascoin && mi.coinrule == 2) continue;
 
                     if (mi.cardid == "#MANARULE" && (mi.enemyclass == "all" || mi.enemyclass == enemclass) && (mi.ownclass == "all" || mi.ownclass == ownclass))
                     {
@@ -298,17 +327,63 @@ namespace HREngine.Bots
                         else
                         {
                             bool hasRequirements = false;
-                            foreach (CardIDEntity reqs in cards)
+
+                            foreach (string s in mi.requiresCard)
                             {
-                                foreach (string s in mi.requiresCard)
+                                if (s.Contains("+"))
                                 {
-                                    if (s == reqs.id)
+                                    int shouldadd = 1;
+                                    foreach (string ss in s.Split('+'))
+                                    {
+                                        if(ss=="") continue;
+
+                                        bool hascard = false;
+                                        foreach (CardIDEntity reqs2 in cards)
+                                        {
+                                            if (reqs2.id == ss) hascard = true;
+                                        }
+                                        if (hascard)
+                                        {
+                                            shouldadd++;
+                                        }
+                                        else
+                                        {
+                                            shouldadd -= 1000;
+                                        }
+                                    }
+
+                                    if (shouldadd >= 1)
                                     {
                                         hasRequirements = true;
-                                        break;
+
+                                        foreach (string ss in s.Split('+'))
+                                        {
+                                            if (ss == "") continue;
+
+                                            combosToHold.Add(ss);
+                                        }
                                     }
+
+                                }
+                                else
+                                {
+                                    //Helpfunctions.Instance.ErrorLog("search cards for: " + s);
+                                    foreach (CardIDEntity reqs in cards)
+                                    {
+                                        //Helpfunctions.Instance.ErrorLog("in hand " + reqs.id);
+                                        if (s == reqs.id)
+                                        {
+                                            hasRequirements = true;
+                                            combosToHold.Add(s);
+                                            //break;
+                                        }
+                                    }
+                                    //Helpfunctions.Instance.ErrorLog("hasreqiresments " + hasRequirements);
+                                    
                                 }
                             }
+
+                            
                             if (hasRequirements)
                             {
                                 if (holddic.ContainsKey(c.id)) // we are holding one of the cards
@@ -327,6 +402,7 @@ namespace HREngine.Bots
                         }
                     }
                 }
+
 
                 if (!usedManarule)
                 {
@@ -364,6 +440,31 @@ namespace HREngine.Bots
                             holddic.Add(c.id, 1);
                         }
                     }
+                }
+
+            }
+
+            //remove combo items from discard list
+            foreach (CardIDEntity cie in cards)
+            {
+                int amountInDiscard = 0;
+                int amountInHand =0 ;
+                foreach (CardIDEntity cie2 in cards)
+                {
+                    if(cie.id == cie2.id)
+                    {
+                        amountInHand++;
+
+                        if(discarditems.Contains(cie2.entitiy))  amountInDiscard++;
+                    }
+                }
+
+
+                if (amountInDiscard == amountInHand && combosToHold.Contains(cie.id))
+                {
+                    //remove item
+
+                    discarditems.Remove(cie.entitiy);
                 }
 
             }
