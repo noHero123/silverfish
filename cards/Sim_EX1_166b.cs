@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-                p.minionGetSilenced(target);
+            if (target != null) p.minionGetSilenced(target);
 		}
 
 	}

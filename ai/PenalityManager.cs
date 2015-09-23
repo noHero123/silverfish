@@ -229,7 +229,13 @@
             }
 
             if (!this.attackBuffDatabase.ContainsKey(name)) return 0;
-            if (target == null) return 60;
+            if (target == null)
+            {
+                //if ((p.ownMaxMana <= 2 && (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.hunter)))
+                //    return 10;
+                return 60;
+            }
+
             if (!target.isHero && !target.own)
             {
                 if (card.type == CardDB.cardtype.MOB && p.ownMinions.Count == 0) return 0;
@@ -262,10 +268,29 @@
                     pen = 500;
                 }
             }
+
             if (!target.isHero && target.own)
             {
                 Minion m = target;
-                if (!m.Ready)
+                bool hasownready = false;
+                
+
+                //vs mage or hunter we need board presence at early game? (so if it is not the case-> whe should use it to buff)
+                if (!(p.ownMaxMana <= 2 && (p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.hunter))) hasownready = true;
+
+                if (!hasownready)
+                {
+                    foreach (Minion mnn in p.ownMinions)
+                    {
+                        if (m.Ready)
+                        {
+                            hasownready = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!m.Ready && hasownready)
                 {
                     return 50;
                 }
@@ -898,6 +923,9 @@
             bool hasknife = false;
             bool hasflamewaker = false;
             bool hasmech = false;
+            bool hadkn = false;
+
+            
 
             foreach (Minion mnn in p.ownMinions)
             {
@@ -926,6 +954,35 @@
                 {
                     hasflamewaker = true;
                 }
+            }
+
+            foreach (Action a in p.playactions) // penalty for "killing" combos (like had knifejuggler, traded him in last enemy-minion and then played a minion)
+            {
+                if (a.actionType == actionEnum.attackWithMinion)
+                {
+                    if (a.own.silenced)
+                        continue;
+                    if (a.own.name == CardDB.cardName.gadgetzanauctioneer)
+                    {
+                        if (!hasgadget && p.owncards.Count <=5) return 10;
+                    }
+
+                    if (a.own.name == CardDB.cardName.starvingbuzzard)
+                    {
+                        if (!hasstarving && card.race == TAG_RACE.PET) return 10; 
+                    }
+
+                    if (a.own.name == CardDB.cardName.knifejuggler)
+                    {
+                        if (!hasknife && card.type == CardDB.cardtype.MOB) return 10; 
+                    }
+
+                    if (a.own.name == CardDB.cardName.flamewaker)
+                    {
+                        if (!hasflamewaker && card.type == CardDB.cardtype.SPELL) return 10; 
+                    }
+                }
+
             }
 
             // Don't penalize for cases that don't actually have random outcomes
@@ -1363,11 +1420,17 @@
             //bonus for early thread
             if (p.ownMaxMana == 1 )
             {
+                //if (card.name == CardDB.cardName.nerubianegg) return -10;
                 if (card.name == CardDB.cardName.lepergnome) return -10;
                 if (card.name == CardDB.cardName.faeriedragon) return -20;
                 if (card.name == CardDB.cardName.shrinkmeister) return 0;
                 if (card.Attack >= 3 && card.Health >= 2) return -20;
                 
+            }
+
+            if (p.ownMaxMana == 2)
+            {
+                if (card.name == CardDB.cardName.nerubianegg) return -15;
             }
 
             /*if (card.name == CardDB.cardName.flamewaker && p.turnCounter == 0)

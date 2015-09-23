@@ -2201,7 +2201,7 @@
                         if (!m.stealth && m.Ready && m.Angr>=1) hasReady++;
                     }
 
-                    if (!eHasTaunt)
+                    if (!eHasTaunt && !this.enemyHero.immune)
                     {
 
 
@@ -4272,8 +4272,8 @@
                 {
                     m.handcard.card.sim_card.onTurnEndsTrigger(this, m, ownturn);
                 }
-                if (ownturn && m.destroyOnOwnTurnEnd) this.minionGetDestroyed(m);
-                if (!ownturn && m.destroyOnEnemyTurnEnd) this.minionGetDestroyed(m);
+                if (ownturn == m.own && m.destroyOnOwnTurnEnd) this.minionGetDestroyed(m);
+                if (ownturn != m.own && m.destroyOnEnemyTurnEnd) this.minionGetDestroyed(m);
             }
             List<Minion> enemm = (ownturn) ? this.enemyMinions : this.ownMinions;
             foreach (Minion m in enemm.ToArray())
@@ -4283,6 +4283,8 @@
                 {
                     m.handcard.card.sim_card.onTurnEndsTrigger(this, m, ownturn);
                 }
+                if (ownturn == m.own && m.destroyOnOwnTurnEnd) this.minionGetDestroyed(m);
+                if (ownturn != m.own && m.destroyOnEnemyTurnEnd) this.minionGetDestroyed(m);
             }
 
             this.doDmgTriggers();
@@ -4398,8 +4400,8 @@
                         m.handcard.card.sim_card.onTurnStartTrigger(this, m, ownturn);
                     }
                 }
-                if (ownturn && m.destroyOnOwnTurnStart) this.minionGetDestroyed(m);
-                if (!ownturn && m.destroyOnEnemyTurnStart) this.minionGetDestroyed(m);
+                if (ownturn == m.own && m.destroyOnOwnTurnStart) this.minionGetDestroyed(m);
+                if (ownturn != m.own && m.destroyOnEnemyTurnStart) this.minionGetDestroyed(m);
             }
 
             if (summonbigone >= 0)
@@ -4414,8 +4416,8 @@
                 {
                     if (m.name == CardDB.cardName.micromachine) m.handcard.card.sim_card.onTurnStartTrigger(this, m, ownturn);
                 }
-                if (ownturn && m.destroyOnOwnTurnStart) this.minionGetDestroyed(m);
-                if (!ownturn && m.destroyOnEnemyTurnStart) this.minionGetDestroyed(m);
+                if (ownturn == m.own && m.destroyOnOwnTurnStart) this.minionGetDestroyed(m);
+                if (ownturn != m.own && m.destroyOnEnemyTurnStart) this.minionGetDestroyed(m);
             }
 
             this.doDmgTriggers();

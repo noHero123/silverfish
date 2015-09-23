@@ -55,6 +55,7 @@
                 posmoves[0].value = int.MinValue;
                 posmoves[0].enemyAnzCards--;
                 posmoves[0].triggerCardsChanged(false);
+                posmoves[0].mana = enemMana;
                 if (oldval < newval)
                 {
                     posmoves.Clear();
@@ -273,17 +274,17 @@
             }
             
             //if warrior, equip a weapon
-            if (p.enemyHeroName == HeroEnum.warrior && p.enemyWeaponDurability == 0 && p.enemyMaxMana >= 4)
+            if (p.enemyHeroName == HeroEnum.warrior && p.enemyWeaponDurability == 0 && p.mana >= 4)
             {
                 p.equipWeapon(this.warriorweapon, false);
                 if (p.ownHero.Hp>=1 && p.ownHero.Hp <= p.ownHero.maxHp - 3)  p.ownHero.Hp += 3; //to not change lethal
             }
-            if (p.enemyHeroName == HeroEnum.thief && p.enemyWeaponDurability != 0 && p.enemyMaxMana >= 4)
+            if (p.enemyHeroName == HeroEnum.thief && p.enemyWeaponDurability != 0 && p.mana >= 4)
             {
                 p.enemyWeaponAttack++;
                 if (p.ownHero.Hp >= 1 && p.ownHero.Hp <= p.ownHero.maxHp - 1) p.ownHero.Hp += 1;//to not change lethal
             }
-            if (p.enemyHeroName == HeroEnum.pala && p.enemyWeaponDurability == 0 && p.enemyMaxMana >= 4)
+            if (p.enemyHeroName == HeroEnum.pala && p.enemyWeaponDurability == 0 && p.mana >= 4)
             {
                 p.equipWeapon(this.warriorweapon, false);//warrion weapon is ok for pala 
                 if (p.ownHero.Hp >= 1 && p.ownHero.Hp <= p.ownHero.maxHp - 3) p.ownHero.Hp += 3;//to not change lethal
@@ -321,9 +322,10 @@
                         }
                         break;
                     case CardDB.cardName.fjolalightbane:
-                        if (p.enemyAnzCards >= 2)
+                        if (p.enemyAnzCards >= 2 && p.mana>=2)
                         {
                             m.divineshild = true;
+                            p.mana -= 2;
                         }
                         break;
 
@@ -350,7 +352,7 @@
                         //draw cards if he has gadgetzanauctioneer or starving buzzard
                     case CardDB.cardName.gadgetzanauctioneer:
                     case CardDB.cardName.starvingbuzzard:
-                        if (p.enemyAnzCards >= 2 && p.enemyDeckSize >=1)
+                        if (p.enemyAnzCards >= 2 && p.enemyDeckSize >= 1)
                         {
                             p.drawACard(CardDB.cardIDEnum.None, false);
                         }
@@ -359,6 +361,8 @@
                         //if there is something to heal... draw a card with northshirecleric
                     case CardDB.cardName.northshirecleric:
                         {
+                            if (p.mana <= 2) break;
+                            p.mana -= 2;
                             int anz = 0;
                             foreach (Minion mnn in p.enemyMinions)
                             {
@@ -474,12 +478,15 @@
             }
 
             //enemy will shure play a minion
-            if (p.enemyMinions.Count < 7)
+            if (p.enemyMinions.Count < 7 && p.mana>=2)
             {
                 p.callKid(this.flame, p.enemyMinions.Count, false);
-                int bval = 1;
-                if (p.enemyMaxMana > 4) bval = 2;
-                if (p.enemyMaxMana > 7) bval = 3;
+                int bval = 0;
+                if (p.mana > 3) bval = 1;
+                if (p.mana > 4) bval = 2;
+                if (p.mana > 5) bval = 3;
+                if (p.mana > 6) bval = 4;
+                if (p.mana > 9) bval = 5;
                 if (p.enemyMinions.Count >= 1) p.minionGetBuffed(p.enemyMinions[p.enemyMinions.Count - 1], bval - 1, bval);
             }
         }

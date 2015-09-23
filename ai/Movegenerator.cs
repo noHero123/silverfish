@@ -911,6 +911,7 @@
                 if (m.Angr > strongestAttack) strongestAttack = m.Angr;
                 if (m.taunt) return true;
                 if (m.name == CardDB.cardName.dancingswords || m.name == CardDB.cardName.deathlord) return true;
+                if (m.name == CardDB.cardName.flametonguetotem || m.name == CardDB.cardName.direwolfalpha) return true;
             }
 
             int haspets = 0;

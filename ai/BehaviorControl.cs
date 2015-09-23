@@ -112,7 +112,7 @@
                 if (m.handcard.card.name == CardDB.cardName.nerubianegg)
                 {
                     if (m.Angr >= 1) retval += 2;
-                    if ((!m.taunt && m.Angr == 0) && (m.divineshild || m.maxHp > 2)) retval -= 10;
+                    if (m.divineshild || m.maxHp > 2) retval -= 10;
                     if (p.ownMinions.Count >= 3) retval += 15;
                 }
                 if (m.Ready) readycount++;
