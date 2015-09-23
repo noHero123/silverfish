@@ -72,7 +72,6 @@ namespace HREngine.Bots
         private string choiceCardId = "";
         DateTime starttime = DateTime.Now;
         Silverfish sf;
-        
 
         Behavior behave = new BehaviorControl();
 
@@ -111,7 +110,33 @@ namespace HREngine.Bots
             //Helpfunctions.Instance.ErrorLog("test... " + Settings.Instance.logpath + Settings.Instance.logfile);
             if (Settings.Instance.useExternalProcess) Helpfunctions.Instance.ErrorLog("YOU USE SILVER.EXE FOR CALCULATION, MAKE SURE YOU STARTED IT!");
             if (Settings.Instance.useExternalProcess) Helpfunctions.Instance.ErrorLog("SILVER.EXE IS LOCATED IN: " + Settings.Instance.path);
+            
+            if (Settings.Instance.useExternalProcess)
+            {
+                System.Diagnostics.Process[] pname = System.Diagnostics.Process.GetProcessesByName("silver");
+                string directory = Settings.Instance.path + "silver.exe";
+                bool hasToOpen = true;
+                
+                if (pname.Length >= 1)
+                {
+                    
+                    for (int i = 0; i < pname.Length; i++)
+                    {
+                        
+                        string fullPath = pname[i].Modules[0].FileName;
+                        if (fullPath == directory) hasToOpen = false;
+                    }
+                }
 
+                if (hasToOpen)
+                {
+                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(directory);
+                    startInfo.WorkingDirectory = Settings.Instance.path;
+                    System.Diagnostics.Process.Start(startInfo);
+                }
+
+                System.Threading.Thread.Sleep(500);
+            }
 
 
             if (teststuff)//run autotester for developpers
@@ -162,14 +187,19 @@ namespace HREngine.Bots
                 {
 
                     List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
+                    bool hascoin=false;
                     foreach (var item in list)
                     {
                         if (item.CardId != "GAME_005")// dont mulligan coin
                         {
                             celist.Add(new Mulligan.CardIDEntity(item.CardId, item.EntityId));
                         }
+                        else
+                        {
+                            hascoin = true;
+                        }
                     }
-                    List<int> mullientitys = Mulligan.Instance.whatShouldIMulligan(celist, ownName, enemName);
+                    List<int> mullientitys = Mulligan.Instance.whatShouldIMulligan(celist, ownName, enemName, hascoin);
                     foreach (var item in list)
                     {
                         if (mullientitys.Contains(item.EntityId))
@@ -908,7 +938,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.22";
+        public string versionnumber = "116.27";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
