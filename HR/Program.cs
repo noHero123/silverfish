@@ -113,8 +113,8 @@ namespace HREngine.Bots
             
             if (Settings.Instance.useExternalProcess)
             {
-                System.Diagnostics.Process[] pname = System.Diagnostics.Process.GetProcessesByName("silver");
-                string directory = Settings.Instance.path + "silver.exe";
+                System.Diagnostics.Process[] pname = System.Diagnostics.Process.GetProcessesByName("Silver");
+                string directory = Settings.Instance.path + "Silver.exe";
                 bool hasToOpen = true;
                 
                 if (pname.Length >= 1)

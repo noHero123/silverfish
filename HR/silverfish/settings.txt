@@ -14,7 +14,7 @@ nextTurnTotalBoards = 200;//maximum boards calculated in second turn simulation
 useSecretsPlayArround = false; // playing arround enemys secrets
 alpha = 50; // weight of the second turn in calculation (0<= alpha <= 100)
 simulatePlacement = true;  // set this true, and ai will simulate all placements, whether you have a alpha/flametongue/argus
-useExternalProcess = false; // use silver.exe for calculations a lot faster than turning it off (true = recomended)
+useExternalProcess = true; // use silver.exe for calculations a lot faster than turning it off (true = recomended)
 passiveWaiting = false; // process will wait passive for silver.exe to finish
 behave = control; // select the behavoir of the ai: control, rush, face (new) or mana (very experimental, dont use that :D)
 concedeOnBadBoard = false; // set this to true and ai will concede if enemy is to good
