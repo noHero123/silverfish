@@ -20,6 +20,8 @@ namespace HREngine.Bots
                 {
                     angr += m.Angr;
                     hp += m.Hp;
+                    if (m.Ready) p.evaluatePenality += m.Angr;//DIRTY Penalty-fix (cause i dont pass the place to penmanager->getplaycardpen())
+                    //otherwise it would be a little bit more stuff to calculate
                     p.minionGetDestroyed(m);
                 }
             }

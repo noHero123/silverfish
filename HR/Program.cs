@@ -938,7 +938,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.27";
+        public string versionnumber = "116.29";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;

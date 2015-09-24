@@ -186,7 +186,7 @@
                     }
 
                     p.endEnemyTurn();
-                    p.guessingHeroHP = rootfield.guessingHeroHP;
+                    //p.guessingHeroHP = rootfield.guessingHeroHP;
                     if (Ai.Instance.botBase.getPlayfieldValue(p) < bestoldval) // want the best enemy-play-> worst for us
                     {
                         bestoldval = Ai.Instance.botBase.getPlayfieldValue(p);
@@ -222,7 +222,7 @@
             for (i = 0; i < count; i++)
             {
                 p = posmoves[i];
-                p.guessingHeroHP = rootfield.guessingHeroHP;
+                //p.guessingHeroHP = rootfield.guessingHeroHP;
                 float val = Ai.Instance.botBase.getPlayfieldValue(p);
                 if (bestval > val)// we search the worst value
                 {

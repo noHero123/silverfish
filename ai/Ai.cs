@@ -371,12 +371,37 @@
                 simmulateWholeTurn(this.mainTurnSimulator.bestboard);
                 help.logg("calculated " + timeneeded);
             }
+
+            if (bt.boardToSimulate >= 0)
+            {
+                int input = 0;
+                while (input >= 0)
+                {
+                    Console.WriteLine("write Index of board you want to simulate:");
+                    String cnslrdl = Console.ReadLine();
+
+                    try
+                    {
+                        input = Convert.ToInt32(cnslrdl);
+                        simmulateWholeTurn(this.mainTurnSimulator.getBoard(input));
+                    }
+                    catch
+                    {
+                        Console.WriteLine("testmode ended...");
+                        input = -1;
+                    }
+                }
+            }
+            else 
+            {
+                Console.WriteLine("notestmode");
+            }
         }
 
         public void simmulateWholeTurn(Playfield board)
         {
             help.ErrorLog("########################################################################################################");
-            help.ErrorLog("simulate best board");
+            help.ErrorLog("simulate board " + this.mainTurnSimulator.boardindexToSimulate);
             help.ErrorLog("########################################################################################################");
             //this.bestboard.printActions();
 
@@ -389,7 +414,7 @@
                 help.logg("stepp");
 
 
-                if (bestmovee != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
+                if (bestmovee != null && bestmovee.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
                 {
                     bestmovee.print();
 
@@ -443,7 +468,7 @@
                 help.logg("stepp");
 
 
-                if (bestmovee != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
+                if (bestmovee != null && bestmovee.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
                 {
                     bestmovee.print();
 

@@ -58,11 +58,11 @@
 
         private void startEnemyTurnSim(Playfield p, bool simulateTwoTurns, bool print, bool playaround, int playaroundprob, int playaroundprob2)
         {
-            if (p.guessingHeroHP >= 1)
+            if (p.ownHero.Hp >= 1)
             {
                 //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                 p.prepareNextTurn(p.isOwnTurn);
-
+                //Helpfunctions.Instance.ErrorLog("tc " + p.turnCounter);
                 Ai.Instance.enemySecondTurnSim[this.thread].simulateEnemysTurn(p, simulateTwoTurns, playaround, print, playaroundprob, playaroundprob2);
                 /*
                 if (p.turnCounter >= 2)

@@ -14,7 +14,6 @@
             int hpboarder = 10;
             if (p.ownHeroName == HeroEnum.warlock && p.enemyHeroName != HeroEnum.mage) hpboarder = 6;
             int aggroboarder = 11;
-
             retval -= p.evaluatePenality;
             retval += p.owncards.Count * 5;
 
@@ -112,7 +111,7 @@
                 if (m.handcard.card.name == CardDB.cardName.nerubianegg)
                 {
                     if (m.Angr >= 1) retval += 2;
-                    if (m.divineshild || m.maxHp > 2) retval -= 10;
+                    if (m.divineshild || (m.maxHp > 2 && !m.destroyOnOwnTurnEnd)) retval -= 10;
                     if (p.ownMinions.Count >= 3) retval += 15;
                 }
                 if (m.Ready) readycount++;
@@ -227,13 +226,35 @@
                 if (a.card.card.name == CardDB.cardName.soulfire || a.card.card.name == CardDB.cardName.doomguard || a.card.card.name == CardDB.cardName.succubus) deletecardsAtLast = 1;
                 if (deletecardsAtLast == 1 && !(a.card.card.name == CardDB.cardName.soulfire || a.card.card.name == CardDB.cardName.doomguard || a.card.card.name == CardDB.cardName.succubus)) retval -= 20;
             }
-            if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
+
+            if (p.enemyHero.Hp >= 1 && p.ownHero.Hp <= 0)
             {
-                if (p.turnCounter < 2) retval += p.owncarddraw * 100;
-                retval -= 1000;
+                //Helpfunctions.Instance.ErrorLog("turncounter " + p.turnCounter + " " + retval);
+                if (p.turnCounter == 0) // own turn 
+                {
+                    //worst case: we die on own turn
+                    retval += p.owncarddraw * 100;
+                    retval = -10000;
+                }
+                else
+                {
+                    if (p.turnCounter == 1) // enemys first turn
+                    {
+                        retval += p.owncarddraw * 100;
+                        retval -= 1000;
+                    }
+                    if (p.turnCounter >= 2)
+                    {
+                        //carddraw next turn doesnt count this turn :D
+                        retval -= 100;
+                    }
+                }
+                
+                
+                
             }
-            
-            if (p.ownHero.Hp <= 0) retval = -10000;
+
+            //if (p.ownHero.Hp <= 0 && p.turnCounter < 2) retval = -10000;
 
             p.value = retval;
             return retval;

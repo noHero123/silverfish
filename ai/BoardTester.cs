@@ -6,7 +6,7 @@
 
     public class BoardTester
     {
-
+        public int boardToSimulate = -1;
         public string evalFunction = "control";
         int maxwide = 3000;
         int twoturnsim = 256;
@@ -102,6 +102,7 @@
 
         public BoardTester(string data = "")
         {
+            this.boardToSimulate = -1;
             string og = "";
             string eg = "";
 
@@ -167,6 +168,10 @@
                 }
                 if (s.StartsWith("####"))
                 {
+                    if (s.EndsWith("test "))
+                    {
+                        this.boardToSimulate = 1;
+                    }
                     continue;
                 }
 

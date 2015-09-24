@@ -152,7 +152,7 @@
 
         public int hashcode = 0;
         public float value = Int32.MinValue;
-        public int guessingHeroHP = 30;
+        //public int guessingHeroHP = 30;
 
         public int mana = 0;
         public int manaTurnEnd = 0;
@@ -1984,7 +1984,7 @@
 
             int guessingHeroDamage = Math.Max(0, ghd);
             if (this.ownHero.immune) guessingHeroDamage = 0;
-            this.guessingHeroHP = this.ownHero.Hp + this.ownHero.armor - guessingHeroDamage;
+            //this.guessingHeroHP = this.ownHero.Hp + this.ownHero.armor - guessingHeroDamage;
         }
 
         public void simulateTraps()
@@ -2182,7 +2182,7 @@
             if (!doServerstuff)
             {
                 this.value = int.MinValue;
-                if (this.turnCounter == 0)
+                if (!this.enemyHero.immune && this.turnCounter == 0)
                 {
                     this.manaTurnEnd = this.mana;
                     this.numEnemySecretsTurnEnd = this.enemySecretCount;
@@ -2219,7 +2219,7 @@
 
                 }
 
-                if (this.turnCounter == 2)//own next turn
+                if (!this.enemyHero.immune && this.turnCounter == 2)//own next turn
                 {
                     bool eHasTaunt = false;
                     foreach (Minion m in this.enemyMinions)
@@ -2234,11 +2234,26 @@
                             if (m.Ready) attack += m.Angr;
                             if (m.Ready && m.windfury && m.numAttacksThisTurn == 0) attack += m.Angr;
                         }
-
-                        this.enemyHero.Hp -= attack;
+                        if (this.enemyHero.armor == 0)
+                        {
+                            this.enemyHero.Hp -= attack;
+                        }
+                        else
+                        {
+                            if (this.enemyHero.armor >= attack)
+                            {
+                                this.enemyHero.armor -= attack;
+                            }
+                            else 
+                            {
+                                this.enemyHero.Hp += this.enemyHero.armor - attack;
+                                this.enemyHero.armor = 0;
+                            }
+                        }
                     }
 
                 }
+
 
             }
             //this.turnCounter++;
@@ -2264,16 +2279,16 @@
             {
                 if (!this.isOwnTurn) simulateTraps();
 
-                if (!sEnemTurn)
+                if (!sEnemTurn && !this.isOwnTurn) // it was at the biginning our turn -> now its enems
                 {
-                    guessHeroDamage();
+                    //guessHeroDamage();
                     this.triggerEndTurn(false);
                     this.triggerStartTurn(true);
                     this.complete = true;
                 }
                 else
                 {
-                    guessHeroDamage();
+                    //guessHeroDamage();
                     /*
                     if (this.guessingHeroHP >= 1)
                     {
@@ -2379,9 +2394,9 @@
                 this.playedmagierinderkirintor = false;
 
                 this.sEnemTurn = false;
-                this.turnCounter++;
+                
             }
-
+            this.turnCounter++;
             this.attacked = false;
             this.optionsPlayedThisTurn = 0;
             this.cardsPlayedThisTurn = 0;
@@ -2400,6 +2415,53 @@
 
         public void endEnemyTurn() //
         {
+
+            //do face-attack:
+
+            if (!this.ownHero.immune && (this.turnCounter == 1 || this.turnCounter == 3))// enemys turn ends -> attack with all minions face (if there is no taunt)
+            {
+                //Helpfunctions.Instance.ErrorLog(turnCounter + " bef " + this.ownHero.Hp + " " + this.ownHero.armor);
+                bool oHasTaunt = false;
+                foreach (Minion m in this.ownMinions)
+                {
+                    if (m.taunt) oHasTaunt = true;
+                }
+                if (!oHasTaunt && this.ownSecretsIDList.Count == 0)
+                {
+                    int attack = 0;
+                    foreach (Minion m in this.enemyMinions)
+                    {
+                        if (m.Ready) attack += m.Angr;
+                        if (m.Ready && m.windfury && m.numAttacksThisTurn == 0) attack += m.Angr;
+                        m.Ready = false;
+                    }
+
+                    if (this.ownHero.armor == 0)
+                    {
+                        this.ownHero.Hp -= attack;
+                    }
+                    else
+                    {
+                        if (this.ownHero.armor >= attack)
+                        {
+                            this.ownHero.armor -= attack;
+                        }
+                        else
+                        {
+                            this.ownHero.Hp += this.ownHero.armor - attack;
+                            this.ownHero.armor = 0;
+                        }
+                    }
+                }
+
+                if (this.turnCounter == 3)// enemys turn ends -> attack with all minions face (if there is no taunt)
+                {
+                    if (this.ownHero.Hp <= 0) this.ownHero.Hp = 0;
+                }
+                //Helpfunctions.Instance.ErrorLog("aft " + this.ownHero.Hp + " " + this.ownHero.armor);
+
+            }
+
             this.triggerEndTurn(false);
             //this.turnCounter++;
             this.isOwnTurn = true;
@@ -6080,10 +6142,17 @@
             }
         }
 
-        public void printBoard()
+        public void printBoard(int boardnumber = -1)
         {
             float copy = value;
-            Helpfunctions.Instance.logg("board: " + value + " ++++++++++++++++++++++");
+            if (boardnumber >= 0)
+            {
+                Helpfunctions.Instance.logg("index: "+boardnumber + " board: " + value + " ++++++++++++++++++++++");
+            }
+            else
+            {
+                Helpfunctions.Instance.logg("board: " + value + " ++++++++++++++++++++++");
+            }
             Helpfunctions.Instance.logg("pen " + this.evaluatePenality);
             Helpfunctions.Instance.logg("mana " + this.mana + "/" + this.ownMaxMana + " turnEndMana " + this.manaTurnEnd);
             Helpfunctions.Instance.logg("cardsplayed: " + this.cardsPlayedThisTurn + " handsize: " + this.owncards.Count + " eh " + this.enemyAnzCards + " " + this.enemycarddraw);

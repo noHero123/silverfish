@@ -35,7 +35,7 @@
             retval -= p.lostDamage;//damage which was to high (like killing a 2/1 with an 3/3 -> => lostdamage =2
             retval -= p.lostWeaponDamage;
             if (p.enemyHero.Hp <= 0) retval = 10000;
-            if (p.enemyHero.Hp >= 1 && p.guessingHeroHP <= 0)
+            if (p.enemyHero.Hp >= 1 && p.ownHero.Hp <= 0)
             {
                 retval += p.owncarddraw * 500;
                 retval -= 1000;

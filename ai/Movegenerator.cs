@@ -304,7 +304,8 @@
             bool useplacement = Settings.Instance.simulatePlacement && p.turnCounter == 0 && p.ownMinions.Count >= 2;
             foreach (Minion hc in p.ownMinions)
             {
-                if (hc.handcard.card.name == CardDB.cardName.direwolfalpha || hc.handcard.card.name == CardDB.cardName.flametonguetotem || hc.handcard.card.name == CardDB.cardName.defenderofargus)
+                //if direwolf or flametongue is on our side, we do calculate correct placement (if activated)
+                if (hc.handcard.card.name == CardDB.cardName.direwolfalpha || hc.handcard.card.name == CardDB.cardName.flametonguetotem )
                 {
                     superplacement = true;
                     break;
@@ -362,7 +363,7 @@
                                 if (cardplayPenality <= 499)
                                 {
 
-                                    if (useplacement && ((hc.card.name == CardDB.cardName.direwolfalpha || hc.card.name == CardDB.cardName.flametonguetotem || hc.card.name == CardDB.cardName.defenderofargus) || (superplacement && hc.card.type == CardDB.cardtype.MOB)))
+                                    if (useplacement && ((hc.card.name == CardDB.cardName.direwolfalpha || hc.card.name == CardDB.cardName.flametonguetotem || hc.card.name == CardDB.cardName.defenderofargus || hc.card.name == CardDB.cardName.voidterror) || (superplacement && hc.card.type == CardDB.cardtype.MOB)))
                                     {
                                         int adding = 1;
                                         int subbing = 0;

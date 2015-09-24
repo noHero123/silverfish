@@ -19,6 +19,7 @@
 
         private bool printNormalstuff = false;
 
+        public int boardindexToSimulate = 0;
         List<Playfield> posmoves = new List<Playfield>(7000);
         List<Playfield> twoturnfields = new List<Playfield>(500);
 
@@ -95,7 +96,7 @@
 
         private void startEnemyTurnSim(Playfield p, bool simulateTwoTurns, bool print)
         {
-            if (p.guessingHeroHP >= 1 && p.enemyHero.Hp >= 1)
+            if (p.ownHero.Hp >= 1 && p.enemyHero.Hp >= 1)
             {
                 //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                 p.prepareNextTurn(p.isOwnTurn);
@@ -286,11 +287,12 @@
                 foreach (Playfield p in this.twoturnfields)
                 {
 
-                    if (p.guessingHeroHP >= 1 && p.enemyHero.Hp >= 1)
+                    if (p.ownHero.Hp >= 1 && p.enemyHero.Hp >= 1)
                     {
                         p.value = int.MinValue;
                         //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                         p.prepareNextTurn(p.isOwnTurn);
+                        p.turnCounter = 1;//correcting turncoutner: because we performed turncounter++ in the firstloop, but we perform first enemy turn also in this loop
                         Ai.Instance.enemyTurnSim[thread].simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
                     }
                     else
@@ -358,11 +360,12 @@
                 {
                     //if(threadnumber ==0)Helpfunctions.Instance.ErrorLog("no " + threadnumber + " calculates " + i);
                     Playfield p = this.twoturnfields[i];
-                    if (p.guessingHeroHP >= 1 && p.enemyHero.Hp>=1)
+                    if (p.ownHero.Hp >= 1 && p.enemyHero.Hp>=1)
                     {
                         p.value = int.MinValue;
                         //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                         p.prepareNextTurn(p.isOwnTurn);
+                        p.turnCounter = 1;//correcting turncoutner: because we performed turncounter++ in the firstloop, but we perform first enemy turn also in this loop
                         Ai.Instance.enemyTurnSim[threadnumber].simulateEnemysTurn(p, true, playaround, false, this.playaroundprob, this.playaroundprob2);
                     }
                     else
@@ -571,10 +574,21 @@
             int i = 0;
             foreach (Playfield p in this.posmoves)
             {
-                p.printBoard();
+                p.printBoard(i);
                 i++;
                 if (i >= 200) break;
             }
+        }
+
+        public Playfield getBoard(int i)
+        {
+            if (i >= 0 && i < this.posmoves.Count)
+            {
+                boardindexToSimulate = i;
+                return this.posmoves[i];
+            }
+            boardindexToSimulate = 0;
+            return this.bestboard;
         }
 
     }
