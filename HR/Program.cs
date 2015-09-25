@@ -179,17 +179,19 @@ namespace HREngine.Bots
 
              Entity enemyPlayer = base.EnemyHero;
              Entity ownPlayer = base.FriendHero;
-
                 string enemName = Hrtprozis.Instance.heroIDtoName(enemyPlayer.CardId);
                 string ownName = Hrtprozis.Instance.heroIDtoName(ownPlayer.CardId);
 
+                
+
                 if (Mulligan.Instance.hasmulliganrules(ownName, enemName))
                 {
-
+                    bool hascoin = false;
                     List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
-                    bool hascoin=false;
+                    
                     foreach (var item in list)
                     {
+                        Helpfunctions.Instance.ErrorLog("cards on hand for mulligan: " + item.CardId);
                         if (item.CardId != "GAME_005")// dont mulligan coin
                         {
                             celist.Add(new Mulligan.CardIDEntity(item.CardId, item.EntityId));
@@ -198,7 +200,9 @@ namespace HREngine.Bots
                         {
                             hascoin = true;
                         }
+                        
                     }
+                    if (celist.Count >= 4) hascoin = true;
                     List<int> mullientitys = Mulligan.Instance.whatShouldIMulligan(celist, ownName, enemName, hascoin);
                     foreach (var item in list)
                     {
@@ -396,7 +400,6 @@ namespace HREngine.Bots
              }
 
              ranger_action.Index = moveTodo.place;
-
 
              if (moveTodo.target != null)
              {
@@ -938,7 +941,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.29";
+        public string versionnumber = "116.30";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;

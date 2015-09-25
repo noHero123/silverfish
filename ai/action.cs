@@ -175,7 +175,7 @@ namespace HREngine.Bots
 
                     if (this.place >= 0)
                     {
-                        playaction += " pos " + this.place;
+                        playaction += " pos " +this.place;
                     }
 
                     if (this.druidchoice >= 1) playaction += " choice " + this.druidchoice;

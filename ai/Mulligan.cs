@@ -262,6 +262,15 @@ namespace HREngine.Bots
 
         public List<int> whatShouldIMulligan(List<CardIDEntity> cards, string ownclass, string enemclass, bool hascoin)
         {
+            Helpfunctions.Instance.ErrorLog("do mulligan...");
+            if (hascoin)
+            {
+                Helpfunctions.Instance.ErrorLog("we hold the coin");
+            }
+            else
+            {
+                Helpfunctions.Instance.ErrorLog("we dont hold the coin");
+            }
             List<int> discarditems = new List<int>();
             bool usedManarule = false;
             foreach (mulliitem mi in this.deletelist)
