@@ -398,7 +398,8 @@
             Helpfunctions.Instance.ErrorLog("read _combo.txt...");
             foreach (string line in lines)
             {
-
+                string shortline = line.Replace(" ", "");
+                if(shortline.StartsWith("//")) continue;
                 if (line.Contains("weapon:"))
                 {
                     try

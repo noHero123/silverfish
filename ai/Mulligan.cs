@@ -103,6 +103,9 @@ namespace HREngine.Bots
             Helpfunctions.Instance.ErrorLog("read _mulligan.txt...");
             foreach (string line in lines)
             {
+                string shortline = line.Replace(" ", "");
+                if (shortline.StartsWith("//")) continue;
+
                 if (line.StartsWith("loser"))
                 {
                     this.loserLoserLoser = true;
