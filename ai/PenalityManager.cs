@@ -1499,6 +1499,16 @@
                 pen = 30;
             }
 
+            if (name == CardDB.cardName.sylvanaswindrunner && p.enemyMinions.Count == 0)
+            {
+                return 50;
+            }
+
+            if (name == CardDB.cardName.cabalshadowpriest && target == null)
+            {
+                return 40;
+            }
+
             if (name == CardDB.cardName.emergencycoolant && target != null && target.own)//dont freeze own minions
             {
                 pen = 500;
@@ -1915,7 +1925,13 @@
 
             if (name == CardDB.cardName.equality) // aoe penality
             {
-                if (p.enemyMinions.Count <= 2 || (p.ownMinions.Count - p.enemyMinions.Count >= 1))
+                int hpdestroyed = 0;
+                foreach (Minion mini in p.enemyMinions)
+                {
+                    hpdestroyed += (mini.Hp - 1);
+                }
+
+                if (p.enemyMinions.Count <= 2 || hpdestroyed <= 4)
                 {
                     return 20;
                 }

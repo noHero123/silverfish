@@ -81,6 +81,15 @@
             //int owntaunt = 0;
             int readycount = 0;
             int ownMinionsCount = 0;
+
+            bool enemyhaspatron = false;
+            foreach (Minion m in p.enemyMinions)
+            {
+                retval -= this.getEnemyMinionValue(m, p);
+                if (m.name == CardDB.cardName.grimpatron && !m.silenced && p.enemyHeroName == HeroEnum.warrior) enemyhaspatron = true;
+                //hasTank = hasTank || m.taunt;
+            }
+
             foreach (Minion m in p.ownMinions)
             {
                 retval += 5;
@@ -116,7 +125,10 @@
                 }
                 if (m.Ready) readycount++;
                 if (m.maxHp >= 4 && (m.Angr > 2 || m.Hp > 3)) ownMinionsCount++;
+                if (enemyhaspatron && m.Angr <= 3) retval -= 20;
             }
+
+           
 
             /*if (p.enemyMinions.Count >= 0)
             {
@@ -156,6 +168,7 @@
             if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)
             {
                 if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 20;
+                if (p.ownHeroName == HeroEnum.pala && enemyhaspatron) retval += 20;
             }
             //if (usecoin && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 100;
 
@@ -166,22 +179,28 @@
                 if (hc.card.type == CardDB.cardtype.MOB)
                 {
                     mobsInHand++;
-                    if (hc.card.Attack >= 3) bigMobsInHand++;
+                    if (hc.card.Attack >= 3 && hc.card.Health >= 3) bigMobsInHand++;
                 }
             }
 
-            if (ownMinionsCount - p.enemyMinions.Count >= 4 && bigMobsInHand >= 1)
+            //stuff for not flooding board
+            int mobsturnbegin = Hrtprozis.Instance.ownMinions.Count;
+            if (ownMinionsCount > mobsturnbegin)
             {
-                retval += bigMobsInHand * 25;
+                if (ownMinionsCount - p.enemyMinions.Count >= 3)
+                {
+                    retval += bigMobsInHand * 50 + mobsInHand * 10;
+                }
+
+                if (p.turnCounter <= 1 && p.ownMinions.Count - p.enemyMinions.Count >= 4)
+                {
+                    retval -= (p.ownMinions.Count - p.enemyMinions.Count - 3) * 10;
+                }
             }
 
 
             //bool hasTank = false;
-            foreach (Minion m in p.enemyMinions)
-            {
-                retval -= this.getEnemyMinionValue(m, p);
-                //hasTank = hasTank || m.taunt;
-            }
+            
 
             /*foreach (SecretItem si in p.enemySecretList)
             {

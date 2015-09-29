@@ -85,6 +85,11 @@
             this.canBe_spellbender = sec.canBe_spellbender;
             this.canBe_vaporize = sec.canBe_vaporize;
 
+            this.canBe_effigy = sec.canBe_effigy;
+            this.canBe_beartrap = sec.canBe_beartrap;
+            this.canBe_competivespirit = sec.canBe_competivespirit;
+
+
             this.entityId = sec.entityId;
 
         }
@@ -127,8 +132,7 @@
                 this.canBe_competivespirit = (canbe[19] == '1');
             }
             catch
-            { 
-
+            {
             }
 
             this.updateCanBeTriggered();
@@ -239,6 +243,11 @@
             retval += "" + ((canBe_redemption) ? "1" : "0");
             retval += "" + ((canBe_repentance) ? "1" : "0");
             retval += "" + ((canBe_avenge) ? "1" : "0");
+
+            retval += "" + ((canBe_effigy) ? "1" : "0");
+            retval += "" + ((canBe_beartrap) ? "1" : "0");
+            retval += "" + ((canBe_competivespirit) ? "1" : "0");
+
             return retval + ",";
         }
 
