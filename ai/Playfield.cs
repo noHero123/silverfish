@@ -2366,6 +2366,7 @@
                     m.numAttacksThisTurn = 0;
                     m.playedThisTurn = false;
                     m.updateReadyness();
+                    m.canAttackNormal = false;
                     if (m.concedal)
                     {
                         m.concedal = false;

@@ -12,6 +12,7 @@ namespace HREngine.Bots
         public override void onInspire(Playfield p, Minion m)
         {
             m.canAttackNormal = true;
+            m.updateReadyness();
         }
 
 

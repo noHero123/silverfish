@@ -714,6 +714,9 @@
                         tempminion.enemyPowerWordGlory = enemyPwordGlory;
                         tempminion.souloftheforest = souloftheforest;
 
+                        tempminion.canAttackNormal = false;
+                        if (ready == true) tempminion.canAttackNormal = true;
+
                         if (maxhp > hp) tempminion.wounded = true;
                         tempminion.updateReadyness();
                         this.ownminions.Add(tempminion);
