@@ -941,7 +941,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.32";
+        public string versionnumber = "116.33";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1822,7 +1822,7 @@ namespace HREngine.Bots
             {
                 if (ent.Zone == HSRangerLib.TAG_ZONE.SECRET && ent.ControllerId == enemycontroler) continue; // cant know enemy secrets :D
                 if (ent.Zone == HSRangerLib.TAG_ZONE.DECK) continue;
-                if (ent.CardType == HSRangerLib.TAG_CARDTYPE.MINION || ent.CardType == HSRangerLib.TAG_CARDTYPE.WEAPON || ent.CardType == HSRangerLib.TAG_CARDTYPE.ABILITY)
+                if (ent.CardType == HSRangerLib.TAG_CARDTYPE.MINION || ent.CardType == HSRangerLib.TAG_CARDTYPE.WEAPON || ent.CardType == HSRangerLib.TAG_CARDTYPE.SPELL)
                 {
 
                     CardDB.cardIDEnum cardid = CardDB.Instance.cardIdstringToEnum(ent.CardId);

@@ -1478,9 +1478,12 @@
 
             }
 
-            if (name == CardDB.cardName.flare && p.enemySecretCount >= 1 && p.playactions.Count == 0)
+            if (name == CardDB.cardName.flare) 
             {
-                return -10;
+                if (p.enemyHeroName != HeroEnum.hunter && p.enemyHeroName != HeroEnum.mage && p.enemyHeroName == HeroEnum.pala) return 0;
+                //it is a hunter/mage or pala:
+                if (p.enemySecretCount == 0) return 50;
+                if (p.enemySecretCount >= 1 && p.playactions.Count == 0)  return -10;
             }
 
             //some effects, which are bad :D

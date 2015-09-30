@@ -26,11 +26,11 @@ namespace HREngine.Bots
             p.anzMurlocWarleader--;
                 foreach (Minion mn in p.ownMinions)
                 {
-                    if((TAG_RACE)mn.handcard.card.race == TAG_RACE.MURLOC && mn.entitiyID != m.entitiyID) p.minionGetBuffed(m, -2, -1);
+                    if((TAG_RACE)mn.handcard.card.race == TAG_RACE.MURLOC && mn.entitiyID != m.entitiyID) p.minionGetBuffed(mn, -2, -1);
                 }
                 foreach (Minion mn in p.enemyMinions)
                 {
-                    if ((TAG_RACE)mn.handcard.card.race == TAG_RACE.MURLOC && mn.entitiyID != m.entitiyID) p.minionGetBuffed(m, -2, -1);
+                    if ((TAG_RACE)mn.handcard.card.race == TAG_RACE.MURLOC && mn.entitiyID != m.entitiyID) p.minionGetBuffed(mn, -2, -1);
                 }
 		}
         

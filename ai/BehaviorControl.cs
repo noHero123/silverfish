@@ -66,7 +66,7 @@
             {
                 retval += p.owncarddraw * 100;
             }
-            if (p.ownMaxMana < 4)
+            if (p.ownMaxMana <= 4)
             {
                 retval += p.owncarddraw * 2;
             }
@@ -76,7 +76,7 @@
             }
 
             //retval += p.owncarddraw * 5;
-            retval -= p.enemycarddraw * 15;
+            retval -= p.enemycarddraw * 10;
 
             //int owntaunt = 0;
             int readycount = 0;
