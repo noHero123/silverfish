@@ -42,7 +42,8 @@
         public bool complete = false;
 
         public bool isServer = false;
-        public Random randomGenerator = new Random();
+        public static Random randomGeneratorInstance = new Random();//speedup thanxs to xytrix
+        public Random randomGenerator = null;  // local reference to prevent changing all code locations
 
         //dont have to be copied! (server doesnt copy)
         public List<Handmanager.Handcard> myDeck ;
@@ -269,6 +270,7 @@
         public Playfield()
         {
             this.nextEntity = 1000;
+            this.randomGenerator = randomGeneratorInstance;
             //this.simulateEnemyTurn = Ai.Instance.simulateEnemyTurn;
             this.ownController = Hrtprozis.Instance.getOwnController();
 
@@ -626,6 +628,7 @@
         {
             this.isServer = p.isServer;
             this.nextEntity = p.nextEntity;
+            this.randomGenerator = randomGeneratorInstance;
 
             this.isOwnTurn = p.isOwnTurn;
             this.turnCounter = p.turnCounter;

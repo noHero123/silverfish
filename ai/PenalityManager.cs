@@ -211,6 +211,20 @@
             int pen = 0;
             //buff enemy?
 
+            if (!lethal && (card.name == CardDB.cardName.bolster))
+            {
+                int targets = 0;
+                foreach (Minion m in p.ownMinions)
+                {
+                    if (m.taunt) targets++;
+                }
+                if (targets < 2)
+                {
+                    pen += 10;
+                }
+                return pen;
+            }
+
             if (!lethal && (card.name == CardDB.cardName.savageroar || card.name == CardDB.cardName.bloodlust))
             {
                 int targets = 0;
