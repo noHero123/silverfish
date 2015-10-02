@@ -18,3 +18,4 @@ useExternalProcess = true; // use silver.exe for calculations a lot faster than 
 passiveWaiting = false; // process will wait passive for silver.exe to finish
 behave = control; // select the behavoir of the ai: control, rush, face (new) or mana (very experimental, dont use that :D)
 concedeOnBadBoard = false; // set this to true and ai will concede if enemy is to good
+speed = false;  //set this to true, to support sending multiple actions to bot

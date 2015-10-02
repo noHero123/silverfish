@@ -1136,6 +1136,8 @@
                 }
             }
 
+            // now we're sure the boards are equal, we are just updating entitys (for spawned stuff etc)
+
             for (int i = 0; i < this.ownMinions.Count; i++)
             {
                 Minion dis = this.ownMinions[i]; Minion pis = p.ownMinions[i];

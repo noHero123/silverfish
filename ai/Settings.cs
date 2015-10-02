@@ -45,6 +45,8 @@ namespace HREngine.Bots
             this.useExternalProcess = false; // use silver.exe for calculations a lot faster than turning it off (true = recomended)
             this.passiveWaiting = false; // process will wait passive for silver.exe to finish
 
+            this.speedy = false; // process will wait passive for silver.exe to finish
+
             //###########################################################
 
             applySettings();
@@ -89,6 +91,7 @@ namespace HREngine.Bots
 
         public bool useExternalProcess = false;
         public bool passiveWaiting = false;
+        public bool speedy = false;
 
         public int alpha = 50;
         public float firstweight = 0.5f;
@@ -461,6 +464,21 @@ namespace HREngine.Bots
                         Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
                     }
                 }
+
+                searchword = "speed=";
+                if (s.StartsWith(searchword))
+                {
+                    string a = s.Replace(searchword, "");
+                    try
+                    {
+                        this.speedy = Convert.ToBoolean(a);
+                    }
+                    catch
+                    {
+                        Helpfunctions.Instance.ErrorLog("ignoring the setting " + searchword);
+                    }
+                }
+
                 
 
             }

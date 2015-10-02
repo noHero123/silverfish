@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class Ai
     {
@@ -40,6 +41,7 @@
         public Action bestmove = null;
         public float bestmoveValue = 0;
         public Playfield nextMoveGuess = new Playfield();
+        public Playfield oldMoveGuess = new Playfield();//used for queque actions
         public Behavior botBase = null;
 
         public List<Action> bestActions = new List<Action>();
@@ -189,6 +191,7 @@
             }
 
             this.nextMoveGuess = new Playfield();
+            this.oldMoveGuess = new Playfield();//queque stuff
             //only debug:
             //this.nextMoveGuess.printBoardDebug();
 
@@ -202,12 +205,7 @@
                 }
                 catch (Exception ex)
                 {
-                    Helpfunctions.Instance.logg("Message ---");
-                    Helpfunctions.Instance.logg("Message ---" + ex.Message);
-                    Helpfunctions.Instance.logg("Source ---" + ex.Source);
-                    Helpfunctions.Instance.logg("StackTrace ---" + ex.StackTrace);
-                    Helpfunctions.Instance.logg("TargetSite ---\n{0}" + ex.TargetSite);
-
+                    Helpfunctions.Instance.logg("StackTrace ---" + ex.ToString());
                 }
                 Helpfunctions.Instance.logg("nmgsime-");
 
@@ -231,6 +229,7 @@
                 this.bestActions.RemoveAt(0);
             }
             if (this.nextMoveGuess == null) this.nextMoveGuess = new Playfield();
+            this.oldMoveGuess = new Playfield(this.nextMoveGuess);
             //this.nextMoveGuess.printBoardDebug();
 
             if (bestmove != null && bestmove.actionType != actionEnum.endturn)  // save the guessed move, so we doesnt need to recalc!
@@ -560,6 +559,180 @@
             }
 
         }
+
+
+
+        //queque stuff (done by xytrix)
+        // Looks through a list of playfields from previous moves to find one that matches our current board state.
+        // If any is found, we "rollback" our bestactions list to that point in time.
+        public bool restoreBestMoves(Playfield currentField, List<Playfield> oldMoveGuesses)
+        {
+            for (int i = oldMoveGuesses.Count - 1; i >= 0; i--)  // work backwards
+            {
+                if (currentField.isEqualf(oldMoveGuesses[i]))
+                {
+                    // We need to re-queue moves from this point. So re-populate the "bestActions" list.
+                    for (int j = oldMoveGuesses.Count - 1; j > i; j--)
+                    {
+                        this.bestActions.Insert(0, oldMoveGuesses[j].playactions.Last());
+                    }
+
+                    this.nextMoveGuess = oldMoveGuesses[i];
+                    this.bestmove = nextMoveGuess.playactions.LastOrDefault();  // null if empty (i.e. no moves performed)
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Checks if any actions (beyond our first) can be queued up for sending together. Actions cannot be queued if they have an unexpected outcome.
+        public bool canQueueNextMoves()
+        {
+            if (this.bestmove == null || this.bestActions.Count < 1) return false;  // no moves to queue
+
+            if (this.nextMoveGuess.owncarddraw != 0) return false;
+
+            // Note: Generated entities (i.e. newly spawned minions) are not _always_ a problem,
+            // but 90% of the time we cannot take an action involving them, so easier to just not queue.
+            if (boardContainsGeneratedEntities(this.nextMoveGuess) || nextMoveContainsGeneratedEntities()) return false;
+
+            if (this.bestmove.actionType == actionEnum.attackWithHero)
+            {
+                // check if using a random effect weapon
+                if (this.oldMoveGuess.ownWeaponName == CardDB.cardName.ogrewarmaul) return false;
+                if (this.oldMoveGuess.ownWeaponName == CardDB.cardName.powermace && this.oldMoveGuess.ownWeaponDurability == 1)
+                {
+                    int numMechs = 0;
+                    foreach (Minion m in this.oldMoveGuess.ownMinions)
+                    {
+                        if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL) numMechs++;
+                        if (numMechs > 1) return false;
+                    }
+                }
+            }
+            else if (this.bestmove.actionType == actionEnum.attackWithMinion)
+            {
+                // check for the ogres
+                foreach (Minion m in this.oldMoveGuess.ownMinions)
+                {
+                    if (m.name == CardDB.cardName.mogortheogre && !m.silenced)
+                        return false;
+                }
+                foreach (Minion m in this.oldMoveGuess.enemyMinions)
+                {
+                    if (m.name == CardDB.cardName.mogortheogre && !m.silenced)
+                        return false;
+                }
+
+                if (!this.bestmove.own.silenced && (this.bestmove.own.handcard.card.name == CardDB.cardName.ogrebrute
+                    || this.bestmove.own.handcard.card.name == CardDB.cardName.dunemaulshaman
+                    || this.bestmove.own.handcard.card.name == CardDB.cardName.mogorschampion
+                    || this.bestmove.own.handcard.card.name == CardDB.cardName.ogreninja))
+                    return false;
+            }
+            else if (this.bestmove.actionType == actionEnum.useHeroPower)
+            {
+                // Shaman/Paladin -- covered by boardContainsGeneratedEntities
+                // Warlock -- covered by owncarddraw != 0
+            }
+            else if (this.bestmove.actionType == actionEnum.playcard)
+            {
+                // Check the board prior to applying the last action (this.oldMoveGuess). Was it a random action?
+                return !IsPlayRandomEffect(this.bestmove.card.card, this.oldMoveGuess, this.nextMoveGuess);
+            }
+
+            return true;
+        }
+
+        public bool IsPlayRandomEffect(CardDB.Card card, Playfield oldField, Playfield newField)  // adapted from PenalityManager::getRandomPenality
+        {
+            bool hasgadget = false;
+            bool hasstarving = false;
+            bool hasknife = false;
+            bool hasflamewaker = false;
+            bool hasmech = false;
+
+            foreach (Minion mnn in oldField.ownMinions)
+            {
+                if (mnn.handcard.card.race == TAG_RACE.MECHANICAL) hasmech = true;
+                if (mnn.silenced) continue;
+
+                switch (mnn.name)
+                {
+                    case CardDB.cardName.gadgetzanauctioneer: hasgadget = true; break;
+                    case CardDB.cardName.starvingbuzzard: hasstarving = true; break;
+                    case CardDB.cardName.knifejuggler: hasknife = true; break;
+                    case CardDB.cardName.flamewaker: hasflamewaker = true; break;
+                }
+            }
+
+            if ((hasknife && (oldField.enemyMinions.Count > 0) && (card.type == CardDB.cardtype.MOB || oldField.ownMinions.Count < newField.ownMinions.Count))
+                || (hasgadget && card.type == CardDB.cardtype.SPELL)
+                || (hasflamewaker && (oldField.enemyMinions.Count > 0) && card.type == CardDB.cardtype.SPELL)
+                || (hasstarving && (TAG_RACE)card.race == TAG_RACE.PET))
+            {
+                return true;
+            }
+
+            if (!this.penman.randomEffects.ContainsKey(card.name)) return false;
+
+            if (card.type == CardDB.cardtype.MOB && !card.battlecry) return false;
+
+            if ((card.name == CardDB.cardName.bouncingblade && ((oldField.enemyMinions.Count + oldField.ownMinions.Count) == 1))
+                || (card.name == CardDB.cardName.goblinblastmage && !hasmech)
+                || (card.name == CardDB.cardName.coghammer && oldField.ownMinions.Count == 1))
+            {
+                return false;
+            }
+
+            if (oldField.enemyMinions.Count == 2 && (card.name == CardDB.cardName.cleave
+                || card.name == CardDB.cardName.multishot
+                || card.name == CardDB.cardName.forkedlightning
+                || card.name == CardDB.cardName.darkbargain))
+            {
+                return false;
+            }
+
+            if (oldField.enemyMinions.Count == 1 && (card.name == CardDB.cardName.deadlyshot
+                || card.name == CardDB.cardName.flamecannon
+                || card.name == CardDB.cardName.bomblobber))
+            {
+                return false;
+            }
+
+            if (oldField.enemyMinions.Count == 0 && (card.name == CardDB.cardName.arcanemissiles
+                || card.name == CardDB.cardName.avengingwrath
+                || card.name == CardDB.cardName.goblinblastmage
+                || card.name == CardDB.cardName.flamejuggler))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool nextMoveContainsGeneratedEntities()
+        {
+            if (this.bestActions.Count == 0) return false;
+
+            Action potentialMove = this.bestActions[0];
+            if (potentialMove.actionType == actionEnum.endturn) return false;
+
+            if (potentialMove.card != null && potentialMove.card.entity >= 1000) return true;
+            if (potentialMove.own != null && potentialMove.own.handcard.entity >= 1000) return true;
+            if (potentialMove.target != null && potentialMove.target.handcard.entity >= 1000) return true;
+
+            return false;
+        }
+
+        public bool boardContainsGeneratedEntities(Playfield p)
+        {
+            if (p.ownMinions.Find(m => m.handcard.entity>=1000) != null) return true;
+            if (p.enemyMinions.Find(m => m.handcard.entity >= 1000) != null) return true;
+            return false;
+        }
+
 
     }
 
