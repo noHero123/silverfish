@@ -418,6 +418,7 @@ namespace HREngine.Bots
              }
 
              ranger_action.Index = moveTodo.place;
+             if (moveTodo.place >= 1) ranger_action.Index = moveTodo.place - 1;
 
              if (moveTodo.target != null)
              {
@@ -1068,7 +1069,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.35";
+        public string versionnumber = "116.36";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
