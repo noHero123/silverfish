@@ -86,7 +86,7 @@
             foreach (Minion m in p.enemyMinions)
             {
                 retval -= this.getEnemyMinionValue(m, p);
-                if (m.name == CardDB.cardName.grimpatron && !m.silenced && p.enemyHeroName == HeroEnum.warrior) enemyhaspatron = true;
+                //if (m.name == CardDB.cardName.grimpatron && !m.silenced && p.enemyHeroName == HeroEnum.warrior) enemyhaspatron = true;
                 //hasTank = hasTank || m.taunt;
             }
 
@@ -125,7 +125,6 @@
                 }
                 if (m.Ready) readycount++;
                 if (m.maxHp >= 4 && (m.Angr > 2 || m.Hp > 3)) ownMinionsCount++;
-                if (enemyhaspatron && m.Angr <= 3) retval -= 20;
             }
 
            
@@ -279,6 +278,11 @@
             return retval;
         }
 
+        //other value of the board for enemys turn? (currently the same as getplayfield value)
+        public override float getPlayfieldValueEnemy(Playfield p)
+        {
+            return getPlayfieldValue(p);
+        }
 
 
         public override int getEnemyMinionValue(Minion m, Playfield p)

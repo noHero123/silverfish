@@ -48,10 +48,10 @@
             //playing aoe-effects if activated (and we didnt play loatheb)
             if (playaround && rootfield.ownloatheb == 0)
             {
-                float oldval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
+                float oldval = Ai.Instance.botBase.getPlayfieldValueEnemy(posmoves[0]);
                 posmoves[0].value = int.MinValue;
                 enemMana = posmoves[0].EnemyCardPlaying(rootfield.enemyHeroName, enemMana, rootfield.enemyAnzCards, pprob, pprob2);
-                float newval = Ai.Instance.botBase.getPlayfieldValue(posmoves[0]);
+                float newval = Ai.Instance.botBase.getPlayfieldValueEnemy(posmoves[0]);
                 posmoves[0].value = int.MinValue;
                 posmoves[0].enemyAnzCards--;
                 posmoves[0].triggerCardsChanged(false);
@@ -182,14 +182,19 @@
                         Playfield pf = new Playfield(p);
                         pf.doAction(a);
                         posmoves.Add(pf);
+
+                        /*if (print)
+                        {
+                            a.print();
+                        }*/
                         boardcount++;
                     }
 
                     p.endEnemyTurn();
                     //p.guessingHeroHP = rootfield.guessingHeroHP;
-                    if (Ai.Instance.botBase.getPlayfieldValue(p) < bestoldval) // want the best enemy-play-> worst for us
+                    if (Ai.Instance.botBase.getPlayfieldValueEnemy(p) < bestoldval) // want the best enemy-play-> worst for us
                     {
-                        bestoldval = Ai.Instance.botBase.getPlayfieldValue(p);
+                        bestoldval = Ai.Instance.botBase.getPlayfieldValueEnemy(p);
                         bestold = p;
                     }
                     posmoves.Remove(p);
@@ -223,12 +228,17 @@
             {
                 p = posmoves[i];
                 //p.guessingHeroHP = rootfield.guessingHeroHP;
-                float val = Ai.Instance.botBase.getPlayfieldValue(p);
+                float val = Ai.Instance.botBase.getPlayfieldValueEnemy(p);
                 if (bestval > val)// we search the worst value
                 {
                     bestplay = p;
                     bestval = val;
                 }
+                /*if (print)
+                {
+                    Helpfunctions.Instance.ErrorLog(""+val);
+                    p.printBoard();
+                }*/
             }
             if (print)
             {
@@ -246,7 +256,7 @@
         }
 
         CardDB.Card flame = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_614t);
-        CardDB.Card warsong = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_084);
+        //CardDB.Card warsong = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_084);// RIP little friend
         CardDB.Card warriorweapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_106);
 
         private void doSomeBasicEnemyAi(Playfield p)
@@ -306,7 +316,7 @@
 
                 switch (m.name)
                 {
-                    case CardDB.cardName.grimpatron:
+                    /*case CardDB.cardName.grimpatron:
                         if(p.enemyMinions.Count<=6 && p.enemyHeroName == HeroEnum.warrior)
                         {
                             bool hascharger = false;
@@ -321,6 +331,7 @@
 
                         }
                         break;
+                    */
                     case CardDB.cardName.fjolalightbane:
                         if (p.enemyAnzCards >= 2 && p.mana>=2)
                         {

@@ -106,6 +106,9 @@
         public int anzOwnMaidenOfTheLake = 0;
         public int anzEnemyMaidenOfTheLake = 0;
 
+        public int anzOwnWarsongCommanders = 0;
+        public int anzEnemyWarsongCommanders = 0;
+
         //new ones TGT##########################
 
         public int anzOwnMechwarper = 0;
@@ -328,6 +331,8 @@
             this.anzEnemysorcerersapprentice = 0;
             this.anzOwnSouthseacaptain = 0;
             this.anzEnemySouthseacaptain = 0;
+            this.anzOwnWarsongCommanders = 0;
+            this.anzEnemyWarsongCommanders = 0;
 
             this.feugenDead = Probabilitymaker.Instance.feugenDead;
             this.stalaggDead = Probabilitymaker.Instance.stalaggDead;
@@ -494,6 +499,7 @@
                 if (m.name == CardDB.cardName.acidmaw) this.anzOwnAcidMaw += 1;
                 if (m.name == CardDB.cardName.warhorsetrainer) this.anzOwnWarhorseTrainer += 1;
                 if (m.name == CardDB.cardName.maidenofthelake) this.anzOwnMaidenOfTheLake += 1;
+                if (m.name == CardDB.cardName.warsongcommander) this.anzOwnWarsongCommanders += 1;
 
                 if (m.name == CardDB.cardName.raidleader || m.name == CardDB.cardName.leokk) this.anzOwnRaidleader++;
                 if (m.name == CardDB.cardName.malganis) this.anzOwnMalGanis++;
@@ -581,6 +587,7 @@
                 if (m.name == CardDB.cardName.acidmaw) this.anzEnemyAcidMaw += 1;
                 if (m.name == CardDB.cardName.warhorsetrainer) this.anzEnemyWarhorseTrainer += 1;
                 if (m.name == CardDB.cardName.maidenofthelake) this.anzEnemyMaidenOfTheLake += 1;
+                if (m.name == CardDB.cardName.warsongcommander) this.anzEnemyWarsongCommanders += 1;
 
                 if (m.name == CardDB.cardName.raidleader || m.name == CardDB.cardName.leokk) this.anzEnemyRaidleader++;
                 if (m.name == CardDB.cardName.malganis) this.anzEnemyMalGanis++;
@@ -760,6 +767,8 @@
             this.anzOwnMechwarperStarted = p.anzOwnMechwarperStarted;
             this.anzEnemyMechwarper = p.anzEnemyMechwarper;
             this.anzEnemyMechwarperStarted = p.anzEnemyMechwarperStarted;
+            this.anzOwnWarsongCommanders = p.anzOwnWarsongCommanders;
+            this.anzEnemyWarsongCommanders = p.anzEnemyWarsongCommanders;
 
             this.feugenDead = p.feugenDead;
             this.stalaggDead = p.stalaggDead;
@@ -1761,10 +1770,16 @@
 
 
                 int cval = 0;
-                if (card.Charge || (card.Attack <= 3 && commander))
+                if (card.Charge) // ... || (card.Attack <= 3 && commander) //warsong commander fix
                 {
                     cval = card.Attack;
-                    if (card.windfury) cval = card.Attack;
+                    if (card.windfury) cval += card.Attack;
+
+                    if (commander)//warsong commander fix
+                    {
+                        cval +=1;
+                        if (card.windfury) cval += 1;
+                    }
                 }
                 if (card.name == CardDB.cardName.nerubianegg)
                 {
@@ -2340,6 +2355,7 @@
                 {
                     m.frozen = false;
                     m.canAttackNormal = false;
+                    //m.immune = false;
                 }
                 this.enemyHero.frozen = false;
 
@@ -2368,6 +2384,7 @@
                 this.enemyRecall = 0;
                 foreach (Minion m in enemyMinions)
                 {
+                    //m.immune = true;
                     m.numAttacksThisTurn = 0;
                     m.playedThisTurn = false;
                     m.updateReadyness();
@@ -5188,6 +5205,11 @@
 
                 }
 
+                if (m.charge >= 1)
+                {
+                    angr += this.anzOwnWarsongCommanders;
+                }
+
                 if (m.name == CardDB.cardName.silverhandrecruit)
                 {
                     angr += anzOwnWarhorseTrainer;
@@ -5217,14 +5239,26 @@
                     vert += anzEnemyMalGanis * 2;
 
                 }
+
+                if (m.charge >= 1)
+                {
+                    angr += this.anzEnemyWarsongCommanders;
+                }
+
                 if (m.name == CardDB.cardName.silverhandrecruit)
                 {
                     angr += anzEnemyWarhorseTrainer;
                 }
             }
 
-            if (get) this.minionGetBuffed(m, angr, vert);
-            else this.minionGetBuffed(m, -angr, -vert);
+            if (get)
+            {
+                this.minionGetBuffed(m, angr, vert);
+            }
+            else
+            {
+                this.minionGetBuffed(m, -angr, -vert);
+            }
 
         }
 
@@ -5897,14 +5931,18 @@
 
         public void minionGetCharge(Minion m)
         {
+            this.minionGetOrEraseAllAreaBuffs(m, false);//because of warsong commander
             m.charge++;
             m.updateReadyness();
+            this.minionGetOrEraseAllAreaBuffs(m, true);
         }
 
         public void minionLostCharge(Minion m)
         {
+            this.minionGetOrEraseAllAreaBuffs(m, false);//because of warsong commander
             m.charge--;
             m.updateReadyness();
+            this.minionGetOrEraseAllAreaBuffs(m, true);
         }
 
 

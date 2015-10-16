@@ -432,7 +432,7 @@
                     if (lethal)
                     {
                         //during lethal we only silence taunt, or if its a mob (owl/spellbreaker) + we can give him charge
-                        if (m.taunt || (name == CardDB.cardName.ironbeakowl && (p.ownMinions.Find(x => x.name == CardDB.cardName.tundrarhino) != null || p.ownMinions.Find(x => x.name == CardDB.cardName.warsongcommander) != null || p.owncards.Find(x => x.card.name == CardDB.cardName.charge) != null)) || (name == CardDB.cardName.spellbreaker && p.owncards.Find(x => x.card.name == CardDB.cardName.charge) != null)) return 0;
+                        if (m.taunt || (name == CardDB.cardName.ironbeakowl && (p.ownMinions.Find(x => x.name == CardDB.cardName.tundrarhino) != null || p.owncards.Find(x => x.card.name == CardDB.cardName.charge) != null)) || (name == CardDB.cardName.spellbreaker && p.owncards.Find(x => x.card.name == CardDB.cardName.charge) != null)) return 0; // || p.ownMinions.Find(x => x.name == CardDB.cardName.warsongcommander) != null
 
                         return 500;
                     }
@@ -1357,6 +1357,17 @@
                         }
                         if (beasts == 0) return 500;
                     }
+
+                    if (name == CardDB.cardName.warsongcommander)
+                    {
+                        int beasts = 0;
+                        foreach (Minion mm in p.ownMinions)
+                        {
+                            if (mm.charge>=1) beasts++;
+                        }
+                        if (beasts == 0) return 500;
+                    }
+
                     if (name == CardDB.cardName.southseacaptain)
                     {
                         int beasts = 0;
@@ -1420,7 +1431,8 @@
                         }
                         else
                         {
-                            if (!(name == CardDB.cardName.nightblade || card.Charge || this.silenceDatabase.ContainsKey(name) || ((TAG_RACE)card.race == TAG_RACE.PET && p.ownMinions.Find(x => x.name == CardDB.cardName.tundrarhino) != null) || (p.ownMinions.Find(x => x.name == CardDB.cardName.warsongcommander) != null && card.Attack <= 3) || p.owncards.Find(x => x.card.name == CardDB.cardName.charge) != null))
+                            //ignore that minion if it does not have charge, or we can give him charge ---> warsong was deleted ;_;
+                            if (!(name == CardDB.cardName.nightblade || card.Charge || this.silenceDatabase.ContainsKey(name) || ((TAG_RACE)card.race == TAG_RACE.PET && p.ownMinions.Find(x => x.name == CardDB.cardName.tundrarhino) != null) || p.owncards.Find(x => x.card.name == CardDB.cardName.charge) != null))
                             {
                                 return 500;
                             }
@@ -1439,6 +1451,7 @@
                 if (card.name == CardDB.cardName.faeriedragon) return -20;
                 if (card.name == CardDB.cardName.shrinkmeister) return 0;
                 if (card.Attack >= 3 && card.Health >= 2) return -20;
+                if (card.name == CardDB.cardName.wildgrowth) return -150;
                 
             }
 
@@ -2955,6 +2968,7 @@
             buffingMinionsDatabase.Add(CardDB.cardName.templeenforcer, 0);
             buffingMinionsDatabase.Add(CardDB.cardName.timberwolf, 0);
             buffingMinionsDatabase.Add(CardDB.cardName.malganis, 0);
+            buffingMinionsDatabase.Add(CardDB.cardName.warsongcommander, 0);
 
             buffing1TurnDatabase.Add(CardDB.cardName.abusivesergeant, 0);
             buffing1TurnDatabase.Add(CardDB.cardName.darkirondwarf, 0);
