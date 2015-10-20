@@ -468,6 +468,21 @@ namespace HREngine.Bots
             
             try
             {
+                //HR-only fix for being to fast
+                if (!this.doMultipleThingsAtATime && this.gameState.IsProcessingPowers)
+                {
+                    //do fake action
+                    BotAction fakemove = new HSRangerLib.BotAction();
+                    fakemove.Type = BotActionType.HERO_ATTACK;
+                    fakemove.Actor = base.FriendHero;
+                    fakemove.Target = this.FriendHero;
+                    e.action_list.Add(fakemove);
+                    Helpfunctions.Instance.logg("HR is to fast...");
+                    Helpfunctions.Instance.ErrorLog("HR is to fast...");
+                    return;
+                }
+
+                //we are conceding
                 if (this.isgoingtoconcede)
                 {
                     if (HSRangerLib.RangerBotSettings.CurrentSettingsGameType == HSRangerLib.enGameType.The_Arena)
@@ -1069,7 +1084,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.37";
+        public string versionnumber = "116.38";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
