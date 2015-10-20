@@ -86,7 +86,7 @@
             foreach (Minion m in p.enemyMinions)
             {
                 retval -= this.getEnemyMinionValue(m, p);
-                //if (m.name == CardDB.cardName.grimpatron && !m.silenced && p.enemyHeroName == HeroEnum.warrior) enemyhaspatron = true;
+                if (m.name == CardDB.cardName.grimpatron && !m.silenced) enemyhaspatron = true;
                 //hasTank = hasTank || m.taunt;
             }
 
