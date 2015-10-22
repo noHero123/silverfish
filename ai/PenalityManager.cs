@@ -1209,22 +1209,24 @@
             if (target == null) return 0;
             if (target.own && !target.isHero)
             {
+                // dont destroy owns ;_; (except mins with deathrattle effects)
                 Minion m = target;
                 if (!m.handcard.card.deathrattle)
                 {
                     pen = 500;
                 }
             }
+
             if (!target.own && !target.isHero)
             {
-                // dont destroy owns ;_; (except mins with deathrattle effects)
 
+                // destroy others
                 Minion m = target;
 
-                if (m.allreadyAttacked)
+                /*if (m.allreadyAttacked)//doesnt make sence :D
                 {
                     return 50;
-                }
+                }*/
 
                 if (name == CardDB.cardName.shadowwordpain)
                 {
@@ -1238,6 +1240,8 @@
                     return 10;
                 }
 
+                
+
                 if (m.Angr >= 4 || m.Hp >= 5)
                 {
                     pen = 0; // so we dont destroy cheap ones :D
@@ -1245,6 +1249,11 @@
                 else
                 {
                     pen = 30;
+                }
+
+                if ( m.name == CardDB.cardName.doomsayer )
+                {
+                    pen = 0;
                 }
 
                 if (name == CardDB.cardName.mindcontrol && (m.name == CardDB.cardName.direwolfalpha || m.name == CardDB.cardName.raidleader || m.name == CardDB.cardName.flametonguetotem) && p.enemyMinions.Count == 1)
