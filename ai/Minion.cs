@@ -51,6 +51,7 @@
         public bool concedal = false;
         public int souloftheforest = 0;
 
+        public int explorersHat = 0;
         public int ownBlessingOfWisdom = 0;
         public int enemyBlessingOfWisdom = 0;
         public int ownPowerWordGlory = 0;
@@ -122,6 +123,8 @@
             this.concedal = m.concedal;
             this.souloftheforest = m.souloftheforest;
 
+            this.explorersHat = m.explorersHat;
+
             this.ownBlessingOfWisdom = m.ownBlessingOfWisdom;
             this.enemyBlessingOfWisdom = m.enemyBlessingOfWisdom;
             this.ownPowerWordGlory = m.ownPowerWordGlory;
@@ -186,6 +189,8 @@
             this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
             this.concedal = m.concedal;
             this.souloftheforest = m.souloftheforest;
+
+            this.explorersHat = m.explorersHat;
 
             this.ownBlessingOfWisdom = m.ownBlessingOfWisdom;
             this.enemyBlessingOfWisdom = m.enemyBlessingOfWisdom;
@@ -543,6 +548,8 @@
             ownPowerWordGlory = 0;
             enemyPowerWordGlory = 0;
 
+            explorersHat = 0;
+
             cantBeTargetedBySpellsOrHeroPowers = false;
 
             charge = 0;
@@ -609,6 +616,12 @@
             int spellpowerbuffs = 0;
             foreach (miniEnch me in enchants)
             {
+
+                if (me.CARDID == CardDB.cardIDEnum.LOE_105e) //explorersHat
+                {
+                    this.explorersHat++;
+                }
+
 
                 if (me.CARDID == CardDB.cardIDEnum.AT_132_DRUIDe) //Claws better
                 {

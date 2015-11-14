@@ -11,9 +11,9 @@ namespace HREngine.Bots
 
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-            //TODO NOT SUPPORTED YET
-            //p.drawACard(CardDB.cardIDEnum.None, ownplay);
-            p.evaluatePenality += 100;
+            int decksize = (ownplay) ? p.ownDeckSize : p.enemyDeckSize;
+            if(decksize >=1) p.drawACard(CardDB.cardIDEnum.None, ownplay);
+            //p.evaluatePenality += 100;
 		}
 
 	}

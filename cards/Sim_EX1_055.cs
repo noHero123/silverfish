@@ -8,7 +8,7 @@ namespace HREngine.Bots
 	{
 
 //    erhält jedes mal +2 angriff in diesem zug, wenn ihr einen zauber wirkt.
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion, Minion target)
+        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion, Minion target, int choice)
         {
             if (triggerEffectMinion.own == wasOwnCard && c.type == CardDB.cardtype.SPELL)
             {

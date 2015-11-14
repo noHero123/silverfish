@@ -52,6 +52,8 @@
         public Dictionary<CardDB.cardName, int> priorityTargets = new Dictionary<CardDB.cardName, int>();
         public Dictionary<CardDB.cardName, int> specialMinions = new Dictionary<CardDB.cardName, int>(); //minions with cardtext, but no battlecry
 
+        private Dictionary<CardDB.cardName, int> discoverMinions = new Dictionary<CardDB.cardName, int>();
+
 
         private static PenalityManager instance;
 
@@ -83,6 +85,7 @@
             setupLethalHelpMinions();
             setupSilenceTargets();
             setupTargetAbilitys();
+            setupDiscover();
         }
 
         public void setCombos()
@@ -817,6 +820,9 @@
             // penality if carddraw is late or you have enough cards
             int pen = 0;
             if (!cardDrawBattleCryDatabase.ContainsKey(name)) return 0;
+
+            if (discoverMinions.ContainsKey(name)) return 500;// DELETE THIS when discover is supported from bot
+
             if (name == CardDB.cardName.ancientoflore && choice != 1) return 0;
             if (name == CardDB.cardName.wrath && choice != 2) return 0;
             if (name == CardDB.cardName.nourish && choice != 2) return 0;
@@ -1003,7 +1009,7 @@
             // TODO: Add Lightning Storm + Elemental Destruction if all enemies hp < the minimum damage?
 
             if (!this.randomEffects.ContainsKey(card.name) 
-                && !this.cardDrawBattleCryDatabase.ContainsKey(card.name) 
+                && !this.cardDrawBattleCryDatabase.ContainsKey(card.name)
                 && !(hasknife && card.type == CardDB.cardtype.MOB && p.enemyMinions.Count > 0) 
                 && !(hasgadget && card.type == CardDB.cardtype.SPELL)
                 && !(hasflamewaker && card.type == CardDB.cardtype.SPELL && p.enemyMinions.Count > 0)
@@ -1623,7 +1629,7 @@
             {
                 if (m.own)
                 {
-                    if (m.handcard.card.deathrattle || m.ancestralspirit >= 1 || m.souloftheforest >= 1 || m.enemyBlessingOfWisdom >= 1) return 0;
+                    if (m.handcard.card.deathrattle || m.ancestralspirit >= 1 || m.souloftheforest >= 1 || m.enemyBlessingOfWisdom >= 1 || m.explorersHat >=1) return 0;
                     if (m.handcard.card.Charge && ((m.numAttacksThisTurn == 1 && !m.windfury) || (m.numAttacksThisTurn == 2 && m.windfury))) return 0;
                     if (m.wounded || m.Angr < m.handcard.card.Attack || (m.silenced && PenalityManager.instance.specialMinions.ContainsKey(m.name))) return 0;
 
@@ -2707,6 +2713,11 @@
             cardDrawBattleCryDatabase.Add(CardDB.cardName.ambush, 1);
             cardDrawBattleCryDatabase.Add(CardDB.cardName.soultap, 1);
             cardDrawBattleCryDatabase.Add(CardDB.cardName.lockandload, 1);
+
+            //discover minions
+            cardDrawBattleCryDatabase.Add(CardDB.cardName.tracking, 1);
+            cardDrawBattleCryDatabase.Add(CardDB.cardName.jeweledscarab, 1);
+            cardDrawBattleCryDatabase.Add(CardDB.cardName.ancientshade, 1);
         }
 
         private void setupDiscardCards()
@@ -3363,6 +3374,13 @@
             this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_132_HUNTER, 1);
             this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_132_MAGE, 1);
             this.TargetAbilitysDatabase.Add(CardDB.cardIDEnum.AT_132_PRIEST, 1);
+        }
+
+        private void setupDiscover()
+        {
+            this.discoverMinions.Add(CardDB.cardName.tracking, 1);
+            this.discoverMinions.Add(CardDB.cardName.jeweledscarab, 1);
+            this.discoverMinions.Add(CardDB.cardName.ancientshade, 1);
         }
 
     }

@@ -25037,4 +25037,1077 @@ Gain 4 Armor.</Tag>
     <Tag enumID="47" type="" value="6" />
     <Tag enumID="184" type="String">Battlecry: Someone remembers to publish this card.</Tag>
   </Entity>
+  <Entity version="2" CardID="LOE_002">
+    <MasterPower>cb4f6231-2ccb-4c64-bfa5-222d6e346fb9</MasterPower>
+    <Tag enumID="185" type="String">Forgotten Torch</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="199" type="" value="4" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">Deal $3 damage. Shuffle a 'Roaring Torch' into your deck that deals 6 damage.</Tag>
+    <Tag enumID="351" type="String">Why does a forgotten torch turn into a roaring torch with no provocation?  It's one of life's many mysteries.</Tag>
+    <Tag enumID="342" type="String">Richard Wright</Tag>
+    <Power definition="cb4f6231-2ccb-4c64-bfa5-222d6e346fb9">
+      <PlayRequirement reqID="11" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="LOE_002t">
+    <MasterPower>df5ba55a-afab-4233-9a8f-b73082c15e1d</MasterPower>
+    <Tag enumID="185" type="String">Roaring Torch</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="199" type="" value="4" />
+    <Tag enumID="184" type="String">Deal $6 damage.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">Richard Wright</Tag>
+    <Power definition="df5ba55a-afab-4233-9a8f-b73082c15e1d">
+      <PlayRequirement reqID="11" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="LOE_003">
+    <MasterPower>e97e3952-c7f5-41fa-b68d-91ea57634738</MasterPower>
+    <Tag enumID="185" type="String">Ethereal Conjurer</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="199" type="" value="4" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry: Discover&lt;/b&gt; a spell.</Tag>
+    <Tag enumID="47" type="" value="6" />
+    <Tag enumID="45" type="" value="3" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Despite the name, he's a solid conjurer.</Tag>
+    <Tag enumID="342" type="String">Ben Zhang</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <ReferencedTag name="Treasure" enumID="415" type="Bool" value="1" />
+    <Power definition="e97e3952-c7f5-41fa-b68d-91ea57634738" />
+  </Entity>
+  <Entity version="2" CardID="LOE_006">
+    <MasterPower>dab8c622-a68e-4663-800c-ac2d6aa7d809</MasterPower>
+    <Tag enumID="185" type="String">Museum Curator</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="47" type="" value="1" />
+    <Tag enumID="45" type="" value="2" />
+    <Tag enumID="199" type="" value="6" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry: Discover&lt;/b&gt; a &lt;b&gt;Deathrattle&lt;/b&gt; card.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">He is forever cursing the kids who climb on the rails and the evil archeologists who animate the exhibits.</Tag>
+    <Tag enumID="342" type="String">Steve Prescott</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <ReferencedTag name="Treasure" enumID="415" type="Bool" value="1" />
+    <ReferencedTag name="Deathrattle" enumID="217" type="Bool" value="1" />
+    <Power definition="dab8c622-a68e-4663-800c-ac2d6aa7d809" />
+  </Entity>
+  <Entity version="2" CardID="LOE_007">
+    <MasterPower>7b0c517f-eaf6-4940-8afb-80d9a975b4b2</MasterPower>
+    <Tag enumID="185" type="String">Curse of Rafaam</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="199" type="" value="9" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">Give your opponent a 'Cursed!' card.
+While they hold it, they take 2 damage on their turn.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">This is what happens when Rafaam stubs his toe unexpectedly.</Tag>
+    <Tag enumID="342" type="String">Alex Horley Orlandelli</Tag>
+    <Power definition="7b0c517f-eaf6-4940-8afb-80d9a975b4b2" />
+  </Entity>
+  <Entity version="2" CardID="LOE_007t">
+    <Tag enumID="185" type="String">Cursed!</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="199" type="" value="9" />
+    <Tag enumID="184" type="String">While this is in your hand, take 2 damage at the start of your turn.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">Jim Nelson</Tag>
+    <Tag enumID="349" type="" value="1" />
+    <Tag enumID="401" type="" value="1" />
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="7bff50f3-ea82-4762-92a0-35a366e23da6" />
+    <Power definition="afd9a827-8f4f-4b78-ac06-bacdb3845338" />
+    <Power definition="2c792cf1-1a14-4aed-9200-b079ec11297b" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="True" />
+  </Entity>
+  <Entity version="2" CardID="LOE_009">
+    <Tag enumID="185" type="String">Obsidian Destroyer</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="7" />
+    <Tag enumID="199" type="" value="10" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">At the end of your turn, summon a 1/1 Scarab with &lt;b&gt;Taunt&lt;/b&gt;.</Tag>
+    <Tag enumID="47" type="" value="7" />
+    <Tag enumID="45" type="" value="7" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">No obsidian is safe around the Obsidian Destroyer!</Tag>
+    <Tag enumID="342" type="String">Anton Zemskov</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="83a2397d-63e0-4973-b59c-0f45c6d64553" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="LOE_009t">
+    <Tag enumID="185" type="String">Scarab</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="47" type="" value="1" />
+    <Tag enumID="45" type="" value="1" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="184" type="String">&lt;b&gt;Taunt&lt;/b&gt;</Tag>
+    <Tag enumID="199" type="" value="10" />
+    <Tag enumID="342" type="String">Jaemin Kim</Tag>
+    <Tag enumID="190" type="" value="1" />
+    <Power definition="889b3ee4-f594-4afe-8d46-7923d8325a53" />
+  </Entity>
+  <Entity version="2" CardID="LOE_010">
+    <Tag enumID="185" type="String">Pit Snake</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="199" type="" value="7" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">Destroy any minion damaged by this minion.</Tag>
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="1" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="200" type="" value="20" />
+    <Tag enumID="351" type="String">It could be worse.  It could be a Snake Pit.</Tag>
+    <Tag enumID="342" type="String">Bernie Kang</Tag>
+    <Tag enumID="363" type="" value="1" />
+    <Power definition="99186b1d-bf98-4e30-b806-49ba1c5c7125" />
+  </Entity>
+  <Entity version="2" CardID="LOE_011">
+    <MasterPower>d0ac73b1-6b85-4767-aee5-02e8810a9e9f</MasterPower>
+    <Tag enumID="185" type="String">Reno Jackson</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="5" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="6" />
+    <Tag enumID="47" type="" value="4" />
+    <Tag enumID="45" type="" value="6" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; If your deck contains no more than 1 of any card, fully heal your hero.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="114" type="" value="1" />
+    <Tag enumID="351" type="String">Reno is a four-time winner of the 'Best Accessorized Explorer' award.</Tag>
+    <Tag enumID="342" type="String">Tyson Murphy</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="d0ac73b1-6b85-4767-aee5-02e8810a9e9f" />
+  </Entity>
+  <Entity version="2" CardID="LOE_012">
+    <Tag enumID="185" type="String">Tomb Pillager</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="199" type="" value="7" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Deathrattle:&lt;/b&gt; Add a Coin to your hand.</Tag>
+    <Tag enumID="47" type="" value="5" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">After the guild broke up, he could no longer raid the tombs.</Tag>
+    <Tag enumID="342" type="String">Dave Allsop</Tag>
+    <Tag enumID="217" type="" value="1" />
+    <Power definition="b69dc759-1943-4941-9811-fb5b78d4c743" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="LOE_016">
+    <Tag enumID="185" type="String">Rumbling Elemental</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="199" type="" value="8" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">After you play a &lt;b&gt;Battlecry&lt;/b&gt; minion, deal 2 damage to a random enemy.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="45" type="" value="6" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="351" type="String">He's a very hungry elemental.</Tag>
+    <Tag enumID="342" type="String">Cole Eastburn</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <ReferencedTag name="Battlecry" enumID="218" type="Bool" value="1" />
+    <Power definition="bd2c0dab-2e8b-4666-acca-085dde108fd0" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="True" />
+  </Entity>
+  <Entity version="2" CardID="LOE_017">
+    <MasterPower>357bf519-a8e4-4740-b97e-f6ad02586978</MasterPower>
+    <Tag enumID="185" type="String">Keeper of Uldaman</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="199" type="" value="5" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; Set a minion's Attack and Health to 3.</Tag>
+    <Tag enumID="325" type="String">Change to 3/3.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">U da man!  No, U da man!</Tag>
+    <Tag enumID="342" type="String">James Ryman</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="357bf519-a8e4-4740-b97e-f6ad02586978">
+      <PlayRequirement reqID="22" param="" />
+      <PlayRequirement reqID="1" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="LOE_017e">
+    <Tag enumID="185" type="String">Watched</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="6" />
+    <Tag enumID="199" type="" value="5" />
+    <Tag enumID="184" type="String">Stats changed to 3/3.</Tag>
+    <Tag enumID="330" type="" value="3" />
+    <Tag enumID="331" type="" value="3" />
+    <Power definition="11d50dce-d147-472e-8d6b-616e46a8fd81" />
+  </Entity>
+  <Entity version="2" CardID="LOE_018">
+    <Tag enumID="185" type="String">Tunnel Trogg</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="47" type="" value="1" />
+    <Tag enumID="45" type="" value="3" />
+    <Tag enumID="199" type="" value="8" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">Whenever you &lt;b&gt;Overload&lt;/b&gt;, gain +1 Attack per locked Mana Crystal.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Sure, they're ugly, but they live in tunnels.  You try your beauty routine without natural light.</Tag>
+    <Tag enumID="342" type="String">Andrew Hou</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <ReferencedTag name="Overload" enumID="215" type="Number" value="1" />
+    <Power definition="d7c620e3-fb89-44dd-b675-ffb3794d1e4f" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="LOE_018e">
+    <Tag enumID="185" type="String">Trogg No Stupid</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="6" />
+    <Tag enumID="199" type="" value="8" />
+    <Tag enumID="184" type="String">Increased Attack.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Power definition="b77a3547-5db1-4867-b9a1-db9e12ae2778" />
+  </Entity>
+  <Entity version="2" CardID="LOE_019">
+    <MasterPower>bc335cf1-6816-48ce-ae51-5a2783797d5a</MasterPower>
+    <Tag enumID="185" type="String">Unearthed Raptor</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="199" type="" value="7" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; Choose a friendly minion. Gain a copy of its &lt;b&gt;Deathrattle&lt;/b&gt; effect.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="351" type="String">Still hunting for the ones who earthed him.</Tag>
+    <Tag enumID="342" type="String">Trent Kaniuga</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <ReferencedTag name="Deathrattle" enumID="217" type="Bool" value="1" />
+    <Power definition="bc335cf1-6816-48ce-ae51-5a2783797d5a">
+      <PlayRequirement reqID="22" param="" />
+      <PlayRequirement reqID="2" param="" />
+      <PlayRequirement reqID="58" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="LOE_019e">
+    <Tag enumID="185" type="String">Unearthed Raptor</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="6" />
+    <Tag enumID="184" type="String">Copied &lt;b&gt;Deathrattle&lt;/b&gt; from CARD_NAME.</Tag>
+    <Tag enumID="330" type="" value="1" />
+    <Tag enumID="331" type="" value="1" />
+    <Tag enumID="199" type="" value="7" />
+  </Entity>
+  <Entity version="2" CardID="LOE_019t">
+    <MasterPower>76dacd09-5d96-477b-94e3-3e403932dae9</MasterPower>
+    <Tag enumID="185" type="String">Map to the Golden Monkey</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="184" type="String">Shuffle the Golden Monkey into your deck. Draw a card.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">Milivoj Ceran</Tag>
+    <Power definition="76dacd09-5d96-477b-94e3-3e403932dae9" />
+  </Entity>
+  <Entity version="2" CardID="LOE_019t2">
+    <Tag enumID="185" type="String">Golden Monkey</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="6" />
+    <Tag enumID="45" type="" value="6" />
+    <Tag enumID="184" type="String">&lt;b&gt;Taunt&lt;/b&gt;
+&lt;b&gt;Battlecry:&lt;/b&gt; Replace your hand and deck with &lt;b&gt;Legendary&lt;/b&gt; minions.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">A.J. Nazzaro</Tag>
+    <Tag enumID="190" type="" value="1" />
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="b5b920d8-5a18-4f15-a062-683064cdf7ac" />
+    <Power definition="1907e2b5-6a54-43c9-ad8e-5babf6ca3b72" />
+  </Entity>
+  <Entity version="2" CardID="LOE_020">
+    <MasterPower>acc77346-9843-4b71-85d5-ae89982f04ac</MasterPower>
+    <Tag enumID="185" type="String">Desert Camel</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="199" type="" value="3" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; Put a 1-Cost minion from each deck into the battlefield.</Tag>
+    <Tag enumID="200" type="" value="20" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Dang.  This card is sweet.  Almost as sweet as Dessert Camel.</Tag>
+    <Tag enumID="342" type="String">Matt Dixon</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="acc77346-9843-4b71-85d5-ae89982f04ac" />
+  </Entity>
+  <Entity version="2" CardID="LOE_021">
+    <Tag enumID="185" type="String">Dart Trap</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="199" type="" value="3" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Secret:&lt;/b&gt; When an opposing Hero Power is used, deal 5 damage to a random enemy.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Five years of tap-dancing lessons are FINALLY going to pay off!</Tag>
+    <Tag enumID="342" type="String">Zoltan Boros</Tag>
+    <Tag enumID="219" type="" value="1" />
+    <Power definition="076667f7-aa3f-4b85-ab2e-55acad1211bc" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="LOE_022">
+    <Tag enumID="185" type="String">Fierce Monkey</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="199" type="" value="10" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Taunt&lt;/b&gt;</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Fierce monkey.  That funky monkey.</Tag>
+    <Tag enumID="200" type="" value="20" />
+    <Tag enumID="342" type="String">Peter Stapleton</Tag>
+    <Tag enumID="190" type="" value="1" />
+    <Power definition="f3cb0aeb-4bde-4269-bb88-96acb4e2af82" />
+  </Entity>
+  <Entity version="2" CardID="LOE_023">
+    <MasterPower>31c99344-ed66-4893-891f-a3fc588d0229</MasterPower>
+    <Tag enumID="185" type="String">Dark Peddler</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="199" type="" value="9" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="2" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry: Discover&lt;/b&gt; a
+1-Cost card.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">I'm offering you a bargain here!  This amazing vacuum cleaner for your soul!</Tag>
+    <Tag enumID="342" type="String">George Davis</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <ReferencedTag name="Treasure" enumID="415" type="Bool" value="1" />
+    <Power definition="31c99344-ed66-4893-891f-a3fc588d0229" />
+  </Entity>
+  <Entity version="2" CardID="LOE_026">
+    <MasterPower>488efb5e-b992-4b6d-a27b-8c1a3e36426d</MasterPower>
+    <Tag enumID="185" type="String">Anyfin Can Happen</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="199" type="" value="5" />
+    <Tag enumID="48" type="" value="10" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">Summon 7 Murlocs that died this game.</Tag>
+    <Tag enumID="351" type="String">Theme song by Ellie Goldfin and Blagghghlrlrl Harris.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">Ryan Metcalf</Tag>
+    <Power definition="488efb5e-b992-4b6d-a27b-8c1a3e36426d" />
+  </Entity>
+  <Entity version="2" CardID="LOE_027">
+    <Tag enumID="185" type="String">Sacred Trial</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="199" type="" value="5" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Secret:&lt;/b&gt; When your opponent has at least 3 minions and plays another, destroy it.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">You have chosen poorly.</Tag>
+    <Tag enumID="342" type="String">Zoltan Boros</Tag>
+    <Tag enumID="219" type="" value="1" />
+    <Power definition="5abffdcd-89c2-4365-9620-7daeaa23983f" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="LOE_029">
+    <Tag enumID="185" type="String">Jeweled Scarab</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="47" type="" value="1" />
+    <Tag enumID="45" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry: Discover&lt;/b&gt; a
+3-Cost card.</Tag>
+    <Tag enumID="351" type="String">It's amazing what you can do with super glue!</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="200" type="" value="20" />
+    <Tag enumID="342" type="String">Jaemin Kim</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <ReferencedTag name="Treasure" enumID="415" type="Bool" value="1" />
+    <Power definition="b17ccb73-bc27-48dc-93f6-78bf9c7bd01b" />
+  </Entity>
+  <Entity version="2" CardID="LOE_038">
+    <Tag enumID="185" type="String">Naga Sea Witch</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="4" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="47" type="" value="5" />
+    <Tag enumID="45" type="" value="5" />
+    <Tag enumID="184" type="String">Your cards cost (5).</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">If she had studied harder, she would have been a C+ witch.</Tag>
+    <Tag enumID="342" type="String">Ben Zhang</Tag>
+    <Tag enumID="362" type="" value="1" />
+    <Power definition="75905451-09d9-4f34-916d-a78597abc111" />
+  </Entity>
+  <Entity version="2" CardID="LOE_039">
+    <Tag enumID="185" type="String">Gorillabot A-3</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; If you control another Mech, &lt;b&gt;Discover&lt;/b&gt; a Mech.</Tag>
+    <Tag enumID="351" type="String">A-1 and A-2 went nuts, when they should have gone bolts.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="200" type="" value="17" />
+    <Tag enumID="342" type="String">Skan Srisuwan</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <ReferencedTag name="Treasure" enumID="415" type="Bool" value="1" />
+    <Power definition="311e69bc-ec49-4bf5-b439-9b4ec71ccd57" />
+    <Power definition="dbc2479f-3ab9-468d-9aa7-cba3597fcb7b" />
+  </Entity>
+  <Entity version="2" CardID="LOE_046">
+    <Tag enumID="185" type="String">Huge Toad</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="2" />
+    <Tag enumID="184" type="String">&lt;b&gt;Deathrattle:&lt;/b&gt; Deal 1 damage to a random enemy.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="200" type="" value="20" />
+    <Tag enumID="351" type="String">Deals damage when he croaks.</Tag>
+    <Tag enumID="342" type="String">Matt Dixon</Tag>
+    <Tag enumID="217" type="" value="1" />
+    <Power definition="6db8a4b4-d071-456a-9fe9-3a2127db7120" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="True" />
+  </Entity>
+  <Entity version="2" CardID="LOE_047">
+    <Tag enumID="185" type="String">Tomb Spider</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="3" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry: Discover&lt;/b&gt; a Beast.</Tag>
+    <Tag enumID="351" type="String">Less serious than its cousin, the Grave Spider.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="200" type="" value="20" />
+    <Tag enumID="342" type="String">Turovec Konstantin</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <ReferencedTag name="Treasure" enumID="415" type="Bool" value="1" />
+    <Power definition="64f8117b-f6aa-4e68-bec3-7462ff18c3fc" />
+  </Entity>
+  <Entity version="2" CardID="LOE_050">
+    <Tag enumID="185" type="String">Mounted Raptor</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="2" />
+    <Tag enumID="184" type="String">&lt;b&gt;Deathrattle:&lt;/b&gt; Summon a random 1-Cost minion.</Tag>
+    <Tag enumID="351" type="String">Clever girl!</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="199" type="" value="2" />
+    <Tag enumID="200" type="" value="20" />
+    <Tag enumID="342" type="String">Ben Zhang</Tag>
+    <Tag enumID="217" type="" value="1" />
+    <Power definition="9bdee693-fbdf-46b5-9037-e52eb0d7841a" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="LOE_051">
+    <Tag enumID="185" type="String">Jungle Moonkin</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="4" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="184" type="String">Both players have
+&lt;b&gt;Spell Damage +2&lt;/b&gt;.</Tag>
+    <Tag enumID="200" type="" value="20" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="199" type="" value="2" />
+    <Tag enumID="351" type="String">The REAL angry chicken!</Tag>
+    <Tag enumID="342" type="String">Mike Sass</Tag>
+    <ReferencedTag name="Spellpower" enumID="192" type="Bool" value="1" />
+    <Power definition="2349ad2c-ccf3-4ff4-bc98-c8727e8e43ec" />
+  </Entity>
+  <Entity version="2" CardID="LOE_053">
+    <Tag enumID="185" type="String">Djinni of Zephyrs</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="4" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="47" type="" value="4" />
+    <Tag enumID="45" type="" value="6" />
+    <Tag enumID="184" type="String">Whenever you cast a spell on another friendly minion, cast a copy of it on this one.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">If you want your wish granted, don't rub him the wrong way.</Tag>
+    <Tag enumID="342" type="String">Jakub Kasper</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="32cec84d-5b0c-48d7-9629-7da09de1951a" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="True" />
+  </Entity>
+  <Entity version="2" CardID="LOE_061">
+    <Tag enumID="185" type="String">Anubisath Sentinel</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="47" type="" value="4" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="184" type="String">&lt;b&gt;Deathrattle:&lt;/b&gt; Give a random friendly minion +3/+3.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">He's actually a 1/1 who picked up the hammer from the last guy.</Tag>
+    <Tag enumID="342" type="String">Paul Mafayon</Tag>
+    <Tag enumID="217" type="" value="1" />
+    <Power definition="1c2f1a94-dc67-444b-bce0-8b67b281539a" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="LOE_061e">
+    <Tag enumID="185" type="String">Power of the Titans</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="6" />
+    <Tag enumID="184" type="String">+3/+3.</Tag>
+    <Tag enumID="330" type="" value="1" />
+    <Tag enumID="331" type="" value="1" />
+    <Power definition="4bd94c28-8ec5-41fa-bc2e-b07f9eb8c4ad" />
+  </Entity>
+  <Entity version="2" CardID="LOE_073">
+    <MasterPower>8411cf88-5015-46f4-8524-95ab8e0bf1da</MasterPower>
+    <Tag enumID="185" type="String">Fossilized Devilsaur</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="8" />
+    <Tag enumID="47" type="" value="8" />
+    <Tag enumID="45" type="" value="8" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; If you control a Beast, gain &lt;b&gt;Taunt&lt;/b&gt;.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">This was the only job he could get after the dinosaur theme park debacle.</Tag>
+    <Tag enumID="342" type="String">Trent Kaniuga</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <ReferencedTag name="Taunt" enumID="190" type="Bool" value="1" />
+    <Power definition="8411cf88-5015-46f4-8524-95ab8e0bf1da" />
+    <Power definition="2115bde0-fea7-4958-81fb-2b764fccd88e" />
+  </Entity>
+  <Entity version="2" CardID="LOE_073e">
+    <Tag enumID="185" type="String">Fossilized</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="6" />
+    <Tag enumID="184" type="String">Has &lt;b&gt;Taunt&lt;/b&gt;.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Power definition="c9445efa-15ab-4c1c-aeae-264ee2def8c1" />
+  </Entity>
+  <Entity version="2" CardID="LOE_076">
+    <MasterPower>d2992705-a675-4b37-afb9-914a911d83b0</MasterPower>
+    <Tag enumID="185" type="String">Sir Finley Mrrgglton</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="5" />
+    <Tag enumID="114" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="47" type="" value="1" />
+    <Tag enumID="45" type="" value="3" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry: Discover&lt;/b&gt; a new basic Hero Power.</Tag>
+    <Tag enumID="200" type="" value="14" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">In addition to fluent Common, he also speaks fourteen dialects of 'mrgl'.</Tag>
+    <Tag enumID="342" type="String">Matt Dixon</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <ReferencedTag name="Treasure" enumID="415" type="Bool" value="1" />
+    <Power definition="d2992705-a675-4b37-afb9-914a911d83b0" />
+    <EntourageCard cardID="00000011-b1b7-4137-a76e-d8f43551b27e" />
+    <EntourageCard cardID="00000011-314f-47e2-a096-f0522a7e67c7" />
+    <EntourageCard cardID="00000011-6671-4f8f-a9e6-764a8786d2d0" />
+    <EntourageCard cardID="00000011-67e0-46cc-b0e5-ac354d3147ff" />
+    <EntourageCard cardID="00000011-a196-472a-b617-3fc0eb5276b7" />
+    <EntourageCard cardID="00000011-a266-485e-848b-d3cd9a0b549c" />
+    <EntourageCard cardID="00000011-9a14-4c69-8953-36e8518806d6" />
+    <EntourageCard cardID="00000011-f0c8-4618-8d66-265dd2678b0a" />
+    <EntourageCard cardID="00000011-43c5-4c9d-ada7-164a2537a8ed" />
+  </Entity>
+  <Entity version="2" CardID="LOE_077">
+    <Tag enumID="185" type="String">Brann Bronzebeard</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="5" />
+    <Tag enumID="114" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="184" type="String">Your &lt;b&gt;Battlecries&lt;/b&gt; trigger twice.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="325" type="String">Trigger a &lt;b&gt;Deathrattle&lt;/b&gt;.</Tag>
+    <Tag enumID="351" type="String">Contains 75% more fiber than his brother Magni!</Tag>
+    <Tag enumID="342" type="String">Sam Nielson</Tag>
+    <Tag enumID="362" type="" value="1" />
+    <ReferencedTag name="Battlecry" enumID="218" type="Bool" value="1" />
+    <Power definition="64bc9c35-f5ef-4abe-92dd-569c1ce631aa" />
+  </Entity>
+  <Entity version="2" CardID="LOE_079">
+    <Tag enumID="185" type="String">Elise Starseeker</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="5" />
+    <Tag enumID="114" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="5" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; Shuffle the 'Map to the Golden Monkey'   into your deck.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">A large part of her job entails not mixing up the Map to the Golden Monkey with the Map to Monkey Island.</Tag>
+    <Tag enumID="342" type="String">Luke Mancini</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="5c346497-42d7-43cb-9133-3ef1a4629dfb">
+      <PlayRequirement reqID="2" param="" />
+      <PlayRequirement reqID="1" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="LOE_086">
+    <Tag enumID="185" type="String">Summoning Stone</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="47" type="" value="0" />
+    <Tag enumID="45" type="" value="6" />
+    <Tag enumID="184" type="String">Whenever you cast a spell, summon a random minion of the same Cost.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Sometimes it feels like it's always the same slackers that are waiting for a summon.</Tag>
+    <Tag enumID="342" type="String">Jason Kang</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="32b3e612-a72f-4740-8d94-d5a97a46039e" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="True" />
+  </Entity>
+  <Entity version="2" CardID="LOE_089">
+    <Tag enumID="185" type="String">Wobbling Runts</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="6" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="6" />
+    <Tag enumID="184" type="String">&lt;b&gt;Deathrattle:&lt;/b&gt; Summon three 2/2 Runts.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">The fourth one fell off in a tragic accident.  They don't talk about it.</Tag>
+    <Tag enumID="342" type="String">Sam Nielson</Tag>
+    <Tag enumID="217" type="" value="1" />
+    <Power definition="b1424c4a-3fc0-4150-b46b-23805cb0ae0e" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
+  <Entity version="2" CardID="LOE_089t">
+    <Tag enumID="185" type="String">Rascally Runt</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="2" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">Matt Dixon</Tag>
+  </Entity>
+  <Entity version="2" CardID="LOE_089t2">
+    <Tag enumID="185" type="String">Wily Runt</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="2" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">Matt Dixon</Tag>
+  </Entity>
+  <Entity version="2" CardID="LOE_089t3">
+    <Tag enumID="185" type="String">Grumbly Runt</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="45" type="" value="2" />
+    <Tag enumID="342" type="String">Matt Dixon</Tag>
+  </Entity>
+  <Entity version="2" CardID="LOE_092">
+    <MasterPower>23067734-0f72-4858-87d4-70b6795c834b</MasterPower>
+    <Tag enumID="185" type="String">Arch-Thief Rafaam</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="203" type="" value="5" />
+    <Tag enumID="114" type="" value="1" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="48" type="" value="9" />
+    <Tag enumID="47" type="" value="7" />
+    <Tag enumID="45" type="" value="8" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry: Discover&lt;/b&gt; a powerful Artifact.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">He's very good at retrieving artifacts.  From other people's museums.</Tag>
+    <Tag enumID="342" type="String">Alex Horley Orlandelli</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <ReferencedTag name="Treasure" enumID="415" type="Bool" value="1" />
+    <Power definition="23067734-0f72-4858-87d4-70b6795c834b" />
+  </Entity>
+  <Entity version="2" CardID="LOE_104">
+    <MasterPower>9b890453-948c-4a6d-a0c3-11fb5ed913a0</MasterPower>
+    <Tag enumID="185" type="String">Entomb</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="6" />
+    <Tag enumID="184" type="String">Choose an enemy minion.
+Shuffle it into your deck.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="199" type="" value="6" />
+    <Tag enumID="351" type="String">It's perfectly safe as long as you remember to put in air holes.</Tag>
+    <Tag enumID="342" type="String">Alex Konstad</Tag>
+    <Power definition="9b890453-948c-4a6d-a0c3-11fb5ed913a0">
+      <PlayRequirement reqID="11" param="" />
+      <PlayRequirement reqID="1" param="" />
+      <PlayRequirement reqID="3" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="LOE_105">
+    <MasterPower>adfc6c29-6be2-49bc-9131-ec208fdaeeb4</MasterPower>
+    <Tag enumID="185" type="String">Explorer's Hat</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="184" type="String">Give a minion +1/+1 and "&lt;b&gt;Deathrattle:&lt;/b&gt; Add an Explorer's Hat to your hand."</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="199" type="" value="3" />
+    <Tag enumID="351" type="String">Harrison Jones was disappointed that he didn't get to be part of the League of Explorers, but his hat did.</Tag>
+    <Tag enumID="342" type="String">Joe Wilson</Tag>
+    <ReferencedTag name="Deathrattle" enumID="217" type="Bool" value="1" />
+    <Power definition="adfc6c29-6be2-49bc-9131-ec208fdaeeb4">
+      <PlayRequirement reqID="11" param="" />
+      <PlayRequirement reqID="1" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="LOE_105e">
+    <Tag enumID="185" type="String">Explorer's Hat</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="6" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="184" type="String">+1/+1. &lt;b&gt;Deathrattle:&lt;/b&gt; Add an Explorer's Hat to your hand.</Tag>
+    <Tag enumID="199" type="" value="3" />
+    <Power definition="4d17d898-0375-4432-ba69-2fd6db65080e" />
+  </Entity>
+  <Entity version="2" CardID="LOE_107">
+    <Tag enumID="185" type="String">Eerie Statue</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="7" />
+    <Tag enumID="45" type="" value="7" />
+    <Tag enumID="184" type="String">Cant attack unless its the only minion in the battlefield.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Don't blink!  Don't turn your back, don't look away, and DON'T BLINK.</Tag>
+    <Tag enumID="342" type="String">Jim Nelson</Tag>
+    <Power definition="8ffe4883-3335-416b-b5c4-324b9718cb95" />
+  </Entity>
+  <Entity version="2" CardID="LOE_110">
+    <MasterPower>d90a4371-6777-4a32-89d4-2115aa6d309e</MasterPower>
+    <Tag enumID="185" type="String">Ancient Shade</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="7" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; Shuffle an 'Ancient Curse' into your deck that deals 7 damage to you when drawn.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Warning: Do not expose to direct sunlight.</Tag>
+    <Tag enumID="342" type="String">Slawomir Maniak</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="d90a4371-6777-4a32-89d4-2115aa6d309e" />
+  </Entity>
+  <Entity version="2" CardID="LOE_110t">
+    <Tag enumID="185" type="String">Ancient Curse</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="0" />
+    <Tag enumID="184" type="String">When you draw this, take 7 damage and draw a card.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">Slawomir Maniak</Tag>
+    <Tag enumID="349" type="" value="1" />
+    <Power definition="c93da5f8-0382-4e04-920c-cd4b8846303a" />
+    <Power definition="903fb4e1-48a2-4b69-829c-cd78192dab21" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="True" />
+  </Entity>
+  <Entity version="2" CardID="LOE_111">
+    <MasterPower>0ce50e91-436c-4d4e-819c-f230bc9cb3d8</MasterPower>
+    <Tag enumID="185" type="String">Excavated Evil</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="184" type="String">Deal $3 damage to all minions.
+Shuffle this card into your opponent's deck.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="199" type="" value="6" />
+    <Tag enumID="351" type="String">MOM! DAD! DON'T TOUCH IT! IT'S EVIL!!!!!!</Tag>
+    <Tag enumID="342" type="String">Raymond Swanland</Tag>
+    <Power definition="0ce50e91-436c-4d4e-819c-f230bc9cb3d8" />
+  </Entity>
+  <Entity version="2" CardID="LOE_113">
+    <MasterPower>d2665460-6feb-4f91-aa01-ea4b015ffe90</MasterPower>
+    <Tag enumID="185" type="String">Everyfin is Awesome</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="7" />
+    <Tag enumID="184" type="String">Give your minions +2/+2.
+Costs (1) less for each Murloc you control.</Tag>
+    <Tag enumID="199" type="" value="8" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Everyfin is cool when you're part of a murloc team!</Tag>
+    <Tag enumID="342" type="String">Andrius Matijoshius</Tag>
+    <Power definition="d2665460-6feb-4f91-aa01-ea4b015ffe90" />
+    <Power definition="dad19773-1261-4ca8-b7fa-9f2bd1fb9e0f" />
+  </Entity>
+  <Entity version="2" CardID="LOE_113e">
+    <Tag enumID="185" type="String">Mrglllraawrrrglrur!</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="6" />
+    <Tag enumID="184" type="String">+2/+2.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Power definition="e7aabbd3-32e3-41d0-91cb-df26289d4efd" />
+  </Entity>
+  <Entity version="2" CardID="LOE_115">
+    <Tag enumID="185" type="String">Raven Idol</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="199" type="" value="2" />
+    <Tag enumID="184" type="String">&lt;b&gt;Choose One -&lt;/b&gt;
+&lt;b&gt;Discover&lt;/b&gt; a minion; or &lt;b&gt;Discover&lt;/b&gt; a spell.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">Was petrified when it found out it didn't make the cut for Azerothean Idol.</Tag>
+    <Tag enumID="342" type="String">A.J. Nazzaro</Tag>
+    <ReferencedTag name="Treasure" enumID="415" type="Bool" value="1" />
+  </Entity>
+  <Entity version="2" CardID="LOE_115a">
+    <MasterPower>d7cce7a3-a9fc-49da-99bf-08e472eebd05</MasterPower>
+    <Tag enumID="185" type="String">Raven Idol</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="199" type="" value="2" />
+    <Tag enumID="184" type="String">&lt;b&gt;Discover&lt;/b&gt; a minion.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">A.J. Nazzaro</Tag>
+    <Power definition="d7cce7a3-a9fc-49da-99bf-08e472eebd05" />
+  </Entity>
+  <Entity version="2" CardID="LOE_115b">
+    <MasterPower>c7fafb8c-efcd-4f41-96d5-dd4846138502</MasterPower>
+    <Tag enumID="185" type="String">Raven Idol</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="199" type="" value="2" />
+    <Tag enumID="184" type="String">&lt;b&gt;Discover&lt;/b&gt; a spell.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">A.J. Nazzaro</Tag>
+    <Power definition="c7fafb8c-efcd-4f41-96d5-dd4846138502" />
+  </Entity>
+  <Entity version="2" CardID="LOE_116">
+    <Tag enumID="185" type="String">Reliquary Seeker</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="47" type="" value="1" />
+    <Tag enumID="45" type="" value="1" />
+    <Tag enumID="199" type="" value="9" />
+    <Tag enumID="184" type="String">&lt;b&gt;Battlecry:&lt;/b&gt; If you have 6 other minions, gain +4/+4.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">The Reliquary considers itself the equal of the League of Explorers.  The League of Explorers doesn't.</Tag>
+    <Tag enumID="342" type="String">Wayne Reynolds</Tag>
+    <Tag enumID="218" type="" value="1" />
+    <Power definition="7c042869-30a2-4915-ab81-68e73a6962dd" />
+    <Power definition="3228a9c9-ea4d-48fe-96d9-80fe52c77fe1" />
+  </Entity>
+  <Entity version="2" CardID="LOE_118">
+    <Tag enumID="185" type="String">Cursed Blade</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="7" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="47" type="" value="2" />
+    <Tag enumID="187" type="" value="3" />
+    <Tag enumID="199" type="" value="10" />
+    <Tag enumID="184" type="String">Double all damage dealt to your hero.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="351" type="String">The Curse is that you have to listen to "MMMBop" on repeat.</Tag>
+    <Tag enumID="342" type="String">Craig Mullins</Tag>
+    <Power definition="180ec047-613a-441e-942c-e071475488f4" />
+  </Entity>
+  <Entity version="2" CardID="LOE_118e">
+    <Tag enumID="185" type="String">Cursed Blade</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="6" />
+    <Tag enumID="199" type="" value="10" />
+    <Tag enumID="184" type="String">Double all damage dealt to your hero.</Tag>
+    <Tag enumID="330" type="" value="2" />
+    <Tag enumID="331" type="" value="2" />
+    <Power definition="f1962b9d-29a1-4ef3-804a-f0bc3d5eb709" />
+  </Entity>
+  <Entity version="2" CardID="LOE_119">
+    <Tag enumID="185" type="String">Animated Armor</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="3" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="4" />
+    <Tag enumID="47" type="" value="4" />
+    <Tag enumID="45" type="" value="4" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="184" type="String">Your hero can only take 1 damage at a time.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="199" type="" value="4" />
+    <Tag enumID="351" type="String">Try putting it on.  Wait, let me get my camera.</Tag>
+    <Tag enumID="342" type="String">Mike Sass</Tag>
+    <Tag enumID="32" type="" value="1" />
+    <Power definition="b01897d6-b6a2-471c-8d7c-66e691b5a71e" />
+    <Power definition="72928ea3-3bf5-430c-b1fc-5ffccd84dc5d" />
+    <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
+  </Entity>
 </CardDefs>

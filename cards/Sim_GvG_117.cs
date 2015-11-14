@@ -9,7 +9,7 @@ namespace HREngine.Bots
 
         //   Whenever you cast a 1-mana spell, add a random Mech to your hand.
         //todo: do it right (not card.cost, we have to use current cost)
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion, Minion target)
+        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion, Minion target, int choice)
         {
             if (triggerEffectMinion.own == wasOwnCard)
             {

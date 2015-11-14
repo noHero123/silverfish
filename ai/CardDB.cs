@@ -65,8 +65,65 @@
         public enum cardIDEnum
         {
             None,
-            //TGT####################################
+            //loe####################################
+            LOE_002,
+            LOE_002t,
+            LOE_003,
+            LOE_006,
+            LOE_007,
+            LOE_007t,
+            LOE_009,
+            LOE_009t,
+            LOE_010,
+            LOE_011,
+            LOE_012,
+            LOE_016,
+            LOE_017,
+            LOE_018,
+            LOE_019,
+            LOE_019t,
+            LOE_019t2,
+            LOE_020,
+            LOE_021,
+            LOE_022,
+            LOE_023,
+            LOE_026,
+            LOE_027,
+            LOE_029,
+            LOE_038,
+            LOE_039,
+            LOE_046,
+            LOE_047,
+            LOE_050,
+            LOE_051,
+            LOE_053,
+            LOE_061,
+            LOE_073,
+            LOE_076,
+            LOE_077,
+            LOE_079,
+            LOE_086,
+            LOE_089,
+            LOE_089t,
+            LOE_089t2,
+            LOE_089t3,
+            LOE_092,
+            LOE_104,
+            LOE_105,
+            LOE_105e,
+            LOE_107,
+            LOE_110,
+            LOE_110t,
+            LOE_111,
+            LOE_113,
+            LOE_115,
+            LOE_115a,
+            LOE_115b,
+            LOE_116,
+            LOE_118,
+            LOE_119,
 
+            //TGT####################################
             AT_001,
             AT_002,
             AT_003,
@@ -1394,6 +1451,7 @@
 
         public cardIDEnum cardIdstringToEnum(string s)
         {
+
             if (s == "AT_001") return CardDB.cardIDEnum.AT_001;
             if (s == "AT_002") return CardDB.cardIDEnum.AT_002;
             if (s == "AT_003") return CardDB.cardIDEnum.AT_003;
@@ -2748,6 +2806,65 @@
             if (s == "AT_132_SHAMANc") return CardDB.cardIDEnum.CS2_051;//stonwclaw
             if (s == "AT_132_SHAMANd") return CardDB.cardIDEnum.CS2_052;//wrath of air
 
+            //LOE##############
+            if (s == "LOE_002") return CardDB.cardIDEnum.LOE_002;
+            if (s == "LOE_002t") return CardDB.cardIDEnum.LOE_002t;
+            if (s == "LOE_003") return CardDB.cardIDEnum.LOE_003;
+            if (s == "LOE_006") return CardDB.cardIDEnum.LOE_006;
+            if (s == "LOE_007") return CardDB.cardIDEnum.LOE_007;
+            if (s == "LOE_007t") return CardDB.cardIDEnum.LOE_007t;
+            if (s == "LOE_009") return CardDB.cardIDEnum.LOE_009;
+            if (s == "LOE_009t") return CardDB.cardIDEnum.LOE_009t;
+            if (s == "LOE_010") return CardDB.cardIDEnum.LOE_010;
+            if (s == "LOE_011") return CardDB.cardIDEnum.LOE_011;
+            if (s == "LOE_012") return CardDB.cardIDEnum.LOE_012;
+            if (s == "LOE_016") return CardDB.cardIDEnum.LOE_016;
+            if (s == "LOE_017") return CardDB.cardIDEnum.LOE_017;
+            if (s == "LOE_018") return CardDB.cardIDEnum.LOE_018;
+            if (s == "LOE_019") return CardDB.cardIDEnum.LOE_019;
+            if (s == "LOE_019t") return CardDB.cardIDEnum.LOE_019t;
+            if (s == "LOE_019t2") return CardDB.cardIDEnum.LOE_019t2;
+            if (s == "LOE_020") return CardDB.cardIDEnum.LOE_020;
+            if (s == "LOE_021") return CardDB.cardIDEnum.LOE_021;
+            if (s == "LOE_022") return CardDB.cardIDEnum.LOE_022;
+            if (s == "LOE_023") return CardDB.cardIDEnum.LOE_023;
+            if (s == "LOE_026") return CardDB.cardIDEnum.LOE_026;
+            if (s == "LOE_027") return CardDB.cardIDEnum.LOE_027;
+            if (s == "LOE_029") return CardDB.cardIDEnum.LOE_029;
+            if (s == "LOE_038") return CardDB.cardIDEnum.LOE_038;
+            if (s == "LOE_039") return CardDB.cardIDEnum.LOE_039;
+            if (s == "LOE_046") return CardDB.cardIDEnum.LOE_046;
+            if (s == "LOE_047") return CardDB.cardIDEnum.LOE_047;
+            if (s == "LOE_050") return CardDB.cardIDEnum.LOE_050;
+            if (s == "LOE_051") return CardDB.cardIDEnum.LOE_051;
+            if (s == "LOE_053") return CardDB.cardIDEnum.LOE_053;
+            if (s == "LOE_061") return CardDB.cardIDEnum.LOE_061;
+            if (s == "LOE_073") return CardDB.cardIDEnum.LOE_073;
+            if (s == "LOE_076") return CardDB.cardIDEnum.LOE_076;
+            if (s == "LOE_077") return CardDB.cardIDEnum.LOE_077;
+            if (s == "LOE_079") return CardDB.cardIDEnum.LOE_079;
+            if (s == "LOE_086") return CardDB.cardIDEnum.LOE_086;
+            if (s == "LOE_089") return CardDB.cardIDEnum.LOE_089;
+            if (s == "LOE_089t") return CardDB.cardIDEnum.LOE_089t;
+            if (s == "LOE_089t2") return CardDB.cardIDEnum.LOE_089t2;
+            if (s == "LOE_089t3") return CardDB.cardIDEnum.LOE_089t3;
+            if (s == "LOE_092") return CardDB.cardIDEnum.LOE_092;
+            if (s == "LOE_104") return CardDB.cardIDEnum.LOE_104;
+            if (s == "LOE_105") return CardDB.cardIDEnum.LOE_105;
+            if (s == "LOE_105e") return CardDB.cardIDEnum.LOE_105e;
+            if (s == "LOE_107") return CardDB.cardIDEnum.LOE_107;
+            if (s == "LOE_110") return CardDB.cardIDEnum.LOE_110;
+            if (s == "LOE_110t") return CardDB.cardIDEnum.LOE_110t;
+            if (s == "LOE_111") return CardDB.cardIDEnum.LOE_111;
+            if (s == "LOE_113") return CardDB.cardIDEnum.LOE_113;
+            if (s == "LOE_115") return CardDB.cardIDEnum.LOE_115;
+            if (s == "LOE_115a") return CardDB.cardIDEnum.LOE_115a;
+            if (s == "LOE_115b") return CardDB.cardIDEnum.LOE_115b;
+            if (s == "LOE_116") return CardDB.cardIDEnum.LOE_116;
+            if (s == "LOE_118") return CardDB.cardIDEnum.LOE_118;
+            if (s == "LOE_119") return CardDB.cardIDEnum.LOE_119;
+
+
             //better hero powers of alternative heros
             if (s == "CS2_034_H1_AT_132") return CardDB.cardIDEnum.AT_132_MAGE;
             if (s == "CS2_102_H1_AT_132") return CardDB.cardIDEnum.AT_132_WARRIOR;
@@ -2769,6 +2886,61 @@
         public enum cardName
         {
             unknown,
+            //LOE
+            forgottentorch,
+            roaringtorch,
+            etherealconjurer,
+            museumcurator,
+            curseofrafaam,
+            cursed,
+            obsidiandestroyer,
+            scarab,
+            pitsnake,
+            renojackson,
+            tombpillager,
+            rumblingelemental,
+            keeperofuldaman,
+            tunneltrogg,
+            unearthedraptor,
+            maptothegoldenmonkey,
+            goldenmonkey,
+            desertcamel,
+            darttrap,
+            fiercemonkey,
+            darkpeddler,
+            anyfincanhappen,
+            sacredtrial,
+            jeweledscarab,
+            nagaseawitch,
+            gorillabota3,
+            hugetoad,
+            tombspider,
+            mountedraptor,
+            junglemoonkin,
+            djinniofzephyrs,
+            anubisathsentinel,
+            fossilizeddevilsaur,
+            sirfinleymrrgglton,
+            brannbronzebeard,
+            elisestarseeker,
+            summoningstone,
+            wobblingrunts,
+            rascallyrunt,
+            wilyrunt,
+            grumblyrunt,
+            archthiefrafaam,
+            entomb,
+            explorershat,
+            eeriestatue,
+            ancientshade,
+            ancientcurse,
+            excavatedevil,
+            everyfinisawesome,
+            ravenidol,
+            reliquaryseeker,
+            cursedblade,
+            animatedarmor,
+
             //TGT
             flamelance,
             effigy,
@@ -4776,6 +4948,62 @@
             if (s == "emergencycoolant") return CardDB.cardName.emergencycoolant;
             if (s == "reversingswitch") return CardDB.cardName.reversingswitch;
             if (s == "whirlingblades") return CardDB.cardName.whirlingblades;
+            //LOE
+
+            if (s == "forgottentorch") return CardDB.cardName.forgottentorch;
+            if (s == "roaringtorch") return CardDB.cardName.roaringtorch;
+            if (s == "etherealconjurer") return CardDB.cardName.etherealconjurer;
+            if (s == "museumcurator") return CardDB.cardName.museumcurator;
+            if (s == "curseofrafaam") return CardDB.cardName.curseofrafaam;
+            if (s == "cursed") return CardDB.cardName.cursed;
+            if (s == "obsidiandestroyer") return CardDB.cardName.obsidiandestroyer;
+            if (s == "scarab") return CardDB.cardName.scarab;
+            if (s == "pitsnake") return CardDB.cardName.pitsnake;
+            if (s == "renojackson") return CardDB.cardName.renojackson;
+            if (s == "tombpillager") return CardDB.cardName.tombpillager;
+            if (s == "rumblingelemental") return CardDB.cardName.rumblingelemental;
+            if (s == "keeperofuldaman") return CardDB.cardName.keeperofuldaman;
+            if (s == "tunneltrogg") return CardDB.cardName.tunneltrogg;
+            if (s == "unearthedraptor") return CardDB.cardName.unearthedraptor;
+            if (s == "maptothegoldenmonkey") return CardDB.cardName.maptothegoldenmonkey;
+            if (s == "goldenmonkey") return CardDB.cardName.goldenmonkey;
+            if (s == "desertcamel") return CardDB.cardName.desertcamel;
+            if (s == "darttrap") return CardDB.cardName.darttrap;
+            if (s == "fiercemonkey") return CardDB.cardName.fiercemonkey;
+            if (s == "darkpeddler") return CardDB.cardName.darkpeddler;
+            if (s == "anyfincanhappen") return CardDB.cardName.anyfincanhappen;
+            if (s == "sacredtrial") return CardDB.cardName.sacredtrial;
+            if (s == "jeweledscarab") return CardDB.cardName.jeweledscarab;
+            if (s == "nagaseawitch") return CardDB.cardName.nagaseawitch;
+            if (s == "gorillabota3") return CardDB.cardName.gorillabota3;
+            if (s == "hugetoad") return CardDB.cardName.hugetoad;
+            if (s == "tombspider") return CardDB.cardName.tombspider;
+            if (s == "mountedraptor") return CardDB.cardName.mountedraptor;
+            if (s == "junglemoonkin") return CardDB.cardName.junglemoonkin;
+            if (s == "djinniofzephyrs") return CardDB.cardName.djinniofzephyrs;
+            if (s == "anubisathsentinel") return CardDB.cardName.anubisathsentinel;
+            if (s == "fossilizeddevilsaur") return CardDB.cardName.fossilizeddevilsaur;
+            if (s == "sirfinleymrrgglton") return CardDB.cardName.sirfinleymrrgglton;
+            if (s == "brannbronzebeard") return CardDB.cardName.brannbronzebeard;
+            if (s == "elisestarseeker") return CardDB.cardName.elisestarseeker;
+            if (s == "summoningstone") return CardDB.cardName.summoningstone;
+            if (s == "wobblingrunts") return CardDB.cardName.wobblingrunts;
+            if (s == "rascallyrunt") return CardDB.cardName.rascallyrunt;
+            if (s == "wilyrunt") return CardDB.cardName.wilyrunt;
+            if (s == "grumblyrunt") return CardDB.cardName.grumblyrunt;
+            if (s == "archthiefrafaam") return CardDB.cardName.archthiefrafaam;
+            if (s == "entomb") return CardDB.cardName.entomb;
+            if (s == "explorershat") return CardDB.cardName.explorershat;
+            if (s == "eeriestatue") return CardDB.cardName.eeriestatue;
+            if (s == "ancientshade") return CardDB.cardName.ancientshade;
+            if (s == "ancientcurse") return CardDB.cardName.ancientcurse;
+            if (s == "excavatedevil") return CardDB.cardName.excavatedevil;
+            if (s == "everyfinisawesome") return CardDB.cardName.everyfinisawesome;
+            if (s == "ravenidol") return CardDB.cardName.ravenidol;
+            if (s == "reliquaryseeker") return CardDB.cardName.reliquaryseeker;
+            if (s == "cursedblade") return CardDB.cardName.cursedblade;
+            if (s == "animatedarmor") return CardDB.cardName.animatedarmor;
+
             if (s == "placeholdercard") return CardDB.cardName.placeholdercard;
 
             return CardDB.cardName.unknown;
@@ -6611,6 +6839,38 @@
         {
             switch (id)
             {
+                    //LOE
+
+                case cardIDEnum.LOE_002:
+                    return new Sim_LOE_002();
+                case cardIDEnum.LOE_002t:
+                    return new Sim_LOE_002t();
+                case cardIDEnum.LOE_009:
+                    return new Sim_LOE_009();
+                case cardIDEnum.LOE_009t:
+                    return new Sim_LOE_009t();
+                case cardIDEnum.LOE_011:
+                    return new Sim_LOE_011();
+                case cardIDEnum.LOE_016:
+                    return new Sim_LOE_016();
+                case cardIDEnum.LOE_023:
+                    return new Sim_LOE_023();
+                case cardIDEnum.LOE_027:
+                    return new Sim_LOE_027();
+                case cardIDEnum.LOE_029:
+                    return new Sim_LOE_029();
+                case cardIDEnum.LOE_053:
+                    return new Sim_LOE_053();
+                case cardIDEnum.LOE_061:
+                    return new Sim_LOE_061();
+                case cardIDEnum.LOE_086:
+                    return new Sim_LOE_086();
+                case cardIDEnum.LOE_105:
+                    return new Sim_LOE_105();
+                case cardIDEnum.LOE_110:
+                    return new Sim_LOE_110();
+                case cardIDEnum.LOE_110t:
+                    return new Sim_LOE_110t();
 
                 //TGT---------------------------------
                 case cardIDEnum.AT_001:
@@ -10044,73 +10304,122 @@
                     return new Pen_AT_132_WARRIOR();
                 case cardIDEnum.AT_133:
                     return new Pen_AT_133();
+
+                case cardIDEnum.LOE_002:
+                    return new Pen_LOE_002();
+                case cardIDEnum.LOE_002t:
+                    return new Pen_LOE_002t();
+                case cardIDEnum.LOE_003:
+                    return new Pen_LOE_003();
+                case cardIDEnum.LOE_006:
+                    return new Pen_LOE_006();
+                case cardIDEnum.LOE_007:
+                    return new Pen_LOE_007();
+                case cardIDEnum.LOE_007t:
+                    return new Pen_LOE_007t();
+                case cardIDEnum.LOE_009:
+                    return new Pen_LOE_009();
+                case cardIDEnum.LOE_009t:
+                    return new Pen_LOE_009t();
+                case cardIDEnum.LOE_010:
+                    return new Pen_LOE_010();
+                case cardIDEnum.LOE_011:
+                    return new Pen_LOE_011();
+                case cardIDEnum.LOE_012:
+                    return new Pen_LOE_012();
+                case cardIDEnum.LOE_016:
+                    return new Pen_LOE_016();
+                case cardIDEnum.LOE_017:
+                    return new Pen_LOE_017();
+                case cardIDEnum.LOE_018:
+                    return new Pen_LOE_018();
+                case cardIDEnum.LOE_019:
+                    return new Pen_LOE_019();
+                case cardIDEnum.LOE_019t:
+                    return new Pen_LOE_019t();
+                case cardIDEnum.LOE_019t2:
+                    return new Pen_LOE_019t2();
+                case cardIDEnum.LOE_020:
+                    return new Pen_LOE_020();
+                case cardIDEnum.LOE_021:
+                    return new Pen_LOE_021();
+                case cardIDEnum.LOE_022:
+                    return new Pen_LOE_022();
+                case cardIDEnum.LOE_023:
+                    return new Pen_LOE_023();
+                case cardIDEnum.LOE_026:
+                    return new Pen_LOE_026();
+                case cardIDEnum.LOE_027:
+                    return new Pen_LOE_027();
+                case cardIDEnum.LOE_029:
+                    return new Pen_LOE_029();
+                case cardIDEnum.LOE_038:
+                    return new Pen_LOE_038();
+                case cardIDEnum.LOE_039:
+                    return new Pen_LOE_039();
+                case cardIDEnum.LOE_046:
+                    return new Pen_LOE_046();
+                case cardIDEnum.LOE_047:
+                    return new Pen_LOE_047();
+                case cardIDEnum.LOE_050:
+                    return new Pen_LOE_050();
+                case cardIDEnum.LOE_051:
+                    return new Pen_LOE_051();
+                case cardIDEnum.LOE_053:
+                    return new Pen_LOE_053();
+                case cardIDEnum.LOE_061:
+                    return new Pen_LOE_061();
+                case cardIDEnum.LOE_073:
+                    return new Pen_LOE_073();
+                case cardIDEnum.LOE_076:
+                    return new Pen_LOE_076();
+                case cardIDEnum.LOE_077:
+                    return new Pen_LOE_077();
+                case cardIDEnum.LOE_079:
+                    return new Pen_LOE_079();
+                case cardIDEnum.LOE_086:
+                    return new Pen_LOE_086();
+                case cardIDEnum.LOE_089:
+                    return new Pen_LOE_089();
+                case cardIDEnum.LOE_089t:
+                    return new Pen_LOE_089t();
+                case cardIDEnum.LOE_089t2:
+                    return new Pen_LOE_089t2();
+                case cardIDEnum.LOE_089t3:
+                    return new Pen_LOE_089t3();
+                case cardIDEnum.LOE_092:
+                    return new Pen_LOE_092();
+                case cardIDEnum.LOE_104:
+                    return new Pen_LOE_104();
+                case cardIDEnum.LOE_105:
+                    return new Pen_LOE_105();
+                case cardIDEnum.LOE_107:
+                    return new Pen_LOE_107();
+                case cardIDEnum.LOE_110:
+                    return new Pen_LOE_110();
+                case cardIDEnum.LOE_110t:
+                    return new Pen_LOE_110t();
+                case cardIDEnum.LOE_111:
+                    return new Pen_LOE_111();
+                case cardIDEnum.LOE_113:
+                    return new Pen_LOE_113();
+                case cardIDEnum.LOE_115:
+                    return new Pen_LOE_115();
+                case cardIDEnum.LOE_115a:
+                    return new Pen_LOE_115a();
+                case cardIDEnum.LOE_115b:
+                    return new Pen_LOE_115b();
+                case cardIDEnum.LOE_116:
+                    return new Pen_LOE_116();
+                case cardIDEnum.LOE_118:
+                    return new Pen_LOE_118();
+                case cardIDEnum.LOE_119:
+                    return new Pen_LOE_119();
                 case cardIDEnum.PlaceholderCard:
                     return new Pen_PlaceholderCard();
             }
 
             return new PenTemplate();
-        }
-
-        private void enumCreator()
-        {
-            //call this, if carddb.txt was changed, to get latest public enum cardIDEnum
-            Helpfunctions.Instance.logg("public enum cardIDEnum");
-            Helpfunctions.Instance.logg("{");
-            Helpfunctions.Instance.logg("None,");
-            foreach (string cardid in this.allCardIDS)
-            {
-                Helpfunctions.Instance.logg(cardid + ",");
-            }
-            Helpfunctions.Instance.logg("}");
-
-
-
-            Helpfunctions.Instance.logg("public cardIDEnum cardIdstringToEnum(string s)");
-            Helpfunctions.Instance.logg("{");
-            foreach (string cardid in this.allCardIDS)
-            {
-                Helpfunctions.Instance.logg("if(s==\"" + cardid + "\") return CardDB.cardIDEnum." + cardid + ";");
-            }
-            Helpfunctions.Instance.logg("return CardDB.cardIDEnum.None;");
-            Helpfunctions.Instance.logg("}");
-
-            List<string> namelist = new List<string>();
-
-            foreach (string cardid in this.namelist)
-            {
-                if (namelist.Contains(cardid)) continue;
-                namelist.Add(cardid);
-            }
-
-
-            Helpfunctions.Instance.logg("public enum cardName");
-            Helpfunctions.Instance.logg("{");
-            foreach (string cardid in namelist)
-            {
-                Helpfunctions.Instance.logg(cardid + ",");
-            }
-            Helpfunctions.Instance.logg("}");
-
-            Helpfunctions.Instance.logg("public cardName cardNamestringToEnum(string s)");
-            Helpfunctions.Instance.logg("{");
-            foreach (string cardid in namelist)
-            {
-                Helpfunctions.Instance.logg("if(s==\"" + cardid + "\") return CardDB.cardName." + cardid + ";");
-            }
-            Helpfunctions.Instance.logg("return CardDB.cardName.unknown;");
-            Helpfunctions.Instance.logg("}");
-
-            // simcard creator:
-
-            Helpfunctions.Instance.logg("public SimTemplate getSimCard(cardIDEnum id)");
-            Helpfunctions.Instance.logg("{");
-            foreach (string cardid in this.allCardIDS)
-            {
-                Helpfunctions.Instance.logg("if(id == CardDB.cardIDEnum." + cardid + ") return new Sim_" + cardid + "();");
-            }
-            Helpfunctions.Instance.logg("return new SimTemplate();");
-            Helpfunctions.Instance.logg("}");
-
         }
 
         private void setAdditionalData()

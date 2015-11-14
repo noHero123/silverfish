@@ -9,7 +9,7 @@ namespace HREngine.Bots
 
 //    zieht jedes mal eine karte, wenn ihr einen zauber wirkt.
 
-        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion, Minion target)
+        public override void onCardIsGoingToBePlayed(Playfield p, CardDB.Card c, bool wasOwnCard, Minion triggerEffectMinion, Minion target, int choice)
         {
             if (c.type == CardDB.cardtype.SPELL && wasOwnCard == triggerEffectMinion.own)
             {

@@ -137,6 +137,9 @@
         public int ownBaronRivendare = 0;
         public int enemyBaronRivendare = 0;
         //#########################################
+        //new variables LOE
+        public int selectedChoice = -1;
+        //############################
 
         public int tempanzOwnCards = 0; // for Goblin Sapper
         public int tempanzEnemyCards = 0;// for Goblin Sapper
@@ -402,7 +405,7 @@
             this.enemyDeckSize = Hrtprozis.Instance.enemyDeckSize;
 
 
-
+            this.selectedChoice = -1;
 
             this.pintsizedsummoner = 0;
             this.managespenst = 0;
@@ -815,7 +818,7 @@
 
             //#########################################
 
-
+            this.selectedChoice = p.selectedChoice;
 
             this.anzMinionsDiedThisTurn = p.anzMinionsDiedThisTurn;
 
@@ -2608,15 +2611,25 @@
                         break;
                     }
                 }
+                if (aa.tracking >= 1 )
+                {
+                    ha = Handmanager.Instance.getCardChoice(aa.tracking - 1);
+                }
                 if (aa.actionType == actionEnum.useHeroPower)
                 {
                     ha = this.isOwnTurn ? this.ownHeroAblility : this.enemyHeroAblility;
                 }
             }
             // create and execute the action------------------------------------------------------------------------
-            Action a = new Action(aa.actionType, ha, o, aa.place, trgt, aa.penalty, aa.druidchoice);
+            Action a = new Action(aa.actionType, ha, o, aa.place, trgt, aa.penalty, aa.druidchoice, aa.tracking);
 
+            //druidchoice correction, and save tracking-choice
+            if (a.tracking >= 1)
+            {
+                int codedchoice = a.druidchoice;
+                this.selectedChoice = a.tracking;
 
+            }
 
             //save the action if its our first turn
             if (this.turnCounter == 0) this.playactions.Add(a);
@@ -2976,7 +2989,7 @@
             if (logging) Helpfunctions.Instance.logg("play crd " + c.name + " entitiy# " + hc.entity + " mana " + hc.getManaCost(this) + " trgt " + target);
 
 
-            this.triggerACardWillBePlayed(hc, true, target);
+            this.triggerACardWillBePlayed(hc, true, target, choice);
             int newTarget = secretTrigger_SpellIsPlayed(target, c.type == CardDB.cardtype.SPELL);
             if (newTarget >= 1)
             {
@@ -3047,7 +3060,7 @@
 
             this.enemyAnzCards--;//might be deleted if he got a real hand
 
-            this.triggerACardWillBePlayed(hc, false, target);
+            this.triggerACardWillBePlayed(hc, false, target, choice);
             this.triggerCardsChanged(false);
 
             int newTarget = secretTrigger_SpellIsPlayed(target, c.type == CardDB.cardtype.SPELL);
@@ -4044,7 +4057,7 @@
  
         }
 
-        public void triggerACardWillBePlayed(Handmanager.Handcard hc, bool own, Minion target)
+        public void triggerACardWillBePlayed(Handmanager.Handcard hc, bool own, Minion target, int choice)
         {
             if (this.isOwnTurn == own && this.lockAndLoads>=1 && hc.card.type == CardDB.cardtype.SPELL)
             {
@@ -4101,7 +4114,7 @@
                         continue;
                     }
 
-                    m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, m, target);
+                    m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, m, target, choice);
                 }
 
                 foreach (Minion m in this.enemyMinions)
@@ -4112,7 +4125,7 @@
                     }
                     if (m.name == CardDB.cardName.felreaver)
                     {
-                        m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, m, target);
+                        m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, m, target, choice);
                     }
                 }
 
@@ -4173,7 +4186,7 @@
                         continue;
                     }
 
-                    m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, m, target);
+                    m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, m, target, choice);
                 }
                 foreach (Minion m in this.ownMinions)
                 {
@@ -4183,7 +4196,7 @@
                     }
                     if (m.name == CardDB.cardName.felreaver)
                     {
-                        m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, m, target);
+                        m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, m, target, choice);
                     }
                 }
                 for (int i = 0; i < violetteacher; i++)
@@ -4226,6 +4239,10 @@
                 {
                     this.allMinionsGetDamage(1);
                 }
+                if (own && m.name == CardDB.cardName.rumblingelemental && c.type == CardDB.cardtype.MOB && c.battlecry==true)
+                {
+                    this.doDmgToRandomEnemyCLIENT(2, true, !own);
+                }
             }
 
             foreach (Minion m in this.enemyMinions)
@@ -4244,6 +4261,10 @@
                 if (!own && m.name == CardDB.cardName.wildpyromancer && c.type == CardDB.cardtype.SPELL)
                 {
                     this.allMinionsGetDamage(1);
+                }
+                if (!own && m.name == CardDB.cardName.rumblingelemental && c.type == CardDB.cardtype.MOB && c.battlecry == true)
+                {
+                    this.doDmgToRandomEnemyCLIENT(2, true, !own);
                 }
             }
 
@@ -4795,8 +4816,10 @@
         public void secretTrigger_MinionIsPlayed(Minion playedMinion)
         {
             int triggered = 0;
+            
             if (this.isOwnTurn && playedMinion.own && this.enemySecretCount >= 1)
             {
+                int minionCount = this.ownMinions.Count -1; //played minion is allready placed
                 foreach (SecretItem si in this.enemySecretList.ToArray())
                 {
                     if (si.canBe_snipe)
@@ -4804,10 +4827,22 @@
                         triggered++;
                         CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_609).sim_card.onSecretPlay(this, false, playedMinion, 0);
                         doDmgTriggers();
-                        si.usedTrigger_MinionIsPlayed();
+                        si.usedTrigger_MinionIsPlayed(minionCount);
                         foreach (SecretItem sii in this.enemySecretList)
                         {
                             sii.canBe_snipe = false;
+                        }
+                    }
+
+                    if (si.canBe_Trial && minionCount >= 3)
+                    {
+                        triggered++;
+                        CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.LOE_027).sim_card.onSecretPlay(this, false, playedMinion, 0);
+                        doDmgTriggers();
+                        si.usedTrigger_MinionIsPlayed(minionCount);
+                        foreach (SecretItem sii in this.enemySecretList)
+                        {
+                            sii.canBe_Trial = false;
                         }
                     }
 
@@ -4815,7 +4850,7 @@
                     {
                         triggered++;
                         CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_294).sim_card.onSecretPlay(this, false, playedMinion, 0);
-                        si.usedTrigger_MinionIsPlayed();
+                        si.usedTrigger_MinionIsPlayed(minionCount);
                         foreach (SecretItem sii in this.enemySecretList)
                         {
                             sii.canBe_mirrorentity = false;
@@ -4827,7 +4862,7 @@
                     {
                         //triggered++;
                         //CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_379).sim_card.onSecretPlay(this, false, playedMinion, 0);
-                        si.usedTrigger_MinionIsPlayed();
+                        si.usedTrigger_MinionIsPlayed(minionCount);
                         foreach (SecretItem sii in this.enemySecretList)
                         {
                             sii.canBe_repentance = false;
@@ -4996,6 +5031,11 @@
                     callKid(kid, pos, m.own);
                 }
 
+                for (int i = 0; i < m.explorersHat; i++)
+                {
+                    this.drawACard(CardDB.cardIDEnum.LOE_105, m.own, true);
+                }
+
                 //baron rivendare ??
                 if ((m.own && this.ownBaronRivendare >= 1) || (!m.own && this.enemyBaronRivendare >= 1))
                 {
@@ -5013,6 +5053,11 @@
                         CardDB.Card kid = m.handcard.card;
                         int pos = (m.own) ? this.ownMinions.Count : this.enemyMinions.Count;
                         callKid(kid, pos, m.own);
+                    }
+
+                    for (int i = 0; i < m.explorersHat; i++)
+                    {
+                        this.drawACard(CardDB.cardIDEnum.LOE_105, m.own, true);
                     }
 
                 }
@@ -5056,7 +5101,7 @@
                             minionOwnReviving = true;
                         }
 
-                        if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.souloftheforest >= 1)
+                        if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.souloftheforest >= 1 || m.explorersHat >= 1)
                         {
                             deathrattles.Add(m);
                         }
@@ -5105,7 +5150,7 @@
                             minionEnemyReviving = true;
                         }
 
-                        if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.souloftheforest >= 1)
+                        if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.souloftheforest >= 1 || m.explorersHat>=1)
                         {
                             deathrattles.Add(m);
                         }
@@ -6198,6 +6243,7 @@
                 Helpfunctions.Instance.logg("board: " + value + " ++++++++++++++++++++++");
             }
             Helpfunctions.Instance.logg("pen " + this.evaluatePenality);
+            if (this.selectedChoice >= 1) Helpfunctions.Instance.logg("tracking " + this.selectedChoice);
             Helpfunctions.Instance.logg("mana " + this.mana + "/" + this.ownMaxMana + " turnEndMana " + this.manaTurnEnd);
             Helpfunctions.Instance.logg("cardsplayed: " + this.cardsPlayedThisTurn + " handsize: " + this.owncards.Count + " eh " + this.enemyAnzCards + " " + this.enemycarddraw);
 
@@ -6395,10 +6441,13 @@
             Probabilitymaker.Instance.printTurnGraveYard(runEx);
             Probabilitymaker.Instance.printGraveyards(runEx);
             */
+
+            string choice = Handmanager.Instance.getCardChoiceString();
             Probabilitymaker probm = Probabilitymaker.Instance;
             String data = "#######################################################################"+"\r\n";
             data += "start calculations, current time: " + time + " V" + version + " " + settings + "\r\n";
             data += "#######################################################################" + "\r\n";
+            if (choice != "") data += choice + "\r\n"; 
             data +="mana " + this.mana + "/" + this.ownMaxMana+"\r\n";
             data +="emana " + this.enemyMaxMana+"\r\n";
             data +="own secretsCount: " + this.ownSecretsIDList.Count+"\r\n";
@@ -6503,6 +6552,8 @@
 
             if (m.ownPowerWordGlory >= 1) mini += " ownPWG(" + m.ownPowerWordGlory + ")";
             if (m.enemyPowerWordGlory >= 1) mini += " enemyPWG(" + m.enemyPowerWordGlory + ")";
+
+            if (m.explorersHat >= 1) mini += " explht(" + m.explorersHat + ")";
 
 
             return mini;

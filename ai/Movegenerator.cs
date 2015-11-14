@@ -21,19 +21,22 @@
         }
 
 
-        public List<Action> doAllChoices(Playfield p, Handmanager.Handcard hc, bool lethalcheck, bool usePenalityManager)
+        public List<Action> doAllChoices(Playfield p, Handmanager.Handcard hcc, bool lethalcheck, bool usePenalityManager, int tracing = 0)
         {
+            int tracking = tracing;
             List<Action> returnlist = new List<Action>();
-
+            Handmanager.Handcard hc = hcc;
             if (hc.card.type == CardDB.cardtype.MOB && p.ownMinions.Count >= 7) return returnlist;
 
             int max = 3;
             if (hc.card.cardIDenum == CardDB.cardIDEnum.AT_132_SHAMAN) max = 5;
-
-            for (int i = 1; i < max; i++)
+            if (hc.isChoiceTemp) max = Handmanager.Instance.getNumberChoices() + 1;
+            
+            for (int j = 1; j < max; j++)
             {
+                int i = j;
                 CardDB.Card c = hc.card;
-
+                int basemana = hc.manacost;
                 if (c.cardIDenum == CardDB.cardIDEnum.AT_132_SHAMAN)
                 {
                     if (i == 1)
@@ -216,7 +219,25 @@
                     }
                 }
 
-                if (c.canplayCard(p, hc.manacost))
+                if (hcc.isChoiceTemp)
+                {
+                    i = 0;//its not a druid-choice
+                    tracking = j;
+                    hc = Handmanager.Instance.getCardChoice(tracking - 1);
+                    c = hc.card;
+                    //the tracking/discover card is a druid-choice-card himself :D
+                    if (c.choice)
+                    {
+                        //Helpfunctions.Instance.ErrorLog("choice tracking " + c.name);
+                        Handmanager.Handcard hccc = Handmanager.Instance.getCardChoice(tracking - 1);
+                        returnlist.AddRange(doAllChoices( p, hccc, lethalcheck, usePenalityManager, tracking));
+                        continue;
+                    }
+                    
+                    basemana = c.cost;
+                }
+
+                if (c.canplayCard(p, basemana))
                 {
 
                     int bestplace = p.getBestPlace(c, lethalcheck);
@@ -234,7 +255,7 @@
                                 //help.logg(hc.card.name + " is played");
                                 //pf.playCard(hc, hc.position - 1, hc.entity, -1, -1, i, bestplace, cardplayPenality);
                                 // i is the choice
-                                Action a = new Action(actionEnum.playcard, hc, null, bestplace, null, cardplayPenality, i);
+                                Action a = new Action(actionEnum.playcard, hc, null, bestplace, null, cardplayPenality, i , tracking);
                                 //pf.playCard(hc, hc.position - 1, hc.entity, -1, -1, 0, bestplace, cardplayPenality);
                                 returnlist.Add(a);
                             }
@@ -243,7 +264,7 @@
                         {
                             //pf.playCard(hc, hc.position - 1, hc.entity, -1, -1, i, bestplace, cardplayPenality);
 
-                            Action a = new Action(actionEnum.playcard, hc, null, bestplace, null, cardplayPenality, i);
+                            Action a = new Action(actionEnum.playcard, hc, null, bestplace, null, cardplayPenality, i , tracking);
                             returnlist.Add(a);
                         }
 
@@ -262,7 +283,7 @@
                                     //help.logg(hc.card.name + " is played");
                                     //pf.playCard(hc, hc.position - 1, hc.entity, trgt.target, trgt.targetEntity, i, bestplace, cardplayPenality);
 
-                                    Action a = new Action(actionEnum.playcard, hc, null, bestplace, trgt, cardplayPenality, i); //i is the choice
+                                    Action a = new Action(actionEnum.playcard, hc, null, bestplace, trgt, cardplayPenality, i , tracking); //i is the choice
                                     returnlist.Add(a);
                                 }
                             }
@@ -270,7 +291,7 @@
                             {
                                 //pf.playCard(hc, hc.position - 1, hc.entity, trgt.target, trgt.targetEntity, i, bestplace, cardplayPenality);
 
-                                Action a = new Action(actionEnum.playcard, hc, null, bestplace, trgt, cardplayPenality, i); //i is the choice
+                                Action a = new Action(actionEnum.playcard, hc, null, bestplace, trgt, cardplayPenality, i , tracking); //i is the choice
                                 returnlist.Add(a);
                             }
 
@@ -320,7 +341,7 @@
                 if (playedcards.Contains(c.name)) continue; // dont play the same card in one loop
                 playedcards.Add(c.name);
 
-                if (c.choice)
+                if (c.choice || hc.isChoiceTemp)
                 {
                     ret.AddRange(this.doAllChoices(p, hc, isLethalCheck, usePenalityManager));
                 }

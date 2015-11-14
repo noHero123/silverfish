@@ -12,6 +12,7 @@
             public int manacost = 1000;
             public int addattack = 0;
             public int addHp = 0;
+            public bool isChoiceTemp = false;
             public CardDB.Card card;
 
             public Handcard()
@@ -26,6 +27,7 @@
                 this.card = hc.card;
                 this.addattack = hc.addattack;
                 this.addHp = hc.addHp;
+                this.isChoiceTemp = hc.isChoiceTemp;
             }
             public Handcard(CardDB.Card c)
             {
@@ -47,6 +49,8 @@
 
         public List<Handcard> handCards = new List<Handcard>();
 
+        List<Handcard> handcardchoices = new List<Handcard>();
+
         public int anzcards = 0;
 
         public int enemyAnzCards = 0;
@@ -67,6 +71,7 @@
         }
 
 
+
         private Handmanager()
         {
             this.help = Helpfunctions.Instance;
@@ -79,6 +84,7 @@
             this.anzcards = 0;
             this.enemyAnzCards = 0;
             this.ownPlayerController = 0;
+            this.handcardchoices.Clear();
         }
 
         public void setOwnPlayer(int player)
@@ -86,12 +92,57 @@
             this.ownPlayerController = player;
         }
 
-
-
-
-        public void setHandcards(List<Handcard> hc, int anzowncards, int anzenemycards)
+        public string getCardChoiceString()
         {
-            
+            string retval ="";
+
+            if (handcardchoices.Count >= 1)
+            {
+                retval = "activeChoice:";
+
+                foreach (Handcard c in handcardchoices)
+                {
+                    retval += " " + c.card.cardIDenum;
+                }
+            }
+
+            return retval;
+        }
+
+        private void setCardChoices(List<CardDB.cardIDEnum> crdchcs)
+        {
+            this.handcardchoices.Clear();
+            foreach (CardDB.cardIDEnum cid in crdchcs)
+            {
+                CardDB.Card cardc = CardDB.Instance.getCardDataFromID(cid);
+                Handcard nehc = new Handcard(cardc);
+                nehc.entity = 54321;
+                nehc.manacost = cardc.cost;
+                this.handcardchoices.Add(nehc);
+                Helpfunctions.Instance.ErrorLog("choices " + cardc.name);
+            }
+            CardDB.Card tempcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_029);//=fireball, just to make sure its not a mob (movegen will ignore mobs if own minions >= 7)
+            Handcard newhc = new Handcard(tempcard);
+            newhc.entity = 54321;
+            newhc.isChoiceTemp=true;
+            newhc.manacost = 0;
+            this.handCards.Add(newhc);
+        }
+
+        public Handcard getCardChoice(int i)
+        {
+            return handcardchoices[i];
+        }
+
+        public int getNumberChoices()
+        {
+            return handcardchoices.Count;
+        }
+
+
+        public void setHandcards(List<Handcard> hc, int anzowncards, int anzenemycards, List<CardDB.cardIDEnum> crdchcs)
+        {
+            this.handcardchoices.Clear();
             this.handCards.Clear();
             foreach (Handcard h in hc)
             {
@@ -101,6 +152,12 @@
             this.handCards.Sort((a, b) => a.position.CompareTo(b.position));
             this.anzcards = anzowncards;
             this.enemyAnzCards = anzenemycards;
+
+            if (crdchcs.Count >= 1)
+            {
+                setCardChoices(crdchcs);
+                this.anzcards++;
+            }
         }
 
         //not updated anymore!

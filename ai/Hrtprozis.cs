@@ -129,6 +129,9 @@
             this.attackFaceHp = hp;
         }
 
+
+
+
         public void clearAll()
         {
             ownHeroEntity = -1;
@@ -169,6 +172,7 @@
             ownCurrentRecall = 0;
             this.ownHeroWeapon = CardDB.cardName.unknown;
             this.enemyHeroWeapon = CardDB.cardName.unknown;
+
         }
 
 

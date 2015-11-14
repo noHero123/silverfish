@@ -154,6 +154,7 @@ namespace HREngine.Bots
             writeSettings();
 
             this.doMultipleThingsAtATime = Settings.Instance.speedy;
+            this.doMultipleThingsAtATime = false; // for easier debugging+bug fixing in the first weeks after update
         }
 
         /// <summary>
@@ -1084,7 +1085,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "116.38";
+        public string versionnumber = "117.01";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1162,7 +1163,10 @@ namespace HREngine.Bots
         int enemysabo = 0;//number of saboteurplays  of enemy player (so we have the buff)
         int ownFenciCoaches = 0; // number of Fencing Coach-debuffs on our player 
 
+        //LOE stuff###############################################################################################################
+        List<CardDB.cardIDEnum> choiceCards = new List<CardDB.cardIDEnum>(); // here we save all available tracking/discover cards ordered from left to right
 
+        
         private static HSRangerLib.GameState latestGameState;
 
         private static Silverfish instance;
@@ -1261,7 +1265,7 @@ namespace HREngine.Bots
             Hrtprozis.Instance.updateEnemyHero(this.enemyHeroWeapon, this.enemyWeaponAttack, this.enemyWeaponDurability, this.enemyHeroname, this.enemyMaxMana, this.enemyAbility, this.enemyHero, this.enemyHeroPowerUsesThisGame);
 
             Hrtprozis.Instance.updateMinions(this.ownMinions, this.enemyMinions);
-            Handmanager.Instance.setHandcards(this.handCards, this.anzcards, this.enemyAnzCards);
+            Handmanager.Instance.setHandcards(this.handCards, this.anzcards, this.enemyAnzCards, this.choiceCards);
 
             Hrtprozis.Instance.updateFatigueStats(this.ownDecksize, this.ownHeroFatigue, this.enemyDecksize, this.enemyHeroFatigue);
 

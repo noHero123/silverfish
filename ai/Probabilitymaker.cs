@@ -47,11 +47,15 @@
         public bool canBe_redemption = true;
         public bool canBe_repentance = true;
         public bool canBe_avenge = true;
+        
 
         //new TGT---
         public bool canBe_effigy = true;
         public bool canBe_beartrap = true;
         public bool canBe_competivespirit = true;
+
+        // LOE
+        public bool canBe_Trial = true;
 
         public int entityId = 0;
 
@@ -89,6 +93,7 @@
             this.canBe_beartrap = sec.canBe_beartrap;
             this.canBe_competivespirit = sec.canBe_competivespirit;
 
+            this.canBe_Trial = sec.canBe_Trial;
 
             this.entityId = sec.entityId;
 
@@ -133,6 +138,18 @@
             }
             catch
             {
+                this.canBe_effigy = false;
+                this.canBe_beartrap = false;
+                this.canBe_competivespirit = false;
+            }
+
+            try
+            {
+                this.canBe_Trial = (canbe[20] == '1');
+            }
+            catch
+            {
+                this.canBe_Trial = false;
             }
 
             this.updateCanBeTriggered();
@@ -182,11 +199,12 @@
             updateCanBeTriggered();
         }
 
-        public void usedTrigger_MinionIsPlayed()
+        public void usedTrigger_MinionIsPlayed(int numberMinionsOnBoard)
         {
             this.canBe_snipe = false;
             this.canBe_mirrorentity = false;
             this.canBe_repentance = false;
+            if (numberMinionsOnBoard >= 3) this.canBe_Trial = false;
             updateCanBeTriggered();
         }
 
@@ -248,6 +266,8 @@
             retval += "" + ((canBe_beartrap) ? "1" : "0");
             retval += "" + ((canBe_competivespirit) ? "1" : "0");
 
+            retval += "" + ((canBe_Trial) ? "1" : "0");
+
             return retval + ",";
         }
 
@@ -258,6 +278,8 @@
             result = result && this.canBe_eyeforaneye == s.canBe_eyeforaneye && this.canBe_freezing == s.canBe_freezing && this.canBe_icebarrier == s.canBe_icebarrier && this.canBe_iceblock == s.canBe_iceblock;
             result = result && this.canBe_mirrorentity == s.canBe_mirrorentity && this.canBe_missdirection == s.canBe_missdirection && this.canBe_noblesacrifice == s.canBe_noblesacrifice && this.canBe_redemption == s.canBe_redemption;
             result = result && this.canBe_repentance == s.canBe_repentance && this.canBe_snaketrap == s.canBe_snaketrap && this.canBe_snipe == s.canBe_snipe && this.canBe_spellbender == s.canBe_spellbender && this.canBe_vaporize == s.canBe_vaporize;
+            result = result && this.canBe_effigy == s.canBe_effigy && this.canBe_beartrap == s.canBe_beartrap && this.canBe_competivespirit == s.canBe_competivespirit;
+            result = result && this.canBe_Trial == s.canBe_Trial;
 
             return result;
         }
@@ -266,6 +288,8 @@
 
     public class Probabilitymaker
     {
+        public bool hasDeck = false;
+
         public Dictionary<CardDB.cardIDEnum, int> ownCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
         public Dictionary<CardDB.cardIDEnum, int> enemyCardsPlayed = new Dictionary<CardDB.cardIDEnum, int>();
         List<CardDB.Card> ownDeckGuessed = new List<CardDB.Card>();
@@ -724,6 +748,8 @@
                 sec.canBe_competivespirit = false;
                 sec.canBe_effigy = false;
 
+                sec.canBe_Trial = false;
+
 
                 if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_554) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_554] >= 2)
                 {
@@ -749,6 +775,11 @@
                 {
                     sec.canBe_missdirection = false;
                 }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.AT_060) && enemyCardsPlayed[CardDB.cardIDEnum.AT_060] >= 2)
+                {
+                    sec.canBe_beartrap = false;
+                }
             }
 
             if (enemyHeroName == HeroEnum.mage)
@@ -767,6 +798,8 @@
 
                 sec.canBe_competivespirit = false;
                 sec.canBe_beartrap = false;
+
+                sec.canBe_Trial = false;
 
                 if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_287) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_287] >= 2)
                 {
@@ -802,11 +835,15 @@
                 {
                     sec.canBe_duplicate = false;
                 }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.AT_002) && enemyCardsPlayed[CardDB.cardIDEnum.AT_002] >= 2)
+                {
+                    sec.canBe_effigy = false;
+                }
             }
 
             if (enemyHeroName == HeroEnum.pala)
             {
-
                 sec.canBe_snaketrap = false;
                 sec.canBe_snipe = false;
                 sec.canBe_explosive = false;
@@ -823,6 +860,7 @@
 
                 sec.canBe_effigy = false;
                 sec.canBe_beartrap = false;
+
 
 
                 if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_132) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_132] >= 2)
@@ -848,6 +886,16 @@
                 if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.FP1_020) && enemyCardsPlayed[CardDB.cardIDEnum.FP1_020] >= 2)
                 {
                     sec.canBe_avenge = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.AT_073) && enemyCardsPlayed[CardDB.cardIDEnum.AT_073] >= 2)
+                {
+                    sec.canBe_competivespirit = false;
+                }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.LOE_027) && enemyCardsPlayed[CardDB.cardIDEnum.LOE_027] >= 2)
+                {
+                    sec.canBe_Trial = false;
                 }
 
             }
@@ -925,7 +973,7 @@
             bool attackedWithHero = false;
             int attackTargetIsMinion = 0;
             bool enemyHeroGotDmg = false;
-
+            int minionsOnBoard = old.enemyMinions.Count;
             bool endedTurn = false;
 
             Handmanager.Handcard hcard = null;
@@ -1040,7 +1088,7 @@
 
                 if (enemyMinionDied) si.usedTrigger_MinionDied();
 
-                if (playedMob) si.usedTrigger_MinionIsPlayed();
+                if (playedMob) si.usedTrigger_MinionIsPlayed(minionsOnBoard);
 
                 if (usedspell) si.usedTrigger_SpellIsPlayed(lastEffectedIsMinion == 2);
 
