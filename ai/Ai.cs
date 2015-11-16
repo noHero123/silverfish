@@ -50,6 +50,10 @@
         //public int secondTurnAmount = 256;
         public bool playaround = false;
 
+        public int bestTracking = -1;
+        public int bestTrackingStatus = 0;//0=optimal, 1= suboptimal 2=random
+
+
         private static Ai instance;
 
         public static Ai Instance
@@ -141,6 +145,12 @@
                 this.lethalMissing = 130;
             }
 
+            //set best tracking
+            this.bestTracking = 0;
+            this.bestTrackingStatus = 0;
+            if(Handmanager.Instance.getNumberChoices()>=1) selectBestTracking();
+
+            //set best actions
             this.bestActions.Clear();
             this.bestmove = null;
             foreach (Action a in bestplay.playactions)
@@ -161,6 +171,8 @@
             {
                 this.nextMoveGuess = new Playfield();
 
+                //TODO: add card if bestTracking was calculated!
+
                 this.nextMoveGuess.doAction(bestmove);
             }
             else
@@ -170,12 +182,59 @@
 
         }
 
-        public void setBestMoves(List<Action> alist, float value)
+        private void selectBestTracking()
         {
+            int trackingchoice = 0;
+            int trackingstatus = 0;
+            //wich choice-card to draw?
+            if (mainTurnSimulator.bestboard.selectedChoice >= 1)
+            {
+                trackingchoice = mainTurnSimulator.bestboard.selectedChoice;
+                //Helpfunctions.Instance.logg("discovering using optimal choice..." + trackingchoice);
+                trackingstatus = 0;
+            }
+
+            //TODO: select card based on mana + usefullness?
+
+            if (trackingchoice == 0)
+            {
+                //search other non-optimal boards for a choice:
+                for (int i = 0; i < 100; i++)
+                {
+                    Playfield tc = mainTurnSimulator.getBoard(i);
+                    if (trackingchoice == 0 && tc.selectedChoice >= 1) trackingchoice = tc.selectedChoice;
+                }
+                if (trackingchoice >= 1) trackingstatus = 1;//use tracking of other board
+                //if (trackingchoice >= 1) Helpfunctions.Instance.logg("discovering using suboptimal choice..." + trackingchoice);
+            }
+
+            if (trackingchoice == 0)
+            {
+                //random card
+                Random randovar = new Random();
+                trackingchoice = randovar.Next(1, Handmanager.Instance.getNumberChoices() + 1);
+                //if (trackingchoice >= 1) Helpfunctions.Instance.logg("discovering using random choice..." + trackingchoice);
+                trackingstatus = 2;//use random card
+            }
+
+            this.bestTracking = trackingchoice;
+            this.bestTrackingStatus = trackingstatus;
+        }
+
+        //TODO add tracking-choice to hand in nextMoveGuess!
+        public void setBestMoves(List<Action> alist, float value, int tracking, int trackingstatus)
+        {
+            this.bestTracking = -1;
+            this.bestTrackingStatus = 0;
+
+            this.bestTracking = tracking;
+            this.bestTrackingStatus = trackingstatus;
+
             help.logg("set best action-----------------------------------");
             this.bestActions.Clear();
             this.bestmove = null;
             this.bestmoveValue = value;
+            if (bestTracking >= 1) help.logg("discover " + bestTracking + " " + bestTrackingStatus);
             foreach (Action a in alist)
             {
                 help.logg("-a-");

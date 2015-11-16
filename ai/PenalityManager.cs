@@ -821,7 +821,7 @@
             int pen = 0;
             if (!cardDrawBattleCryDatabase.ContainsKey(name)) return 0;
 
-            //if (discoverMinions.ContainsKey(name)) return 500;// DELETE THIS when discover is supported from bot
+            if (discoverMinions.ContainsKey(name)) return -200;// DELETE THIS; ONLY FOR TESTING
 
             if (name == CardDB.cardName.ancientoflore && choice != 1) return 0;
             if (name == CardDB.cardName.wrath && choice != 2) return 0;
