@@ -536,6 +536,31 @@ namespace HREngine.Bots
                     return;
                 }
 
+                if (Handmanager.Instance.getNumberChoices() >= 1)
+                {
+                    //detect which choice
+
+                    int trackingchoice = Ai.Instance.bestTracking;
+                    if (Ai.Instance.bestTrackingStatus == 0) Helpfunctions.Instance.logg("discovering using optimal choice..." + trackingchoice);
+                    if (Ai.Instance.bestTrackingStatus == 1) Helpfunctions.Instance.logg("discovering using suboptimal choice..." + trackingchoice);
+                    if (Ai.Instance.bestTrackingStatus == 2) Helpfunctions.Instance.logg("discovering using random choice..." + trackingchoice);
+
+                    trackingchoice = Silverfish.Instance.choiceCardsEntitys[trackingchoice - 1];
+                    Helpfunctions.Instance.logg("discovering choice entity" + trackingchoice);
+                    //there is a tracking/discover effect ongoing! (not druid choice)
+                    BotAction trackingaction = new HSRangerLib.BotAction();
+                    trackingaction.Actor = this.getEntityWithNumber(trackingchoice);
+
+                    //DEBUG stuff
+                    Helpfunctions.Instance.logg("actor: cardid " + trackingaction.Actor.CardId + " entity " + trackingaction.Actor.EntityId);
+                    //trackingaction.Choice = trackingchoice;
+                    e.action_list.Add(trackingaction);
+                    string filename = "silvererror" + DateTime.Now.ToString("_yyyy-MM-dd_HH-mm-ss") + ".xml";
+                    Helpfunctions.Instance.logg("create errorfile " +  filename);
+                    this.gameState.SaveToXMLFile(filename);
+                    return;
+                }
+
                 if (!doMultipleThingsAtATime)
                 {
                     //this is used if you cant queque actions (so ai is just sending one action at a time)
@@ -544,7 +569,10 @@ namespace HREngine.Bots
                     if (moveTodo == null || moveTodo.actionType == actionEnum.endturn)
                     {
                         //simply clear action list, hearthranger bot will endturn if no action can do.
-                        e.action_list.Clear();
+                        //e.action_list.Clear();
+                        BotAction endturnmove = new HSRangerLib.BotAction();
+                        endturnmove.Type = BotActionType.END_TURN;
+                        e.action_list.Add(endturnmove);
                         return;
                     }
 
@@ -555,7 +583,7 @@ namespace HREngine.Bots
 
                 }
                 else
-                {
+                {//##########################################################################
                     //this is used if you can queque multiple actions
                     //thanks to xytrix
 
@@ -599,7 +627,7 @@ namespace HREngine.Bots
                     Helpfunctions.Instance.ErrorLog("sending HR " + numActionsSent + " queued actions");
                     numExecsReceived = 0;
 
-                }
+                }//##########################################################################
 
 
             }
@@ -1085,7 +1113,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "117.01";
+        public string versionnumber = "117.02";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1165,7 +1193,7 @@ namespace HREngine.Bots
 
         //LOE stuff###############################################################################################################
         List<CardDB.cardIDEnum> choiceCards = new List<CardDB.cardIDEnum>(); // here we save all available tracking/discover cards ordered from left to right
-
+        public List<int> choiceCardsEntitys = new List<int>(); //list of entitys same order as choiceCards
         
         private static HSRangerLib.GameState latestGameState;
 
@@ -1985,6 +2013,21 @@ namespace HREngine.Bots
                 }
             }
 
+            //search for choice-cards in HR:
+            this.choiceCards.Clear();
+            this.choiceCardsEntitys.Clear();
+            foreach (Entity ent in allEntitys.Values)
+            {
+                if (ent.ControllerId == this.ownPlayerController && ent.Zone == HSRangerLib.TAG_ZONE.SETASIDE) // choice cards are in zone setaside (but thats not all D:)
+                {
+                    if (ent.CardState == ActorStateType.CARD_SELECTABLE) //in HR these cards (setaside + card_selectable) are choice/tracking/discover-cards
+                    {
+                        this.choiceCards.Add(CardDB.Instance.cardIdstringToEnum(ent.CardId));
+                        this.choiceCardsEntitys.Add(ent.EntityId);
+                    }
+                }
+            }
+
         }
 
         private void getDecks(HSRangerLib.BotBase rangerbot)
@@ -2177,6 +2220,8 @@ namespace HREngine.Bots
             float value = 0f;
             string boardnumm = "-1";
             this.waitingForSilver = true;
+            int trackingchoice = 0;
+            int trackingstate = 0;
             while (readed)
             {
                 try
@@ -2210,6 +2255,16 @@ namespace HREngine.Bots
                             value = float.Parse((first.Split(' ')[1].Split(' ')[0]));
                             alist.RemoveAt(0);
                         }
+
+                        first = alist[0];
+
+                        if (first.StartsWith("discover "))
+                        {
+                            string trackingstuff = first.Replace("discover ", "");
+                            trackingchoice = Convert.ToInt32(first.Split(',')[0]);
+                            trackingstate = Convert.ToInt32(first.Split(',')[1]);
+                            alist.RemoveAt(0);
+                        }
                         readed = false;
                     }
                     else
@@ -2240,7 +2295,7 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.logg(a);
             }
 
-            Ai.Instance.setBestMoves(aclist, value);
+            Ai.Instance.setBestMoves(aclist, value, trackingchoice, trackingstate);
 
             return true;
         }
