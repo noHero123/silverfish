@@ -7,4 +7,7 @@ with
 useExternalProcess = true;
 
 start the bot and silver.exe (and let it run) and
+
+silver.exe (and all the other stuff) has to be in this path: .../HearthRanger (that folder with the Hearthranger.exe) /ExternBot/silverfish/
+
 choose silver.dll as your ai

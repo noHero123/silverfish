@@ -4,17 +4,15 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-    class Sim_GVG_066 : SimTemplate //Dunemaul Shaman
-    {
-
-        //   Windfury, Overload: (1)&lt;/b&gt
+    class Sim_LOE_019 : SimTemplate //unearthed raptor
+	{
+        //Battlecry: Choose a friendly minion. Gain a copy of its Deathrattle effect.
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            p.changeRecall(own.own, 1);
+            //TODO
         }
 
-
-    }
+	}
 
 }

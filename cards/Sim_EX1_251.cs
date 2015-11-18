@@ -11,7 +11,7 @@ namespace HREngine.Bots
         //todo list
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-            if (ownplay) { p.owedRecall += 2; } else { p.enemyRecall += 2; };
+            p.changeRecall(ownplay, 2);
 
             if (p.isServer)
             {
@@ -38,7 +38,6 @@ namespace HREngine.Bots
                 i++;
                 if (i == 2) break;
             }
-            if (ownplay) { p.owedRecall += 2; } else { p.enemyRecall += 2; };
 		}
 
 	}

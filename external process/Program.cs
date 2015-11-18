@@ -71,6 +71,8 @@ namespace HREngine.Bots
             Helpfunctions.Instance.resetBuffer();
             Helpfunctions.Instance.writeToBuffer("board " + Ai.Instance.currentCalculatedBoard);
             Helpfunctions.Instance.writeToBuffer("value " + Ai.Instance.bestmoveValue);
+            Helpfunctions.Instance.writeToBuffer("discover " + Ai.Instance.bestTracking + "," + Ai.Instance.bestTrackingStatus);
+            
             if (Ai.Instance.bestmove != null)
             {
                 Ai.Instance.bestmove.print(true);
@@ -222,6 +224,8 @@ namespace HREngine.Bots
             List<string> alist = new List<string>();
             float value = 0f;
             string boardnumm = "-1";
+            int trackingchoice = 0;
+            int trackingstate = 0;
             while (readed)
             {
                 try
@@ -255,6 +259,17 @@ namespace HREngine.Bots
                             value = float.Parse((first.Split(' ')[1].Split(' ')[0]));
                             alist.RemoveAt(0);
                         }
+
+                        first = alist[0];
+
+                        if (first.StartsWith("discover "))
+                        {
+                            string trackingstuff = first.Replace("discover ", "");
+                            trackingchoice = Convert.ToInt32(first.Split(',')[0]);
+                            trackingstate = Convert.ToInt32(first.Split(',')[1]);
+                            alist.RemoveAt(0);
+                        }
+
                         readed = false;
                     }
                     else
@@ -284,7 +299,7 @@ namespace HREngine.Bots
                 Helpfunctions.Instance.logg(a);
             }
 
-            Ai.Instance.setBestMoves(aclist, value);
+            Ai.Instance.setBestMoves(aclist, value, trackingchoice, trackingstate);
 
         }
 

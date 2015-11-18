@@ -86,6 +86,8 @@
 
         public bool silenced = false;
 
+        public List<int> deathrattles = new List<int>();//we might have to use this for unearthed raptor
+
         public Minion()
         {
             this.handcard = new Handmanager.Handcard();
@@ -156,6 +158,14 @@
             this.cantLowerHPbelowONE = m.cantLowerHPbelowONE;
 
             this.silenced = m.silenced;
+            if (m.deathrattles != null)
+            {
+                this.deathrattles = new List<int>();
+                foreach (int dr in m.deathrattles)
+                {
+                    this.deathrattles.Add(dr);  
+                }
+            }
         }
 
         public void setMinionTominion(Minion m)
@@ -223,6 +233,15 @@
             this.cantLowerHPbelowONE = m.cantLowerHPbelowONE;
 
             this.silenced = m.silenced;
+
+            if (m.deathrattles != null)
+            {
+                this.deathrattles = new List<int>();
+                foreach (int dr in m.deathrattles)
+                {
+                    this.deathrattles.Add(dr);
+                }
+            }
         }
 
         public int getRealAttack()
@@ -561,7 +580,7 @@
             immune = false;
             poisonous = false;
             cantLowerHPbelowONE = false;
-
+            if(this.deathrattles!=null) this.deathrattles.Clear();
 
             if (own) p.spellpower -= spellpower;
             else p.enemyspellpower -= spellpower;
@@ -608,6 +627,12 @@
                 this.shadowmadnessed = false;
                 p.minionGetControlled(this, !own, false);
             }
+        }
+
+        public bool hasDeathrattle()
+        {
+            if (this.deathrattles == null || this.deathrattles.Count == 0) return false;
+            return true;
         }
 
         public void loadEnchantments(List<miniEnch> enchants, int ownPlayerControler)

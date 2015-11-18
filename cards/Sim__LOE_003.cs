@@ -4,9 +4,9 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-    class Sim_LOE_023 : SimTemplate //Jeweled Scarab
+    class Sim_LOE_003 : SimTemplate //ethereal conjurer
 	{
-        //Battlecry: Discover a 3-Cost card.
+        //Battlecry: discover a spell
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {

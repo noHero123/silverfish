@@ -11,18 +11,18 @@ namespace HREngine.Bots
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
+            p.changeRecall(ownplay, 1);
             if (p.isServer)
             {
                 int random = p.getRandomNumber_SERVER(3, 6);
                 int dmgS = (ownplay) ? p.getSpellDamageDamage(random) : p.getEnemySpellDamageDamage(random);
                 p.minionGetDamageOrHeal(target, dmgS);
-                if (ownplay) { p.owedRecall += 1; } else { p.enemyRecall += 1; };
+                
                 return;
             }
 
             int dmg = (ownplay) ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);
             p.minionGetDamageOrHeal(target, dmg);
-            if (ownplay) { p.owedRecall += 1; } else { p.enemyRecall += 1; };
         }
 
 

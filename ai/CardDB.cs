@@ -5380,6 +5380,31 @@
                     }
                 }
 
+                if (isRequirementInList(CardDB.ErrorType2.REQ_TARGET_WITH_DEATHRATTLE))
+                {
+                    addEnemyHero = false;
+                    addOwnHero = false;
+                    k = -1;
+                    foreach (Minion m in p.ownMinions)
+                    {
+                        k++;
+                        if ( !(m.hasDeathrattle() || (m.handcard.card.deathrattle && !m.silenced) ))
+                        {
+                            ownMins[k] = false;
+                        }
+                    }
+                    k = -1;
+                    foreach (Minion m in p.enemyMinions)
+                    {
+                        k++;
+                        if (!(m.hasDeathrattle() || (m.handcard.card.deathrattle && !m.silenced)))
+                        {
+                            enemyMins[k] = false;
+                        }
+                    }
+                }
+                
+
                 if (isRequirementInList(CardDB.ErrorType2.REQ_UNDAMAGED_TARGET))
                 {
                     addEnemyHero = false;
@@ -6845,6 +6870,8 @@
                     return new Sim_LOE_002();
                 case cardIDEnum.LOE_002t:
                     return new Sim_LOE_002t();
+                case cardIDEnum.LOE_003:
+                    return new Sim_LOE_003();
                 case cardIDEnum.LOE_009:
                     return new Sim_LOE_009();
                 case cardIDEnum.LOE_009t:
@@ -6853,16 +6880,30 @@
                     return new Sim_LOE_011();
                 case cardIDEnum.LOE_016:
                     return new Sim_LOE_016();
+                case cardIDEnum.LOE_017:
+                    return new Sim_LOE_017();
+                case cardIDEnum.LOE_018:
+                    return new Sim_LOE_018();
+                case cardIDEnum.LOE_019:
+                    return new Sim_LOE_019();
+                case cardIDEnum.LOE_022:
+                    return new Sim_LOE_022();
                 case cardIDEnum.LOE_023:
                     return new Sim_LOE_023();
                 case cardIDEnum.LOE_027:
                     return new Sim_LOE_027();
                 case cardIDEnum.LOE_029:
                     return new Sim_LOE_029();
+                case cardIDEnum.LOE_047:
+                    return new Sim_LOE_047();
+                case cardIDEnum.LOE_050:
+                    return new Sim_LOE_050();
                 case cardIDEnum.LOE_053:
                     return new Sim_LOE_053();
                 case cardIDEnum.LOE_061:
                     return new Sim_LOE_061();
+                case cardIDEnum.LOE_077:
+                    return new Sim_LOE_077();
                 case cardIDEnum.LOE_086:
                     return new Sim_LOE_086();
                 case cardIDEnum.LOE_105:
@@ -6871,6 +6912,10 @@
                     return new Sim_LOE_110();
                 case cardIDEnum.LOE_110t:
                     return new Sim_LOE_110t();
+                case cardIDEnum.LOE_111:
+                    return new Sim_LOE_111();
+                case cardIDEnum.LOE_116:
+                    return new Sim_LOE_116();
 
                 //TGT---------------------------------
                 case cardIDEnum.AT_001:

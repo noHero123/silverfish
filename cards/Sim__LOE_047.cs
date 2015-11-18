@@ -4,9 +4,9 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-    class Sim_LOE_023 : SimTemplate //Jeweled Scarab
+    class Sim_LOE_047 : SimTemplate //Tomb Spider
 	{
-        //Battlecry: Discover a 3-Cost card.
+        //Battlecry: Discover a Beast.
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
@@ -16,6 +16,10 @@ namespace HREngine.Bots
                 return;
             }
             p.drawACard(CardDB.cardIDEnum.None, own.own, true);
+            //rogue= pit snake
+            //warrior fierce monkey
+            //hunter = all his cards? ^^
+            //druid = mounted raptor, savage combatant, jungle moonkin, malorne
         }
 
 	}

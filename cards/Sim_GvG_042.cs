@@ -12,13 +12,27 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            
+
+            p.changeRecall(own.own, 3);
+
+            if (p.isServer)
+            {
+                //todo
+                for (int i = 0; i < 4; i++)
+                {
+                    int posi = (own.own) ? p.ownMinions.Count : p.enemyMinions.Count;
+                    p.callKid(kid, posi, own.own);
+                }
+                return;
+            }
+   
             for (int i = 0; i < 4; i++)
             {
                 int posi = (own.own) ? p.ownMinions.Count : p.enemyMinions.Count;
                 p.callKid(kid, posi, own.own);
             }
-            if (own.own) { p.owedRecall += 3; } else { p.enemyRecall += 3; };
+            
+
         }
 
 

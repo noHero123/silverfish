@@ -10,6 +10,7 @@ namespace HREngine.Bots
         //Deal $2-$3 damage to all enemy minions. Overload: (2)
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
+            p.changeRecall(ownplay, 2);
             if (p.isServer)
             {
                 List<Minion> temp = (!ownplay) ? p.ownMinions : p.enemyMinions;
@@ -19,12 +20,12 @@ namespace HREngine.Bots
                     int dmgs = (ownplay) ? p.getSpellDamageDamage(random) : p.getEnemySpellDamageDamage(random);
                     p.minionGetDamageOrHeal(m, dmgs, true);
                 }
-                if (ownplay) { p.owedRecall += 2; } else { p.enemyRecall += 2; };
+                
                 return;
             }
             int dmg = (ownplay) ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
             p.allMinionOfASideGetDamage(!ownplay, dmg);
-            if (ownplay) { p.owedRecall += 2; } else { p.enemyRecall += 2; };
+            
         }
 
     }

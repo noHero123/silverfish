@@ -469,19 +469,6 @@ namespace HREngine.Bots
             
             try
             {
-                //HR-only fix for being to fast
-                if (!this.doMultipleThingsAtATime && this.gameState.IsProcessingPowers)
-                {
-                    //do fake action
-                    BotAction fakemove = new HSRangerLib.BotAction();
-                    fakemove.Type = BotActionType.HERO_ATTACK;
-                    fakemove.Actor = base.FriendHero;
-                    fakemove.Target = this.FriendHero;
-                    e.action_list.Add(fakemove);
-                    Helpfunctions.Instance.logg("HR is to fast...");
-                    Helpfunctions.Instance.ErrorLog("HR is to fast...");
-                    return;
-                }
 
                 //we are conceding
                 if (this.isgoingtoconcede)
@@ -546,18 +533,20 @@ namespace HREngine.Bots
                     if (Ai.Instance.bestTrackingStatus == 2) Helpfunctions.Instance.logg("discovering using random choice..." + trackingchoice);
 
                     trackingchoice = Silverfish.Instance.choiceCardsEntitys[trackingchoice - 1];
-                    Helpfunctions.Instance.logg("discovering choice entity" + trackingchoice);
+                    
                     //there is a tracking/discover effect ongoing! (not druid choice)
                     BotAction trackingaction = new HSRangerLib.BotAction();
                     trackingaction.Actor = this.getEntityWithNumber(trackingchoice);
+                    Helpfunctions.Instance.logg("discovering choice entity" + trackingchoice + " card " + trackingaction.Actor.CardId);
 
                     //DEBUG stuff
-                    Helpfunctions.Instance.logg("actor: cardid " + trackingaction.Actor.CardId + " entity " + trackingaction.Actor.EntityId);
-                    //trackingaction.Choice = trackingchoice;
+                    //Helpfunctions.Instance.logg("actor: cardid " + trackingaction.Actor.CardId + " entity " + trackingaction.Actor.EntityId);
+                    
                     e.action_list.Add(trackingaction);
-                    string filename = "silvererror" + DateTime.Now.ToString("_yyyy-MM-dd_HH-mm-ss") + ".xml";
-                    Helpfunctions.Instance.logg("create errorfile " +  filename);
-                    this.gameState.SaveToXMLFile(filename);
+                    
+                    //string filename = "silvererror" + DateTime.Now.ToString("_yyyy-MM-dd_HH-mm-ss") + ".xml";
+                    //Helpfunctions.Instance.logg("create errorfile " +  filename);
+                    //this.gameState.SaveToXMLFile(filename);
                     return;
                 }
 
@@ -2261,8 +2250,8 @@ namespace HREngine.Bots
                         if (first.StartsWith("discover "))
                         {
                             string trackingstuff = first.Replace("discover ", "");
-                            trackingchoice = Convert.ToInt32(first.Split(',')[0]);
-                            trackingstate = Convert.ToInt32(first.Split(',')[1]);
+                            trackingchoice = Convert.ToInt32(trackingstuff.Split(',')[0]);
+                            trackingstate = Convert.ToInt32(trackingstuff.Split(',')[1]);
                             alist.RemoveAt(0);
                         }
                         readed = false;

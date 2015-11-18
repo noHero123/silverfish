@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            if (own.own) { p.owedRecall += 1; } else { p.enemyRecall += 1; };
+            p.changeRecall(own.own, 1);
         }
         // death-effect is handled in playfield -> triggerAMinionDied
 

@@ -15,7 +15,8 @@ namespace HREngine.Bots
 
             p.callKid(kid, posi, ownplay);
             p.callKid(kid, posi, ownplay);
-            if (ownplay) { p.owedRecall += 2; } else { p.enemyRecall += 2; };
+            p.changeRecall(ownplay, 2);
+
 		}
 
 	}

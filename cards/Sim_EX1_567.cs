@@ -14,7 +14,7 @@ namespace HREngine.Bots
 		{
             
             p.equipWeapon(card, ownplay);
-            if (ownplay) { p.owedRecall += 2; } else { p.enemyRecall += 2; };
+            p.changeRecall(ownplay, 2);
 		}
 
 	}

@@ -11,15 +11,14 @@ namespace HREngine.Bots
        
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
+            p.changeRecall(own.own, 1);
             if (p.isServer)
             {
-                if (own.own) { p.owedRecall += 1; } else { p.enemyRecall += 1; };
                 int random = p.getRandomNumber_SERVER(1, 4);
                 p.minionGetBuffed(own, random, 0);
                 return;
             }
 
-            if (own.own) { p.owedRecall += 1; } else { p.enemyRecall += 1; };
             p.minionGetBuffed(own, 2, 0);
 		}
 

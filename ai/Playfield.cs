@@ -109,7 +109,12 @@
         public int anzOwnWarsongCommanders = 0;
         public int anzEnemyWarsongCommanders = 0;
 
-        //new ones TGT##########################
+        //new ones LOE##########################
+
+        public int anzOwnBranns = 0;
+        public int anzEnemyBranns = 0;
+
+        //##########################
 
         public int anzOwnMechwarper = 0;
         public int anzOwnMechwarperStarted = 0;
@@ -436,6 +441,8 @@
             anzEnemyWarhorseTrainer = 0;
             anzOwnMaidenOfTheLake = 0;
             anzEnemyMaidenOfTheLake = 0;
+            anzOwnBranns = 0;
+            anzEnemyBranns = 0;
 
             this.spellpower = 0;
             this.enemyspellpower = 0;
@@ -514,6 +521,8 @@
                 if (m.name == CardDB.cardName.auchenaisoulpriest) this.anzOwnAuchenaiSoulpriest++;
 
                 if (m.name == CardDB.cardName.fallenhero) this.anzOwnFallenHeros++;
+
+                if (m.name == CardDB.cardName.brannbronzebeard) this.anzOwnBranns++;
 
                 if (m.name == CardDB.cardName.sorcerersapprentice)
                 {
@@ -602,6 +611,8 @@
                 if (m.name == CardDB.cardName.auchenaisoulpriest) this.anzEnemyAuchenaiSoulpriest++;
 
                 if (m.name == CardDB.cardName.fallenhero) this.anzEnemyFallenHeros++;
+
+                if (m.name == CardDB.cardName.brannbronzebeard) this.anzEnemyBranns++;
 
                 if (m.name == CardDB.cardName.sorcerersapprentice)
                 {
@@ -815,6 +826,9 @@
             anzOwnMaidenOfTheLake = p.anzOwnMaidenOfTheLake;
             anzEnemyMaidenOfTheLake = p.anzEnemyMaidenOfTheLake;
 
+            //loe new---
+            anzOwnBranns = p.anzOwnBranns;
+            anzEnemyBranns = p.anzEnemyBranns;
 
             //#########################################
 
@@ -4543,6 +4557,37 @@
             }
         }
 
+        public void changeRecall(bool own, int value)
+        {
+            int oldrecall = 0;
+            int newrecall = 0;
+            List<Minion> tempminions = this.ownMinions;
+            if (own)
+            {
+                oldrecall = this.owedRecall;
+                this.owedRecall = Math.Max(10,this.owedRecall+value);
+                newrecall = this.owedRecall;
+            }
+            else
+            {
+                oldrecall = this.enemyRecall;
+                this.enemyRecall = Math.Max(10, this.enemyRecall + value);
+                newrecall = this.enemyRecall;
+                tempminions = this.enemyMinions;
+            };
+
+            if (oldrecall < newrecall)
+            {
+                foreach (Minion m in tempminions)
+                {
+                    if (!m.silenced && m.name == CardDB.cardName.tunneltrogg)
+                    {
+                        this.minionGetBuffed(m, newrecall - oldrecall, 0);
+                    }
+                }
+            }
+        }
+
         public void triggerACardWasDiscarded(bool own)
         {
             if (own)
@@ -5423,6 +5468,22 @@
 
             //trigger the battlecry!
             m.handcard.card.sim_card.getBattlecryEffect(this, m, target, choice);
+            if (m.own)
+            {
+                if (this.anzOwnBranns >= 1)
+                {
+                    m.handcard.card.sim_card.getBattlecryEffect(this, m, target, choice);
+                }
+            }
+            else
+            {
+                if (this.anzEnemyBranns >= 1)
+                {
+                    m.handcard.card.sim_card.getBattlecryEffect(this, m, target, choice);
+                }
+            }
+
+            
 
             //add minion to list + do triggers + do secret trigger +  minion was played trigger
             addMinionToBattlefield(m);
