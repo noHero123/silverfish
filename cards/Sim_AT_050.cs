@@ -22,11 +22,12 @@ namespace HREngine.Bots
             if (m.own)
             {
                 p.ownHeroAblility = new Handmanager.Handcard(hp);
-                
+                p.ownAbilityReady = true;
             }
             else
             {
                 p.enemyHeroAblility = new Handmanager.Handcard(hp);
+                p.enemyAbilityReady = true;
             }
 
             if (m.own == p.isOwnTurn) p.heroPowerActivationsThisTurn = 0;

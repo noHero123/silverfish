@@ -19,6 +19,7 @@ namespace HREngine.Bots
                 p.ownHeroName = HeroEnum.ragnarosthefirelord;
                 p.ownHero.Hp = 8;
                 p.ownHero.maxHp = 8;
+                p.ownAbilityReady = true;
             }
             else
             {
@@ -26,8 +27,10 @@ namespace HREngine.Bots
                 p.enemyHeroName = HeroEnum.ragnarosthefirelord;
                 p.enemyHero.Hp = 8;
                 p.enemyHero.maxHp = 8;
+                p.enemyAbilityReady = true;
 
             }
+            if(m.own == p.isOwnTurn) p.heroPowerActivationsThisTurn = 0;
         }
 
 

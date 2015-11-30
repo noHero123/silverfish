@@ -21,9 +21,10 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-
+            p.heroPowerActivationsThisTurn = 0;
             if (own.own)
             {
+                p.ownAbilityReady = true;
                 if (p.ownHeroName == HeroEnum.druid)
                 {
                     p.ownHeroAblility = new Handmanager.Handcard(drui);
@@ -74,10 +75,13 @@ namespace HREngine.Bots
                     p.ownHeroAblility = new Handmanager.Handcard(warli);//hightes possibility :D
                 }
 
+                
 
             }
             else
             {
+
+                p.enemyAbilityReady = true;
                 if (p.enemyHeroName == HeroEnum.druid)
                 {
                     p.enemyHeroAblility = new Handmanager.Handcard(drui);

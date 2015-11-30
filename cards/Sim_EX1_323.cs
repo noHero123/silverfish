@@ -30,7 +30,9 @@ namespace HREngine.Bots
                 p.enemyHero.maxHp = own.maxHp;
 
                 p.equipWeapon(weapon, own.own);
+                p.enemyAbilityReady = true;
             }
+            p.heroPowerActivationsThisTurn = 0;
 		}
 
 	}

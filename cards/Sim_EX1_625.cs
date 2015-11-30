@@ -19,18 +19,21 @@ namespace HREngine.Bots
                 {
                     p.ownHeroAblility.card = mindspike;
                     p.ownAbilityReady = true;
+                    p.heroPowerActivationsThisTurn = 0;
                 }
                 else
                 {
                     p.ownHeroAblility.card = shatter;  // mindspike becomes mind shatter
                     p.ownAbilityReady = true;
+                    p.heroPowerActivationsThisTurn = 0;
                 }
             }
             else
             {
                 p.enemyHeroAblility.card = p.enemyHeroAblility.card.cardIDenum == CardDB.cardIDEnum.CS1h_001 ? this.mindspike : this.shatter;
-
+                p.heroPowerActivationsThisTurn = 0;
             }
+
         }
 
     }

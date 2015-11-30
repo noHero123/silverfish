@@ -15,14 +15,15 @@ namespace HREngine.Bots
             if (own.own)
             {
                 p.ownHeroAblility = new Handmanager.Handcard(p.enemyHeroAblility.card);
+                p.ownAbilityReady = true;
 
             }
             else
             {
                 p.enemyHeroAblility = new Handmanager.Handcard(p.ownHeroAblility.card);
+                p.enemyAbilityReady = true;
             }
-
-            if (own.own == p.isOwnTurn) p.heroPowerActivationsThisTurn = 0;
+            p.heroPowerActivationsThisTurn = 0;
 
         }
 
