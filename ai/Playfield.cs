@@ -144,6 +144,8 @@
         //#########################################
         //new variables LOE
         public int selectedChoice = -1;
+        public int anzownNagaSeaWitch = 0;
+        public int anzenemyNagaSeaWitch = 0;
         //############################
 
         public int tempanzOwnCards = 0; // for Goblin Sapper
@@ -341,6 +343,8 @@
             this.anzEnemySouthseacaptain = 0;
             this.anzOwnWarsongCommanders = 0;
             this.anzEnemyWarsongCommanders = 0;
+            this.anzownNagaSeaWitch = 0;
+            this.anzenemyNagaSeaWitch = 0;
 
             this.feugenDead = Probabilitymaker.Instance.feugenDead;
             this.stalaggDead = Probabilitymaker.Instance.stalaggDead;
@@ -520,6 +524,8 @@
                 if (m.name == CardDB.cardName.grimscaleoracle) this.anzGrimscaleOracle++;
                 if (m.name == CardDB.cardName.auchenaisoulpriest) this.anzOwnAuchenaiSoulpriest++;
 
+                if (m.name == CardDB.cardName.nagaseawitch) this.anzownNagaSeaWitch++;
+
                 if (m.name == CardDB.cardName.fallenhero) this.anzOwnFallenHeros++;
 
                 if (m.name == CardDB.cardName.brannbronzebeard) this.anzOwnBranns++;
@@ -609,6 +615,8 @@
                 if (m.name == CardDB.cardName.murlocwarleader) this.anzMurlocWarleader++;
                 if (m.name == CardDB.cardName.grimscaleoracle) this.anzGrimscaleOracle++;
                 if (m.name == CardDB.cardName.auchenaisoulpriest) this.anzEnemyAuchenaiSoulpriest++;
+
+                if (m.name == CardDB.cardName.nagaseawitch) this.anzenemyNagaSeaWitch++;
 
                 if (m.name == CardDB.cardName.fallenhero) this.anzEnemyFallenHeros++;
 
@@ -829,6 +837,9 @@
             //loe new---
             anzOwnBranns = p.anzOwnBranns;
             anzEnemyBranns = p.anzEnemyBranns;
+
+            this.anzownNagaSeaWitch = p.anzownNagaSeaWitch;
+            this.anzenemyNagaSeaWitch = p.anzenemyNagaSeaWitch;
 
             //#########################################
 
@@ -3132,7 +3143,6 @@
         {
 
             CardDB.Card c = (ownturn) ? this.ownHeroAblility.card : this.enemyHeroAblility.card;
-
             this.heroPowerActivationsThisTurn++;
             if (ownturn)
             {
@@ -3170,6 +3180,8 @@
             this.evaluatePenality += penality;
             this.mana = this.mana - cost;
             this.anzOwnFencingCoach = 0;
+
+            this.secretTrigger_HeroPowerUsed(ownturn);
 
             //Helpfunctions.Instance.logg("play crd " + c.name + " entitiy# " + cardEntity + " mana " + hc.getManaCost(this) + " trgt " + target);
             if (logging) Helpfunctions.Instance.logg("play crd " + c.name + " trgt " + target);
@@ -4673,6 +4685,35 @@
         }
 
 
+        public void secretTrigger_HeroPowerUsed(bool own)
+        {
+            int triggered = 0;
+            if (own != this.isOwnTurn)
+            {
+                if (this.isOwnTurn && this.enemySecretCount >= 1)
+                {
+                    foreach (SecretItem si in this.enemySecretList)
+                    {
+                        if (si.canBe_Dart)
+                        {
+                            triggered++;
+                            CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.LOE_021).sim_card.onSecretPlay(this, false, 0);
+                            si.usedTrigger_HeroGotDmg();
+                            foreach (SecretItem sii in this.enemySecretList)
+                            {
+                                sii.canBe_Dart = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (turnCounter == 0)
+            {
+                this.evaluatePenality -= triggered * 50;
+            }
+
+        }
 
         public int secretTrigger_CharIsAttacked(Minion attacker, Minion defender)
         {

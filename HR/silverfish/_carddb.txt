@@ -26110,4 +26110,19 @@ Costs (1) less for each Murloc you control.</Tag>
     <Power definition="72928ea3-3bf5-430c-b1fc-5ffccd84dc5d" />
     <TriggeredPowerHistoryInfo effectIndex="0" showInHistory="False" />
   </Entity>
+  <Entity version="2" CardID="LOEA10_3">
+    <Tag enumID="185" type="String">Murloc Tinyfin</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="0" />
+    <Tag enumID="47" type="" value="1" />
+    <Tag enumID="45" type="" value="1" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="200" type="" value="14" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="351" type="String">High mortality rate, from often being hugged to death.</Tag>
+    <Tag enumID="342" type="String">Oliver Chipping</Tag>
+  </Entity>
 </CardDefs>

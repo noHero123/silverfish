@@ -75,6 +75,7 @@
             LOE_009,
             LOE_009t,
             LOE_010,
+            LOEA10_3,
             LOE_011,
             LOE_012,
             LOE_016,
@@ -2816,6 +2817,8 @@
             if (s == "LOE_009") return CardDB.cardIDEnum.LOE_009;
             if (s == "LOE_009t") return CardDB.cardIDEnum.LOE_009t;
             if (s == "LOE_010") return CardDB.cardIDEnum.LOE_010;
+            if (s == "LOEA10_3") return CardDB.cardIDEnum.LOEA10_3;
+            
             if (s == "LOE_011") return CardDB.cardIDEnum.LOE_011;
             if (s == "LOE_012") return CardDB.cardIDEnum.LOE_012;
             if (s == "LOE_016") return CardDB.cardIDEnum.LOE_016;
@@ -5888,6 +5891,11 @@
                     }
                 }
 
+                if ((this.type == cardtype.MOB || this.type == cardtype.SPELL || this.type == cardtype.WEAPON) && p.anzownNagaSeaWitch >= 1)
+                {
+                    retval = 5;
+                }
+
                 if (this.type == cardtype.MOB)
                 {
                     if (p.anzOwnAviana >= 1) retval = 1;
@@ -5945,9 +5953,27 @@
                     case CardDB.cardName.solemnvigil:
                         retval = retval - p.anzMinionsDiedThisTurn;
                         break;
+                    case CardDB.cardName.everyfinisawesome:
+                        int murlocs = 0;
+                        foreach (Minion m in p.ownMinions)
+                        {
+                            if (m.handcard.card.race == TAG_RACE.MURLOC)
+                            {
+                                murlocs++;
+                            }
+                        }
+                        retval = retval - murlocs;
+                        break;
                     default:
                         retval = retval + offset;
                         break;
+                }
+
+
+
+                if (this.type == cardtype.SPELL)
+                {
+                    retval += (p.isOwnTurn) ? p.enemyloatheb * 5 : p.ownloatheb * 5;
                 }
 
                 if (this.Secret && p.playedmagierinderkirintor)
@@ -6015,8 +6041,27 @@
                         offset += -p.nerubarweblord * 2;
                     }
 
-                    if (p.anzOwnAviana >= 1) offset += this.cost - 1;
+                    if (p.anzOwnAviana >= 1)
+                    {
+                        offset += this.cost - 1;
+                    }
+                    else
+                    {
+                        if (p.anzownNagaSeaWitch >= 1)
+                        {
+                            offset += this.cost - 5;
+                        }
+                    }
                 }
+                else  //nagaseawitch for other cards
+                {
+                    if (p.anzownNagaSeaWitch >= 1)
+                    {
+                        offset += this.cost - 5;
+                    }
+                }
+
+                
 
                 // CARDS that decrease the manacosts of others ##############################
 
@@ -6876,6 +6921,10 @@
                     return new Sim_LOE_009();
                 case cardIDEnum.LOE_009t:
                     return new Sim_LOE_009t();
+                case cardIDEnum.LOE_010:
+                    return new Sim_LOE_010();
+                case cardIDEnum.LOEA10_3:
+                    return new Sim_LOEA10_3();
                 case cardIDEnum.LOE_011:
                     return new Sim_LOE_011();
                 case cardIDEnum.LOE_016:
@@ -6886,6 +6935,8 @@
                     return new Sim_LOE_018();
                 case cardIDEnum.LOE_019:
                     return new Sim_LOE_019();
+                case cardIDEnum.LOE_021:
+                    return new Sim_LOE_021();
                 case cardIDEnum.LOE_022:
                     return new Sim_LOE_022();
                 case cardIDEnum.LOE_023:
@@ -6894,18 +6945,30 @@
                     return new Sim_LOE_027();
                 case cardIDEnum.LOE_029:
                     return new Sim_LOE_029();
+                case cardIDEnum.LOE_038:
+                    return new Sim_LOE_038();
+                case cardIDEnum.LOE_039:
+                    return new Sim_LOE_039();
+                case cardIDEnum.LOE_046:
+                    return new Sim_LOE_046();
                 case cardIDEnum.LOE_047:
                     return new Sim_LOE_047();
                 case cardIDEnum.LOE_050:
                     return new Sim_LOE_050();
+                case cardIDEnum.LOE_051:
+                    return new Sim_LOE_051();
                 case cardIDEnum.LOE_053:
                     return new Sim_LOE_053();
                 case cardIDEnum.LOE_061:
                     return new Sim_LOE_061();
+                case cardIDEnum.LOE_076:
+                    return new Sim_LOE_076();
                 case cardIDEnum.LOE_077:
                     return new Sim_LOE_077();
                 case cardIDEnum.LOE_086:
                     return new Sim_LOE_086();
+                case cardIDEnum.LOE_104:
+                    return new Sim_LOE_104();
                 case cardIDEnum.LOE_105:
                     return new Sim_LOE_105();
                 case cardIDEnum.LOE_110:
@@ -6914,6 +6977,8 @@
                     return new Sim_LOE_110t();
                 case cardIDEnum.LOE_111:
                     return new Sim_LOE_111();
+                case cardIDEnum.LOE_113:
+                    return new Sim_LOE_113();
                 case cardIDEnum.LOE_116:
                     return new Sim_LOE_116();
 

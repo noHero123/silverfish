@@ -25,6 +25,7 @@
         public bool canbeTriggeredWithAttackingMinion = true;
         public bool canbeTriggeredWithPlayingMinion = true;
         public bool canbeTriggeredWithKillingMinion = true;
+        public bool canbeTriggeredWithHeroPower = true;
 
 
 
@@ -56,6 +57,7 @@
 
         // LOE
         public bool canBe_Trial = true;
+        public bool canBe_Dart = true;//hunter
 
         public int entityId = 0;
 
@@ -70,6 +72,7 @@
             this.canbeTriggeredWithAttackingMinion = sec.canbeTriggeredWithAttackingMinion;
             this.canbeTriggeredWithPlayingMinion = sec.canbeTriggeredWithPlayingMinion;
             this.canbeTriggeredWithKillingMinion = sec.canbeTriggeredWithKillingMinion;
+            this.canbeTriggeredWithHeroPower = sec.canbeTriggeredWithHeroPower;
 
             this.canBe_avenge = sec.canBe_avenge;
             this.canBe_counterspell = sec.canBe_counterspell;
@@ -94,6 +97,7 @@
             this.canBe_competivespirit = sec.canBe_competivespirit;
 
             this.canBe_Trial = sec.canBe_Trial;
+            this.canBe_Dart = sec.canBe_Dart;
 
             this.entityId = sec.entityId;
 
@@ -146,10 +150,12 @@
             try
             {
                 this.canBe_Trial = (canbe[20] == '1');
+                this.canBe_Dart = (canbe[21] == '1');
             }
             catch
             {
                 this.canBe_Trial = false;
+                this.canBe_Dart = false;
             }
 
             this.updateCanBeTriggered();
@@ -161,15 +167,18 @@
             this.canbeTriggeredWithAttackingMinion = false;
             this.canbeTriggeredWithPlayingMinion = false;
             this.canbeTriggeredWithKillingMinion = false;
+            this.canbeTriggeredWithHeroPower = false;
             
 
             if (this.canBe_snipe || this.canBe_mirrorentity || this.canBe_repentance) this.canbeTriggeredWithPlayingMinion = true;
 
             if (this.canBe_explosive || this.canBe_missdirection || this.canBe_freezing || this.canBe_icebarrier || this.canBe_vaporize || this.canBe_noblesacrifice || this.canBe_beartrap) this.canbeTriggeredWithAttackingHero = true;
 
-            if (this.canBe_snaketrap || this.canBe_freezing || this.canBe_noblesacrifice) this.canbeTriggeredWithAttackingMinion = true;
+            if (this.canBe_snaketrap || this.canBe_freezing || this.canBe_noblesacrifice || this.canBe_Trial) this.canbeTriggeredWithAttackingMinion = true;
 
             if (this.canBe_avenge || this.canBe_redemption || this.canBe_duplicate || this.canBe_effigy) this.canbeTriggeredWithKillingMinion = true;
+
+            if (this.canBe_Dart) this.canbeTriggeredWithHeroPower = true;
 
 
         }
@@ -239,6 +248,13 @@
             updateCanBeTriggered();
         }
 
+        public void usedTrigger_HeroPower()
+        {
+
+            this.canBe_Dart = false;
+            updateCanBeTriggered();
+        }
+
         public string returnAString()
         {
             string retval = "" + this.entityId + ".";
@@ -268,6 +284,8 @@
 
             retval += "" + ((canBe_Trial) ? "1" : "0");
 
+            retval += "" + ((this.canBe_Dart) ? "1" : "0");
+
             return retval + ",";
         }
 
@@ -280,6 +298,8 @@
             result = result && this.canBe_repentance == s.canBe_repentance && this.canBe_snaketrap == s.canBe_snaketrap && this.canBe_snipe == s.canBe_snipe && this.canBe_spellbender == s.canBe_spellbender && this.canBe_vaporize == s.canBe_vaporize;
             result = result && this.canBe_effigy == s.canBe_effigy && this.canBe_beartrap == s.canBe_beartrap && this.canBe_competivespirit == s.canBe_competivespirit;
             result = result && this.canBe_Trial == s.canBe_Trial;
+
+            result = result && this.canBe_Dart == s.canBe_Dart;
 
             return result;
         }
@@ -749,6 +769,7 @@
                 sec.canBe_effigy = false;
 
                 sec.canBe_Trial = false;
+                
 
 
                 if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_554) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_554] >= 2)
@@ -780,6 +801,11 @@
                 {
                     sec.canBe_beartrap = false;
                 }
+
+                if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.LOE_021) && enemyCardsPlayed[CardDB.cardIDEnum.LOE_021] >= 2)
+                {
+                    sec.canBe_Dart = false;
+                }
             }
 
             if (enemyHeroName == HeroEnum.mage)
@@ -800,6 +826,7 @@
                 sec.canBe_beartrap = false;
 
                 sec.canBe_Trial = false;
+                sec.canBe_Dart = false;
 
                 if (enemyCardsPlayed.ContainsKey(CardDB.cardIDEnum.EX1_287) && enemyCardsPlayed[CardDB.cardIDEnum.EX1_287] >= 2)
                 {
@@ -860,6 +887,7 @@
 
                 sec.canBe_effigy = false;
                 sec.canBe_beartrap = false;
+                sec.canBe_Dart = false;
 
 
 
@@ -975,6 +1003,7 @@
             bool enemyHeroGotDmg = false;
             int minionsOnBoard = old.enemyMinions.Count;
             bool endedTurn = false;
+            bool usedHeropower = false;
 
             Handmanager.Handcard hcard = null;
             if (p.cardsPlayedThisTurn > old.cardsPlayedThisTurn)
@@ -1038,6 +1067,11 @@
                 if (pcount > ocount) enemyMinionDied = true;
             }
 
+            //used heropower?
+            if (old.own_TIMES_HERO_POWER_USED_THIS_GAME < p.own_TIMES_HERO_POWER_USED_THIS_GAME)
+            {
+                usedHeropower = true;
+            }
 
             //attacked with mob?
 
@@ -1093,6 +1127,8 @@
                 if (usedspell) si.usedTrigger_SpellIsPlayed(lastEffectedIsMinion == 2);
 
                 if (endedTurn) si.usedTrigger_EndTurn();
+
+                if (usedHeropower) si.usedTrigger_HeroPower();
 
             }
         }

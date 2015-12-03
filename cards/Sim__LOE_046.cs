@@ -4,10 +4,10 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-    class Sim_GVG_110t : SimTemplate //Boom Bot
+    class Sim_LOE_046 : SimTemplate //huge toad
     {
 
-        //  Deathrattle: Deal 1-4 damage to a random enemy.
+        //  Deathrattle: Deal 1 damage to a random enemy.
 
         
 
@@ -15,13 +15,13 @@ namespace HREngine.Bots
         {
             if (p.isServer)
             {
-                int randdmg = p.getRandomNumber_SERVER(1, 4);
+                int randdmg = 1;
                 Minion poortarget = p.getRandomMinionFromSide_SERVER(!m.own, true);
                 if (poortarget != null) p.minionGetDamageOrHeal(poortarget, randdmg);
                 return;
             }
 
-            p.doDmgToRandomEnemyCLIENT(2, true, !m.own);
+            p.doDmgToRandomEnemyCLIENT(1, true, !m.own);
 
         }
 
