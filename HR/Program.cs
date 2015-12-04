@@ -561,6 +561,7 @@ namespace HREngine.Bots
                         //e.action_list.Clear();
                         BotAction endturnmove = new HSRangerLib.BotAction();
                         endturnmove.Type = BotActionType.END_TURN;
+                        Helpfunctions.Instance.ErrorLog("end turn action");
                         e.action_list.Add(endturnmove);
                         return;
                     }
@@ -648,6 +649,8 @@ namespace HREngine.Bots
                     Helpfunctions.Instance.ErrorLog("HR action " + numExecsReceived + " done <invalid_source>: " + e.action_id); break;
                 case ActionDoneEventArgs.ActionResult.TargetInvalid:
                     Helpfunctions.Instance.ErrorLog("HR action " + numExecsReceived + " done <invalid_target>: " + e.action_id); break;
+                default:
+                    Helpfunctions.Instance.ErrorLog("HR action " + numExecsReceived + " done <default>: " + e.action_id + " " + e.ToString()); break;
             }
 
         }
@@ -1102,7 +1105,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "117.03";
+        public string versionnumber = "117.04";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1201,7 +1204,7 @@ namespace HREngine.Bots
             this.singleLog = Settings.Instance.writeToSingleFile;
             Helpfunctions.Instance.logg("init Silverfish");
             Helpfunctions.Instance.ErrorLog("init Silverfish");
-            string path = SiverFishBotPath.AssemblyDirectory + System.IO.Path.DirectorySeparatorChar + "UltimateLogs" + System.IO.Path.DirectorySeparatorChar;
+            string path = SiverFishBotPath.AssemblyDirectory + System.IO.Path.DirectorySeparatorChar + "SilverLogs" + System.IO.Path.DirectorySeparatorChar;
             System.IO.Directory.CreateDirectory(path);
             Helpfunctions.Instance.ErrorLog("setlogpath to:" + path);
             sttngs.setFilePath(SiverFishBotPath.AssemblyDirectory);
@@ -1216,7 +1219,7 @@ namespace HREngine.Bots
             else
             {
                 sttngs.setLoggPath(SiverFishBotPath.LogPath + System.IO.Path.DirectorySeparatorChar);
-                sttngs.setLoggFile("UILogg.txt");
+                sttngs.setLoggFile("SilverLog.txt");
                 Helpfunctions.Instance.createNewLoggfile();
             }
             Helpfunctions.Instance.ErrorLog("setlogpath to:" + path);
@@ -1228,7 +1231,7 @@ namespace HREngine.Bots
         {
             if (!singleLog)
             {
-                sttngs.setLoggFile("UILogg" + DateTime.Now.ToString("_yyyy-MM-dd_HH-mm-ss") + ".txt");
+                sttngs.setLoggFile("SilverLog" + DateTime.Now.ToString("_yyyy-MM-dd_HH-mm-ss") + ".txt");
                 Helpfunctions.Instance.createNewLoggfile();
                 Helpfunctions.Instance.ErrorLog("#######################################################");
                 Helpfunctions.Instance.ErrorLog("fight is logged in: " + sttngs.logpath + sttngs.logfile);
