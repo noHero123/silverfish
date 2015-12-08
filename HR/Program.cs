@@ -497,7 +497,7 @@ namespace HREngine.Bots
                 //  AI has requested to ignore this update, so return without setting any actions.
                 if (!shouldSendActions)
                 {
-                    Helpfunctions.Instance.ErrorLog("shouldsendactionsblah");
+                    //Helpfunctions.Instance.ErrorLog("shouldsendactionsblah");
                     shouldSendActions = true;  // unpause ourselves for next time
                     return;
                 }
@@ -583,7 +583,7 @@ namespace HREngine.Bots
 
                     do
                     {
-                        Helpfunctions.Instance.ErrorLog("play action...1");
+                        Helpfunctions.Instance.ErrorLog("play action..." + (e.action_list.Count() + 1));
                         Action moveTodo = Ai.Instance.bestmove;
 
                         if (!hasMoreActions && (moveTodo == null || moveTodo.actionType == actionEnum.endturn))
@@ -623,8 +623,8 @@ namespace HREngine.Bots
             }
             catch (Exception Exception)
             {
-                Helpfunctions.Instance.ErrorLog(Exception.Message);
-                Helpfunctions.Instance.ErrorLog(Environment.StackTrace);
+                Helpfunctions.Instance.logg("StackTrace ---" + Exception.ToString());
+                Helpfunctions.Instance.ErrorLog("StackTrace ---" + Exception.ToString());
                 if (Settings.Instance.learnmode)
                 {
                     e.action_list.Clear();
@@ -1105,7 +1105,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "117.04";
+        public string versionnumber = "117.1";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -2276,7 +2276,7 @@ namespace HREngine.Bots
 
             }
             this.waitingForSilver = false;
-            Helpfunctions.Instance.logg("received " + boardnumm + " actions to do:");
+            Helpfunctions.Instance.logg("received " + boardnumm + " actions to do: (currtime = " + DateTime.Now.ToString("HH:mm:ss.ffff") + ")");
             Ai.Instance.currentCalculatedBoard = "0";
             Playfield p = new Playfield();
             List<Action> aclist = new List<Action>();
