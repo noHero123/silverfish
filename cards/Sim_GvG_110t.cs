@@ -21,7 +21,8 @@ namespace HREngine.Bots
                 return;
             }
 
-            p.doDmgToRandomEnemyCLIENT(2, true, !m.own);
+            int dmg = (m.own ? 2 : 3);
+            p.doDmgToRandomEnemyCLIENT2(dmg, true, m.own);
 
         }
 

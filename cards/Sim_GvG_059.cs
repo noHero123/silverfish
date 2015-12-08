@@ -26,7 +26,7 @@ namespace HREngine.Bots
                 return;
             }
 
-            Minion m = p.searchRandomMinion(temp, Playfield.searchmode.searchLowestHP);
+            Minion m = p.searchRandomMinion(temp, (ownplay ? Playfield.searchmode.searchLowestAttack : Playfield.searchmode.searchHighestAttack));
             m.divineshild = true;
             m.taunt = true;
         }

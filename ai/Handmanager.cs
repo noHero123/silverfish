@@ -122,6 +122,7 @@
                 Helpfunctions.Instance.ErrorLog("choices " + cardc.name);
             }
             CardDB.Card tempcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_029);//=fireball, just to make sure its not a mob (movegen will ignore mobs if own minions >= 7)
+            tempcard.name = CardDB.cardName.placeholdercard;
             Handcard newhc = new Handcard(tempcard);
             newhc.entity = 54321;
             newhc.isChoiceTemp=true;

@@ -58,7 +58,7 @@
 
         private void startEnemyTurnSim(Playfield p, bool simulateTwoTurns, bool print, bool playaround, int playaroundprob, int playaroundprob2)
         {
-            if (p.ownHero.Hp >= 1)
+            if (p.ownHero.Hp >= 1 && p.enemyHero.Hp>=1)
             {
                 //simulateEnemysTurn(simulateTwoTurns, playaround, print, pprob, pprob2);
                 p.prepareNextTurn(p.isOwnTurn);

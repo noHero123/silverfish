@@ -62,7 +62,7 @@
             
             //RR card draw value depending on the turn and distance to lethal
             //RR if lethal is close, carddraw value is increased
-            if (Ai.Instance.lethalMissing <= 5) //RR
+            if (Ai.Instance.lethalMissing <= 5 && p.turnCounter ==0) //RR
             {
                 retval += p.owncarddraw * 100;
             }
@@ -72,7 +72,9 @@
             }
             else
             {
-                retval += p.owncarddraw * 5;
+                //retval += p.owncarddraw * 5;
+                // value card draw this turn > card draw next turn (the sooner the better)
+                retval += (p.turnCounter < 2 ? p.owncarddraw * 5 : p.owncarddraw * 3);
             }
 
             //retval += p.owncarddraw * 5;
@@ -83,10 +85,34 @@
             int ownMinionsCount = 0;
 
             bool enemyhaspatron = false;
+
+            //
+            bool canPingMinions = (p.ownHeroAblility.card.name == CardDB.cardName.fireblast);
+            bool hasPingedMinion = false;
+
+
             foreach (Minion m in p.enemyMinions)
             {
-                retval -= this.getEnemyMinionValue(m, p);
                 if (m.name == CardDB.cardName.grimpatron && !m.silenced) enemyhaspatron = true;
+
+                int currMinionValue = this.getEnemyMinionValue(m, p);
+
+                // Give a bonus for 1 hp minions as a mage, since we can remove it easier in the future with ping.
+                // But we make sure we only give this bonus once among all enemies. We also give another +1 bonus once if the atk >= 4.
+                if (canPingMinions && !hasPingedMinion && currMinionValue > 2 && m.Hp == 1)
+                {
+                    currMinionValue -= 1;
+                    canPingMinions = false;  // only 1 per turn (-1 bonus regardless of atk)
+                    hasPingedMinion = true;
+                }
+                if (hasPingedMinion && currMinionValue > 2 && m.Hp == 1 && m.Angr >= 4)
+                {
+                    currMinionValue -= 1;
+                    hasPingedMinion = false;  // only 1 per turn (-1 bonus additional for atk >= 4)
+                }
+
+                retval -= currMinionValue;
+
                 //hasTank = hasTank || m.taunt;
             }
 
@@ -169,6 +195,7 @@
                 if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 20;
                 if (p.ownHeroName == HeroEnum.pala && enemyhaspatron) retval += 20;
             }
+            if (useAbili && usecoin == 2) retval -= 5;
             //if (usecoin && p.manaTurnEnd >= 1 && p.owncards.Count <= 8) retval -= 100;
 
             int mobsInHand = 0;
@@ -234,8 +261,18 @@
                 else
                 {
                     retval += 50;//10000
+                    if (p.numPlayerMinionsAtTurnStart == 0) retval += 50; // if we can kill the enemy even after a board clear, bigger bonus
+                    if (p.loathebLastTurn > 0) retval += 50;  // give a bonus to turn 2 sims where we played loatheb in turn 1 to protect our lethal board
+
                 }
             }
+            else if (p.ownHero.Hp > 0)
+            {
+                // if our damage on board is lethal, give a strong bonus so enemy AI avoids this outcome in its turn (i.e. AI will clear our minions if it can instead of ignoring them)
+                if (p.turnCounter == 1 && p.guessHeroDamage(true) >= p.enemyHero.Hp + p.enemyHero.armor) retval += 100;
+            }
+
+
             //soulfire etc
             int deletecardsAtLast = 0;
             foreach (Action a in p.playactions)
@@ -274,6 +311,10 @@
 
             //if (p.ownHero.Hp <= 0 && p.turnCounter < 2) retval = -10000;
 
+            // give a bonus for making the enemy spend more mana dealing with our board, so boards where the enemy makes different plays
+            // aren't considered as equal value (i.e. attacking the enemy and making him spend mana to heal vs not attacking at all)
+            if (p.turnCounter == 1 || p.turnCounter == 3) retval += p.enemyMaxMana - p.mana;
+
             p.value = retval;
             return retval;
         }
@@ -295,7 +336,36 @@
                 retval += m.Angr * 2;
                 if (m.windfury) retval += m.Angr * 2;
                 if (m.Angr >= 4) retval += 10;
-                if (m.Angr >= 7) retval += 50;
+                if (m.Angr >= 7)
+                {
+                    //this might be faster, than creating new lists, use findall and loop over them
+                    int enemyAttackerscount = 0;
+                    int ownTauntCount = 0;
+                    int ownTauntHP = 0;
+                    int enemyTotalAttack = 0;
+
+                    foreach (Minion min in p.enemyMinions)
+                    {
+                        if (min.Angr >= 1)
+                        {
+                            enemyTotalAttack += min.Angr;
+                            enemyAttackerscount++;
+                        }
+
+                    }
+
+                    foreach (Minion min in p.ownMinions)
+                    {
+                        if (min.taunt)
+                        {
+                            ownTauntCount++;
+                            ownTauntHP += min.Hp;
+                        }
+                    }
+
+                    if (ownTauntCount < enemyAttackerscount && ownTauntHP <= enemyTotalAttack) retval += 30;
+
+                }
             }
 
             if (m.Angr == 0) retval -= 7;

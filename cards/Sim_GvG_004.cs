@@ -9,10 +9,10 @@ namespace HREngine.Bots
 
         //    Battlecry: If you have a Mech, deal 4 damage randomly split among all enemies.
 
-        public override void  getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
 
-            // optimistic
+            // conservative/realistic
             bool ownplay = own.own;
             List<Minion> temp1 = (ownplay) ? p.ownMinions : p.enemyMinions;
             bool haveAMech = false;
@@ -37,57 +37,29 @@ namespace HREngine.Bots
                 return;
             }
 
-            int i = 0;
-            List<Minion> temp = (ownplay) ? p.enemyMinions : p.ownMinions;
+            List<Minion> targets = (ownplay) ? new List<Minion>(p.enemyMinions) : new List<Minion>(p.ownMinions);
             int times = (ownplay) ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);
 
-            if ((ownplay && p.enemyHero.Hp <= times) || (!ownplay && p.ownHero.Hp <= times))
+            if (ownplay)
             {
-                if (ownplay) p.minionGetDamageOrHeal(p.enemyHero, p.enemyHero.Hp - 1);
-                else p.minionGetDamageOrHeal(p.ownHero, p.ownHero.Hp - 1);
+                targets.Add(p.enemyHero);
+                targets.Sort((a, b) => -a.Hp.CompareTo(b.Hp));  // most hp -> least
             }
             else
             {
-                while (i < times)
-                {
-                    if (temp.Count >= 1)
-                    {
-                        //search Minion with lowest hp
-                        Minion enemy = temp[0];
-                        int minhp = 10000;
-                        bool found = false;
-                        foreach (Minion m in temp)
-                        {
-                            if (m.name == CardDB.cardName.nerubianegg && enemy.Hp >= 2) continue; //dont attack nerubianegg!
+                targets.Add(p.ownHero);
+                targets.Sort((a, b) => a.Hp.CompareTo(b.Hp));  // least hp -> most
+            }
 
-                            if (m.Hp >= 2 && minhp > m.Hp)
-                            {
-                                enemy = m;
-                                minhp = m.Hp;
-                                found = true;
-                            }
-                        }
-
-                        if (found)
-                        {
-                            p.minionGetDamageOrHeal(enemy, 1);
-                        }
-                        else
-                        {
-                            p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, 1);
-                        }
-
-                    }
-                    else
-                    {
-                        p.minionGetDamageOrHeal(ownplay ? p.enemyHero : p.ownHero, 1);
-                    }
-
-                    i++;
-                }
+            // Distribute the damage evenly among the targets
+            int i = 0;
+            while (i < times)
+            {
+                int loc = i % targets.Count;
+                p.minionGetDamageOrHeal(targets[loc], 1);
+                i++;
             }
         }
-
 
     }
 

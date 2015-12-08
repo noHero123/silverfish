@@ -9,13 +9,14 @@ namespace HREngine.Bots
 
         //   Deathrattle: Summon a random 2-Cost minion.
 
-        CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_172);
+        CardDB.Card bloodfen = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_172);
+        CardDB.Card treant = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_158t);
 
         public override void onDeathrattle(Playfield p, Minion m)
         {
             
             int pos = (m.own) ? p.ownMinions.Count : p.enemyMinions.Count;
-            p.callKid(kid, pos, m.own);
+            p.callKid((m.own ? treant : bloodfen), pos, m.own);
         }
 
 

@@ -50,7 +50,7 @@ namespace HREngine.Bots
                 }
                 if (p.cardsPlayedThisTurn >= 1 && p.ownMinions.Count >= 1)
                 {
-                    p.minionGetBuffed(p.searchRandomMinion(p.ownMinions, Playfield.searchmode.searchLowestAttack), 3, 0);
+                    p.minionGetBuffed(p.searchRandomMinion(p.ownMinions, Playfield.searchmode.searchLowestHP), 3, 0);
                 }
             }
             else
@@ -62,7 +62,7 @@ namespace HREngine.Bots
                 }
                 if (p.cardsPlayedThisTurn >= 1 && p.enemyMinions.Count >= 1)
                 {
-                    p.minionGetBuffed(p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchLowestAttack), 3, 0);
+                    p.minionGetBuffed(p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchHighestHP), 3, 0);
                 }
             }
         }

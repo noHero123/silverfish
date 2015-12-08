@@ -23,7 +23,7 @@ namespace HREngine.Bots
             List<Minion> temp = (ownplay)? p.enemyMinions : p.ownMinions;
             if (temp.Count >= 1)
             {
-                p.minionGetDestroyed(p.searchRandomMinion(temp, Playfield.searchmode.searchLowestHP));
+                p.minionGetDestroyed(p.searchRandomMinion(temp, (ownplay ? Playfield.searchmode.searchLowestAttack : Playfield.searchmode.searchHighestAttack)));
                 
             }
             if (p.cardsPlayedThisTurn >= 1) p.lowerWeaponDurability(1000, !ownplay);

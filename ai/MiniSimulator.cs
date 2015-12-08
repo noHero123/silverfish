@@ -248,7 +248,7 @@
                     float val = botBase.getPlayfieldValue(p);
                     if (bestval <= val)
                     {
-                        if (bestval == val && bestanzactions < p.playactions.Count) continue;
+                        if (bestval == val && bestanzactions <= p.playactions.Count) continue;
                         bestplay = p;
                         bestval = val;
                         bestanzactions = p.playactions.Count;

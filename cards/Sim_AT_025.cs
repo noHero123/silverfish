@@ -24,16 +24,27 @@ namespace HREngine.Bots
                 return;
             }
 
+            if (ownplay)
+            {
+                Minion choosen2 = p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchLowestAttack);
+                if (choosen2 != null) p.minionGetDestroyed(choosen2);
 
-            Minion choosen2 = p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchLowestAttack);
-            if (choosen2 != null) p.minionGetDestroyed(choosen2);
+                choosen2 = p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchLowestAttack);
+                if (choosen2 != null) p.minionGetDestroyed(choosen2);
+            }
+            else
+            {
+                Minion choosen2 = p.searchRandomMinion(p.ownMinions, Playfield.searchmode.searchHighestAttack);
+                if (choosen2 != null) p.minionGetDestroyed(choosen2);
 
-            choosen2 = p.searchRandomMinion(p.enemyMinions, Playfield.searchmode.searchLowestAttack);
-            if (choosen2 != null) p.minionGetDestroyed(choosen2);
+                choosen2 = p.searchRandomMinion(p.ownMinions, Playfield.searchmode.searchHighestAttack);
+                if (choosen2 != null) p.minionGetDestroyed(choosen2);
+            }
 
             p.disCardACard(ownplay);
             p.disCardACard(ownplay);
         }
+
 
        
 

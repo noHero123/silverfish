@@ -8,6 +8,12 @@ namespace HREngine.Bots
 	{
 		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
+
+            if (p.enemyHeroName == HeroEnum.hunter || p.enemyHeroName == HeroEnum.mage || p.enemyHeroName == HeroEnum.pala)
+            {
+                return 50;
+            }
+
 			return 0;
 		}
 	}

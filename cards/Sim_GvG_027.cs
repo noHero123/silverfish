@@ -30,7 +30,7 @@ namespace HREngine.Bots
                         p.minionGetBuffed(tempmech[random], 2, 2);
                         return;
                     }
-                    p.minionGetBuffed(p.searchRandomMinion(tempmech, Playfield.searchmode.searchHighestAttack), 2, 2);
+                    p.minionGetBuffed(p.searchRandomMinion(tempmech, (triggerEffectMinion.own ? Playfield.searchmode.searchLowestHP : Playfield.searchmode.searchHighestHP)), 2, 2);
                 }
             }
         }

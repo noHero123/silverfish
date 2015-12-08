@@ -15,7 +15,7 @@ namespace HREngine.Bots
             p.equipWeapon(w, ownplay);
             List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
             if (temp.Count <= 0) return;
-            p.minionGetBuffed(p.searchRandomMinion(temp, Playfield.searchmode.searchLowestAttack), 1, 0);
+            p.minionGetBuffed(p.searchRandomMinion(temp, (ownplay ? Playfield.searchmode.searchLowestHP : Playfield.searchmode.searchHighestHP)), 1, 0);
 
         }
 

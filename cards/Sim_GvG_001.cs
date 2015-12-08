@@ -43,17 +43,19 @@ namespace HREngine.Bots
 
                     if (!hasDivineShield)
                     {
-                        temp.Sort((a, b) => a.Angr.CompareTo(b.Angr));  // sorted by lowest atk
-                        chosen = temp[0];
+                        List<Minion> temp2 = new List<Minion>(temp);
+                        temp2.Sort((a, b) => a.Angr.CompareTo(b.Angr));  // sorted by lowest atk
+                        chosen = temp2[0];
                     }
                 }
                 else
                 {
-                    temp.Sort((a, b) => -a.Angr.CompareTo(b.Angr));  // sorted by highest atk
+                    List<Minion> temp2 = new List<Minion>(temp);
+                    temp2.Sort((a, b) => -a.Angr.CompareTo(b.Angr));  // sorted by highest atk
 
                     // find strongest minion that can be killed, or pick minion with highest hp
                     int maxhp = 0;
-                    foreach (Minion m in temp)
+                    foreach (Minion m in temp2)
                     {
                         if (m.Hp <= times)
                         {

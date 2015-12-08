@@ -11,7 +11,7 @@ namespace HREngine.Bots
         public override void onSecretPlay(Playfield p, bool ownplay, int number)
         {
             int dmg = 5;
-            p.doDmgToRandomEnemyCLIENT(dmg, true, !ownplay);
+            p.doDmgToRandomEnemyCLIENT2(dmg, true, ownplay);
         }
 
     }

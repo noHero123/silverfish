@@ -15,7 +15,7 @@ namespace HREngine.Bots
         {
             int dmg = (ownplay) ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
             if (ownplay && p.ownHero.Hp <= 12) dmg = p.getSpellDamageDamage(3);
-            if (!ownplay && p.enemyHero.Hp <= 12) dmg = p.getSpellDamageDamage(3);
+            if (!ownplay && p.enemyHero.Hp <= 12) dmg = p.getEnemySpellDamageDamage(3);
 
             p.allMinionsGetDamage(dmg);
         }

@@ -13,10 +13,14 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            int pos = (own.own) ? p.ownMinions.Count : p.enemyMinions.Count;
+            /*int pos = (own.own) ? p.ownMinions.Count : p.enemyMinions.Count;
             p.callKid(kid, pos, own.own);
             pos = (own.own) ? p.ownMinions.Count : p.enemyMinions.Count;
-            p.callKid(kid, pos, own.own);
+            p.callKid(kid, pos, own.own);*/
+            int pos = own.zonepos;
+            p.callKid(kid, pos, own.own, true);
+            p.callKid(kid, pos, own.own, true);
+            own.zonepos++;  // move Boom to the middle of our bots
         }
 
 

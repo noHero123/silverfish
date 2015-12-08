@@ -23,7 +23,7 @@ namespace HREngine.Bots
                 return;
             }
 
-            p.doDmgToRandomEnemyCLIENT(1, true, !own.own);
+            p.doDmgToRandomEnemyCLIENT2(1, true, own.own);
             
         }
 

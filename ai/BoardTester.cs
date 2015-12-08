@@ -247,6 +247,7 @@
                     {
                         string facehp = s.Split(new string[] { "face " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0];
                         ComboBreaker.Instance.attackFaceHP = Convert.ToInt32(facehp);
+                        Settings.Instance.enfacehp = ComboBreaker.Instance.attackFaceHP;
                     }
 
                     this.playarround = false;

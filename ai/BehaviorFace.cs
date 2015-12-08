@@ -1,4 +1,6 @@
-﻿namespace HREngine.Bots
+﻿using System.Collections.Generic;
+
+namespace HREngine.Bots
 {
     public class BehaviorFace : Behavior
     {
@@ -12,11 +14,17 @@
             retval += p.owncards.Count * 3;
 
             retval += p.ownHero.Hp + p.ownHero.armor;
-            retval += -3*(p.enemyHero.Hp + p.enemyHero.armor);
+            retval += -3 * (p.enemyHero.Hp + p.enemyHero.armor);
+
+            // when enemy hp is low, we need more face
+            if (p.enemyHero.Hp + p.enemyHero.armor < 15)
+            {
+                retval += 2 * (15 - p.enemyHero.Hp - p.enemyHero.armor);
+            }
 
             retval += p.ownMaxMana * 15 - p.enemyMaxMana * 15;
 
-            if (p.ownWeaponAttack >= 1)
+            if (p.ownWeaponAttack >= 1 && !p.ownHero.frozen)
             {
                 retval += p.ownWeaponAttack * p.ownWeaponDurability;
             }
@@ -37,7 +45,7 @@
             //RR if lethal is close, carddraw value is increased
 
 
-            if (Ai.Instance.lethalMissing <= 5) //RR
+            if (p.turnCounter == 0 && Ai.Instance.lethalMissing <= 5) //RR
             {
                 retval += p.owncarddraw * 100;
             }
@@ -47,7 +55,8 @@
             }
             else
             {
-                retval += p.owncarddraw * 5;
+                // value card draw this turn > card draw next turn (the sooner the better)
+                retval += (p.turnCounter < 2 ? p.owncarddraw * 5 : p.owncarddraw * 3);
             }
             //retval += p.owncarddraw * 5;
             retval -= p.enemycarddraw * 15;
@@ -75,10 +84,23 @@
             int heropowermana = p.ownHeroAblility.card.getManaCost(p, 2);
             if (p.manaTurnEnd >= heropowermana && !useAbili && p.ownAbilityReady)
             {
-                if (p.ownHeroName == HeroEnum.pala) retval -= 3;
-                else if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 15;
+                if (!(p.ownHeroName == HeroEnum.thief && (p.ownWeaponDurability >= 2 || p.ownWeaponAttack >= 2))) retval -= 20;
             }
+            if (useAbili) retval -= 3;  // penalty in case the hero power was chosen over playing a card (penalty == card count bonus)
+            if (useAbili && usecoin == 2) retval -= 5;  // prevent being wasteful with innervate if we could've just not used hero power for 2mana
             //if (usecoin && p.mana >= 1) retval -= 20;
+
+            if (p.ownHeroName == HeroEnum.pala)
+            {
+                foreach (Handmanager.Handcard hc in p.owncards)
+                {
+                    if (hc.card.name == CardDB.cardName.avenge && p.manaTurnEnd >= hc.getManaCost(p))
+                    {
+                        retval -= 8;
+                        break;
+                    }
+                }
+            }
 
             foreach (Minion m in p.ownMinions)
             {
@@ -94,7 +116,7 @@
                     retval += 1;
                     if (!m.taunt && m.stealth) retval += (m.Angr < 4 ? 10 : 20);
                 }
-                if (m.handcard.card.name == CardDB.cardName.silverhandrecruit && m.Angr == 1 && m.Hp == 1) retval -= 5;
+                //if (m.handcard.card.name == CardDB.cardName.silverhandrecruit && m.Angr == 1 && m.Hp == 1) retval -= 5;
                 if (m.handcard.card.name == CardDB.cardName.direwolfalpha || m.handcard.card.name == CardDB.cardName.flametonguetotem || m.handcard.card.name == CardDB.cardName.stormwindchampion || m.handcard.card.name == CardDB.cardName.raidleader) retval += 10;
                 if (m.handcard.card.name == CardDB.cardName.nerubianegg)
                 {
@@ -124,8 +146,16 @@
                 else
                 {
                     retval += 50;//10000
+                    if (p.numPlayerMinionsAtTurnStart == 0) retval += 50; // if we can kill the enemy even after a board clear, bigger bonus
+                    if (p.loathebLastTurn > 0) retval += 50;  // give a bonus to turn 2 sims where we played loatheb in turn 1 to protect our lethal board
                 }
             }
+            else if (p.ownHero.Hp > 0)
+            {
+                // if our damage on board is lethal, give a strong bonus so enemy AI avoids this outcome in its turn (i.e. AI will clear our minions if it can instead of ignoring them)
+                if (p.turnCounter == 1 && p.guessHeroDamage(true) >= p.enemyHero.Hp + p.enemyHero.armor) retval += 100;
+            }
+
             //soulfire etc
             int deletecardsAtLast = 0;
             foreach (Action a in p.playactions)
@@ -170,6 +200,10 @@
             }
             if (p.ownHero.Hp <= 0) retval = -10000;*/
 
+            // give a bonus for making the enemy spend more mana dealing with our board, so boards where the enemy makes different plays
+            // aren't considered as equal value (i.e. attacking the enemy and making him spend mana to heal vs not attacking at all)
+            if (p.turnCounter == 1 || p.turnCounter == 3) retval += p.enemyMaxMana - p.mana;
+
             p.value = retval;
             return retval;
         }
@@ -177,7 +211,7 @@
         public override int getEnemyMinionValue(Minion m, Playfield p)
         {
 
-            int retval = 0;
+            int retval = 1;  // Give a base value of 1, so in the event of equal boards next turn vs this turn, minion removal is prioritzed earlier rather than later.;
             if (m.name == CardDB.cardName.cutpurse) retval += 40;
             if (m.taunt || (m.handcard.card.targetPriority >= 1 && !m.silenced))
             {
@@ -187,21 +221,30 @@
                     retval += m.Angr * 2;
                     if (m.windfury) retval += 2 * m.Angr;
                 }
-                if (m.taunt) retval += 5;
+                if (m.taunt && m.Angr > 0) retval += 5;
                 if (m.divineshild) retval += m.Angr;
                 if (m.frozen) retval -= 1; // because its bad for enemy :D
                 if (m.poisonous) retval += 4;
                 retval += m.handcard.card.rarity;
 
-                
-                if (m.Angr >= 4) retval += 20;
-                if (m.Angr >= 7) retval += 50;
+
+                if (!m.frozen && m.Angr >= 4) retval += 20 + m.Hp;
+                if (!m.frozen && m.Angr >= 7)
+                {
+                    List<Minion> myTaunts = p.ownMinions.FindAll(own => own.taunt);
+                    List<Minion> enemyAttackers = p.enemyMinions.FindAll(enm => enm.entitiyID != m.entitiyID && enm.Angr > 0 && !enm.frozen);
+                    int totalTauntHp = 0;
+                    int totalAtkDmg = 0;
+                    myTaunts.ForEach(taunt => totalTauntHp += taunt.Hp);
+                    enemyAttackers.ForEach(atkr => totalAtkDmg += atkr.Angr);
+                    if (myTaunts.Count < enemyAttackers.Count && totalTauntHp <= totalAtkDmg) retval += 30 + m.Hp;
+                }
                 if (m.name == CardDB.cardName.nerubianegg && m.Angr <= 3 && !m.taunt) retval = 0;
             }
 
             if (m.handcard.card.targetPriority >= 1 && !m.silenced) retval += m.handcard.card.targetPriority;
 
-            
+
             return retval;
         }
 

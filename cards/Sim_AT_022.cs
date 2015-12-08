@@ -19,7 +19,7 @@ namespace HREngine.Bots
                 if (choosen != null) p.minionGetDamageOrHeal(choosen, dmg);
                 return;
             }
-            p.doDmgToRandomEnemyCLIENT(dmg, true, !ownplay);
+            p.doDmgToRandomEnemyCLIENT2(dmg, true, ownplay);
         }
 
         public virtual void onCardIsDiscarded(Playfield p, CardDB.Card card, bool own)
@@ -34,7 +34,7 @@ namespace HREngine.Bots
                 return;
             }
 
-            p.doDmgToRandomEnemyCLIENT(dmg, true, !own);
+            p.doDmgToRandomEnemyCLIENT2(dmg, true, own);
         }
 
 

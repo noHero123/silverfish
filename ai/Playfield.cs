@@ -197,6 +197,9 @@
         public List<GraveYardItem> diedMinions = null;
         public int anzMinionsDiedThisTurn = 0;
 
+        public int numPlayerMinionsAtTurnStart = 0;
+        public int loathebLastTurn = 0;  // only checked for turn 2 bonus
+
         public List<Handmanager.Handcard> owncards = new List<Handmanager.Handcard>();
         public int owncarddraw = 0;
 
@@ -1992,10 +1995,18 @@
             return bestplace + 1;
         }
 
-        public void guessHeroDamage()
+        public int guessHeroDamage(bool own = false)
         {
+            List<Minion> attackingMinions = (own ? this.ownMinions : this.enemyMinions);
+            Minion attackingHero = (own ? this.ownHero : this.enemyHero);
+            HeroEnum attackingHeroName = (own ? this.ownHeroName : this.enemyHeroName);
+            int weaponAttack = (own ? this.ownWeaponAttack : this.enemyWeaponAttack);
+            CardDB.cardName weaponName = (own ? this.ownWeaponName : this.enemyWeaponName);
+            List<Minion> targetMinions = (own ? this.enemyMinions : this.ownMinions);
+            Minion targetHero = (own ? this.enemyHero : this.ownHero);
+
             int ghd = 0;
-            foreach (Minion m in this.enemyMinions)
+            foreach (Minion m in attackingMinions)
             {
                 if (m.frozen) continue;
                 if (m.name == CardDB.cardName.ancientwatcher && !m.silenced)
@@ -2006,33 +2017,36 @@
                 if (m.windfury) ghd += m.Angr;
             }
 
-            if (!this.enemyHero.frozen)
+            if (!attackingHero.frozen)
             {
-                if (this.enemyWeaponAttack >= 1)
+                if (weaponAttack >= 1)
                 {
-                    ghd += enemyWeaponAttack;
-                    if (this.enemyHero.windfury || this.enemyWeaponName == CardDB.cardName.doomhammer) ghd += enemyWeaponAttack;
+                    ghd += weaponAttack;
+                    if (attackingHero.windfury || weaponName == CardDB.cardName.doomhammer) ghd += weaponAttack;
                 }
                 else
                 {
-                    if (this.enemyHeroName == HeroEnum.druid) ghd++;
-                    if (this.enemyHeroName == HeroEnum.thief) ghd++;
+                    if (attackingHeroName == HeroEnum.thief) ghd++;
                 }
+
+                if (attackingHeroName == HeroEnum.druid) ghd++;
             }
 
-            if (this.enemyHeroName == HeroEnum.mage) ghd++;
-            if (this.enemyHeroName == HeroEnum.hunter) ghd += 2;
+            if (attackingHeroName == HeroEnum.mage) ghd++;
+            if (attackingHeroName == HeroEnum.hunter) ghd += 2;
 
 
-            foreach (Minion m in this.ownMinions)
+            foreach (Minion m in targetMinions)
             {
                 if (m.taunt) ghd -= m.Hp;
                 if (m.taunt && m.divineshild) ghd -= 1;
             }
 
             int guessingHeroDamage = Math.Max(0, ghd);
-            if (this.ownHero.immune) guessingHeroDamage = 0;
+            if (targetHero.immune) guessingHeroDamage = 0;
             //this.guessingHeroHP = this.ownHero.Hp + this.ownHero.armor - guessingHeroDamage;
+
+            return guessingHeroDamage;
         }
 
         public void simulateTraps()
@@ -2094,7 +2108,7 @@
                 {
                     // first damage to your hero is nulled -> lower guessingHeroDamage
                     List<Minion> temp = new List<Minion>(this.enemyMinions);
-                    temp.Sort((a, b) => -a.Angr.CompareTo(b.Angr));//take the strongest
+                    temp.Sort((a, b) => a.Angr.CompareTo(b.Angr));//take the weakest
                     if (temp.Count == 0) continue;
                     Minion m = temp[0];
                     m.Angr = 0;
@@ -2119,20 +2133,21 @@
                     this.ownHero.immune = true;
                 }
 
-                 if (secretID == CardDB.cardIDEnum.EX1_294) //mirror entity
-                 {
-                     // summon a weak minion (thx to xytrix)
-                     int posi = this.ownMinions.Count;
+                if (secretID == CardDB.cardIDEnum.EX1_294) //mirror entity
+                {
+                    // summon a weak minion (thx to xytrix)
+                    int posi = this.ownMinions.Count;
                     CardDB.Card kid;
                     switch ((this.ownMaxMana + 2) / 3)  // conservative, but scales a little as the game progresses
                     {
-                        case 1: default:  kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_554t); break;  // 1/1 snake turns 1-3
+                        case 1:
+                        default: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_554t); break;  // 1/1 snake turns 1-3
                         case 2: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_158t); break; // 2/2 treant turns 4-6
                         case 3: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_172); break; // 3/2 bloodfen raptor turns 7-9
                         case 4: kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AT_036t); break; // 4/4 nerubian turn 10
                     }
-                     callKid(kid, posi, true);
-                 }
+                    callKid(kid, posi, true);
+                }
                 if (secretID == CardDB.cardIDEnum.tt_010) //spellbender
                 {
                     //whut???
@@ -2157,6 +2172,17 @@
                     Minion m = temp[0];
                     drawACard(m.handcard.card.cardIDenum, true);
                     drawACard(m.handcard.card.cardIDenum, true);
+                }
+                if (secretID == CardDB.cardIDEnum.AT_002) // effigy
+                {
+                    if (this.ownMinions.Count == 0) continue;
+
+                    // assume enemy kills our lowest mana cost minion, and we get a vanilla drop of manacost-1
+                    List<Minion> temp = new List<Minion>(this.ownMinions);
+                    temp.Sort((a, b) => a.handcard.card.cost.CompareTo(b.handcard.card.cost));
+
+                    int cardCost = Math.Min(8, Math.Max(temp[0].handcard.card.cost - 1, 0));  // min cost 0 (wisp), max cost 8 (giants, etc)
+                    this.evaluatePenality -= cardCost * 3;  // value as if we played a vanilla minion of the same cost (i.e. 2*atk + hp, but atk==hp)
                 }
 
                 //pala secrets############
@@ -2184,12 +2210,18 @@
                     List<Minion> temp = new List<Minion>(this.ownMinions);
                     temp.Sort((a, b) => a.Hp.CompareTo(b.Hp));//take the weakest
                     if (temp.Count == 0) continue;
+
+                    bool buffed = false;
                     foreach (Minion m in temp)
                     {
                         if (m.divineshild) continue;
                         m.divineshild = true;
+                        buffed = true;
                         break;
                     }
+
+                    // all our minions have divine shield? redemption really shines here, so give weakest minion more hp.
+                    if (!buffed) temp[0].Hp += temp[0].handcard.card.Health;  // don't count already buffed hp
                 }
 
                 if (secretID == CardDB.cardIDEnum.EX1_379) // repentance
@@ -2205,10 +2237,17 @@
 
                 if (secretID == CardDB.cardIDEnum.FP1_020) // avenge
                 {
+                    if (this.numPlayerMinionsAtTurnStart < 2) continue;
+
                     // we give our weakest minion +3/+2 :D
                     List<Minion> temp = new List<Minion>(this.ownMinions);
                     temp.Sort((a, b) => a.Hp.CompareTo(b.Hp));//take the weakest
-                    if (temp.Count < 2) continue;
+                    if (temp.Count == 0)
+                    {
+                        // even though there's no minions to buff because the board was cleared, we still got value for the secret
+                        this.evaluatePenality -= 8;
+                        continue;
+                    }
                     foreach (Minion m in temp)
                     {
                         minionGetBuffed(m, 3, 2);
@@ -2257,12 +2296,15 @@
                     }
                     else
                     {
-                        if (this.enemySecretCount >= 1)
+                        if (!simulateTwoTurns)
                         {
-                            this.evaluatePenality += 2 * hasReady;
-                        }
+                            if (this.enemySecretCount >= 1)
+                            {
+                                this.evaluatePenality += 2 * hasReady;
+                            }
 
-                        this.evaluatePenality += 40 * hasReady;
+                            this.evaluatePenality += 40 * hasReady;
+                        }
                     }
 
                 }
@@ -2396,6 +2438,7 @@
                 this.playedmagierinderkirintor = false;
 
                 this.weHavePlayedMillhouseManastorm = false;
+                loathebLastTurn = this.ownloatheb;
                 this.ownloatheb = 0;
                 this.ownSaboteur = 0;
                 
@@ -4267,7 +4310,7 @@
                 }
                 if (own && m.name == CardDB.cardName.rumblingelemental && c.type == CardDB.cardtype.MOB && c.battlecry==true)
                 {
-                    this.doDmgToRandomEnemyCLIENT(2, true, !own);
+                    this.doDmgToRandomEnemyCLIENT2(2, true, own);
                 }
             }
 
@@ -4290,7 +4333,7 @@
                 }
                 if (!own && m.name == CardDB.cardName.rumblingelemental && c.type == CardDB.cardtype.MOB && c.battlecry == true)
                 {
-                    this.doDmgToRandomEnemyCLIENT(2, true, !own);
+                    this.doDmgToRandomEnemyCLIENT2(2, true, own);
                 }
             }
 
@@ -4456,6 +4499,7 @@
 
         public void triggerStartTurn(bool ownturn)
         {
+            this.numPlayerMinionsAtTurnStart = this.ownMinions.Count;
             if (ownturn)
             {
                 int at073 = 0;
@@ -5245,7 +5289,7 @@
 
                         if ((!m.silenced && (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem)) || m.ancestralspirit >= 1)
                         {
-                            this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
+                            if (Ai.Instance.botBase != null) this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
                         }
                     }
                     else
@@ -5632,8 +5676,8 @@
                     return;
                 }
             }
-            int mobplace = zonepos + 1;//todo check this?
-
+            //int mobplace = zonepos + 1;//todo check this?
+            int mobplace = (spawnKid ? zonepos : zonepos + 1);
             //create minion (+triggers)
             Handmanager.Handcard hc = new Handmanager.Handcard(c) { entity = this.getNextEntity() };
             Minion m = createNewMinion(hc, mobplace, own);
@@ -6000,11 +6044,11 @@
         {
             m.endAura(this);
 
-            Handmanager.Handcard hc = new Handmanager.Handcard(c) { entity = m.entitiyID };
+            Handmanager.Handcard hc = new Handmanager.Handcard(c){ entity = this.getNextEntity() }; // m.entityID;
             int ancestral = m.ancestralspirit;
             if (m.handcard.card.name == CardDB.cardName.cairnebloodhoof || m.handcard.card.name == CardDB.cardName.harvestgolem || ancestral >= 1)
             {
-                this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
+                if (Ai.Instance.botBase != null) this.evaluatePenality -= Ai.Instance.botBase.getEnemyMinionValue(m, this) - 1;
             }
 
             //necessary???
@@ -6316,7 +6360,7 @@
             return ret;
         }
 
-
+        
         public void debugMinions()
         {
             Helpfunctions.Instance.logg("OWN MINIONS################");
@@ -6607,6 +6651,7 @@
             data +="Own Handcards: "+ "\r\n";
             foreach (Handmanager.Handcard c in this.owncards)
             {
+                if (c.isChoiceTemp) continue;  // don't print fake 'discover' card
                 data +="pos " + c.position + " " + c.card.name + " " + c.getManaCost(this) + " entity " + c.entity + " " + c.card.cardIDenum + " " + c.addattack+ " " + c.addHp + "\r\n";
             }
             data += "Enemy cards: " + this.enemyAnzCards + "\r\n";
@@ -6850,9 +6895,43 @@
             }
         }
 
-        public void doDmgToRandomEnemyCLIENT(int dmg, bool targetHero, bool side)
+
+        public Minion searchRandomMinionForDamage(List<Minion> enemies, int damage, bool ownPlay, bool includeEnemyHero)
         {
-            //TODO
+            // own = true -> search for us the worst-case scenario (i.e. random target = enemy's lowest atk minion that doesn't die)
+            // own = false -> search for enemy the best-case scenario (i.e. random target = our highest atk minion that can die)
+            Minion targetHero = (ownPlay ? this.enemyHero : this.ownHero);
+            Minion selected = (includeEnemyHero ? targetHero : null);
+
+            if (enemies.Count == 0) return selected;
+            if (includeEnemyHero && !ownPlay && damage >= this.ownHero.Hp) return this.ownHero;  // best-case for enemy: if it can kill us, it will
+
+            List<Minion> temp = new List<Minion>(enemies);
+            if (ownPlay)
+                temp.Sort((a, b) => a.Angr.CompareTo(b.Angr)); // increasing Atk
+            else
+                temp.Sort((a, b) => -a.Angr.CompareTo(b.Angr)); // decreasing Atk
+
+            Minion firstAlive = null;
+            foreach (Minion m in temp)
+            {
+                if (m.Hp <= 0) continue;
+                if (firstAlive == null) firstAlive = m;
+
+                if ((ownPlay && m.Hp > damage) || (!ownPlay && m.Hp <= damage))
+                    return m;
+            }
+
+            if (includeEnemyHero && ownPlay && damage < this.enemyHero.Hp - 15) return this.enemyHero;  // worst-case for us: no minions damaged
+
+            // no minions found = all ours live or all enemies die (so just return the first one, highest/lowest atk)
+            return (firstAlive == null ? targetHero : firstAlive);
+        }
+
+
+        public void doDmgToRandomEnemyCLIENT2(int dmg, bool targetHero, bool ownPlay)
+        {
+            /* //TODO
             if (!targetHero)
             {
                 Minion m = this.searchRandomMinion((side) ? this.ownMinions : this.enemyMinions, Playfield.searchmode.searchHighestHP);
@@ -6876,9 +6955,13 @@
                 else
                 {
                     this.minionGetDamageOrHeal((side) ? this.ownHero : this.enemyHero, dmg);
-                }
+                }*/
+
+             Minion m = this.searchRandomMinionForDamage((ownPlay ? this.enemyMinions : this.ownMinions), dmg, ownPlay, targetHero);
+             if (m != null) this.minionGetDamageOrHeal(m, dmg);
+
             }
-        }
+        
     }
 
    

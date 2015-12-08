@@ -11,7 +11,7 @@ namespace HREngine.Bots
         CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_050);//searing
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            int pos = (own.own) ? p.ownMinions.Count : p.enemyMinions.Count;
+            int pos = own.zonepos;
             if (p.isServer)
             {
                 //TODO

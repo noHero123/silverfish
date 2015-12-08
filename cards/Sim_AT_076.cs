@@ -9,6 +9,7 @@ namespace HREngine.Bots
 
         //insprire: Summon a random Murloc.
         CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_050); //coldlight oracle
+        CardDB.Card warleader = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_507); //murloc warleader
 
         public override void onInspire(Playfield p, Minion m)
         {
@@ -21,7 +22,7 @@ namespace HREngine.Bots
                 return;
             }
 
-            p.callKid(kid, pos, m.own);
+            p.callKid((m.own ? kid : warleader), pos, m.own);  // assume worse scenario (warleader) for enemy vs average scenario (oracle) for us
         }
 
 
