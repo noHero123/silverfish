@@ -22,6 +22,8 @@
 
     public class Hrtprozis
     {
+
+        public int enemyCursedCardsinHand = 0;
         public int ownFenciCoaches=0;
         public int ownSaboteur=0;
         public int enemySaboteur=0;
@@ -404,7 +406,7 @@
             
         }
 
-        public void setPlayereffects(int ownDragonConsorts, int enemyDragonConsorts, int ownLoathebs, int enemyLoathebs, int ownMillhouses, int enemyMillhouses, int ownKirin, int ownPrep, int ownSabo, int enemySabo, int ownFenciCoachess)
+        public void setPlayereffects(int ownDragonConsorts, int enemyDragonConsorts, int ownLoathebs, int enemyLoathebs, int ownMillhouses, int enemyMillhouses, int ownKirin, int ownPrep, int ownSabo, int enemySabo, int ownFenciCoachess, int enemycurses)
         {
             this.ownDragonConsort = ownDragonConsorts;
             this.enemyDragonConsort = enemyDragonConsorts;
@@ -423,6 +425,8 @@
             this.enemySaboteur = enemySabo;
 
             this.ownFenciCoaches = ownFenciCoachess;
+
+            this.enemyCursedCardsinHand = enemycurses;
         }
 
         public void updateOwnHero(string weapon, int watt, int wdur, string heron, CardDB.Card hab, bool habrdy, Minion Hero, int heroPowerUsesThisGame)

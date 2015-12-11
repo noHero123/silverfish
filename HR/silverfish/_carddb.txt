@@ -26125,4 +26125,62 @@ Costs (1) less for each Murloc you control.</Tag>
     <Tag enumID="351" type="String">High mortality rate, from often being hugged to death.</Tag>
     <Tag enumID="342" type="String">Oliver Chipping</Tag>
   </Entity>
+  <Entity version="2" CardID="LOEA16_3">
+    <MasterPower>a45a4c0e-2558-45cc-bced-fba6f933088d</MasterPower>
+    <Tag enumID="185" type="String">Lantern of Power</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="10" />
+    <Tag enumID="184" type="String">Give a minion +10/+10.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Power definition="a45a4c0e-2558-45cc-bced-fba6f933088d">
+      <PlayRequirement reqID="11" param="" />
+      <PlayRequirement reqID="1" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="LOEA16_3e">
+    <Tag enumID="185" type="String">Lantern of Power</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="6" />
+    <Tag enumID="184" type="String">+10/+10.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Power definition="f2158d7f-9d64-4f66-ad49-9d822ae8e797" />
+  </Entity>
+  <Entity version="2" CardID="LOEA16_4">
+    <MasterPower>3fe53473-1b1e-4d21-a102-5d20fe42b1af</MasterPower>
+    <Tag enumID="185" type="String">Timepiece of Horror</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="10" />
+    <Tag enumID="184" type="String">Deal $10 damage randomly split among all enemies.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="349" type="" value="1" />
+    <Power definition="3fe53473-1b1e-4d21-a102-5d20fe42b1af" />
+  </Entity>
+  <Entity version="2" CardID="LOEA16_5">
+    <MasterPower>79977b1b-c115-4b32-8c62-714e1cf152fd</MasterPower>
+    <Tag enumID="185" type="String">Mirror of Doom</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="48" type="" value="10" />
+    <Tag enumID="184" type="String">Fill your board with 3/3 Mummy Zombies.</Tag>
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Power definition="79977b1b-c115-4b32-8c62-714e1cf152fd">
+      <PlayRequirement reqID="12" param="1" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="LOEA16_5t">
+    <Tag enumID="185" type="String">Mummy Zombie</Tag>
+    <Tag enumID="183" type="" value="20" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="48" type="" value="3" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="47" type="" value="3" />
+    <Tag enumID="45" type="" value="3" />
+  </Entity>
 </CardDefs>

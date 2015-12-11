@@ -470,6 +470,20 @@ namespace HREngine.Bots
             try
             {
 
+                //HR-only fix for being to fast
+                if (!this.doMultipleThingsAtATime && this.gameState.IsProcessingPowers)
+                {
+                    //do fake action
+                    BotAction fakemove = new HSRangerLib.BotAction();
+                    fakemove.Type = BotActionType.HERO_ATTACK;
+                    fakemove.Actor = base.FriendHero;
+                    fakemove.Target = this.FriendHero;
+                    e.action_list.Add(fakemove);
+                    Helpfunctions.Instance.logg("HR is to fast...");
+                    Helpfunctions.Instance.ErrorLog("HR is to fast...");
+                    return;
+                }
+
                 //we are conceding
                 if (this.isgoingtoconcede)
                 {
@@ -1105,7 +1119,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "117.1";
+        public string versionnumber = "117.11";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -1182,6 +1196,8 @@ namespace HREngine.Bots
         int ownsabo=0;//number of saboteurplays  of our player (so enemy has the buff)
         int enemysabo = 0;//number of saboteurplays  of enemy player (so we have the buff)
         int ownFenciCoaches = 0; // number of Fencing Coach-debuffs on our player 
+
+        int enemyCursedCardsInHand = 0;
 
         //LOE stuff###############################################################################################################
         List<CardDB.cardIDEnum> choiceCards = new List<CardDB.cardIDEnum>(); // here we save all available tracking/discover cards ordered from left to right
@@ -1277,7 +1293,7 @@ namespace HREngine.Bots
             }
 
             Hrtprozis.Instance.updatePlayer(this.ownMaxMana, this.currentMana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.ueberladung, ownHero.entitiyID, enemyHero.entitiyID, this.numberMinionsDiedThisTurn, this.ownCurrentOverload, this.enemyOverload, this.heroPowerUsesThisTurn,this.lockandload);
-            Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrepa, this.ownsabo, this.enemysabo, this.ownFenciCoaches);
+            Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrepa, this.ownsabo, this.enemysabo, this.ownFenciCoaches, this.enemyCursedCardsInHand);
             Hrtprozis.Instance.updateSecretStuff(this.ownSecretList, this.enemySecretCount);
 
 
@@ -2002,6 +2018,9 @@ namespace HREngine.Bots
                 if (ent.ControllerId != this.ownPlayerController && ent.ZonePosition >= 1 && ent.Zone == HSRangerLib.TAG_ZONE.HAND) // enemy handcard
                 {
                     this.enemyAnzCards++;
+
+                    //dont know if we can read this so ;D
+                    if (CardDB.Instance.cardIdstringToEnum(ent.CardId) == CardDB.cardIDEnum.LOE_007t) this.enemyCursedCardsInHand++;
                 }
             }
 

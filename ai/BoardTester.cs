@@ -85,6 +85,8 @@
         string enemyWeapon = "";
         int enemyNumberHand = 5;
 
+        int enemyCursedCards = 0;
+
         List<Minion> ownminions = new List<Minion>();
         List<Minion> enemyminions = new List<Minion>();
         List<Handmanager.Handcard> handcards = new List<Handmanager.Handcard>();
@@ -510,6 +512,16 @@
 
                     }
 
+                    try
+                    {
+                        this.enemyCursedCards = Convert.ToInt32(s.Split(' ')[11]);
+
+                    }
+                    catch
+                    {
+
+                    }
+
 
 
                 }
@@ -926,7 +938,7 @@
 
 
             Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overdrive, ownHEntity, enemyHEntity, this.numberMinionsDiedThisturn, this.owncurrentRecall, this.enemyRecall, this.heropowerUsesThisTurn, this.locknload);
-            Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrep, this.ownSab, this.enemySab, this.ownFenci);
+            Hrtprozis.Instance.setPlayereffects(this.ownDragonConsort, this.enemyDragonConsort, this.ownLoathebs, this.enemyLoathebs, this.ownMillhouse, this.enemyMillhouse, this.ownKirintor, this.ownPrep, this.ownSab, this.enemySab, this.ownFenci, this.enemyCursedCards);
 
 
             Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);

@@ -697,6 +697,14 @@
 
             int cardsremaining = this.anzCardsInDeck(cardid);
             if (cardsremaining == 0) return 0;
+
+            foreach (CardDB.cardIDEnum playedcard in this.enemyCardsPlayed.Keys)
+            {
+                handsize += this.enemyCardsPlayed[playedcard];
+                if (CardDB.Instance.getCardDataFromID(playedcard).rarity == 5)
+                    handsize -= 1;  // don't doublecount legendaries like the dictionary does
+            }
+
             double retval = 0.0;
             //http://de.wikipedia.org/wiki/Hypergeometrische_Verteilung (we calculte 1-p(x=0))
 

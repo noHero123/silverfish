@@ -66,6 +66,13 @@
         {
             None,
             //loe####################################
+            LOEA10_3,
+            LOEA16_3,
+            LOEA16_3e,
+            LOEA16_4,
+            LOEA16_5,
+            LOEA16_5t,
+
             LOE_002,
             LOE_002t,
             LOE_003,
@@ -75,7 +82,6 @@
             LOE_009,
             LOE_009t,
             LOE_010,
-            LOEA10_3,
             LOE_011,
             LOE_012,
             LOE_016,
@@ -2808,6 +2814,13 @@
             if (s == "AT_132_SHAMANd") return CardDB.cardIDEnum.CS2_052;//wrath of air
 
             //LOE##############
+            if (s == "LOEA10_3") return CardDB.cardIDEnum.LOEA10_3;
+            if (s == "LOEA16_3") return CardDB.cardIDEnum.LOEA16_3;
+            if (s == "LOEA16_3e") return CardDB.cardIDEnum.LOEA16_3e;
+            if (s == "LOEA16_4") return CardDB.cardIDEnum.LOEA16_4;
+            if (s == "LOEA16_5") return CardDB.cardIDEnum.LOEA16_5;
+            if (s == "LOEA16_5t") return CardDB.cardIDEnum.LOEA16_5t;
+
             if (s == "LOE_002") return CardDB.cardIDEnum.LOE_002;
             if (s == "LOE_002t") return CardDB.cardIDEnum.LOE_002t;
             if (s == "LOE_003") return CardDB.cardIDEnum.LOE_003;
@@ -2817,8 +2830,6 @@
             if (s == "LOE_009") return CardDB.cardIDEnum.LOE_009;
             if (s == "LOE_009t") return CardDB.cardIDEnum.LOE_009t;
             if (s == "LOE_010") return CardDB.cardIDEnum.LOE_010;
-            if (s == "LOEA10_3") return CardDB.cardIDEnum.LOEA10_3;
-            
             if (s == "LOE_011") return CardDB.cardIDEnum.LOE_011;
             if (s == "LOE_012") return CardDB.cardIDEnum.LOE_012;
             if (s == "LOE_016") return CardDB.cardIDEnum.LOE_016;
@@ -2868,6 +2879,7 @@
             if (s == "LOE_119") return CardDB.cardIDEnum.LOE_119;
 
 
+
             //better hero powers of alternative heros
             if (s == "CS2_034_H1_AT_132") return CardDB.cardIDEnum.AT_132_MAGE;
             if (s == "CS2_102_H1_AT_132") return CardDB.cardIDEnum.AT_132_WARRIOR;
@@ -2890,6 +2902,12 @@
         {
             unknown,
             //LOE
+            murloctinyfin,
+            lanternofpower,
+            timepieceofhorror,
+            mirrorofdoom,
+            mummyzombie,
+
             forgottentorch,
             roaringtorch,
             etherealconjurer,
@@ -4953,6 +4971,12 @@
             if (s == "whirlingblades") return CardDB.cardName.whirlingblades;
             //LOE
 
+            if (s == "murloctinyfin") return CardDB.cardName.murloctinyfin;
+            if (s == "lanternofpower") return CardDB.cardName.lanternofpower;
+            if (s == "timepieceofhorror") return CardDB.cardName.timepieceofhorror;
+            if (s == "mirrorofdoom") return CardDB.cardName.mirrorofdoom;
+            if (s == "mummyzombie") return CardDB.cardName.mummyzombie;
+
             if (s == "forgottentorch") return CardDB.cardName.forgottentorch;
             if (s == "roaringtorch") return CardDB.cardName.roaringtorch;
             if (s == "etherealconjurer") return CardDB.cardName.etherealconjurer;
@@ -5006,6 +5030,7 @@
             if (s == "reliquaryseeker") return CardDB.cardName.reliquaryseeker;
             if (s == "cursedblade") return CardDB.cardName.cursedblade;
             if (s == "animatedarmor") return CardDB.cardName.animatedarmor;
+
 
             if (s == "placeholdercard") return CardDB.cardName.placeholdercard;
 
@@ -6910,6 +6935,16 @@
             switch (id)
             {
                     //LOE
+                case cardIDEnum.LOEA10_3:
+                    return new Sim_LOEA10_3();
+                case cardIDEnum.LOEA16_3:
+                    return new Sim_LOEA16_3();
+                case cardIDEnum.LOEA16_4:
+                    return new Sim_LOEA16_4();
+                case cardIDEnum.LOEA16_5:
+                    return new Sim_LOEA16_5();
+                case cardIDEnum.LOEA16_5t:
+                    return new Sim_LOEA16_5t();
 
                 case cardIDEnum.LOE_002:
                     return new Sim_LOE_002();
@@ -6917,16 +6952,22 @@
                     return new Sim_LOE_002t();
                 case cardIDEnum.LOE_003:
                     return new Sim_LOE_003();
+                case cardIDEnum.LOE_006:
+                    return new Sim_LOE_006();
+                case cardIDEnum.LOE_007:
+                    return new Sim_LOE_007();
+                case cardIDEnum.LOE_007t:
+                    return new Sim_LOE_007t();
                 case cardIDEnum.LOE_009:
                     return new Sim_LOE_009();
                 case cardIDEnum.LOE_009t:
                     return new Sim_LOE_009t();
                 case cardIDEnum.LOE_010:
                     return new Sim_LOE_010();
-                case cardIDEnum.LOEA10_3:
-                    return new Sim_LOEA10_3();
                 case cardIDEnum.LOE_011:
                     return new Sim_LOE_011();
+                case cardIDEnum.LOE_012:
+                    return new Sim_LOE_012();
                 case cardIDEnum.LOE_016:
                     return new Sim_LOE_016();
                 case cardIDEnum.LOE_017:
@@ -6935,6 +6976,12 @@
                     return new Sim_LOE_018();
                 case cardIDEnum.LOE_019:
                     return new Sim_LOE_019();
+                case cardIDEnum.LOE_019t:
+                    return new Sim_LOE_019t();
+                case cardIDEnum.LOE_019t2:
+                    return new Sim_LOE_019t2();
+                case cardIDEnum.LOE_020:
+                    return new Sim_LOE_020();
                 case cardIDEnum.LOE_021:
                     return new Sim_LOE_021();
                 case cardIDEnum.LOE_022:
@@ -6961,16 +7008,28 @@
                     return new Sim_LOE_053();
                 case cardIDEnum.LOE_061:
                     return new Sim_LOE_061();
+                case cardIDEnum.LOE_073:
+                    return new Sim_LOE_073();
                 case cardIDEnum.LOE_076:
                     return new Sim_LOE_076();
                 case cardIDEnum.LOE_077:
                     return new Sim_LOE_077();
+                case cardIDEnum.LOE_079:
+                    return new Sim_LOE_079();
                 case cardIDEnum.LOE_086:
                     return new Sim_LOE_086();
+                case cardIDEnum.LOE_089:
+                    return new Sim_LOE_089();
+                case cardIDEnum.LOE_089t:
+                    return new Sim_LOE_089t();
+                case cardIDEnum.LOE_092:
+                    return new Sim_LOE_092();
                 case cardIDEnum.LOE_104:
                     return new Sim_LOE_104();
                 case cardIDEnum.LOE_105:
                     return new Sim_LOE_105();
+                case cardIDEnum.LOE_107:
+                    return new Sim_LOE_107();
                 case cardIDEnum.LOE_110:
                     return new Sim_LOE_110();
                 case cardIDEnum.LOE_110t:
@@ -6979,8 +7038,18 @@
                     return new Sim_LOE_111();
                 case cardIDEnum.LOE_113:
                     return new Sim_LOE_113();
+                case cardIDEnum.LOE_115:
+                    return new Sim_LOE_115();
+                case cardIDEnum.LOE_115a:
+                    return new Sim_LOE_115a();
+                case cardIDEnum.LOE_115b:
+                    return new Sim_LOE_115b();
                 case cardIDEnum.LOE_116:
                     return new Sim_LOE_116();
+                case cardIDEnum.LOE_118:
+                    return new Sim_LOE_118();
+                case cardIDEnum.LOE_119:
+                    return new Sim_LOE_119();
 
                 //TGT---------------------------------
                 case cardIDEnum.AT_001:

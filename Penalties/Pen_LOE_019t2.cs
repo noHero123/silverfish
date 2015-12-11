@@ -8,7 +8,7 @@ namespace HREngine.Bots
 	{
 		public override float getPlayPenalty(Playfield p, Handmanager.Handcard hc, Minion target, int choice, bool isLethal)
 		{
-			return 0;
+			return -50;
 		}
 	}
 }

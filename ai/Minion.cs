@@ -249,14 +249,41 @@
             return this.Angr;
         }
 
-        public void getDamageOrHeal(int dmg, Playfield p, bool isMinionAttack, bool dontCalcLostDmg)
+        public void getDamageOrHeal(int dmgg, Playfield p, bool isMinionAttack, bool dontCalcLostDmg)
         {
+            int dmg = dmgg;
             if (this.Hp <= 0) return;
 
             if (this.immune && dmg > 0) return;
 
             if (this.isHero)
             {
+                //dmg reduction from animated armor
+                if (this.own && dmg > 1)
+                {
+                    if (p.ownWeaponDurability >=1 && p.ownWeaponName == CardDB.cardName.cursedblade)
+                    {
+                        dmg = dmg*2;
+                    }
+
+                    if (p.anzOwnAnimatedArmor >= 1)
+                    {
+                        dmg = 1;
+                    }
+                }
+                else
+                {
+                    if (p.enemyWeaponDurability >=1 && p.enemyWeaponName == CardDB.cardName.cursedblade)
+                    {
+                        dmg = dmg * 2;
+                    }
+
+                    if (p.anzEnemyAnimatedArmor >= 1)
+                    {
+                        dmg = 1;
+                    }
+                }
+
                 int copy = this.Hp;
                 if (dmg < 0 || this.armor <= 0)
                 {
@@ -530,7 +557,42 @@
                 return;
             }
 
+            if (!silenced && (name == CardDB.cardName.ragnarosthefirelord || name == CardDB.cardName.ancientwatcher || (name == CardDB.cardName.argentwatchman && !this.canAttackNormal) || (name == CardDB.cardName.eeriestatue && !this.canAttackNormal))) return;
+
+            if (!frozen && ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury) || (!silenced && this.name == CardDB.cardName.v07tr0n && numAttacksThisTurn <= 3))) Ready = true;
+
+        }
+
+        public void updateReadyness(Playfield p)
+        {
+            Ready = false;
+            //default test (minion must be unfrozen!)
+            if (isHero)
+            {
+                if (!frozen && ((charge >= 1 && playedThisTurn) || !playedThisTurn) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury))) Ready = true;
+                return;
+            }
+
             if (!silenced && (name == CardDB.cardName.ragnarosthefirelord || name == CardDB.cardName.ancientwatcher || (name == CardDB.cardName.argentwatchman && !this.canAttackNormal))) return;
+
+            if (!silenced && (name == CardDB.cardName.eeriestatue))
+            {
+                int numberminionOnBoard = 0;
+                //we loop throug every minion, because we have to test hp>=1 (we trigger this in on minion died -> died minion isnt removed)
+                foreach (Minion m in p.ownMinions)
+                {
+                    if (m.Hp >= 1) numberminionOnBoard++;
+                }
+
+                if (numberminionOnBoard > 1) return;
+
+                foreach (Minion m in p.enemyMinions)
+                {
+                    if (m.Hp >= 1) numberminionOnBoard++;
+                }
+
+                if (numberminionOnBoard > 1) return;
+            }
 
             if (!frozen && ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury) || (!silenced && this.name == CardDB.cardName.v07tr0n && numAttacksThisTurn <= 3))) Ready = true;
 

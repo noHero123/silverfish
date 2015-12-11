@@ -78,7 +78,7 @@
             }
 
             //retval += p.owncarddraw * 5;
-            retval -= p.enemycarddraw * 10;
+            retval -= (p.enemycarddraw-p.anzEnemyCursed) * 10;
 
             //int owntaunt = 0;
             int readycount = 0;
