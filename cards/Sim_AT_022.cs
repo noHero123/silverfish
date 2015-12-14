@@ -22,7 +22,7 @@ namespace HREngine.Bots
             p.doDmgToRandomEnemyCLIENT2(dmg, true, ownplay);
         }
 
-        public virtual void onCardIsDiscarded(Playfield p, CardDB.Card card, bool own)
+        public override void onCardIsDiscarded(Playfield p, CardDB.Card card, bool own)
         {
 
             int dmg = (own) ? p.getSpellDamageDamage(4) : p.getEnemySpellDamageDamage(4);

@@ -1,8 +1,13 @@
-an idea of how to import it to Hearthbuddy
 
-search for 
-//Reading new values:###########################
+How to install:
 
-and give the new variables a value! :D
-replace the existing silver_HB.cs file and the the two folders: ai + cards
-(take the newest version of these folder from my github)
+- make a copy of the default routine (but don save it in routines folder)
+
+- delete silverfish_HB.cs and DefaultRoutine_new.cs files
+- delete Silverfish\cards and Silverfish\penalties folders
+- (dont delete ai-folder, we need Helpfunctions.cs file, which is not in my source)
+
+- copy DefaultRoutine_new.cs and silverfish_HB.cs to DefaultRoutine-folder
+- copy ai, cards and penalties folders to DefaultRoutine\Silverfish folder
+- copy new version of _carddb.txt file to DefaultRoutine\Silverfish\Data
+- copy silver.exe and silver.exe.config in same folder as _carddb
