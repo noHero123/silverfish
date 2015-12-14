@@ -10,4 +10,5 @@ How to install:
 - copy DefaultRoutine_new.cs and silverfish_HB.cs to DefaultRoutine-folder
 - copy ai, cards and penalties folders to DefaultRoutine\Silverfish folder
 - copy new version of _carddb.txt file to DefaultRoutine\Silverfish\Data
+- copy settings.txt file to DefaultRoutine\Silverfish\Data
 - copy silver.exe and silver.exe.config in same folder as _carddb
