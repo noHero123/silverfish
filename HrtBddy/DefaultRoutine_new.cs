@@ -40,6 +40,7 @@ namespace HREngine.Bots
         private int concedeLvl = 5; // the rank, till you want to concede
         private int dirtytarget = -1;
         private int dirtychoice = -1;
+        private int dirtytrackingchoice = -1;
         private string choiceCardId = "";
         DateTime starttime = DateTime.Now;
         bool enemyConcede = false;
@@ -772,6 +773,46 @@ def Execute():
                 TritonHs.CancelTargetingMode();
             }
 
+
+            if (TritonHs.IsInChoiceMode() && (dirtychoice >=1 || dirtytrackingchoice >=1))
+            {
+
+                if (dirtychoice >= 1)
+                {
+                await Coroutine.Sleep(new Random().Next(1200, 3800));
+                        Helpfunctions.Instance.logg("chooses the card: " + dirtychoice);
+
+                        await Coroutine.Sleep(555);
+                        switch (dirtychoice)
+                        {
+                            case 0: TritonHs.ChooseOneClickMiddle(); break;
+                            case 1: TritonHs.ChooseOneClickLeft(); break;
+                            case 2: TritonHs.ChooseOneClickRight(); break;
+                        }
+                        dirtychoice = -1;
+                        await Coroutine.Sleep(555);
+                        return;
+                }
+
+                if (dirtytrackingchoice >= 1)
+                {
+                        await Coroutine.Sleep(new Random().Next(1200, 3800));
+                        Helpfunctions.Instance.logg("chooses the card: " + dirtytrackingchoice);
+
+                        await Coroutine.Sleep(555);
+                        switch (dirtytrackingchoice)
+                        {
+                            case 2: TritonHs.ChooseOneClickMiddle(); break;
+                            case 1: TritonHs.ChooseOneClickLeft(); break;
+                            case 3: TritonHs.ChooseOneClickRight(); break;
+                        }
+                        dirtytrackingchoice = -1;
+                        await Coroutine.Sleep(555);
+                        return;
+                }
+
+            }
+
             /*
             if (TritonHs.IsInChoiceMode())
             {
@@ -835,7 +876,9 @@ def Execute():
             bool useExtern = HREngine.Bots.Settings.Instance.useExternalProcess;
             bool passiveWaiting=false;
 
-            bool templearn = Silverfish.Instance.updateEverything(behave, false,useExtern, passiveWaiting);
+            bool nodruidchoice = true; //to indicate, that the tracking-choice is not a druid-choice-card.
+            if(dirtychoice >=1) nodruidchoice = false; //should not occour
+            bool templearn = Silverfish.Instance.updateEverything(behave, false,useExtern, passiveWaiting, nodruidchoice);
             if (templearn == true) this.printlearnmode = true;
             
             if (this.learnmode)
@@ -871,6 +914,23 @@ def Execute():
             moveTodo.print();
 
             //play the move#########################################################################
+            //play tracking choice:
+
+            if (Handmanager.Instance.getNumberChoices() >= 1)
+                {
+                    //detect which choice
+
+                    int trackingchoice = Ai.Instance.bestTracking;
+                    if (Ai.Instance.bestTrackingStatus == 0) Helpfunctions.Instance.logg("discovering using optimal choice..." + trackingchoice);
+                    if (Ai.Instance.bestTrackingStatus == 1) Helpfunctions.Instance.logg("discovering using suboptimal choice..." + trackingchoice);
+                    if (Ai.Instance.bestTrackingStatus == 2) Helpfunctions.Instance.logg("discovering using random choice..." + trackingchoice);
+                    dirtytrackingchoice = trackingchoice;
+                    int trackingEntity  = Silverfish.Instance.choiceCardsEntitys[trackingchoice - 1];
+                   
+                    Helpfunctions.Instance.logg("discovering choice entity" + dirtytrackingchoice + " card " + trackingEntity);
+                    return;
+                }
+
 
             //play a card form hand
             if (moveTodo.actionType == actionEnum.playcard)

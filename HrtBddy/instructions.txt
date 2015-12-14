@@ -7,7 +7,7 @@ How to install:
 - delete Silverfish\cards and Silverfish\penalties folders
 - (dont delete ai-folder, we need Helpfunctions.cs file, which is not in my source)
 
-- copy DefaultRoutine_new.cs and silverfish_HB.cs to DefaultRoutine-folder
+- copy DefaultRoutine_new.cs and Program_HB.cs to DefaultRoutine-folder
 - copy ai, cards and penalties folders to DefaultRoutine\Silverfish folder
 - copy new version of _carddb.txt file to DefaultRoutine\Silverfish\Data
 - copy settings.txt file to DefaultRoutine\Silverfish\Data

@@ -197,7 +197,7 @@ namespace HREngine.Bots
             }
         }
 
-        public bool updateEverything(Behavior botbase, bool quequeActions, bool runExtern = false, bool passiveWait = false)
+        public bool updateEverything(Behavior botbase, bool quequeActions, bool runExtern = false, bool passiveWait = false, bool nodruidchoice=true)
         {
             quequeActions = false;
             Helpfunctions.Instance.ErrorLog("updateEverything");
@@ -218,7 +218,7 @@ namespace HREngine.Bots
             }
 
             getMinions();
-            getHandcards();
+            getHandcards(nodruidchoice);
             getDecks();
             correctSpellpower();
             // send ai the data:
@@ -833,7 +833,7 @@ namespace HREngine.Bots
             }
         }
 
-        private void getHandcards()
+        private void getHandcards(bool nodruidchoice)
         {
             handCards.Clear();
             this.anzcards = 0;
@@ -885,16 +885,19 @@ namespace HREngine.Bots
             //search for choice-cards in HR:
             this.choiceCards.Clear();
             this.choiceCardsEntitys.Clear();
-            foreach (HSCard ent in allEntitys)
-            {
-                if (ent.ControllerId == this.ownPlayerController && ent.GetZone() == Triton.Game.Mapping.TAG_ZONE.SETASIDE) // choice cards are in zone setaside (but thats not all D:)
-                {
 
-                    /*if (ent.CardState == ActorStateType.CARD_SELECTABLE) //in HR these cards (setaside + card_selectable) are choice/tracking/discover-cards
-                    {
-                        this.choiceCards.Add(CardDB.Instance.cardIdstringToEnum(ent.Id));
-                        this.choiceCardsEntitys.Add(ent.EntityId);
-                    }*/
+            if (TritonHs.IsInChoiceMode() && nodruidchoice)
+            {
+                var choiceCardMgr = ChoiceCardMgr.Get();
+                List<Card> cards = choiceCardMgr.GetFriendlyCards();
+
+                for (int i = 0; i < cards.Count; i++)
+                {
+                    Card ent = cards[i];
+                    this.choiceCards.Add(CardDB.Instance.cardIdstringToEnum(ent.GetCardId()));
+                    this.choiceCardsEntitys.Add(ent.GetEntityId());
+                    Helpfunctions.Instance.ErrorLog("choice card: " + ent.GetCardId() + " " + ent.GetEntityId());
+
                 }
             }
 
