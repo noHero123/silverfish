@@ -3,7 +3,7 @@ How to install:
 
 - make a copy of the default routine (but don save it in routines folder)
 
-- delete silverfish_HB.cs and DefaultRoutine_new.cs files
+- delete silverfish_HB.cs and DefaultRoutine.cs files from DefaultRoutine-folder
 - delete Silverfish\cards and Silverfish\penalties folders
 - (dont delete ai-folder, we need Helpfunctions.cs file, which is not in my source)
 
