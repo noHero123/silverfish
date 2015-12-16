@@ -8,6 +8,8 @@ using Triton.Common;
 using Triton.Game.Mapping;
 using Logger = Triton.Common.LogUtilities.Logger;
 
+//work mostly done by Hearthbuddy team
+
 namespace HREngine.Bots
 {
     /// <summary>Settings for the DefaultRoutine. </summary>

@@ -88,7 +88,7 @@ namespace HREngine.Bots
         public void ErrorLog(string s)
         {
 
-            this.logg(s);
+            //this.logg(s);//dont needed anymore 
             Log.Info(s);
         }
 

@@ -26,6 +26,8 @@ using Triton.Game.Mapping;
 
 using Logger = Triton.Common.LogUtilities.Logger;
 
+//work mostly done by Hearthbuddy team, added/changed stuff, to make it work with my version of silverfish 
+
 namespace HREngine.Bots
 {
     public class DefaultRoutine : IRoutine
@@ -652,9 +654,46 @@ def Execute():
 
             var count = mulliganData.Cards.Count;
 
-            if (1==2)
+            /*string ownName = mulliganData.UserClass.ToString();
+            string enemName = mulliganData.OpponentClass.ToString();
+            if (Mulligan.Instance.hasmulliganrules(ownName, enemName))
             {
-                //Mulligan.Instance.getHoldList(mulliganData);
+                    bool hascoin = false;
+                    List<Mulligan.CardIDEntity> celist = new List<Mulligan.CardIDEntity>();
+                    
+
+                    for (var i = 0; i < mulliganData.Cards.Count; i++)
+                    {
+                        string id = mulliganData.Cards[i].Entity.Id
+                        if ( id != "GAME_005")// dont mulligan coin
+                        {
+                            celist.Add(new Mulligan.CardIDEntity(id, i));
+                        }
+                        else
+                        {
+                            hascoin = true;
+                        }
+                        
+                    }
+
+                    if (celist.Count >= 4) hascoin = true;
+                    List<int> mullientitys = Mulligan.Instance.whatShouldIMulligan(celist, ownName, enemName, hascoin);
+
+                    for (var i = 0; i < mulliganData.Cards.Count; i++)
+                    {
+                        if (mullientitys.Contains(i))
+                        {
+                            Helpfunctions.Instance.ErrorLog("Rejecting Mulligan Card " + mulliganData.Cards[i].Entity.Id + " because of your rules");                            
+
+                            
+                        }
+                    }
+
+            }*/
+
+            if (Mulligan.Instance.mulliganRulesLoaded)
+            {
+                Mulligan.Instance.getHoldList(mulliganData);
             }
             else
             {
