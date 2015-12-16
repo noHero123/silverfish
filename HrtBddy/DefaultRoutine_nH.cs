@@ -48,7 +48,7 @@ namespace HREngine.Bots
         public bool learnmode = false;
         public bool printlearnmode = true;
         
-        Behavior behave = new BehaviorControl();//change this to new BehaviorRush() for rush mode
+        public Behavior behave = new BehaviorControl();//change this to new BehaviorRush() for rush mode
         //Behavior behave = new BehaviorRush();
 
         public DefaultRoutine()
@@ -352,6 +352,23 @@ def Execute():
                     BotManager.Stop();
                 }
             }
+
+            //set behaviour
+            if (DefaultRoutineSettings.Instance.BotBehaviour == TAG_MODE.CONTROL)
+            {
+                behave = new BehaviorControl();
+            }
+            if (DefaultRoutineSettings.Instance.BotBehaviour == TAG_MODE.RUSH)
+            {
+                behave = new BehaviorRush();
+            }
+            if (DefaultRoutineSettings.Instance.BotBehaviour == TAG_MODE.FACE)
+            {
+                behave = new BehaviorFace();
+            }
+             //Helpfunctions.Instance.ErrorLog("start");
+
+            
         }
 
         /// <summary> The routine tick callback. Do any update logic here. </summary>
@@ -366,6 +383,8 @@ def Execute():
             GameEventManager.GameOver -= GameEventManagerOnGameOver;
             GameEventManager.QuestUpdate -= GameEventManagerOnQuestUpdate;
             GameEventManager.ArenaRewards -= GameEventManagerOnArenaRewards;
+
+            //Helpfunctions.Instance.ErrorLog("stop");
         }
 
         #endregion
@@ -377,7 +396,7 @@ def Execute():
         {
             get
             {
-                using (var fs = new FileStream(@"Routines\DefaultRoutine\SettingsGui.xaml", FileMode.Open))
+                using (var fs = new FileStream(@"Routines\DefaultRoutine\SettingsGui_nH.xaml", FileMode.Open))
                 {
                     var root = (UserControl) XamlReader.Load(fs);
 
@@ -479,6 +498,26 @@ def Execute():
                     }
 
                     // Your settings event handlers here.
+
+                    // botbehaviour
+                    if (
+                        !Wpf.SetupComboBoxItemsBinding(root, "botbehaveComboBox", "AllModes",
+                            BindingMode.OneWay, DefaultRoutineSettings.Instance))
+                    {
+                        Log.DebugFormat(
+                            "[SettingsControl] SetupComboBoxItemsBinding failed for 'botbehaveComboBox1'.");
+                        throw new Exception("The SettingsControl could not be created.");
+                    }
+
+                    if (
+                        !Wpf.SetupComboBoxSelectedItemBinding(root, "botbehaveComboBox",
+                            "BotBehaviour", BindingMode.TwoWay, DefaultRoutineSettings.Instance))
+                    {
+                        Log.DebugFormat(
+                            "[SettingsControl] SetupComboBoxSelectedItemBinding failed for 'botbehaveComboBox11'.");
+                        throw new Exception("The SettingsControl could not be created.");
+                    }
+
 
                     return root;
                 }
@@ -776,7 +815,7 @@ def Execute():
 
             if (TritonHs.IsInChoiceMode() && (dirtychoice >=1 || dirtytrackingchoice >=1))
             {
-
+                Helpfunctions.Instance.ErrorLog("TritonHs.IsInChoiceMode() " + dirtychoice + " " + dirtytrackingchoice);
                 if (dirtychoice >= 1)
                 {
                 await Coroutine.Sleep(new Random().Next(1200, 3800));

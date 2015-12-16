@@ -1,14 +1,9 @@
 
 How to install:
 
-- make a copy of the default routine (but don save it in routines folder)
+(- make a copy of the original defaultroutine-folder (but don save it in routines folder))
 
-- delete silverfish_HB.cs and DefaultRoutine.cs files from DefaultRoutine-folder
-- delete Silverfish\cards and Silverfish\penalties folders
-- (dont delete ai-folder, we need Helpfunctions.cs file, which is not in my source)
+- delete the DefaultRoutine folder in Hearthbuddy/Routines
 
-- copy DefaultRoutine_new.cs and Program_HB.cs to DefaultRoutine-folder
-- copy ai, cards and penalties folders to DefaultRoutine\Silverfish folder
-- copy new version of _carddb.txt file to DefaultRoutine\Silverfish\Data
-- copy settings.txt file to DefaultRoutine\Silverfish\Data
-- copy silver.exe and silver.exe.config in same folder as _carddb
+- extract the stuff inside the DefaultRoutine_nH.zip to that Hearthbuddy/Routines folder
+  (if you did it correctly you will have a Hearthbuddy/Routines/DefaultRoutine/Silverfish - folder)
