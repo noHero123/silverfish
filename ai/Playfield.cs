@@ -4180,6 +4180,9 @@
                     this.minionGetBuffed(target, 1, 1);
                 }
 
+                int summonstones = 0;
+                Minion summoningStone = null;
+
                 foreach (Minion m in this.ownMinions)
                 {
                     if (m.silenced) continue;
@@ -4208,7 +4211,19 @@
                         continue;
                     }
 
+                    if (own && m.name == CardDB.cardName.summoningstone)
+                    {
+                        summonstones++;
+                        summoningStone = m;
+                        continue;
+                    }
+
                     m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, m, target, choice);
+                }
+
+                for (int i = 0; i < summonstones; i++)
+                {
+                    summoningStone.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, summoningStone, target, choice);
                 }
 
                 foreach (Minion m in this.enemyMinions)
@@ -4254,6 +4269,9 @@
                     this.minionGetBuffed(target, 1, 1);
                 }
 
+                int summonstones = 0;
+                Minion summoningStone = null;
+
                 foreach (Minion m in this.enemyMinions)
                 {
                     if (m.silenced) continue;
@@ -4280,8 +4298,22 @@
                         continue;
                     }
 
+                    if (!own && m.name == CardDB.cardName.summoningstone)
+                    {
+                        summonstones++;
+                        summoningStone = m;
+                        continue;
+                    }
+
+
                     m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, m, target, choice);
                 }
+
+                for (int i = 0; i < summonstones; i++)
+                {
+                    summoningStone.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc.card, own, summoningStone, target, choice);
+                }
+
                 foreach (Minion m in this.ownMinions)
                 {
                     if (m.name == CardDB.cardName.troggzortheearthinator)
