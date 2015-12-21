@@ -57,7 +57,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "117.12";
+        public string versionnumber = "117.21";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
@@ -366,7 +366,7 @@ namespace HREngine.Bots
             HSCard enemyhero = TritonHs.EnemyHero;
             HSCard ownHeroAbility = TritonHs.OurHeroPowerCard;
 
-
+            /*
             //TEST
             List<HSCard> heroplayers = new List<HSCard>();
             heroplayers.Add(ownPlayer);
@@ -385,6 +385,7 @@ namespace HREngine.Bots
                 }
             }
             //TEST end
+            */
 
             //player stuff#########################
             //this.currentMana =ownPlayer.GetTag(HRGameTag.RESOURCES) - ownPlayer.GetTag(HRGameTag.RESOURCES_USED) + ownPlayer.GetTag(HRGameTag.TEMP_RESOURCES);

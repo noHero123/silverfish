@@ -852,7 +852,7 @@ def Execute():
             }
 
 
-            if (TritonHs.IsInChoiceMode() && (dirtychoice >=1 || dirtytrackingchoice >=1))
+            if (TritonHs.IsInChoiceMode())
             {
                 Helpfunctions.Instance.ErrorLog("TritonHs.IsInChoiceMode() " + dirtychoice + " " + dirtytrackingchoice);
                 if (dirtychoice >= 1)
@@ -1004,7 +1004,7 @@ def Execute():
                     if (Ai.Instance.bestTrackingStatus == 2) Helpfunctions.Instance.logg("discovering using random choice..." + trackingchoice);
                     dirtytrackingchoice = trackingchoice;
                     int trackingEntity  = Silverfish.Instance.choiceCardsEntitys[trackingchoice - 1];
-                   
+                    Helpfunctions.Instance.ErrorLog("discovering choice entity" + dirtytrackingchoice + " card " + trackingEntity + " " + Ai.Instance.bestTrackingStatus);
                     Helpfunctions.Instance.logg("discovering choice entity" + dirtytrackingchoice + " card " + trackingEntity);
                     return;
                 }
