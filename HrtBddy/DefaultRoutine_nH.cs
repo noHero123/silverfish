@@ -973,21 +973,7 @@ def Execute():
             }
 
             var moveTodo = Ai.Instance.bestmove;
-            if (moveTodo == null || moveTodo.actionType == actionEnum.endturn)
-            {
-                if (Ai.Instance.bestmoveValue > -10000)
-                {
-                    Helpfunctions.Instance.ErrorLog("end turn");
-                    await TritonHs.EndTurn();
-                }
-                else
-                {
-                    Helpfunctions.Instance.ErrorLog("Lethal detected. Concede...");
-                    Helpfunctions.Instance.logg("Concede... Lethal detected###############################################");
-                    TritonHs.Concede(true);
-                }
-                return;
-            }
+            
             Helpfunctions.Instance.ErrorLog("play action");
             moveTodo.print();
 
@@ -1009,6 +995,23 @@ def Execute():
                     return;
                 }
 
+
+
+            if (moveTodo == null || moveTodo.actionType == actionEnum.endturn)
+            {
+                if (Ai.Instance.bestmoveValue > -10000)
+                {
+                    Helpfunctions.Instance.ErrorLog("end turn");
+                    await TritonHs.EndTurn();
+                }
+                else
+                {
+                    Helpfunctions.Instance.ErrorLog("Lethal detected. Concede...");
+                    Helpfunctions.Instance.logg("Concede... Lethal detected###############################################");
+                    TritonHs.Concede(true);
+                }
+                return;
+            }
 
             //play a card form hand
             if (moveTodo.actionType == actionEnum.playcard)
