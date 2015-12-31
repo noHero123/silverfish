@@ -154,7 +154,7 @@ namespace HREngine.Bots
             writeSettings();
 
             this.doMultipleThingsAtATime = Settings.Instance.speedy;
-            this.doMultipleThingsAtATime = false; // for easier debugging+bug fixing in the first weeks after update
+            //this.doMultipleThingsAtATime = false; // for easier debugging+bug fixing in the first weeks after update
         }
 
         /// <summary>
@@ -469,20 +469,35 @@ namespace HREngine.Bots
             
             try
             {
-
+ 
                 //HR-only fix for being to fast
                 if (!this.doMultipleThingsAtATime && this.gameState.IsProcessingPowers)
                 {
                     //do fake action
-                    BotAction fakemove = new HSRangerLib.BotAction();
+                    /*BotAction fakemove = new HSRangerLib.BotAction();
                     fakemove.Type = BotActionType.HERO_ATTACK;
                     fakemove.Actor = base.FriendHero;
                     fakemove.Target = this.FriendHero;
-                    e.action_list.Add(fakemove);
+                    e.action_list.Add(fakemove);*/
                     Helpfunctions.Instance.logg("HR is to fast...");
                     Helpfunctions.Instance.ErrorLog("HR is to fast...");
-                    return;
+                    //return;
+
+                    bool ispropow = true;
+                    while (ispropow == true)
+                    {
+                        if (!this.gameState.IsProcessingPowers)
+                        {
+                            ispropow = false;
+                        }
+                        else
+                        {
+                            System.Threading.Thread.Sleep(10);
+                        }
+                    }
                 }
+
+
 
                 //we are conceding
                 if (this.isgoingtoconcede)
@@ -1119,7 +1134,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "117.11";
+        public string versionnumber = "117.23";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
