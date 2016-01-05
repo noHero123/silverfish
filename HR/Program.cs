@@ -154,7 +154,9 @@ namespace HREngine.Bots
             writeSettings();
 
             this.doMultipleThingsAtATime = Settings.Instance.speedy;
-            //this.doMultipleThingsAtATime = false; // for easier debugging+bug fixing in the first weeks after update
+
+            this.doMultipleThingsAtATime = false; // for easier debugging+bug fixing in the first weeks after update
+            //will be false until xytrix fixes it (@xytrix end the action list, after playing a tracking/discover card)
         }
 
         /// <summary>
@@ -471,7 +473,7 @@ namespace HREngine.Bots
             {
  
                 //HR-only fix for being to fast
-                if (!this.doMultipleThingsAtATime && this.gameState.IsProcessingPowers)
+                if (!this.doMultipleThingsAtATime)
                 {
                     //do fake action
                     /*BotAction fakemove = new HSRangerLib.BotAction();
@@ -483,20 +485,45 @@ namespace HREngine.Bots
                     Helpfunctions.Instance.ErrorLog("HR is to fast...");
                     //return;
 
-                    bool ispropow = true;
-                    while (ispropow == true)
+                    if (this.gameState.IsProcessingPowers)
                     {
-                        if (!this.gameState.IsProcessingPowers)
+
+                        bool ispropow = true;
+                        while (ispropow == true)
                         {
-                            ispropow = false;
+                            if (!this.gameState.IsProcessingPowers)
+                            {
+                                ispropow = false;
+                            }
+                            else
+                            {
+                                System.Threading.Thread.Sleep(10);
+                            }
                         }
-                        else
+                    }
+
+                    //better test... we checked if isprocessing is true.. after that, we wait little time and test it again.
+                    System.Threading.Thread.Sleep(50);
+
+                    if (this.gameState.IsProcessingPowers)
+                    {
+
+                        bool ispropow = true;
+                        while (ispropow == true)
                         {
-                            System.Threading.Thread.Sleep(10);
+                            if (!this.gameState.IsProcessingPowers)
+                            {
+                                ispropow = false;
+                            }
+                            else
+                            {
+                                System.Threading.Thread.Sleep(10);
+                            }
                         }
                     }
                 }
 
+                
 
 
                 //we are conceding
@@ -1134,7 +1161,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "117.23";
+        public string versionnumber = "117.24";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;
