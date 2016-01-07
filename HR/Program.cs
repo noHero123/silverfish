@@ -471,7 +471,7 @@ namespace HREngine.Bots
             
             try
             {
- 
+                Helpfunctions.Instance.ErrorLog("start things...");
                 //HR-only fix for being to fast
                 if (!this.doMultipleThingsAtATime)
                 {
@@ -523,7 +523,7 @@ namespace HREngine.Bots
                     }
                 }
 
-                
+                Helpfunctions.Instance.ErrorLog("proc check done...");
 
 
                 //we are conceding
@@ -546,6 +546,7 @@ namespace HREngine.Bots
                     return;
                 }
 
+                Helpfunctions.Instance.ErrorLog("update everything...");
                 bool templearn = sf.updateEverything(this, behave, doMultipleThingsAtATime, Settings.Instance.useExternalProcess, false); // cant use passive waiting (in this mode i return nothing)
                 if (templearn == true) Settings.Instance.printlearnmode = true;
 
@@ -689,6 +690,7 @@ namespace HREngine.Bots
             }
             return ;
         }
+
 
         public override void OnActionDone(ActionDoneEventArgs e)
         {
@@ -1161,7 +1163,7 @@ namespace HREngine.Bots
 
     public class Silverfish
     {
-        public string versionnumber = "117.24";
+        public string versionnumber = "117.3";
         private bool singleLog = false;
         private string botbehave = "rush";
         public bool waitingForSilver = false;

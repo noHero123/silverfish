@@ -2834,7 +2834,7 @@
                                 attacker.frozen = true;
                             }
 
-                            this.triggerAMinionDealedDmg(defender, oldhp - attacker.Hp);
+                            this.triggerAMinionDealedDmg(defender, oldhp - attacker.Hp, enem_attack);
                         }
                     }
                 }
@@ -2873,7 +2873,7 @@
 
                     if (attacker.handcard.card.name == CardDB.cardName.waterelemental || attacker.handcard.card.name == CardDB.cardName.snowchugger) defender.frozen = true;
 
-                    this.triggerAMinionDealedDmg(attacker, oldhp - defender.Hp);
+                    this.triggerAMinionDealedDmg(attacker, oldhp - defender.Hp, attackerAngr);
                 }
                 doDmgTriggers();
                 return;
@@ -2899,7 +2899,7 @@
                 {
                    if(defender.handcard.card.name == CardDB.cardName.waterelemental || defender.handcard.card.name == CardDB.cardName.snowchugger) attacker.frozen = true;
 
-                   this.triggerAMinionDealedDmg(defender, oldHP - attacker.Hp);
+                   this.triggerAMinionDealedDmg(defender, oldHP - attacker.Hp, defAngr);
                 }
                 attackerGotDmg = oldHP > attacker.Hp;
             }
@@ -4120,7 +4120,7 @@
 
         }
 
-        public void triggerAMinionDealedDmg(Minion m, int dmgDone)
+        public void triggerAMinionDealedDmg(Minion m, int dmgDone, int attackvalue)
         {
             //only GVG_018 has such an trigger!
             if (m.name == CardDB.cardName.mistressofpain && dmgDone >= 1)
@@ -4133,7 +4133,7 @@
                     }
                     else
                     {
-                        this.minionGetDamageOrHeal(this.ownHero, -dmgDone);
+                        this.minionGetDamageOrHeal(this.ownHero, -attackvalue);
                     }
                 }
                 else
@@ -4144,7 +4144,7 @@
                     }
                     else
                     {
-                        this.minionGetDamageOrHeal(this.enemyHero, -dmgDone);
+                        this.minionGetDamageOrHeal(this.enemyHero, -attackvalue);
                     }
                 }
             }

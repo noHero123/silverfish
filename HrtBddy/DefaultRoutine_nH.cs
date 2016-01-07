@@ -368,6 +368,10 @@ def Execute():
             {
                 behave = new BehaviorFace();
             }
+            if (DefaultRoutineSettings.Instance.BotBehaviour == TAG_MODE.TEST)
+            {
+                behave = new BehaviorMana();
+            }
              //Helpfunctions.Instance.ErrorLog("start");
 
             
@@ -975,7 +979,10 @@ def Execute():
             var moveTodo = Ai.Instance.bestmove;
             
             Helpfunctions.Instance.ErrorLog("play action");
-            moveTodo.print();
+            if (moveTodo != null)
+            {
+                moveTodo.print();
+            }
 
             //play the move#########################################################################
             //play tracking choice:

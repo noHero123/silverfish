@@ -186,7 +186,8 @@ namespace HREngine.Bots
                     TAG_MODE.DEFAULT,
                     TAG_MODE.CONTROL,
                     TAG_MODE.RUSH,
-                    TAG_MODE.FACE
+                    TAG_MODE.FACE,
+                    TAG_MODE.TEST,
                 });
             }
         }
@@ -199,6 +200,7 @@ namespace HREngine.Bots
         DEFAULT,
         CONTROL,
         RUSH,
-        FACE
+        FACE,
+        TEST
     }
 }
